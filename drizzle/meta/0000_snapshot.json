@@ -1,0 +1,492 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "ae352392-a3c1-4cfa-940a-5f50ea4486db",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "crm_customers": {
+      "name": "crm_customers",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "space": {
+          "name": "space",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "crm_customers_space_crm_spaces_id_fk": {
+          "name": "crm_customers_space_crm_spaces_id_fk",
+          "tableFrom": "crm_customers",
+          "tableTo": "crm_spaces",
+          "columnsFrom": [
+            "space"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "crm_customers_space_id_pk": {
+          "columns": [
+            "space",
+            "id"
+          ],
+          "name": "crm_customers_space_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "crm_deals": {
+      "name": "crm_deals",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "space": {
+          "name": "space",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "idx_deals_customer": {
+          "name": "idx_deals_customer",
+          "columns": [
+            "space",
+            "customer_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "crm_deals_space_customer_id_crm_customers_space_id_fk": {
+          "name": "crm_deals_space_customer_id_crm_customers_space_id_fk",
+          "tableFrom": "crm_deals",
+          "tableTo": "crm_customers",
+          "columnsFrom": [
+            "space",
+            "customer_id"
+          ],
+          "columnsTo": [
+            "space",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "crm_deals_space_id_pk": {
+          "columns": [
+            "space",
+            "id"
+          ],
+          "name": "crm_deals_space_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "crm_events": {
+      "name": "crm_events",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "space": {
+          "name": "space",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "crm_events_space_customer_id_crm_customers_space_id_fk": {
+          "name": "crm_events_space_customer_id_crm_customers_space_id_fk",
+          "tableFrom": "crm_events",
+          "tableTo": "crm_customers",
+          "columnsFrom": [
+            "space",
+            "customer_id"
+          ],
+          "columnsTo": [
+            "space",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "crm_events_space_id_pk": {
+          "columns": [
+            "space",
+            "id"
+          ],
+          "name": "crm_events_space_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "crm_meetings": {
+      "name": "crm_meetings",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "space": {
+          "name": "space",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "crm_meetings_space_customer_id_crm_customers_space_id_fk": {
+          "name": "crm_meetings_space_customer_id_crm_customers_space_id_fk",
+          "tableFrom": "crm_meetings",
+          "tableTo": "crm_customers",
+          "columnsFrom": [
+            "space",
+            "customer_id"
+          ],
+          "columnsTo": [
+            "space",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "crm_meetings_space_id_pk": {
+          "columns": [
+            "space",
+            "id"
+          ],
+          "name": "crm_meetings_space_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "crm_mutations": {
+      "name": "crm_mutations",
+      "columns": {
+        "space": {
+          "name": "space",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "crm_mutations_space_crm_spaces_id_fk": {
+          "name": "crm_mutations_space_crm_spaces_id_fk",
+          "tableFrom": "crm_mutations",
+          "tableTo": "crm_spaces",
+          "columnsFrom": [
+            "space"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "crm_mutations_space_id_pk": {
+          "columns": [
+            "space",
+            "id"
+          ],
+          "name": "crm_mutations_space_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "crm_orders": {
+      "name": "crm_orders",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "space": {
+          "name": "space",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "deal_id": {
+          "name": "deal_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "idx_orders_customer": {
+          "name": "idx_orders_customer",
+          "columns": [
+            "space",
+            "customer_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "crm_orders_space_deal_id_crm_deals_space_id_fk": {
+          "name": "crm_orders_space_deal_id_crm_deals_space_id_fk",
+          "tableFrom": "crm_orders",
+          "tableTo": "crm_deals",
+          "columnsFrom": [
+            "space",
+            "deal_id"
+          ],
+          "columnsTo": [
+            "space",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "crm_orders_space_id_pk": {
+          "columns": [
+            "space",
+            "id"
+          ],
+          "name": "crm_orders_space_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "crm_spaces": {
+      "name": "crm_spaces",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "write_token": {
+          "name": "write_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
+        },
+        "settings": {
+          "name": "settings",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "crm_tasks": {
+      "name": "crm_tasks",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "space": {
+          "name": "space",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "crm_tasks_space_customer_id_crm_customers_space_id_fk": {
+          "name": "crm_tasks_space_customer_id_crm_customers_space_id_fk",
+          "tableFrom": "crm_tasks",
+          "tableTo": "crm_customers",
+          "columnsFrom": [
+            "space",
+            "customer_id"
+          ],
+          "columnsTo": [
+            "space",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "crm_tasks_space_id_pk": {
+          "columns": [
+            "space",
+            "id"
+          ],
+          "name": "crm_tasks_space_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

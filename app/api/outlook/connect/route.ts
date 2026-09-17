@@ -1,0 +1,4 @@
+import {member,AccessError} from '@/lib/crm-auth';
+import {identity,startConsent,OutlookError} from '@/lib/outlook';
+import {OUTLOOK_REDIRECT} from '@/lib/outlook-shared';
+export async function GET(req:Request){try{if(['print','warehouse','production'].includes((await member(req,true)).role))throw new AccessError('Outlook-vyn är avsedd för säljteamet.');const u=identity(req);const consent=await startConsent(u.id);return new Response(null,{status:302,headers:{Location:consent.url,'Cache-Control':'no-store','Referrer-Policy':'no-referrer','Set-Cookie':'__Host-outlook-state='+consent.state+'; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=600'}})}catch(e){return new Response(null,{status:302,headers:{Location:new URL('/?outlook='+encodeURIComponent(e instanceof OutlookError||e instanceof AccessError?e.message:'Anslutningen kunde inte startas.'),OUTLOOK_REDIRECT).toString(),'Cache-Control':'no-store'}})}}
