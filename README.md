@@ -37,5 +37,6 @@ GitHub lagrar källkod och granskningshistorik. Kunddata och uppladdade filer li
 - [PRODUCT.md](PRODUCT.md): produkt och arbetsflöden.
 - [OPERATIONS.md](OPERATIONS.md): drift, åtkomst och återställning.
 - [OUTLOOK.md](OUTLOOK.md): Outlook-konfiguration och gränser.
+- [CLAUDE_REVIEW.md](CLAUDE_REVIEW.md): källhänvisningar och verifieringsunderlag för en oberoende v13-granskning.
 
 Riktiga Outlook-, Fortnox-, AI- och webbshopskopplingar är inte aktiverade av denna GitHub-förberedelse. Godkända kodtester är inte bevis på produktionsberedskap eller på att säljarna klarar arbetsflödet utan hjälp.
