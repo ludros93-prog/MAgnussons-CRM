@@ -1,0 +1,40 @@
+name: CRM checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crm-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CI: "true"
+      TZ: UTC
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - uses: pnpm/action-setup@v6
+        with:
+          version: "11.25.0"
+          run_install: false
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile --prod=false
+      - name: CRM and Outlook regression tests
+        run: node tests/outlook.mjs
+      - name: TypeScript
+        run: node node_modules/typescript/bin/tsc --noEmit --incremental false
