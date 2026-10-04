@@ -68,3 +68,16 @@ de nya leverans-/hinderfälten vid senare orderskrivning.
 Den rena GitHub-körningen visar att de låsta beroendena kunde installeras och att den isolerade regressionstestsviten och typkontrollen gick igenom. Microsoft Graph och R2 ersätts med kontrollerade testimplementationer; SQLite använder riktiga migreringar och API-skrivningar.
 
 Resultatet verifierar inte produktionshostingens åtkomst eller återställning, riktiga Outlook-/Fortnox-konton, rendering, mobilinstallation eller användbarhet för Magnussons personal. Se [CLAUDE_REVIEW.md](CLAUDE_REVIEW.md) för gränser och källhänvisningar för en ny v13-granskning.
+
+## Visuell resultatöversikt 2026-10-04
+
+Utgångspunkt: GitHub-main `5afd4ce45ed21e27167dc291a2e6b5962607324e` och
+publicerad Sites-källa `39c84f63efe3966dbef6462bd85d598b9ff8cb62`, med samma
+Git-träd `bb3ed3c40ab36ae5f412c216245aad000ef16b31`. Ändringen ligger på
+`feat/visual-results-dashboard`; PR-huvudets revision identifierar resultatet.
+
+- CRM-/Outlook-regressionerna, TypeScript, produktionsbygge och lokal workerd/D1/R2-kontroll är godkända. Byggvarningen om stora klientpaket kvarstår.
+- Nya KPI-prov täcker årets tolv månader, person/team/period, saknade och uttryckligen noll mål, ackumulerade mål och bevarat fakturaansvar vid senare orderansvarsbyte. Teamrader använder samma beräkning som personvyn.
+- Chromium/Playwright med det byggda gränssnittet och en isolerad lokal workerd kontrollerade 1440, 768, 390 och 320 px utan horisontell sidöverströmning eller JavaScript-fel. Månadsval, ackumulerad graf med motsvarande sammanfattning, fakturaunderlag för månad/år, egen/team-växel, valbara placeringar och Min dag provades. Skärmbilder av dator- och mobilvyn granskades.
+- Webbläsarprovet använde fiktiva kunder/fakturor och en simulerad administratör. Det verifierar layout och navigering, inte riktig inloggning, personalens användbarhet eller en ansluten integration.
+- Inga nya beroenden, migreringar, anslutningar, kontoinbjudningar eller ändrade åtkomstregler. Publicering ska ske till samma Site och bevara dess begränsade delning.

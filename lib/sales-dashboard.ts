@@ -11,6 +11,26 @@ export function salesMetrics(st:State,month:string,owner:string){
  const yearMonths=Object.entries(st.settings.sellerGoals[owner]||{}).filter(([date,g])=>date.startsWith(year+'-')&&g.revenue!==null);
  const explicitYear=owner==='all'?st.settings.annualBudgets[year]:st.settings.sellerAnnualGoals[owner]?.[year];
  const yearTarget=explicitYear??(owner!=='all'&&yearMonths.length===12?yearMonths.reduce((n,[,g])=>n+g.revenue!,0):null);
- return {invoices,known,revenue:invoices.reduce((n,o)=>n+o.invoiceValue!,0),target:(owner==='all'?st.settings.budgets[month]:goals?.revenue)??null,profit:known.length?knownRevenue-knownCost:null,profitTarget:goals?.grossProfit??null,margin:margin(knownRevenue,knownCost),yearRevenue:yearInvoices.reduce((n,o)=>n+o.invoiceValue!,0),yearTarget,yearTargetSource:explicitYear!=null?'annual':yearMonths.length===12?'months':'missing',configuredMonths:yearMonths.length,qualified:st.customers.filter(c=>(owner==='all'||!!owner&&(c.prospecting.qualifiedOwner||c.owner)===owner)&&swedishMonth(c.prospecting.qualifiedAt)===month).length,qualifiedTarget:goals?.qualified??null,open,pipeline:open.reduce((n,d)=>n+(d.value||0),0),unpriced:open.filter(d=>d.value===null).length,repeat:invoices.filter(o=>st.deals.find(d=>d.id===o.dealId)?.type==='repeat').length,tasks:st.tasks.filter(t=>matches(t)&&!t.done).sort((a,b)=>a.due.localeCompare(b.due)),customers:st.customers.filter(matches),orders:st.orders.filter(matches),meetings:st.meetings.filter(m=>matches(m)&&m.status==='planned'&&m.date>=day()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time))};
+ return {invoices,yearInvoices,known,revenue:invoices.reduce((n,o)=>n+o.invoiceValue!,0),target:(owner==='all'?st.settings.budgets[month]:goals?.revenue)??null,profit:known.length?knownRevenue-knownCost:null,profitTarget:goals?.grossProfit??null,margin:margin(knownRevenue,knownCost),yearRevenue:yearInvoices.reduce((n,o)=>n+o.invoiceValue!,0),yearTarget,yearTargetSource:explicitYear!=null?'annual':yearMonths.length===12?'months':'missing',configuredMonths:yearMonths.length,qualified:st.customers.filter(c=>(owner==='all'||!!owner&&(c.prospecting.qualifiedOwner||c.owner)===owner)&&swedishMonth(c.prospecting.qualifiedAt)===month).length,qualifiedTarget:goals?.qualified??null,open,pipeline:open.reduce((n,d)=>n+(d.value||0),0),unpriced:open.filter(d=>d.value===null).length,repeat:invoices.filter(o=>st.deals.find(d=>d.id===o.dealId)?.type==='repeat').length,tasks:st.tasks.filter(t=>matches(t)&&!t.done).sort((a,b)=>a.due.localeCompare(b.due)),customers:st.customers.filter(matches),orders:st.orders.filter(matches),meetings:st.meetings.filter(m=>matches(m)&&m.status==='planned'&&m.date>=day()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time))};
 }
 export function noticeInScope(st:State,n:State['notices'][number],owner:string){if(owner==='all'||['print','warehouse','production'].includes(st.viewer?.role||''))return true;if(n.audience==='team')return true;if(!owner||owner==='_unassigned')return false;return n.owner===owner||!!n.orderId&&st.orders.some(o=>o.id===n.orderId&&o.owner===owner);}
+
+export function salesYearSeries(st:State,year:string,owner:string){
+ const invoices=st.orders.filter(o=>o.invoiceValue!==null&&o.invoiceDate.startsWith(year+'-')&&(owner==='all'||!!owner&&(o.invoiceOwner||o.owner)===owner));
+ let cumulativeRevenue=0,cumulativeTarget:number|null=0;
+ return Array.from({length:12},(_,i)=>{
+  const month=year+'-'+String(i+1).padStart(2,'0'),rows=invoices.filter(o=>o.invoiceDate.startsWith(month+'-'));
+  const target=(owner==='all'?st.settings.budgets[month]:st.settings.sellerGoals[owner]?.[month]?.revenue)??null;
+  const revenue=rows.reduce((sum,o)=>sum+o.invoiceValue!,0);cumulativeRevenue+=revenue;
+  cumulativeTarget=target===null||cumulativeTarget===null?null:cumulativeTarget+target;
+  return {month,label:new Date(month+'-01T12:00:00').toLocaleDateString('sv-SE',{month:'short'}),revenue,target,invoices:rows.length,cumulativeRevenue,cumulativeTarget};
+ });
+}
+
+// All result views share the invoice attribution and cost-coverage rules.
+export function teamSalesRows(st:State,month:string){
+ return st.settings.owners.map(owner=>{
+  const stats=salesMetrics(st,month,owner),goal=st.settings.sellerGoals[owner]?.[month];
+  return {owner,revenue:stats.revenue,profit:stats.profit,margin:stats.margin,known:stats.known.length,invoices:stats.invoices.length,qualified:stats.qualified,goal,attainment:stats.target!==null&&stats.target>0?stats.revenue/stats.target:null,repeat:stats.repeat,late:stats.tasks.filter(t=>t.due<day()).length};
+ });
+}
