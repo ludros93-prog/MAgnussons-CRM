@@ -1,6 +1,6 @@
 # Magnussons CRM
 
-CRM för Magnussons med egen arbetsdag, säljuppföljning, kundvård, order, tryck och lager. Version 13 är utgångspunkten. Ursprunglig källrevision och överföringsstatus finns i [SOURCE.md](SOURCE.md).
+CRM för Magnussons med egen arbetsdag, säljuppföljning, kundvård, order, tryck och lager. Version 13 är utgångspunkten. Aktuell granskning och pilotgränser finns i [STATUS-2026-10-04.md](STATUS-2026-10-04.md); verksamhetsbeslut och acceptansprov i [HANDOFF-2026-10-04.md](HANDOFF-2026-10-04.md). Ursprunglig källrevision och överföringsstatus finns i [SOURCE.md](SOURCE.md).
 
 ## Utveckling och kontroller
 

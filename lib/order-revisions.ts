@@ -6,7 +6,7 @@ import {RuleError,DealSchema,TaskSchema,validateDeal,day,type State,type Order,t
 
 const text=z.string().trim().max(4000),required=text.min(1);
 export function revisionBasis(st:State,orderId:string){const o=st.orders.find(o=>o.id===orderId);return recordBasis({order:o||null,deal:o?st.deals.find(d=>d.id===o.dealId)||null:null});}
-export function canAmendOrder(o:Order){return ['draft','cancelled'].includes(o.production.status)&&!hasPhysicalWork(o.production)&&!o.production.quantityAdjustments.length&&!['shipping','delivered','followed'].includes(o.stage)&&o.invoiceValue===null;}
+export function canAmendOrder(o:Order){return !o.directShipments.length&&['draft','cancelled'].includes(o.production.status)&&!hasPhysicalWork(o.production)&&!o.production.quantityAdjustments.length&&!['shipping','delivered','followed'].includes(o.stage)&&o.invoiceValue===null;}
 const need=(v:unknown,message:string)=>{if(!v)throw new RuleError(message)};
 export function applyOrderRevision(st:State,action:Action,actor:Actor):State{
  need(['admin','seller'].includes(actor.role),'Orderändringar hanteras av säljare eller administratör.');

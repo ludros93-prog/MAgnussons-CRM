@@ -1,4 +1,5 @@
 import {applyOrderRevision} from './order-revisions';
+import {DirectShipmentSchema,directRows,directBasis,deliveryVerified,latestDispatch} from './direct-delivery';
 import {normalizeProduction,productionProgress,productionBasis,assignmentBasis,hasPhysicalWork,materializeLegacy,quantity,type MovementKind} from './production-quantities';
 import {z} from 'zod';
 import {type State,type Action,type Actor,RuleError,CustomerSchema,DealSchema,TaskSchema,applyAction,day,plusDays} from './crm';
@@ -15,7 +16,7 @@ export function applyOperations(st:State,action:Action,actor:Actor):State{
  const notify=(audience:'print'|'warehouse'|'seller'|'team',title:string,body:string,customerId='',orderId='',owner='')=>st.notices.unshift({id:uid(),audience,title:title.slice(0,4000),body:body.slice(0,4000),customerId,orderId,owner,at:now,readBy:[]});
  const synchronize=(o:State['orders'][number])=>{
   const v=o.production,d=st.deals.find(d=>d.id===o.dealId)!,rows=productionProgress(v);
-  const allReceived=rows.length>0&&rows.every(r=>r.toReceive===0),allPrinted=rows.length>0&&rows.every(r=>r.usablePrinted===r.target),allDispatched=rows.length>0&&rows.every(r=>r.remaining===0)&&rows.some(r=>r.dispatched>0);
+  const allReceived=rows.length>0&&rows.every(r=>r.toReceive===0),allPrinted=rows.length>0&&rows.every(r=>r.usablePrinted===r.target),allDispatched=rows.length>0&&rows.every(r=>r.remaining===0)&&rows.some(r=>r.dispatched>0)&&!v.issue;
   const wasDispatched=v.status==='dispatched';v.goodsReceived=allReceived;
   if(allReceived&&!v.goodsReceivedAt){v.goodsReceivedAt=now;v.goodsReceivedBy=actor.name;}
   if(allPrinted&&!v.printedAt){v.printedAt=now;v.printedBy=actor.name;}
@@ -29,6 +30,30 @@ export function applyOperations(st:State,action:Action,actor:Actor):State{
   return {rows,allReceived,allPrinted,allDispatched};
  };
  if(['order_amend','order_amend_accept','order_amend_discard'].includes(action.type))return applyOrderRevision(st,action,actor);
+ if(action.type==='direct_dispatch'){
+  must(['admin','seller'].includes(actor.role),'Direktleverans registreras av säljare eller administratör.');
+  const input=z.object({orderId:id,expectedContext:z.string().min(1).max(3000000),supplierConfirmed:z.literal(true),noProofNeeded:z.boolean().default(false)}).passthrough().parse(action.data),o=order(input.orderId),d=st.deals.find(d=>d.id===o.dealId)!;
+  must(input.expectedContext===directBasis(st,o.id),'Ordern eller leveransunderlaget har ändrats. Läs in aktuellt underlag.');
+  must(['draft','cancelled'].includes(o.production.status)&&!hasPhysicalWork(o.production)&&!o.productionHistory.some(hasPhysicalWork),'Direktleverans får inte ersätta registrerade varor eller intern produktion.');
+  must(!o.pendingAmendment&&!o.production.issue,'Godkänn orderändringen och lös alla hinder före direktleverans.');
+  const historical=['shipping','delivered','followed'].includes(o.stage);
+  must(o.invoiceValue===null||historical,'En redan fakturerad order får bara kompletteras med historiskt leveransunderlag.');
+  must(!o.proofRequired||o.proofApproved||input.noProofNeeded,'Bekräfta korrekturet eller ange uttryckligen att kundkorrektur inte behövs.');
+  const shipment=DirectShipmentSchema.parse({...action.data as object,id:uid(),recordedAt:now,recordedById:actor.id,recordedBy:actor.name});
+  must(shipment.dispatchedOn<=today,'Avsändningsdatum får inte ligga i framtiden.');
+  if(o.deliveredDate)must(shipment.dispatchedOn<=o.deliveredDate,'Avsändningen kan inte ligga efter kundens mottagningsdatum.');
+  if(shipment.method!=='collection')must(shipment.address.street&&shipment.address.postalCode&&shipment.address.city,'Ange adress, postnummer och ort för leveransen.');
+  must(o.directShipments.length<1000,'Ordern har nått gränsen för försändelser.');
+  const rows=directRows(d,o.directShipments),seen=new Set<string>();must(rows.length,'Komplettera ordern med accepterade artikelrader före leveransregistrering.');
+  for(const e of shipment.entries){const row=rows.find(r=>r.line.id===e.lineId);must(row&&!seen.has(e.lineId),'Välj varje befintlig artikelrad högst en gång.');seen.add(e.lineId);must(e.quantity===quantity(e.quantity)&&e.quantity<=row!.remaining,'Antalet överstiger återstående åtagande eller har fler än sex decimaler.');}
+  o.directShipments.push(shipment);o.supplierConfirmed=true;if(input.noProofNeeded)o.proofRequired=false;
+  const complete=deliveryVerified(st,o);
+  if(complete&&!historical){o.stage='shipping';ensureReceiptTasks(st);if(!st.tasks.some(t=>t.dealId===o.dealId&&t.kind==='invoice_ready'&&!t.done))st.tasks.push(TaskSchema.parse({id:uid(),customerId:o.customerId,dealId:o.dealId,owner:o.owner,title:('Fakturera skickad order: '+d.title).slice(0,240),due:today,kind:'invoice_ready'}));}
+  if(!historical)for(const task of st.tasks)if(task.dealId===o.dealId&&task.kind==='handover'&&!task.done){task.done=true;task.doneAt=now;}
+  event(o.customerId,o.dealId,'Direktleverans '+shipment.dispatchedOn+': '+shipment.entries.map(e=>e.quantity+' × '+rows.find(r=>r.line.id===e.lineId)!.line.description).join('; ')+'. Underlag: '+shipment.evidence);
+  notify('seller',complete?'Hela ordern skickad – direktleverans bekräftad':'Delleverans registrerad',d.title+'. Kundmottagande registreras separat.',o.customerId,o.id,o.owner);
+  return st;
+ }
  if(['production_claim','production_release'].includes(action.type)){
   const p=z.object({orderId:id,expectedAssignment:z.string().max(100000)}).parse(action.data),o=order(p.orderId),v=o.production;
   must(['admin','production','print','warehouse'].includes(actor.role),'Arbetsansvar hanteras av produktionen eller administratör.');
@@ -39,6 +64,7 @@ export function applyOperations(st:State,action:Action,actor:Actor):State{
  }else if(action.type==='order_shortfall'){
   must(['admin','seller'].includes(actor.role),'Kundens ändrade beställning registreras av säljare eller administratör.');
   const p=z.object({orderId:id,expectedProduction:z.string().min(1),entries:z.array(MovementEntrySchema).min(1).max(100),reason:id,customerApprovedBy:id,customerApprovedOn:validDate.refine(Boolean),agreedValue:z.number().finite().min(0).max(1e9)}).parse(action.data),o=order(p.orderId),v=o.production;
+  must(!v.issue,'Lös det registrerade produktionshindret före kundgodkänd antalminskning.');
   must(['submitted','printed'].includes(v.status)&&o.invoiceValue===null,'Avvikelsen ska registreras på en aktiv, ännu inte fakturerad order.');
   must(p.expectedProduction===productionBasis(v),'Antalen har ändrats. Läs in aktuellt underlag.');
   must(p.customerApprovedOn<=today&&p.customerApprovedOn>=v.submittedAt.slice(0,10),'Ange kundens godkännandedatum för denna order.');
@@ -62,29 +88,36 @@ export function applyOperations(st:State,action:Action,actor:Actor):State{
   const prepared=applyAction(st,{type:'order',data:{...o,...p.approval,shippingAddress:p.deliveryAddress,stage:'handover'}},actor);
   return applyOperations(prepared,{type:'production_submit',data:{orderId:o.id,production:p.production}},actor);
  }else if(action.type==='receipt_confirm'){
-  const p=z.object({orderId:id,deliveredDate:validDate.refine(Boolean),receivedBy:id,note:text.default('')}).parse(action.data),o=order(p.orderId);must(awaitingReceipt(o),'Ordern väntar inte på mottagningsbekräftelse.');must(p.deliveredDate<=today,'Leveransdatum får inte ligga i framtiden.');must(!o.production.dispatchedAt||p.deliveredDate>=o.production.dispatchedAt.slice(0,10),'Mottagandet kan inte ligga före utleveransen.');
+  const p=z.object({orderId:id,deliveredDate:validDate.refine(Boolean),receivedBy:id,note:text.default('')}).parse(action.data),o=order(p.orderId);must(awaitingReceipt(o),'Ordern väntar inte på mottagningsbekräftelse.');must(p.deliveredDate<=today,'Leveransdatum får inte ligga i framtiden.');must(deliveryVerified(st,o),'Komplettera leveransunderlaget innan kundens mottagande bekräftas.');must(!latestDispatch(o)||p.deliveredDate>=latestDispatch(o),'Mottagandet kan inte ligga före utleveransen.');
   const next=applyAction(st,{type:'order',data:{...o,stage:'delivered',deliveredDate:p.deliveredDate,receivedBy:p.receivedBy,receiptNote:p.note}},actor);next.events.unshift({id:uid(),customerId:o.customerId,dealId:o.dealId,at:now,kind:'delivery_receipt',text:'Kundmottagande bekräftat: '+p.receivedBy+' · '+p.deliveredDate+(p.note?' · '+p.note:'')});return next;
  }else if(action.type==='receipt_issue'){
   const p=z.object({orderId:id,message:id,nextCheck:validDate.refine(Boolean)}).parse(action.data),o=order(p.orderId);must(awaitingReceipt(o),'Ordern väntar inte på mottagningsbekräftelse.');must(p.nextCheck>=today,'Nästa kontroll behöver vara idag eller senare.');o.deliveryIssue=p.message;o.deliveryNextCheck=p.nextCheck;ensureReceiptTasks(st);const task=st.tasks.find(t=>t.dealId===o.dealId&&t.kind==='receipt')!;task.done=false;task.doneAt='';task.due=p.nextCheck;task.owner=o.owner;event(o.customerId,o.dealId,'Leverans behöver följas upp: '+p.message);notify('seller','Leverans behöver åtgärd',p.message+' · nästa kontroll '+p.nextCheck,o.customerId,o.id,o.owner);
  }else if(action.type==='production_submit'){
   const p=z.object({orderId:id,production:ProductionSchema}).parse(action.data),o=order(p.orderId),d=st.deals.find(d=>d.id===o.dealId)!;
-  must(!o.pendingAmendment,'Kunden behöver godkänna orderändringen innan underlaget lämnas till tryck.');must(['draft','cancelled'].includes(o.production.status),'Tryckordern är redan inlämnad.');must(!o.production.quantityAdjustments.length,'En kundgodkänd antaländring får inte ersättas av en ny arbetsversion.');must(!hasPhysicalWork(o.production),'Den tidigare arbetsordern har registrerade varor eller produktion. Stäm av hanterade antal innan ett nytt underlag lämnas in.');must(!['delivered','followed','shipping'].includes(o.stage)&&o.invoiceValue===null,'En skickad eller fakturerad order kan inte skickas till tryck igen.');
+  must(!o.directShipments.length,'Registrerad direktleverans får inte ersättas av en intern arbetsorder.');must(!o.pendingAmendment,'Kunden behöver godkänna orderändringen innan underlaget lämnas till tryck.');must(['draft','cancelled'].includes(o.production.status),'Tryckordern är redan inlämnad.');must(!o.production.quantityAdjustments.length,'En kundgodkänd antaländring får inte ersättas av en ny arbetsversion.');must(!hasPhysicalWork(o.production),'Den tidigare arbetsordern har registrerade varor eller produktion. Stäm av hanterade antal innan ett nytt underlag lämnas in.');must(!['delivered','followed','shipping'].includes(o.stage)&&o.invoiceValue===null,'En skickad eller fakturerad order kan inte skickas till tryck igen.');
   const v=p.production;must(v.lines.every(l=>l.quantity===quantity(l.quantity)),'Artikelantal får ha högst sex decimaler.');must(v.lines.length&&v.lines.every(l=>l.article&&l.quantity>0),'Ange artikelnummer, variant och antal på orderraderna.');must(v.instructions,'Beskriv tryckets placering och utförande.');must(v.sketchFileId&&v.sketchVersion,'Välj en uppladdad skiss och version.');must(v.printDeadline&&v.dispatchDeadline&&o.deliveryDate,'Ange tryckdeadline, utleveransdag och kundens leveransdag.');must(v.printDeadline<=v.dispatchDeadline&&v.dispatchDeadline<=o.deliveryDate,'Datumen ska följa tryck → utleverans → leverans.');must(o.supplierConfirmed,'Bekräfta leverantörens order och leveransdag först.');must(!o.proofRequired||(o.proofApproved&&o.proofFileId===v.sketchFileId&&o.proofVersion===v.sketchVersion&&o.approvedBy&&o.approvedDate),'Skissen behöver vara samma version som kundens registrerade korrekturgodkännande.');
   if(o.production.status==='cancelled'){must(o.productionHistory.length<100,'Högst 100 tidigare arbetsversioner per order.');o.productionHistory.push(structuredClone(o.production));}
   const products=d.lines.filter(l=>l.kind==='product');if(products.length){const key=(l:z.infer<typeof LineSchema>)=>JSON.stringify([l.sourceId,l.article,l.variant,l.variantId,l.color,l.size,l.unit,l.quantity]);must(JSON.stringify(products.map(key).sort())===JSON.stringify(v.lines.map(key).sort()),'Tryckorderns artiklar, varianter och antal måste motsvara den accepterade ordern.');}
   o.production=normalizeProduction(ProductionSchema.parse({workId:uid(),quantityMode:'lines',lines:v.lines,instructions:v.instructions,sketchFileId:v.sketchFileId,sketchVersion:v.sketchVersion,printDeadline:v.printDeadline,dispatchDeadline:v.dispatchDeadline,deliveryDate:o.deliveryDate,deliveryAddress:o.shippingAddress||customer(o.customerId).deliveryAddress,status:'submitted',submittedAt:now,submittedBy:actor.name}));o.stage='production';for(const t of st.tasks)if(t.dealId===o.dealId&&t.kind==='handover'&&!t.done){t.done=true;t.doneAt=now;}
   event(o.customerId,o.dealId,'Tryckorder inlämnad: '+d.title+' · tryck klart '+v.printDeadline+' · skickas '+v.dispatchDeadline);notify('print','Ny tryckorder',d.title+' · klart '+v.printDeadline,o.customerId,o.id);notify('warehouse','Ny order att planera',d.title+' · skickas '+v.dispatchDeadline,o.customerId,o.id);
  }else if(action.type.startsWith('production_')){
-  const p=z.object({orderId:id,message:text.default(''),tracking:text.max(500).default(''),recipient:text.max(200).default(''),address:AddressSchema.optional(),expectedProduction:z.string().max(100000).optional(),entries:z.array(MovementEntrySchema).min(1).max(100).optional()}).parse(action.data),o=order(p.orderId),v=o.production,d=st.deals.find(d=>d.id===o.dealId)!;
+  const p=z.object({orderId:id,message:text.default(''),resolution:text.default(''),tracking:text.max(500).default(''),recipient:text.max(200).default(''),address:AddressSchema.optional(),expectedProduction:z.string().max(100000).optional(),entries:z.array(MovementEntrySchema).min(1).max(100).optional()}).parse(action.data),o=order(p.orderId),v=o.production,d=st.deals.find(d=>d.id===o.dealId)!;
   if(action.type==='production_cancel'){
    must(['submitted','printed'].includes(v.status),'Endast en oskickad tryckorder kan avbrytas.');
    must(!v.quantityAdjustments.length,'En kundgodkänd antaländring måste behållas. Rapportera ett hinder om arbetsordern behöver ändras.');
    must(!hasPhysicalWork(v),'Varor har redan registrerats. Rapportera ett hinder så att ändringen kan hanteras utan att mottagna, tryckta eller skickade antal försvinner.');
    must(p.message,'Ange varför tryckordern avbryts.');v.status='cancelled';v.cancellationReason=p.message;o.stage='handover';notify('print','Tryckorder avbruten',d.title+': '+p.message,o.customerId,o.id);notify('warehouse','Tryckorder avbruten',d.title+': '+p.message,o.customerId,o.id);event(o.customerId,o.dealId,'Tryckorder avbruten: '+p.message);
   }else{
-   must(['submitted','printed'].includes(v.status),'Ordern finns inte längre i den aktiva produktionskön.');
+   must(['submitted','printed'].includes(v.status)||(action.type==='production_issue_resolve'&&v.status==='dispatched'),'Ordern finns inte längre i den aktiva produktionskön.');
    if(action.type==='production_accept'){must(!v.acceptedAt,'Tryckordern är redan mottagen.');v.acceptedAt=now;v.acceptedBy=actor.name;event(o.customerId,o.dealId,'Tryck har tagit emot arbetsordern');}
-   if(action.type==='production_issue'){must(!v.issue||v.issueOwnerId===actor.id||actor.role==='admin','Hindret ägs av '+(v.issueOwnerName||'en annan medarbetare')+'. Ägaren eller en administratör behöver ändra det.');v.issue=p.message;v.issueAt=now;v.issueOwnerId=p.message?actor.id:'';v.issueOwnerName=p.message?actor.name:'';event(o.customerId,o.dealId,p.message?'Produktionshinder: '+p.message:'Produktionshindret är löst');notify('seller',p.message?'Åtgärd behövs i order':'Orderhindret är löst',d.title+(p.message?': '+p.message:''),o.customerId,o.id,o.owner);}
+   if(action.type==='production_issue'){must(p.expectedProduction===productionBasis(v),'Hindret eller arbetsordern har ändrats. Läs in aktuellt underlag.');must(p.message,'Beskriv hindret. Använd lösningshandlingen med orsak när hindret är löst.');must(!v.issue||v.issueOwnerId===actor.id||actor.role==='admin','Hindret ägs av '+(v.issueOwnerName||'en annan medarbetare')+'. Ägaren eller en administratör behöver ändra det.');v.issue=p.message;v.issueAt=now;v.issueOwnerId=actor.id;v.issueOwnerName=actor.name;v.issueRevision++;event(o.customerId,o.dealId,'Produktionshinder: '+p.message);notify('seller','Åtgärd behövs i order',d.title+': '+p.message,o.customerId,o.id,o.owner);}
+   if(action.type==='production_issue_resolve'){
+    must(v.issue,'Ordern har inget öppet produktionshinder.');must(v.issueOwnerId===actor.id||actor.role==='admin','Bara den som rapporterade hindret eller administratören får lösa det.');
+    must(p.expectedProduction===productionBasis(v),'Hindret eller arbetsordern har ändrats. Läs in aktuellt underlag.');must(p.resolution,'Beskriv hur hindret löstes.');must(v.issueResolutions.length<1000,'Ordern har nått gränsen för lösningar.');
+    v.issueResolutions.push({issue:v.issue,reportedAt:v.issueAt,reportedById:v.issueOwnerId,reportedBy:v.issueOwnerName,resolution:p.resolution,resolvedAt:now,resolvedById:actor.id,resolvedBy:actor.name});
+    event(o.customerId,o.dealId,'Produktionshindret är löst: '+v.issue+'. Åtgärd: '+p.resolution);v.issue='';v.issueOwnerId='';v.issueOwnerName='';v.issueAt='';v.issueRevision++;
+    notify('seller','Orderhindret är löst',d.title+': '+p.resolution,o.customerId,o.id,o.owner);
+   }
    if(['production_received','production_printed','production_dispatched','production_scrap_unprinted','production_scrap_printed'].includes(action.type)){
     must(p.expectedProduction===productionBasis(v),'Registreringen utgår från äldre antal. Läs in de aktuella antalen och kontrollera din registrering.');
     must(p.entries?.length,'Ange vilka artikelrader och antal som registreras.');
