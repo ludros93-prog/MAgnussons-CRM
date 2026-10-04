@@ -26,6 +26,32 @@ nya användare bjöds in och ingen Site-publicering gjordes av denna kodändring
 Riktig återställning i hostingen, autentiseringsgräns, integrationer, mobil och
 personalens användbarhet är fortfarande inte verifierade.
 
+## Körprov inför publicering 2026-10-04
+
+Den befintliga Sites-källan har hämtats på revision
+`e5e99b6503681cebf4870a976e31a7e600299bae`. Skillnaden mot GitHub-baslinjen
+är dokumentation/CI och borttagen typkontrollcache, utan skillnader i produktkod.
+Samma Site-identitet, begränsade delning, DB-/BUCKET-bindingar och migrationer bevaras.
+
+`tests/runtime-smoke.mjs` kör den byggda Worker-koden i Cloudflare **workerd**
+med isolerad, diskbaserad lokal D1 och R2 via de riktiga HTTP-handlers som ska
+publiceras. Provet är godkänt: startsidan renderas, anonymt CRM-anrop ger 401,
+kund/order/korrekturgodkännande/produktion sparas och tre filer om totalt
+**13 500 000 byte** laddas upp, exporteras och återställs. Backupen är över
+18 MB. Alla återlästa filers SHA-256, korrekturlänk, skissversion, arbetsfoto-
+och arbetsversionslänkar, idempotent återförsök och oförändrad källarbetsyta
+kontrolleras. Här används inga ersättningar för D1/R2-metoderna.
+
+Kör efter `node tests/outlook.mjs` och `pnpm build`:
+`node tests/runtime-smoke.mjs`. CI kör nu även bygge och detta prov.
+
+Detta är ett verkligt körprov med **lokal emulering**, inte återställning i
+den publicerade Sites-databasen. Hostingens identitetsgräns, riktiga konton,
+Fortnox/Outlook och personalens användbarhet behöver fortfarande provas.
+Öppna äldre CRM-flikar måste laddas om efter publicering. Återgång till v13
+efter nya skrivningar kräver en datamedveten rutin: äldre schema bevarar inte
+de nya leverans-/hinderfälten vid senare orderskrivning.
+
 ## Historisk verifiering 2026-09-17
 
 - GitHub-baseline `3504f82d6f5ecce24f01c39963091eb612e9d76f` har verifierat samma Git-träd som ursprungsrevision `e5e99b6503681cebf4870a976e31a7e600299bae` (alla 200 spårade filer och filrättigheter).

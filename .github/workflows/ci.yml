@@ -38,3 +38,7 @@ jobs:
         run: node tests/outlook.mjs
       - name: TypeScript
         run: node node_modules/typescript/bin/tsc --noEmit --incremental false
+      - name: Build Worker and client
+        run: pnpm build
+      - name: Built API with isolated D1 and R2
+        run: node tests/runtime-smoke.mjs
