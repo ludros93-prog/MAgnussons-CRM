@@ -81,3 +81,18 @@ Git-träd `bb3ed3c40ab36ae5f412c216245aad000ef16b31`. Ändringen ligger på
 - Chromium/Playwright med det byggda gränssnittet och en isolerad lokal workerd kontrollerade 1440, 768, 390 och 320 px utan horisontell sidöverströmning eller JavaScript-fel. Månadsval, ackumulerad graf med motsvarande sammanfattning, fakturaunderlag för månad/år, egen/team-växel, valbara placeringar och Min dag provades. Skärmbilder av dator- och mobilvyn granskades.
 - Webbläsarprovet använde fiktiva kunder/fakturor och en simulerad administratör. Det verifierar layout och navigering, inte riktig inloggning, personalens användbarhet eller en ansluten integration.
 - Inga nya beroenden, migreringar, anslutningar, kontoinbjudningar eller ändrade åtkomstregler. Publicering ska ske till samma Site och bevara dess begränsade delning.
+
+## Min dag som tydlig arbetsstart 2026-10-04
+
+Utgångspunkt: GitHub-main `2d43f6148af11896d0e7601006197fa385fc6af3` och
+publicerad Sites-källa `96a4f5301d61e1677e23531f489a9cff5448f8b8`, med samma
+Git-träd `832fcc1ffe15007318468a77199a9761affde5d9`. Ändringen ligger på
+`feat/clear-my-day`; PR-huvudets revision identifierar resultatet.
+
+- CRM-/Outlook-sviten, TypeScript och produktionsbygge passerar. Lokal workerd/D1/R2-kontroll passerar med 13,5 MB filer och verifierade backup-/filreferenser. Byggvarningen om stora klientpaket kvarstår.
+- Chromium/Playwright med byggd app och isolerad lokal workerd/D1/R2 provade 1440, 768, 390 och 320 px samt 200 procent textstorlek vid 390 px utan horisontell sidöverströmning eller JavaScript-fel. Dator- och mobilskärmbilder granskades.
+- Nästa-handling-knappen öppnar gemensam uppföljning. En privat anteckning stängdes, laddades om och återupptogs med bevarad text. Sparstatus för utkast är synlig på mobil. Ett kontrollerat utkastläsfel och återförsök provades.
+- Statuskort flyttar tangentbordsfokus. Resultatkortet öppnar aktuell månad även efter ett tidigare historiskt månadsval, med rätt egen/team-vy.
+- Simulerad admin utan säljarprofil visar inga personliga nollsiffror och öppnar teamets dag uttryckligen. Säljare har egen scope. Läsare ser leveransunderlag utan bekräftelse-/sparknappar. Leveransuppföljning kan vara nästa handling och kön finns kvar.
+- Browserproven använde endast fiktiva data, lokala privata utkast och simulerade inloggningar. Ingen riktig hostinginloggning, integration eller personalens användbarhet verifierades; inga riktiga konton eller kunddata ändrades.
+- Inga beroenden, migrationer eller serverregler ändrades. Samma Site och begränsade delning ska bevaras vid publicering.
