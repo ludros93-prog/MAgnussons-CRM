@@ -1,5 +1,22 @@
 # Magnussons CRM – order, tryck och lager
 
+## Aktuell komplettering 4 oktober 2026
+
+Se [STATUS-2026-10-04.md](STATUS-2026-10-04.md) för aktuell kravmatris. Historiska v12/v13-prov längre ned är inte riktiga hosting-/kontoprov.
+
+**Backup:** Hämta CRM-kopia med kundfiler exporterar nu en strömmad `.ndjson`-fil (`magnussons-crm-backup-2`). Kopian behandlar en fil i taget och kräver verifierad slutmarkör vid återställning. Det finns ingen separat totalgräns på 10 MB för filinnehållet. Gränserna är 5 MB per fil, 200 filer per kund, 2 000 filer totalt och 16 MB CRM-data inklusive filförteckning. Driftleverantörens request-/CPU-/minnesgränser måste fortfarande provas med rätt volym i en isolerad hostingmiljö. En avbruten eller ändrad export får ingen giltig slutmarkör.
+
+Återställaren verifierar filstorlek, SHA-256, hela paketets integritet, kund-/korrektur-/arbetsversionskopplingar och slutet av filen. Den lägger nya filobjekt åt sidan och skriver CRM-data/filmetadata atomiskt till en tom målmiljö. Bekräftat misslyckande städar bara de nya objekten. Okänt commitutfall bevarar objekten tills utfallet kan kontrolleras. Samma begäran kan återförsökas. Originalets filer lämnas orörda och nya fil-ID:n kopplas till återställda referenser.
+
+Tidigare `magnussons-crm-backup-1` JSON-kopior kan fortfarande läsas; dessa har sina ursprungliga 10 MB fil-/16 MB paketgränser. Den äldre JSON-exporten finns också kvar i API:et utan `format=stream`. Inget av formaten omfattar konton, Outlook-anslutningar/cache eller privata utkast. Kopior innehåller kunddata och ska förvaras utanför det publika repot.
+
+**Direktleverans:** Använd Registrera direktleverans i ordervyn/orderns guide. Ange faktiskt skickat antal per artikelrad, datum, leveranssätt, mottagare, adress där den behövs och belägg. Delvis skickat lämnar kvarvarande åtagande öppet. Faktura och kundmottagande registreras separat efter fullständigt leveransunderlag. Äldre skickade order saknar ibland rader/belägg; de märks overifierade och behöver granskad komplettering, utan uppfunna historiska mängder.
+
+**Hinder:** Spara hinder och Hindret är löst är separata handlingar. Den senare kräver en upplösningsorsak och rapportörens eller administratörens behörighet. Lösningen sparar aktör och tid; att tömma textfältet löser inget hinder. Ett öppet hinder blockerar tryck, avsändning och avslut genom mängdminskning.
+
+**Samtidighet och resultat:** Kundplan, bearbetning, onboarding och företagskalender kontrollerar underlaget från öppningen/klicket. Vid konflikt behålls texten och aktuell version måste läsas in medvetet. Fakturaansvar sparas separat från nuvarande orderansvar; namnbyte och överföring av allt öppet arbete kräver fortfarande stabila kommersiella ID:n.
+
+
 ## Dagligt arbete
 
 1. Registrera/importera kunder under Inställningar. CSV-importen förhandsgranskas och kan kopplas till Fortnox kundnummer. Befintliga kundkort skrivs inte över.
@@ -116,7 +133,7 @@ Provdatum: 2026-09-16. Kommando: `node tests/outlook.mjs` (inkluderar `tests/v12
 - Förlorat databassvar efter lyckad commit känner igen den sparade begäran och bevarar filerna. Om commit-resultatet inte kan fastställas behålls filerna för att inte radera en möjlig lyckad återställning.
 - Samma begäran kan upprepas utan dubbel återställning.
 
-Kopians gränser: 5 MB per fil, 10 MB filer totalt, 16 MB hela paketet, 200 filer per kund och 2 000 filer totalt. Export stoppas om den skulle bli ofullständig. Import kräver helt tom arbetsyta utan filer eller öppna utkast. Outlook, konton, autentiseringshemligheter och privata utkast ingår inte. Kopian är en manuell CRM-återställningsväg, inte automatisk katastrofåterställning för hela driftmiljön.
+Äldre JSON-kopians gränser: 5 MB per fil, 10 MB filer totalt, 16 MB hela paketet, 200 filer per kund och 2 000 filer totalt. Export stoppas om den skulle bli ofullständig. Import kräver helt tom arbetsyta utan filer eller öppna utkast. Outlook, konton, autentiseringshemligheter och privata utkast ingår inte. Kopian är en manuell CRM-återställningsväg, inte automatisk katastrofåterställning för hela driftmiljön.
 
 Kvar före driftlöfte: verifiera plattformens skydd av inloggningsheadrar och återställning i den faktiska hostingen, åtkomst-/dataägarskap och supportansvar, samt användartest med Sebbe och en säljare. Riktiga Microsoft-/Fortnox-konton, mejlutsändning, webbshopsorder och AI/transkribering är inte anslutna. Inga nya personer har bjudits in i denna ändring.
 

@@ -1,4 +1,32 @@
-# Verifiering 2026-09-17
+# Verifiering 2026-10-04
+
+Utgångspunkt: `main` på `1f3e7bf1235a60e53e7dd0710191cc1376709d2b`.
+Ändringarna utvecklades på `fix/pilot-backup-and-access`; PR-huvudets commit
+identifierar den samlade koden. [STATUS-2026-10-04.md](STATUS-2026-10-04.md)
+skiljer byggt/testat från kvarvarande konto-, hosting- och användarprov.
+
+- Node.js `v24.19.0`. Den här miljöns effektiva pnpm var `11.19.0`; projektets CI använder fortsatt `11.25.0`.
+- `pnpm install --frozen-lockfile --prod=false`: ren installation godkänd, låsfilen oförändrad.
+- `node tests/outlook.mjs`: godkänd både på utgångspunkten och efter ändringarna, inklusive v12/v13 och de fyra nya regressionstestgrupperna.
+- `node node_modules/typescript/bin/tsc --noEmit --incremental false`: godkänd.
+- `pnpm build`: godkänt portabelt Vinext/Vite-produktionsbygge. Bygget rapporterar stora klientpaket och begränsad statisk klassificering av startsidan; detta är inte ett prestanda- eller renderingstest.
+- `git diff --check`: godkänd.
+
+Nya verifierade scenarier:
+
+- Direktleverans kan inte förbigå mängd-/leveransunderlag genom vanlig orderredigering. Delvis och fullständigt skickat, kundmottagande, historiska leveranser, fil-/radkopplingar, överantal och återförsök provas.
+- Öppet hinder hindrar mängdminskning från att avsluta ordern. Tom hindertext avvisas; en explicit lösning kräver orsak/rätt aktör och bevarar spårbar historik samt skydd mot gammalt underlag.
+- Strömmad export/återställning med mer än **15 MB binära testfiler** och paket över 16 MB bevarar korrektur, foton och arbetsversionsreferenser. Trunkering, fel hash/slutmarkör, saknad fil, ändrat exportunderlag, R2-fel, CAS-konflikt, förlorat/osäkert commitsvar, samtidiga återförsök och rollspärrar provas. Backpressure och avbruten läsare får inte läsa hela filsamlingen. Äldre JSON-prov är fortsatt godkända.
+- Kundplan, bearbetning, onboarding och företagsevent skyddas även efter konflikt/refresh och vid faktisk injicerad databas-CAS. Olika poster kan sparas samtidigt; gammalt checklistaklick får inte skriva över kollegan.
+- Samtidiga nya/befintliga kontokopplingar får inte dela aktiv säljarprofil. Korsvis adminändring lämnar minst en aktiv administratör. Fakturans ansvarigsnapshot bevarar månads-/årsutfall och marginal vid orderansvarsbyte, rensas inte av klientpayload och döljs för produktion.
+
+SQLite kör riktiga migreringar och API-skrivningar. R2 och Graph är kontrollerade
+ersättningar. Inga riktiga kundexporter, konton eller hemligheter användes, inga
+nya användare bjöds in och ingen Site-publicering gjordes av denna kodändring.
+Riktig återställning i hostingen, autentiseringsgräns, integrationer, mobil och
+personalens användbarhet är fortfarande inte verifierade.
+
+## Historisk verifiering 2026-09-17
 
 - GitHub-baseline `3504f82d6f5ecce24f01c39963091eb612e9d76f` har verifierat samma Git-träd som ursprungsrevision `e5e99b6503681cebf4870a976e31a7e600299bae` (alla 200 spårade filer och filrättigheter).
 - Node.js v24.19.0.

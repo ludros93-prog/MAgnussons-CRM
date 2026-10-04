@@ -1,6 +1,6 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Senast uppdaterat 2026-09-16 efter Saleshub-inspiration och Claudes granskning. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
+Uppdaterat 2026-10-04. Verifierad kodstatus och kvarvarande pilotkrav finns i [STATUS-2026-10-04.md](STATUS-2026-10-04.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
 
 ## Syfte och dagligt arbete
 
@@ -32,7 +32,7 @@ Tryck/lager får operativa data utan kalkyl, fakturor, privata anteckningar elle
 
 CSV kan importera kunder/artiklar och bevara Fortnox-kundnummer. Ingen Fortnox-synk, automatisk fakturering, liveprospektering eller orderöverföring till webbshop är ansluten. Outlook-koden läser efter konfiguration men skickar inte mejl/inbjudningar. AI, ljudtranskribering och e-signering är inte aktiverade.
 
-CRM-kopia med kundfiler kan exporteras och återställas till tom arbetsyta med integritetskontroller och omskrivna filreferenser. Konton, Outlook och privata utkast ingår inte. Fil- och storleksgränser framgår i gränssnittet och OPERATIONS.md. Automatisk hostingbackup och ett faktiskt driftåterställningsprov återstår.
+CRM-kopia med kundfiler kan exporteras och återställas till tom arbetsyta med integritetskontroller och omskrivna filreferenser. Konton, Outlook och privata utkast ingår inte. Den nya strömmade kopian saknar den äldre 10 MB-gränsen för samlade filer; en fil är fortfarande högst 5 MB. Övriga gränser och äldre JSON-formatets kompatibilitet framgår i OPERATIONS.md. Automatisk hostingbackup och ett faktiskt driftåterställningsprov återstår.
 
 Flera leverantörer/tekniker per jobb, reklamation efter leverans, delfakturor/krediter, kundsammanslagning, stabila ansvarig-ID:n och storleksmatris är kvarvarande utvecklingsområden. All data laddas i arbetsytan; större datamängder kräver paginering/arkivering.
 
@@ -49,3 +49,13 @@ Gemensam roll **Tryck & leverans** för de personer som hanterar hela flödet. S
 Jobbet öppnas med nästa registrering först. Skiss, instruktion, antal per artikel, leveransadress, foton och historik finns i samma vy. Hinder meddelas säljaren och löses av den som registrerat dem eller en administratör. Utleverans och kundens mottagande är separata händelser.
 
 Mobilanpassningen behåller säljarnas huvudsakliga navigering. Hemskärmsikon och installationshjälp finns via ”I mobilen”. Vyn kräver internet och har notiser inne i CRM; push och offlinearbete ingår inte. Sebastian Engqvist och den andra produktionsmedarbetaren ska få egna verifierade konton vid utrullning.
+
+## Förbättringar 4 oktober 2026
+
+- Direktleverans registreras separat med mängder per accepterad artikelrad, faktiskt avsändningsdatum, leveranssätt, mottagare och belägg. Delleverans avslutar inte hela åtagandet. Normal slutfakturaregistrering och mottagningsbekräftelse kräver leveransunderlag. Äldre order bevaras med synlig overifierad leveransstatus tills underlaget granskats.
+- Ett produktionshinder löses genom en särskild handling med upplösningsorsak, aktör och tid. Tom text löser inget hinder; kundgodkänd mängdminskning får inte avsluta ett blockerat jobb.
+- Kundplan, bearbetning, onboarding och företagsevent har oföränderligt underlagskontroll även efter konflikt/omläsning. Olika poster kan sparas samtidigt. Privata serverutkast för dessa specialdialoger återstår.
+- En sparad fakturaansvarig bevarar månads-/årsutfall vid senare byte av orderansvarig. Full migrering av kommersiellt ansvar från namn till stabila ID:n återstår.
+- CRM-kopior kan strömmas och återställas med mer än 10 MB filer i isolerade tester. Det är ännu inget bevis på faktisk hostingåterställning eller automatisk driftbackup.
+
+Sebbes huvudmått är försäljning mot månads- och årsmål, marginal och nya prospects. Koden räknar fortfarande manuellt registrerade fakturasammanställningar exklusive moms; orderintag/fakturerat och marginalens kostnader är öppna affärsbeslut. TB är inte huvudmått. Chef/VD har fortfarande full adminbehörighet i dagens implementation; det är inte målbilden för en separat affärschefsroll.

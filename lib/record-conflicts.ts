@@ -1,6 +1,22 @@
 import type {State} from './crm';
 
 const collections = {customer:'customers',deal:'deals',order:'orders',task:'tasks',meeting:'meetings',article:'articles'} as const;
+export const customerWorkflowTypes=new Set(['prospecting','onboarding','plan']);
+export const companyEventBasis=(st:State,eventId:string)=>recordBasis(st.companyEvents.find(e=>e.id===eventId)||null);
+// Include only the records and fields read or replaced by this workflow. A
+// colleague editing a different customer must not invalidate this basis.
+export function customerWorkflowBasis(st:State,type:string,customerId:string):string {
+  const c=st.customers.find(c=>c.id===customerId);
+  if(!c)return recordBasis(null);
+  const identity={id:c.id,owner:c.owner,status:c.status};
+  if(type==='prospecting')return recordBasis({...identity,contact:c.contact,prospecting:c.prospecting});
+  if(type==='plan')return recordBasis({...identity,plan:c.plan,nextReview:c.nextReview,expectedOrder:c.expectedOrder,reviewDays:c.reviewDays});
+  if(type==='onboarding'){
+    const o=st.orders.find(o=>o.dealId===c.onboarding.dealId&&o.customerId===c.id);
+    return recordBasis({...identity,onboarding:c.onboarding,nextReview:c.nextReview,plan:{nextAction:c.plan.nextAction,nextNeed:c.plan.nextNeed,lastReview:c.plan.lastReview},order:o?{id:o.id,stage:o.stage,deliveredDate:o.deliveredDate}:null});
+  }
+  throw Error('Okänt kundarbetsflöde.');
+}
 export function editableRecord(st:State,type:string,id:string):Record<string,unknown>|undefined {
   if(type==='settings')return st.settings;
   const key=collections[type as keyof typeof collections];

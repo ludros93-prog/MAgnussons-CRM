@@ -3,8 +3,9 @@ export const personalOwner=(st:State)=>st.viewer?.owner&&st.settings.owners.incl
 export function swedishMonth(at:string){if(!at)return '';const date=new Date(at);return Number.isNaN(date.getTime())?'':new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Stockholm',year:'numeric',month:'2-digit'}).format(date);}
 export function salesMetrics(st:State,month:string,owner:string){
  const year=month.slice(0,4),matches=(r:{owner:string})=>owner==='all'||!!owner&&r.owner===owner;
- const invoices=st.orders.filter(o=>matches(o)&&o.invoiceValue!==null&&o.invoiceDate.startsWith(month+'-'));
- const yearInvoices=st.orders.filter(o=>matches(o)&&o.invoiceValue!==null&&o.invoiceDate.startsWith(year+'-'));
+ const invoiceMatches=(o:State['orders'][number])=>owner==='all'||!!owner&&(o.invoiceOwner||o.owner)===owner;
+ const invoices=st.orders.filter(o=>invoiceMatches(o)&&o.invoiceValue!==null&&o.invoiceDate.startsWith(month+'-'));
+ const yearInvoices=st.orders.filter(o=>invoiceMatches(o)&&o.invoiceValue!==null&&o.invoiceDate.startsWith(year+'-'));
  const known=invoices.filter(o=>o.actualCost!==null),knownRevenue=known.reduce((n,o)=>n+o.invoiceValue!,0),knownCost=known.reduce((n,o)=>n+o.actualCost!,0);
  const open=st.deals.filter(d=>matches(d)&&isOpen(d)),goals=owner==='all'?undefined:st.settings.sellerGoals[owner]?.[month];
  const yearMonths=Object.entries(st.settings.sellerGoals[owner]||{}).filter(([date,g])=>date.startsWith(year+'-')&&g.revenue!==null);

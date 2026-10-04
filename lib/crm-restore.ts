@@ -1,6 +1,7 @@
 import {z} from 'zod';
 import {collectFileReferences} from './export-references';
-import {productionProgress} from './production-quantities';
+import {productionProgress,hasPhysicalWork,quantity} from './production-quantities';
+import {directRows} from './direct-delivery';
 import {ArticleSchema,NoticeSchema,LeadSchema,CompanyEventSchema} from './operations';
 import {normalizeState,RuleError,type State,CustomerSchema,DealSchema,OrderSchema,TaskSchema,MeetingSchema,SettingsSchema} from './crm';
 export function restoreState(current:State,data:unknown,allowFiles=false):State{
@@ -14,6 +15,13 @@ export function restoreState(current:State,data:unknown,allowFiles=false):State{
   const ids=new Set(p.lines.map(l=>l.id));
   if([...p.movements,...p.quantityAdjustments].some(m=>new Set(m.entries.map(e=>e.lineId)).size!==m.entries.length||m.entries.some(e=>!ids.has(e.lineId))))throw new RuleError('Kopian har en bruten artikelkoppling i antalhistoriken.');
   if(productionProgress(p).some(r=>[r.target,r.usableReceived,r.usablePrinted,r.toReceive,r.toPrint,r.toDispatch,r.remaining].some(n=>!Number.isFinite(n)||n<0)))throw new RuleError('Kopian har oförenliga mottagna, tryckta eller skickade antal.');
+ }
+ for(const order of next.orders){
+  if(!order.directShipments.length)continue;
+  const deal=next.deals.find(d=>d.id===order.dealId)!;const rows=directRows(deal,order.directShipments),ids=new Set(rows.map(r=>r.line.id));
+  if(!rows.length||new Set(order.directShipments.map(s=>s.id)).size!==order.directShipments.length||order.directShipments.some(s=>new Set(s.entries.map(e=>e.lineId)).size!==s.entries.length||s.entries.some(e=>!ids.has(e.lineId)||e.quantity!==quantity(e.quantity))))throw new RuleError('Kopian har dubbla försändelser eller brutna artikelkopplingar i direktleveransen.');
+  if(rows.some(r=>r.remaining<0)||hasPhysicalWork(order.production)||order.productionHistory.some(hasPhysicalWork))throw new RuleError('Kopian har oförenliga interna antal och direktleveransantal.');
+  if(order.directShipments.some(s=>s.method!=='collection'&&(!s.address.street||!s.address.postalCode||!s.address.city)))throw new RuleError('Kopians direktleverans saknar leveransadress.');
  }
  if(!allowFiles&&collectFileReferences(next).length)throw new RuleError('Den här dataexporten hänvisar till uppladdade kundfiler som inte ingår i JSON-filen. Återställningen stoppas för att bevara korrektur och produktionsunderlag. Använd funktionen CRM-kopia med kundfiler för en komplett återställning.');
  return next;

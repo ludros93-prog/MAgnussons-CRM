@@ -11,5 +11,16 @@ export async function POST(req:Request){try{
  if(v.active&&v.role==='seller'&&!v.owner)throw new AccessError('Koppla en aktiv säljare till en kundansvarig för att ordernotiser ska hamna rätt.');
  const db=database();if(v.owner){const spaces=await db.prepare('SELECT settings FROM crm_spaces').all<{settings:string}>();if(!spaces.results.some(s=>JSON.parse(s.settings).owners.includes(v.owner)))throw new AccessError('Lägg till den ansvariga säljaren i inställningarna först.');}
  if(v.owner&&v.active){const other=await db.prepare('SELECT id FROM crm_members WHERE owner=? AND active=1 AND email<>?').bind(v.owner,v.email).first();if(other)throw new AccessError('Den ansvariga säljaren är redan kopplad till ett annat konto.');}
- await db.prepare('INSERT INTO crm_members(id,email,name,role,owner,active) VALUES(?,?,?,?,?,?) ON CONFLICT(email) DO UPDATE SET name=excluded.name,role=excluded.role,owner=excluded.owner,active=excluded.active').bind(crypto.randomUUID(),v.email,v.name,v.role,v.owner,v.active?1:0).run();return response({ok:true});
+ // Check these invariants in the write itself: a concurrent admin may have
+ // assigned the same profile or removed the actor's administrative role.
+ const result=await db.prepare(`INSERT INTO crm_members(id,email,name,role,owner,active)
+ SELECT ?,?,?,?,?,? WHERE
+ EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND role='admin' AND active=1)
+ AND (?='' OR ?=0 OR NOT EXISTS(SELECT 1 FROM crm_members WHERE owner=? AND active=1 AND email<>?))
+ AND (?=1 AND ?='admin' OR NOT EXISTS(SELECT 1 FROM crm_members WHERE email=? AND role='admin' AND active=1)
+ OR EXISTS(SELECT 1 FROM crm_members WHERE email<>? AND role='admin' AND active=1))
+ ON CONFLICT(email) DO UPDATE SET name=excluded.name,role=excluded.role,owner=excluded.owner,active=excluded.active`)
+ .bind(crypto.randomUUID(),v.email,v.name,v.role,v.owner,v.active?1:0,user.id,user.user_id!,v.owner,v.active?1:0,v.owner,v.email,v.active?1:0,v.role,v.email,v.email).run();
+ if(result.meta.changes!==1)throw new AccessError('Teamet har ändrats. Kontrollera kontots roll och säljarprofil innan du försöker igen.',409);
+ return response({ok:true});
  }catch(e){return fail(e)}}
