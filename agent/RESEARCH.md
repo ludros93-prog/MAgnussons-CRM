@@ -34,6 +34,36 @@ Ingen av de granskade källorna verifierar våra särskilda tryck-/lagerfall: ä
 
 Först kontrollera vad vårt CRM redan gör. Bygg sedan det arbetsmoment som ger konkret nytta för Magnussons och verifiera beteendet. Lägg inte till leverantörernas alla moduler. Förnya berörda källor när en integration eller funktion faktiskt ska ändras, och skilj leverantörens egenskap från vårt krav, vår implementation och bekräftad drift.
 
+## Återuppta privat kundarbete, B05a
+
+Officiella källor öppnades och kontrollerades 2026-10-05 när kundplan, bearbetning och onboarding fick privata utkast. [Salesforce – pausade flöden](https://help.salesforce.com/s/articleView?id=platform.flow_pause.htm&language=en_US&type=5) beskriver koppling till en bestämd post och styrd åtkomst till återupptagning. [Salesforce – skärmflöden](https://help.salesforce.com/s/articleView?id=platform.automate_flow_build_screen_flows_configuring_screens.htm&language=en_US&type=5) rekommenderar identifierbara etiketter och tydliga instruktioner om var arbetet återupptas. Vår tillämpning binder utkast till kund, flöde, inloggad användare och arbetsyta, med återupptagning i Min dag och kundflödet.
+
+[Lime – 2025.1](https://platform.docs.lime-crm.com/en/latest/on-premise/releases/2025.1/release-notes/) dokumenterar varningar när användaren lämnar Work Order-protokoll eller Resource Planner med osparade ändringar. Det belägger inte generell privat autosparning. [Saleshub AI – funktioner](https://saleshubai.se/funktioner) beskriver ett sammanhängande kundkort och nästa aktivitet, men inget utkast-/samtidighetskontrakt. Magnussons privata autosparning, revisionskonflikter och atomiska inlämning verifieras i vår egen kod och isolerade prov. Återupptagen text får inte registreras som en ny faktisk kundkontakt.
+
+## Design för Magnussons kundarbete
+
+Ludwig lyfte design som huvudkrav 2026-10-05. [Saleshub AI](https://saleshubai.se/) visar en offentlig pipeline-demo med tydlig hierarki för namn, värde och ansvar. Den är en marknadsföringsdemo, inte en provad inloggad produkt. [Saleshub – funktioner](https://saleshubai.se/funktioner) beskriver sammanhanget mellan kundkort, kontakt och nästa aktivitet. Vår tillämpning är grupperad information, tydlig nästa handling och konsekventa kort med Magnussons befintliga uttryck.
+
+[Lime CRM – Split View](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/split-view/) visar och beskriver kunduppgifter tillsammans med en aktivitetstidslinje. Dokumentationsbilden skiljer innehåll, typ och datum visuellt. [Lime Go – historiknoteringar](https://www.lime-technologies.com/sv/produkter/lime-go/funktioner/historiknoteringar-och-dokumentlagring/) beskriver filtrerbar historik och kopplade dokument. Vårt kundkort behåller nästa steg, kontaktplan och order i kundens sammanhang och gör tidslinjen lättare att skanna. Interna anteckningar benämns separat från faktisk kundkontakt.
+
+Källorna öppnades på nytt den 5 oktober. Lime Go:s illustrativa hjältebilder används inte som belägg för ett faktiskt produktgränssnitt. Layout, mobila tryckytor, tangentbordsfokus och visuella statusar provas i vår egen byggda app. [DESIGN.md](../DESIGN.md) samlar riktningen. Inget personalprov, uppmätt tidsvinst, färdig integration eller världsranking har antagits från leverantörernas marknadsföring.
+
 ## Företagsidentitet i första prospektförbättringen
 
 [SCB – variabelbeskrivning för Företagsregistret](https://www.scb.se/vara-tjanster/bestall-data-och-statistik/foretagsregistret/variabelbeskrivning/) kontrollerades 2026-10-05. För juridiska personer är PeOrgNr prefixet `16` följt av det tioställiga organisationsnumret. Därför kan just dessa format få samma företagsnyckel. Godtyckliga tolvsiffriga nummer, momsnummer och arbetsställets CFAR-ID ska inte klippas till ett organisationsnummer. Utan säkert organisationsnummer krävs samma datakälla och dess företags-ID för säker återimport; namn/ort kan endast motivera att tvetydigt underlag behöver kompletteras.
+
+## Granskad överföring av kundansvar
+
+Följande officiella källor kontrollerades på nytt 2026-10-05 inför B01b1:
+
+- [Salesforce – Mass Transfer Records](https://help.salesforce.com/s/articleView?id=platform.admin_transfer.htm&language=en_US&type=5) skiljer tidigare ägares öppna aktiviteter från andra ägares och avslutade affärer. Överföring av kundansvar behöver därför ett uttryckligt urval; all historik är inte samma sak som öppet arbete.
+- [Salesforce – användaråtkomst](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_org) beskriver inaktivering som stopp för inloggning med bevarad användare och data för fortsatt hantering. För Magnussons ska en avgången persons historiska resultat finnas kvar.
+- [Lime – Users and groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer inloggningsanvändare från coworker och anger oföränderliga Object ID:n för referenser när namn ändras. [Relation pickers](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/relation-pickers/) visar uttryckligt urval av aktiva coworkers i ansvarsfält.
+- [Lime – Notifications](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) skiljer tilldelning från mention/follow och beskriver risken med för många tilldelningsnotiser. CRM-notis betyder inte automatiskt mejl eller mobil push.
+- [Saleshub AI – funktioner](https://saleshubai.se/funktioner) beskriver kundkort, nästa aktivitet och projektansvar. Källan verifierar ingen särskild transfer-, CAS- eller historikpolicy.
+
+Vår avgränsade tillämpning är administratörens granskade kundöverlämning till en stabil målprofil med valda öppna fristående aktiviteter, serverägd spårbarhet och sammanhållen skrivning. Affärer, order, möten och skyddade specialflöden har eget ansvar och flyttas inte genom detta första flöde. Historiska fakturor, kvalificeringar och mål bevaras. Full operativ ID-migrering och en komplett personalöverlämning kräver nästa del; inga leverantörskällor eller kodtester gör dessa delar färdiga.
+
+## Slutprov: svensk kalenderdag för avsändning
+
+Vid lokal körning efter svensk midnatt upptäcktes att `latestDispatch` använde UTC-delen av en tidsstämpel medan dagens gräns använder Europe/Stockholm. [MDN:s Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat), läst 5 oktober UTC, dokumenterar uttrycklig locale och timeZone; detta används för samma svenska kalenderdag. Direkta försändelsers uttryckliga date-only-datum ska behållas. Källan fastställer formatering, inte kundens mottagande eller Magnussons affärsdefinitioner.

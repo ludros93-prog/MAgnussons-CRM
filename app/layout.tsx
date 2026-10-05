@@ -9,14 +9,12 @@ import "./customer-work.css";
 import "./mobile-work.css";
 import "./result-work.css";
 import "./day-work.css";
+import "./customer-overview.css";
 
 export const metadata: Metadata = {
   title: "Magnussons CRM",
   appleWebApp: {capable:true,title:"Magnussons",statusBarStyle:"default"},
   description: "Kundrelationer, affärer och leveransuppföljning i en gemensam arbetsyta.",
-  other: {
-    "codex-preview": "development",
-  },
   icons: {
     icon: "/favicon.svg",
     apple: "/icons/apple-touch-icon.png",

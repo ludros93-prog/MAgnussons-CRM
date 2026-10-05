@@ -37,6 +37,7 @@ GitHub lagrar källkod och granskningshistorik. Kunddata och uppladdade filer li
 ## Produkt- och driftunderlag
 
 - [PRODUCT.md](PRODUCT.md): produkt och arbetsflöden.
+- [DESIGN.md](DESIGN.md): visuellt uttryck, kundkort och designkontroller.
 - [OPERATIONS.md](OPERATIONS.md): drift, åtkomst och återställning.
 - [OUTLOOK.md](OUTLOOK.md): Outlook-konfiguration och gränser.
 - [CLAUDE_REVIEW.md](CLAUDE_REVIEW.md): källhänvisningar och verifieringsunderlag för en oberoende v13-granskning.

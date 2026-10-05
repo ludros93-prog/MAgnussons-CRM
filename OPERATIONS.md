@@ -52,6 +52,14 @@ Beställningar, tryckunderlag, kundanteckningar, uppföljningar och vanliga kund
 
 Utkast arkiveras samtidigt som motsvarande order/tryckarbete skapas. Misslyckad inlämning eller samtidig ändring behåller utkastet. Utkast kan kasseras från Min dag eller katalogen. Högst 100 aktiva utkast per användare/arbetsyta. Privata utkast ingår inte i den gemensamma CRM-exporten.
 
+### Privata kundflöden, B05a
+
+Kundplan, bearbetning och onboarding använder separata utkasttyper `plan`, `prospecting` och `onboarding` med `context=customerId`. Innehållet omfattar ofullständiga formulärfält och det ursprungliga kundunderlaget. De är privata per autentiserad användare och arbetsyta, även gentemot andra administratörer. Sparning av ett utkast ändrar ingen gemensam CRM-version, kundkontakt eller aktivitet. Min dag och kundflödet låter användaren fortsätta arbetet. Företagsevent och andra specialdialoger omfattas inte av denna del.
+
+Inlämning använder exakt sparad utkastversion och kundbasis. Kundändring och arkivering sker i samma CAS-skyddade transaktion; förlorat svar kan återförsökas med samma begäran. Kollegans kundändring och en annan enhets utkastrevision är olika konflikter. Texten bevaras och en aktuell kundversion måste granskas uttryckligen. Krysset för en avstämning idag avmarkeras vid återupptagning; servern kräver dessutom dagens explicit sparade kontaktmarkering. Komplett onboardingchecklista avslutar inte onboarding utan dess uttryckliga slutknapp.
+
+Ingen SQL-migrering eller ny gemensam kundmodell införs. Utkasten lagras som nya typer i befintlig `crm_drafts`; tidigare utkastformat förblir läsbara. Äldre v18 kan inte redigera eller återuppta de nya typerna. Vid återgång ska de privata raderna bevaras och en kompatibel version publiceras för fortsatt arbete; använd inte en äldre klient för att kassera ett okänt utkast. Befintliga skydd för säljar-ID:n och kontaktspärr gäller fortsatt. CRM-kopia omfattar fortfarande inte privata utkast, konton eller Outlook. Separat driftbackup för dessa tabeller behöver provas; denna ändring bevisar ingen hostingåterställning.
+
 Äldre skickade order som saknar leveransbevakning får en deterministisk mottagningsuppgift i läsvyn. Den sparas vid nästa CRM-skrivning. GET skriver inte arbetsytan. Uppgiften kan inte bockas bort som vanlig aktivitet; faktisk leverans avslutar den. Fakturering avslutar bara fakturauppgiften.
 
 Personlig månadsförsäljning räknas från den ansvariges fakturor i månaden, årsförsäljning från samma ansvarigs fakturor i kalenderåret. Egna månadsmål kommer från säljarmålen och egna årsmål kan anges separat. Utan uttryckligt årsmål används endast en summa av tolv kompletta månadsmål; delvis satta månadsmål visas inte som ett helårsmål. Företagets budget används aldrig som den enskildes mål. Noll är ett satt mål, men ger ingen procentberäkning. Marginal räknas på försäljningen för just de fakturor som också har kostnad. Kvalificering grupperas efter svensk kalendermånad.
@@ -171,3 +179,23 @@ Produktinspiration: Saleshub AI:s offentliga beskrivningar av kundkort, samlade 
 - Operativa ansvarsetiketter och kontrollerad överföring återstår som B01b. En tidigare registrerad etikett får inte tas bort och sedan återanvändas som en ny person. Nya ansvar kan få separata profiler; dessa får aldrig automatiskt äldre omappad historik.
 - Backup/restore bevarar profilregistret, mål, attribution och kopplingshistorik. Aktuella kontolänkar rensas i målmiljön och måste väljas uttryckligt igen. Konton, inloggning och Outlook återställs fortfarande separat. Återläsningen ändrar inga CRM-roller eller plattformens delning.
 - Ingen SQL-migrering krävs; befintliga JSON-poster får additiva fält. Efter profilinitialisering får tidigare kod som saknar dessa schemafält inte återpubliceras och skriva data: den kan kasta bort ID:n eller återgå till namnbaserade resultat. En återgång måste bevara den nya modellen och dess läs-/skrivskydd. Samma försiktighet gäller kontaktspärrens fält från föregående leverans.
+
+## Granskat byte av kundansvar, B01b1
+
+**Byt kundansvar** på kundkortet låter en administratör välja en annan aktiv, granskad säljarprofil, ange orsak och välja vilka öppna fristående aktiviteter som ska följa med. Målval och uppgiftsval börjar tomma. Granskningen visar gammalt/nytt kundansvar, valda uppgifter och övrigt ansvar som inte ändras genom denna handling.
+
+Endast öppna uppgifter av typen `manual`, `care` eller `meeting_followup`, utan affärskoppling, på samma kund och med kundens nuvarande ansvariga kan väljas. Andra personers uppgifter, avslutade uppgifter, affärs-/orderuppgifter och specialflöden följer inte med automatiskt. Affärer, order, möten, onboardingansvar, ärendeansvar och årshjulsansvar ändras inte genom överföringen. Dessa behöver hanteras i sina arbetsflöden; ett kundansvarsbyte är ännu inte en komplett personalöverlämning.
+
+Kundansvar, valda uppgifter och historik skrivs atomiskt. Historiken innehåller stabila profil-ID:n, ansvarsetiketterna vid överföringen, uppgifts-ID:n, orsak, tid och autentiserad aktör. Underlaget kontrolleras igen vid databasens CAS-återförsök. Ett ändrat överlämningsunderlag behöver läsas in och granskas på nytt; text och val behålls vid fel. Samma begäran får inga dubbla överföringar. Aktörens adminrätt och en eventuell kopplad mottagares konto kontrolleras även vid databasuppdateringen.
+
+Efter profilinitialisering ändras befintlig kunds ansvar genom detta flöde, inte det vanliga kundformuläret. Vanlig kund-/importpayload kan inte skapa eller ändra överföringshistorik. En historikrefererad uppgift kan inte flyttas till en annan kund och bryta spårbarheten. Nya återköp och nya leveransuppföljningar följer aktuellt kundansvar; redan befintligt affärs-/orderarbete och historiska faktura-/prospectresultat bevaras.
+
+Operativa poster använder fortfarande sina befintliga ansvarsetiketter. Det granskade överföringskommandot väljer profiler via stabila ID:n; full migrering av alla operativa referenser återstår. Inga verkliga konton, kundöverlämningar eller personalbeslut antas genom kodpublicering. CRM-kopia behåller ansvarshistoriken och verifierar kund-, profil- och uppgiftskopplingar, medan aktuella kontolänkar fortsatt återställs separat. Produktionsvyn får inte denna kommersiella historik.
+
+Ingen SQL-migrering tillkommer. Äldre kod, inklusive v18, saknar det nya historikfältet och skrivskydden och får inte återpubliceras som skrivande rollback efter att nya överföringar registrerats. Bevara den additiva datamodellen och verifiera återställningsvägen. Isolerade prov är inte en genomförd live-återställning.
+
+## Kundöversikt och svensk avsändningsdag, D01
+
+D01 ändrar ingen SQL-migration, lagringsmodell, externa ID:n eller bilagekoppling. Produktionsavsändningens befintliga tidsstämpel jämförs med mottagningsdatum som Europe/Stockholm-kalenderdag; direkta försändelser behåller sina uttryckliga datum. Ogiltig icke-tom avsändningstidpunkt ger ett begripligt fel i stället för ett antaget datum. Underlaget skrivs inte om automatiskt. Befintliga backup-/återställningsprov ska köras för slutkandidaten; de är isolerade lokala prov, inte ett återställningsprov i Sites.
+
+Vid problem med den nya presentationen ska en verifierad rättning eller enbart UI-återgång bevara B01b1/B05a-serverregler och befintliga historiker/utkast. Återpublicera inte v18 som skrivande rollback efter nya kundansvarshistoriker. Kod-/live-kvittens och källträd anges i PR för D01; D1/R2-bindningar och delning behålls.
