@@ -1,5 +1,20 @@
 import type {State} from './crm';
 import {leadIdentity,leadContactHistory} from './operations';
+import {legacySellerNames} from './seller-profiles';
+
+// Profile initialization and relinking read historical attribution and account
+// aliases, not customer notes or unrelated budgets. Recheck this context on CAS
+// retries so a newly recorded invoice cannot be silently assigned by old input.
+export function sellerProfilesBasis(st:State):string {
+ return recordBasis({
+  aliases:legacySellerNames(st),owners:st.settings.owners,
+  initialized:st.settings.sellerProfilesInitialized,profiles:st.settings.sellerProfiles,
+  goals:st.settings.sellerGoals,annualGoals:st.settings.sellerAnnualGoals,
+  goalsById:st.settings.sellerGoalsById,annualGoalsById:st.settings.sellerAnnualGoalsById,
+  invoices:st.orders.map(o=>({id:o.id,owner:o.owner,invoiceOwner:o.invoiceOwner,invoiceOwnerId:o.invoiceOwnerId,source:o.invoiceOwnerSource,value:o.invoiceValue,date:o.invoiceDate,ref:o.invoiceRef})).sort((a,b)=>a.id.localeCompare(b.id)),
+  prospects:st.customers.map(c=>({id:c.id,owner:c.owner,at:c.prospecting.qualifiedAt,ownerSnapshot:c.prospecting.qualifiedOwner,ownerId:c.prospecting.qualifiedOwnerId})).sort((a,b)=>a.id.localeCompare(b.id))
+ });
+}
 
 const collections = {customer:'customers',deal:'deals',order:'orders',task:'tasks',meeting:'meetings',article:'articles'} as const;
 export const customerWorkflowTypes=new Set(['prospecting','onboarding','plan']);

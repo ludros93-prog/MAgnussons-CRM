@@ -16,5 +16,5 @@ export async function member(req: Request, write = false, admin = false): Promis
   if ((write && row.role === 'reader') || (admin && row.role !== 'admin')) throw new AccessError(admin ? 'Endast administratörer får ändra detta.' : 'Ditt konto har läsbehörighet.');
   return row;
 }
-export const viewer = (m: Member) => ({id:m.user_id!, email:m.email,name:m.name,role:m.role,owner:m.owner});
+export const viewer = (m: Member) => ({id:m.user_id!,memberId:m.id,email:m.email,name:m.name,role:m.role,owner:m.owner});
 export const sameOrigin = (req: Request) => { const origin = req.headers.get('origin'); if (origin && origin !== new URL(req.url).origin) throw new AccessError('Ogiltigt ursprung.'); };

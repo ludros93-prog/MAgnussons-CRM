@@ -4,10 +4,16 @@ import {productionProgress,hasPhysicalWork,quantity} from './production-quantiti
 import {directRows} from './direct-delivery';
 import {ArticleSchema,NoticeSchema,LeadSchema,CompanyEventSchema} from './operations';
 import {normalizeState,RuleError,type State,CustomerSchema,DealSchema,OrderSchema,TaskSchema,MeetingSchema,SettingsSchema} from './crm';
+import {validateSellerProfileReferences} from './seller-profiles';
 export function restoreState(current:State,data:unknown,allowFiles=false):State{
  if(current.customers.length||current.deals.length||current.tasks.length||current.orders.length||current.events.length||current.meetings.length||current.articles.length||current.leads.length||current.companyEvents.length||current.notices.length)throw new RuleError('Återställning kräver en tom arbetsyta. Befintliga uppgifter skrivs inte över.');
  const p=z.object({format:z.literal('magnussons-crm-1'),state:z.object({articles:z.array(ArticleSchema).default([]),notices:z.array(NoticeSchema).default([]),leads:z.array(LeadSchema).default([]),companyEvents:z.array(CompanyEventSchema).default([]),customers:z.array(CustomerSchema).max(10000),deals:z.array(DealSchema).max(20000),orders:z.array(OrderSchema).max(20000),tasks:z.array(TaskSchema).max(30000),meetings:z.array(MeetingSchema).max(20000),events:z.array(z.object({id:z.string().min(1),customerId:z.string().min(1),dealId:z.string(),text:z.string().max(50000),at:z.string(),kind:z.string(),note:z.object({title:z.string(),meetingDate:z.string(),sourceFiles:z.array(z.string())}).optional(),actor:z.object({id:z.string(),name:z.string()}).optional()})).max(50000),settings:SettingsSchema})}).parse(data);
- const next=normalizeState({...p.state,version:current.version});for(const list of [next.customers,next.deals,next.orders,next.tasks,next.meetings,next.events,next.articles,next.leads,next.notices,next.companyEvents]){if(list.some(x=>!x.id)||new Set(list.map(x=>x.id)).size!==list.length)throw new RuleError('Exporten innehåller tomma eller dubbla id:n.');}
+ const next=normalizeState({...p.state,version:current.version});
+ validateSellerProfileReferences(next);
+ // CRM data preserves commercial identities and audit history, while account
+ // bindings must be chosen again in the destination's separate member store.
+ next.settings.sellerProfiles=next.settings.sellerProfiles.map(profile=>({...profile,memberId:''}));
+ for(const list of [next.customers,next.deals,next.orders,next.tasks,next.meetings,next.events,next.articles,next.leads,next.notices,next.companyEvents]){if(list.some(x=>!x.id)||new Set(list.map(x=>x.id)).size!==list.length)throw new RuleError('Exporten innehåller tomma eller dubbla id:n.');}
  const cs=new Set(next.customers.map(c=>c.id)),ds=new Map(next.deals.map(d=>[d.id,d.customerId]));for(const row of [...next.deals,...next.orders,...next.tasks,...next.meetings,...next.events])if(!cs.has(row.customerId))throw new RuleError('Exporten har en bruten kundkoppling.');
  for(const row of [...next.orders,...next.tasks,...next.events])if(row.dealId&&ds.get(row.dealId)!==row.customerId)throw new RuleError('Exporten har en bruten affärskoppling.');
  if(new Set(next.orders.map(o=>o.dealId)).size!==next.orders.length)throw new RuleError('Exporten har fler än en order per affär.');
