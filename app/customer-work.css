@@ -2,3 +2,6 @@
 @media(max-width:640px){.customer-next-row{flex-wrap:wrap}.customer-next-row>div{min-width:180px}.customer-order-row{flex-wrap:wrap}.customer-workspace .customer-section-title{flex-wrap:wrap}.customer-next-row button{min-height:44px}.customer-timeline-item{padding:.8rem}.customer-contact-plan>div{min-width:130px}}
 
 .form-input-lock{border:0;padding:0;margin:0;min-width:0;display:grid;gap:14px}.form-input-lock:disabled{opacity:.8}
+/* Long conflict actions must fit the customer editor on a phone. */
+.wf-sheet .form-input-lock{grid-template-columns:minmax(0,1fr)}
+.wf-sheet .record-conflict button{max-width:100%;white-space:normal;height:auto;min-height:44px}
