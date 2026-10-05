@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 // Exercise real SQLite, authentication, CAS retries and serialized recovery.
 // The fixture occupies demo only; the existing live integration tests remain intact.
 export async function verifySellerProfiles({core,sqlite,get,post,headers,api,conflicts,dashboards}) {
- const sellers=await import('../work/seller-profiles.mjs'),store=await import('../work/crm-store.mjs'),stream=await import('../work/crm-backup-stream.mjs'),restore=await import('../work/crm-restore.mjs'),direct=await import('../work/direct-delivery.mjs'),members=await import('../work/members-api.mjs');
+ const sellers=await import('../work/seller-profiles.mjs'),responsibility=await import('../work/customer-responsibility.mjs'),store=await import('../work/crm-store.mjs'),stream=await import('../work/crm-backup-stream.mjs'),restore=await import('../work/crm-restore.mjs'),direct=await import('../work/direct-delivery.mjs'),members=await import('../work/members-api.mjs');
  const actor={id:'test-admin',name:'Isolerad administratör',role:'admin',owner:''},month='2026-09',year='2026',at='2026-09-04T10:00:00Z';
  const names={a:'Profiltest ansvar A',b:'Profiltest ansvar B',retired:'Profiltest tidigare säljare',goal:'Profiltest historiskt mål',task:'Profiltest äldre uppgiftsansvar',future:'Profiltest nytillagd ansvarig'};
  const accounts={a:{id:'seller-profile-member-a',user:'seller-profile-user-a',email:'seller-profile-a@example.com',owner:names.a},b:{id:'seller-profile-member-b',user:'seller-profile-user-b',email:'seller-profile-b@example.com',owner:names.b},replacement:{id:'seller-profile-replacement',user:'seller-profile-replacement-user',email:'seller-profile-replacement@example.com',owner:names.a},future:{id:'seller-profile-member-future',user:'seller-profile-user-future',email:'seller-profile-future@example.com',owner:names.future},production:{id:'seller-profile-production',user:'seller-profile-production-user',email:'seller-profile-production@example.com',owner:''},reader:{id:'seller-profile-reader',user:'seller-profile-reader-user',email:'seller-profile-reader@example.com',owner:''}};
@@ -107,7 +107,10 @@ export async function verifySellerProfiles({core,sqlite,get,post,headers,api,con
  await save('settings',{...state.settings,sellerGoalsById:{...state.settings.sellerGoalsById,[idB]:{[month]:{revenue:600,grossProfit:120,qualified:1}}},sellerAnnualGoalsById:{...state.settings.sellerAnnualGoalsById,[idB]:{[year]:6000}}});
  assert.equal(metrics(idA).target,800);assert.equal(metrics(idB).target,600);assert.equal(metrics(idB).yearTarget,6000);
  const forgedCustomer=state.customers.find(c=>c.id==='seller-profile-c-q-a');
- await save('customer',{...forgedCustomer,owner:names.a,prospecting:{...forgedCustomer.prospecting,qualifiedOwner:names.b,qualifiedOwnerId:idB}});
+ await reject('customer',{...forgedCustomer,owner:names.a,prospecting:{...forgedCustomer.prospecting,qualifiedOwner:names.b,qualifiedOwnerId:idB}});
+ await save('customer',{...forgedCustomer,prospecting:{...forgedCustomer.prospecting,qualifiedOwner:names.b,qualifiedOwnerId:idB}});
+ assert.equal(state.customers.find(c=>c.id===forgedCustomer.id).prospecting.qualifiedOwnerId,idA);
+ await save('customer_responsibility_transfer',{customerId:forgedCustomer.id,targetProfileId:idA,selectedTaskIds:[],reviewed:true,reason:'Kontrollerad kundöverlämning utan ändrad säljarhistorik',expectedContext:responsibility.customerResponsibilityBasis(state,forgedCustomer.id)});
  assert.equal(state.customers.find(c=>c.id===forgedCustomer.id).prospecting.qualifiedOwnerId,idA);
  const missing=state.customers.find(c=>c.id==='seller-profile-c-missing');
  await save('prospecting',{customerId:missing.id,prospecting:{...missing.prospecting,stage:'qualified',reason:'Relevant',need:'Jackor',scope:'20 plagg',timing:core.day(),nextAction:'Stäm av underlag',nextDate:core.day(),qualifiedOwner:names.a,qualifiedOwnerId:idA}});
