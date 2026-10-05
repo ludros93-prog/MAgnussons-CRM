@@ -52,6 +52,14 @@ Beställningar, tryckunderlag, kundanteckningar, uppföljningar och vanliga kund
 
 Utkast arkiveras samtidigt som motsvarande order/tryckarbete skapas. Misslyckad inlämning eller samtidig ändring behåller utkastet. Utkast kan kasseras från Min dag eller katalogen. Högst 100 aktiva utkast per användare/arbetsyta. Privata utkast ingår inte i den gemensamma CRM-exporten.
 
+### Privata kundflöden, B05a
+
+Kundplan, bearbetning och onboarding använder separata utkasttyper `plan`, `prospecting` och `onboarding` med `context=customerId`. Innehållet omfattar ofullständiga formulärfält och det ursprungliga kundunderlaget. De är privata per autentiserad användare och arbetsyta, även gentemot andra administratörer. Sparning av ett utkast ändrar ingen gemensam CRM-version, kundkontakt eller aktivitet. Min dag och kundflödet låter användaren fortsätta arbetet. Företagsevent och andra specialdialoger omfattas inte av denna del.
+
+Inlämning använder exakt sparad utkastversion och kundbasis. Kundändring och arkivering sker i samma CAS-skyddade transaktion; förlorat svar kan återförsökas med samma begäran. Kollegans kundändring och en annan enhets utkastrevision är olika konflikter. Texten bevaras och en aktuell kundversion måste granskas uttryckligen. Krysset för en avstämning idag avmarkeras vid återupptagning; servern kräver dessutom dagens explicit sparade kontaktmarkering. Komplett onboardingchecklista avslutar inte onboarding utan dess uttryckliga slutknapp.
+
+Ingen SQL-migrering eller ny gemensam kundmodell införs. Utkasten lagras som nya typer i befintlig `crm_drafts`; tidigare utkastformat förblir läsbara. Äldre v18 kan inte redigera eller återuppta de nya typerna. Vid återgång ska de privata raderna bevaras och en kompatibel version publiceras för fortsatt arbete; använd inte en äldre klient för att kassera ett okänt utkast. Befintliga skydd för säljar-ID:n och kontaktspärr gäller fortsatt. CRM-kopia omfattar fortfarande inte privata utkast, konton eller Outlook. Separat driftbackup för dessa tabeller behöver provas; denna ändring bevisar ingen hostingåterställning.
+
 Äldre skickade order som saknar leveransbevakning får en deterministisk mottagningsuppgift i läsvyn. Den sparas vid nästa CRM-skrivning. GET skriver inte arbetsytan. Uppgiften kan inte bockas bort som vanlig aktivitet; faktisk leverans avslutar den. Fakturering avslutar bara fakturauppgiften.
 
 Personlig månadsförsäljning räknas från den ansvariges fakturor i månaden, årsförsäljning från samma ansvarigs fakturor i kalenderåret. Egna månadsmål kommer från säljarmålen och egna årsmål kan anges separat. Utan uttryckligt årsmål används endast en summa av tolv kompletta månadsmål; delvis satta månadsmål visas inte som ett helårsmål. Företagets budget används aldrig som den enskildes mål. Noll är ett satt mål, men ger ingen procentberäkning. Marginal räknas på försäljningen för just de fakturor som också har kostnad. Kvalificering grupperas efter svensk kalendermånad.
