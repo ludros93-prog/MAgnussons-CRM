@@ -10,6 +10,8 @@ Ordningen följer kärnflöde och pilotberedskap före integrationer, därefter 
 
 B01a i [PR #7](https://github.com/ludros93-prog/MAgnussons-CRM/pull/7) levererar stabil resultatidentitet, explicit medlemskoppling, ID-mål och skyddad historisk attribution. Granskad initiering sker i produkten; ingen live-mappning har antagits genom publiceringen. Nästa B01b ska migrera operativa kund-/affärs-/order-/aktivitetsansvar och kontrollerad överföring, med oförändrade historiska resultat och utan återbruk av tidigare personidentitet. Följ först PR-kvittensen och aktuellt main/live innan leveransen betraktas som publicerad.
 
+B01b1 i [PR #8](https://github.com/ludros93-prog/MAgnussons-CRM/pull/8) bygger granskad överföring av en kund och uttryckligt valda öppna fristående aktiviteter, med serverägd ansvarshistorik och stabilt målprofil-ID. Affärer, order, möten och specialflöden överförs inte i denna del. Nya återköp och leveransuppföljningar följer därefter kundens aktuella ansvar. Detta är en avgränsad kodleverans; följ PR-kvittensen för exakt checks/main/live. B01b2 återstår: full operativ ID-migrering, granskade överföringar i övriga arbetsflöden och komplett personalöverlämning. En inaktiverad person får inte tas bort ur historiken.
+
 ## Prioriterade leveranser
 
 | Ordning | Leverans | Klart när | Belägg och beroenden |

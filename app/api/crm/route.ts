@@ -7,6 +7,7 @@ import {assignmentBasis,productionBasis} from '@/lib/production-quantities';
 import {editableRecord,recordBasis,fieldLabels,customerWorkflowTypes,customerWorkflowBasis,companyEventBasis,leadContactBasis,sellerProfilesBasis} from '@/lib/record-conflicts';
 import {SellerProfilesInitSchema,SellerProfileInputSchema} from '@/lib/seller-profiles';
 import {isCustomerWorkflowDraft,validateCustomerWorkflowDraftConsumption} from '@/lib/customer-workflow-drafts';
+import {CustomerResponsibilityTransferSchema,customerResponsibilityBasis} from '@/lib/customer-responsibility';
 import {collectFileReferences} from '@/lib/export-references';
 import {orderBasis,ensureReceiptTasks,awaitingReceipt} from '@/lib/order-work';
 import {roleActions,ArticleSchema,NoticeSchema,LeadSchema,CompanyEventSchema} from '@/lib/operations';
@@ -20,7 +21,10 @@ const reply=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cach
 async function profileAuthorization(req:Request,current:State,type:string,data:unknown):Promise<NonNullable<MutationMeta['sellerProfileAuthorization']>>{
  const actor=await member(req,true,true);
  const links:{id:string;owner:string}[]=[];
- if(type==='seller_profiles_init'){
+ if(type==='customer_responsibility_transfer'){
+  const input=CustomerResponsibilityTransferSchema.parse(data),target=current.settings.sellerProfiles.find(profile=>profile.id===input.targetProfileId);
+  if(target?.memberId)links.push({id:target.memberId,owner:target.legacyOwnerName});
+ }else if(type==='seller_profiles_init'){
   for(const profile of SellerProfilesInitSchema.parse(data).profiles)if(profile.memberId)links.push({id:profile.memberId,owner:profile.legacyOwnerName});
  }else{
   const input=SellerProfileInputSchema.parse(data),old=current.settings.sellerProfiles.find(profile=>profile.id===input.id);
@@ -38,17 +42,22 @@ export async function POST(req:Request){try{
  if(!req.headers.get('content-type')?.includes('application/json'))return reply({error:'JSON krävs.'},415);
  const body=await req.text();if(body.length>10000000)return reply({error:'För stor begäran.'},413);
  const user=await member(req,true);
- const p=z.object({space:z.enum(['demo','live']),version:z.number().int().nonnegative(),requestId:z.string().uuid(),expectedRecord:z.string().max(3000000).optional(),type:z.enum(['production_claim','production_release','prepare_order','receipt_confirm','receipt_issue','customer','deal','order','task','meeting','note','customer_note','follow_up','settings','seller_profiles_init','seller_profile','prospecting','qualify','onboarding','plan','year_need','complete_need','need_deal','products','repeat_order','import_customers','restore','article','article_import','catalog_order','production_submit','production_accept','production_received','production_printed','production_dispatched','production_issue','production_issue_resolve','direct_dispatch','production_cancel','production_scrap_unprinted','production_scrap_printed','order_shortfall','order_amend','order_amend_accept','order_amend_discard','notice_read','lead_import','lead_convert','lead_contact','company_event']),data:z.unknown()}).parse(JSON.parse(body));
+ const p=z.object({space:z.enum(['demo','live']),version:z.number().int().nonnegative(),requestId:z.string().uuid(),expectedRecord:z.string().max(3000000).optional(),type:z.enum(['customer_responsibility_transfer','production_claim','production_release','prepare_order','receipt_confirm','receipt_issue','customer','deal','order','task','meeting','note','customer_note','follow_up','settings','seller_profiles_init','seller_profile','prospecting','qualify','onboarding','plan','year_need','complete_need','need_deal','products','repeat_order','import_customers','restore','article','article_import','catalog_order','production_submit','production_accept','production_received','production_printed','production_dispatched','production_issue','production_issue_resolve','direct_dispatch','production_cancel','production_scrap_unprinted','production_scrap_printed','order_shortfall','order_amend','order_amend_accept','order_amend_discard','notice_read','lead_import','lead_convert','lead_contact','company_event']),data:z.unknown()}).parse(JSON.parse(body));
  if(roleActions[user.role]&&!roleActions[user.role]!.has(p.type))throw new AccessError('Din roll får inte utföra denna åtgärd.');
- if(['settings','seller_profiles_init','seller_profile','import_customers','restore','article','article_import','lead_import'].includes(p.type)&&user.role!=='admin')throw new AccessError('Denna åtgärd kräver administratör.');
+ if(['customer_responsibility_transfer','settings','seller_profiles_init','seller_profile','import_customers','restore','article','article_import','lead_import'].includes(p.type)&&user.role!=='admin')throw new AccessError('Denna åtgärd kräver administratör.');
  await initialize(p.space);const hash=await requestHash(p.type,p.data);
- const profileMutation=p.type==='seller_profiles_init'||p.type==='seller_profile';
- const safe=profileMutation||p.type==='lead_contact'||p.type==='company_event'||customerWorkflowTypes.has(p.type)||['production_claim','production_release','customer','deal','order','task','meeting','customer_note','follow_up','production_received','production_printed','production_dispatched','production_scrap_unprinted','production_scrap_printed','order_shortfall','direct_dispatch','production_issue','production_issue_resolve','order_amend','order_amend_accept','order_amend_discard','prepare_order','notice_read'].includes(p.type);
+ const profileMutation=p.type==='seller_profiles_init'||p.type==='seller_profile',responsibilityMutation=p.type==='customer_responsibility_transfer';
+ const safe=responsibilityMutation||profileMutation||p.type==='lead_contact'||p.type==='company_event'||customerWorkflowTypes.has(p.type)||['production_claim','production_release','customer','deal','order','task','meeting','customer_note','follow_up','production_received','production_printed','production_dispatched','production_scrap_unprinted','production_scrap_printed','order_shortfall','direct_dispatch','production_issue','production_issue_resolve','order_amend','order_amend_accept','order_amend_discard','prepare_order','notice_read'].includes(p.type);
  for(let attempt=0;attempt<4;attempt++){
  const persisted=await load(p.space),current=projectState(persisted,p.space);
  const previous=await db().prepare('SELECT result_json,user_id,request_hash FROM crm_mutations WHERE space=? AND id=?').bind(p.space,p.requestId).first<{result_json:string|null;user_id:string;request_hash:string}>();
  if(previous){if(previous.user_id&&previous.user_id!==user.user_id||previous.request_hash&&previous.request_hash!==hash)return reply({error:'Begäran har redan använts för en annan ändring.'},409);return reply({...visibleState(projectState(await load(p.space),p.space),viewer(user)),mutationResult:JSON.parse(previous.result_json||'{}')});}
  let sellerProfileAuthorization:MutationMeta['sellerProfileAuthorization'];
+ if(responsibilityMutation){
+  const input=CustomerResponsibilityTransferSchema.parse(p.data);
+  if(input.expectedContext!==customerResponsibilityBasis(current,input.customerId))return reply({error:'Kundansvaret eller överlämningsunderlaget har ändrats. Dina val och din orsak finns kvar. Läs in och granska aktuellt underlag innan du sparar.',state:visibleState(current,viewer(user)),code:'customer_responsibility_conflict'},409);
+  sellerProfileAuthorization=await profileAuthorization(req,current,p.type,p.data);
+ }
  if(profileMutation){
   const input=z.object({expectedContext:z.string().min(1).max(3000000)}).parse(p.data);
   if(input.expectedContext!==sellerProfilesBasis(current))return reply({error:'Säljarprofilerna eller resultatunderlaget har ändrats. Dina val finns kvar. Läs in och granska aktuellt underlag innan du sparar.',state:visibleState(current,viewer(user)),code:'seller_profile_conflict'},409);
@@ -69,7 +78,7 @@ export async function POST(req:Request){try{
  if(p.type==='prepare_order'){const input=z.object({orderId:z.string(),expectedOrder:z.string(),approval:z.object({proofRequired:z.boolean(),proofApproved:z.boolean(),proofFileId:z.string(),proofVersion:z.string()}),production:z.object({sketchFileId:z.string(),sketchVersion:z.string()})}).parse(p.data),o=current.orders.find(o=>o.id===input.orderId);if(!o)throw new RuleError('Ordern finns inte.');if(orderBasis(o)!==input.expectedOrder)return reply({error:'Ordern har ändrats medan du arbetade. Ditt utkast finns kvar. Läs in aktuella orderuppgifter och granska igen.',state:visibleState(current,viewer(user))},409);const file=await db().prepare('SELECT data FROM crm_files WHERE id=? AND space=? AND customer_id=?').bind(input.production.sketchFileId,p.space,o.customerId).first<{data:string}>();if(!file||JSON.parse(file.data).version!==input.production.sketchVersion)throw new RuleError('Välj en uppladdad skiss med rätt version.');if(input.approval.proofRequired&&(JSON.parse(file.data).kind!=='proof'||input.approval.proofFileId!==input.production.sketchFileId||input.approval.proofVersion!==input.production.sketchVersion))throw new RuleError('Korrekturgodkännandet ska gälla samma korrekturfil som tryckskissen.');}
  if(p.type==='order'){const o=p.data as Record<string,unknown>;if(o.proofRequired&&o.proofApproved&&o.proofFileId){const file=await db().prepare('SELECT data FROM crm_files WHERE id=? AND space=? AND customer_id=?').bind(o.proofFileId,p.space,o.customerId).first<{data:string}>();if(!file)throw new RuleError('Korrekturfilen finns inte på kunden.');const f=JSON.parse(file.data);if(f.kind!=='proof')throw new RuleError('Välj en korrekturfil.');if(f.version!==o.proofVersion)throw new RuleError('Korrekturversionen stämmer inte med vald fil.');}}
  if(p.type==='production_submit'){const input=z.object({orderId:z.string(),production:z.object({sketchFileId:z.string(),sketchVersion:z.string()})}).parse(p.data),order=current.orders.find(o=>o.id===input.orderId);if(!order)throw new RuleError('Ordern finns inte.');const file=await db().prepare('SELECT data FROM crm_files WHERE id=? AND space=? AND customer_id=?').bind(input.production.sketchFileId,p.space,order.customerId).first<{data:string}>();if(!file||JSON.parse(file.data).version!==input.production.sketchVersion)throw new RuleError('Välj rätt skissversion från orderns kundkort.');}
- const next=p.type==='restore'?restoreState(current,p.data):applyAction(current,{type:p.type,data:p.data},{id:user.user_id!,name:user.name,role:user.role,owner:user.owner});
+ const next=p.type==='restore'?restoreState(current,p.data):applyAction(current,{type:p.type,data:p.data},{id:user.user_id!,memberId:user.id,name:user.name,role:user.role,owner:user.owner});
  if(record&&['customer','deal','order','task','meeting'].includes(p.type)){
   const after=editableRecord(next,p.type,String(record.id));
   const fields=['owner','email','phone','stage','status','due','nextDate','nextAction','value','cost','deliveryDate','deliveredDate','proofRequired','proofApproved','proofFileId','proofVersion','approvedBy','approvedDate','supplierConfirmed','invoiceRef','invoiceDate','invoiceValue','actualCost'];
