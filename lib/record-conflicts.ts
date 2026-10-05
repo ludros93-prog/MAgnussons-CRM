@@ -1,8 +1,13 @@
 import type {State} from './crm';
+import {leadIdentity,leadContactHistory} from './operations';
 
 const collections = {customer:'customers',deal:'deals',order:'orders',task:'tasks',meeting:'meetings',article:'articles'} as const;
 export const customerWorkflowTypes=new Set(['prospecting','onboarding','plan']);
 export const companyEventBasis=(st:State,eventId:string)=>recordBasis(st.companyEvents.find(e=>e.id===eventId)||null);
+export function leadContactBasis(st:State,leadId:string){
+ const lead=st.leads.find(l=>l.id===leadId);
+ return recordBasis(lead?{id:lead.id,name:lead.name,identity:leadIdentity(lead),customerId:lead.customerId,history:leadContactHistory(st.leads,lead)}:null);
+}
 // Include only the records and fields read or replaced by this workflow. A
 // colleague editing a different customer must not invalidate this basis.
 export function customerWorkflowBasis(st:State,type:string,customerId:string):string {

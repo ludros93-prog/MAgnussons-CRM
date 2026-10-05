@@ -1,0 +1,90 @@
+# Arbetskö för Magnussons CRM
+
+Upprättad 2026-10-05 från Ludwigs brief och lästa repo-underlag. Detta är en prioriterad arbetskö, inte en markering av godkänd drift. Uppdatera den när faktisk kod, kontroller, publicering eller användarobservationer ändrar läget. Dagens källrevision och konkreta provresultat hör hemma i aktuell status/verifiering.
+
+## Välj arbete
+
+Varje återkommande körning börjar med färsk `main`, öppna PR:er och dagens Site-status enligt [RUNBOOK.md](RUNBOOK.md). Välj en avgränsad leverans med tydligt beteende och relevant acceptansprov. Bekräftat fel som riskerar dataförlust, fel åtkomst eller fel orderantal går före normal kö. En teknisk förbättring ska kunna kopplas till en person och ett arbetsmoment. Undvik tomma omformateringar och återkommande ändringar av bara datum/status.
+
+Ordningen följer kärnflöde och pilotberedskap före integrationer, därefter utökningar. Ett blockerat ärende stoppar inte oberoende förbättringar. Historisk v13-funktionalitet ska testas innan något behandlas som en kvarvarande bugg.
+
+## Prioriterade leveranser
+
+| Ordning | Leverans | Klart när | Belägg och beroenden |
+| --- | --- | --- | --- |
+| B00 | Kontrollera dagens källa och återstående fel | Lokal HEAD, fjärr-main, Site-revision, öppna PR:er och befintlig testtäckning är kända. Verifierade fel har reproduktion. | Läs status/kod/drift; kör nödvändig baslinje. T01–T26 är krav, inte redan godkända tester. Ingen nyare Lovable-kodbas får antas finnas. |
+| B01 | Stabilt kommersiellt ansvar | Kunder, affärer, aktiviteter, mål och resultat använder stabila säljar-ID:n med säker migrering. Namnbyte ändrar visning och bevarar historiskt utfall. | T04, T19. Dela vid behov i ID-modell/migrering, skrivvägar, UI och kontrollerad överföring. Bevara okända äldre ansvar med synligt mappningsbehov. Gissa inte vilken person ett äldre namn avser. |
+| B02 | Separera affärschef och teknisk admin | Sebbe/Pelle kan arbeta personligt och följa teamet med uttryckliga serverrättigheter; chefsrollen innebär inte automatisk administratörs- eller privat mejlåkomst. | T01–T04. Inventera dagens rättigheter och bevara verifierade kontokopplingar; konton och adresser kräver faktiskt underlag. Inaktivering och överföring lämnar historiskt resultat hos rätt person. |
+| B03 | Verifiera order–tryck–lager–leverans | De representativa fallen nedan kan genomföras på samma order med bevarat underlag, mängder, godkännanden, ansvar och fakturavillkor. | T10–T18. Utgå från automatiska tester och komplettera relevanta browser/runtimeprov. Slutför ändringsärende efter start och andra verkliga luckor utan att bryta nu fungerande spärrar. |
+| B04 | Återställning och automatisk backup | Databas, kundfiler, versioner och länkar kan återställas till en isolerad tom miljö; schemat, förvaring, misslyckanden och återkörning är verifierade. | T20. Den gamla totala 10 MB-gränsen är redan borttagen för strömformatet enligt senaste underlag; kontrollera aktuell kod. Lokal D1/R2 är testad historiskt, verklig hostingåterställning och konto-/utkastrutin återstår. |
+| B05 | Slutför privata serverutkast och uppföljning | Kundplan, onboarding, bearbetning, företagsevent och kvarvarande specialdialoger återkommer efter omladdning, bevarar text vid fel och hanterar två enheter. Alla Följ upp-ingångar är konsekventa. | T05–T06, T08–T09. Ingen omflyttning av verkliga kunddatum bara för att nästa samtal planeras. |
+| B06 | Förbered pilot med begränsat kund-/artikelunderlag | Importen har förhandsgranskning, identifierare, rätt ansvar, dubblettskydd, batch/felrapport och säker omkörning. En ny aktiv kund får första planerade avstämning utan påhittad historisk kontakt. | T07, T24. Använd fiktiva uppgifter tills faktiskt behörigt Fortnox-underlag finns. Föreslagna 10–20 kunder och tre orderfall är pilotförslag, inga genomförda importer. |
+| B07 | Observera centrala arbetsmoment och förbättra friktion | Sebbe, en säljare och en produktionsperson kan utföra pilotmomenten; tid, misstag, hjälpbehov och observerade förbättringar dokumenteras. | T26, T01–T06, T10–T18. Browserkontroll kan byggas självständigt. Verkligt användartest rapporteras först efter faktisk observation, inte efter en simulerad roll. |
+| B08 | Tillförlitligt resultat och Fortnox-adapter | Budgetmått och marginalmodell är tydliga inställningar med dokumenterad källa; manuellt/importerat/live hålls isär. Externa kund-/faktura-ID:n, syncstatus och idempotens bevaras. | T19, T22. Bygg adapter och isolerade timeout-/återförsöksprov utan nyckel. Riktig anslutning kräver faktiskt konto, rätt scopes och test. Okänd kostnad förblir okänd. |
+| B09 | Outlook stegvis | Personlig läsning/delning fungerar med riktiga tillgängliga konton; frånkoppling och ombokning fungerar. Utökad sändning, kalenderändring och free/busy har egna begripliga arbetsflöden och kontroller. | T21, T18. Hela inkorgar och privata mötesrubriker blir inte gemensamma. Saknad tenant/token visas som saknad anslutning; regler ger inga externa utskick på egen hand. |
+| B10 | Pålitlig prospektering före avancerad research | Kontaktspärr överlever import/källbyte; företag och arbetsställe skiljs åt; ett prospekt får en ansvarig/nästa aktivitet. Källfel, inga träffar och saknad kontakt är skilda statusar. | T24–T25. SCB-adapter följer färsk API-nyckel-/pagineringdokumentation. Verifierade kontaktuppgifter och daterat belägg krävs. Lokal relevans/hypotes ersätter inga bevisade inköpsbehov. |
+| B11 | Bakgrundsregler och återköpsförslag | Regler har händelse, villkor, ansvarig, nästa handling, konfigurerbart intervall, dubblettskydd och synligt senaste körresultat även när appen är stängd. | T05, T18, T24. Två/fem/sju dagar och sex månader är historiska förslag, inga bekräftade verksamhetsregler. CRM-notis, mejl och push har separata statusar. |
+| B12 | Förbättra offert och artikelval | Offertnummer/version/giltighet och kunddokument är tydliga. Färg-/storleksmatris skapar rätt rader. Återköp kopierar historiskt underlag som förslag med ny pris-/datum-/godkännandekontroll. | T10, T15, T19. Interna kostnader följer aldrig med kunddokumentet. Produktadapter, prisets källa/ålder och historiska ögonblicksbilder gör webbshopsbyte säkert. |
+| B13 | Utöka produktion efter verkliga order | Flera moment, leverantörer, packning, mottagande per försändelse, direktleveransavvikelser och reklamationer stöds där deras behov kan beläggas. | T11–T17. Ett materialbesked gäller rätt rad/leverantör. Reklamation länkas till ursprungsordern. Dela i små leveranser och bevara redan registrerade mängder. |
+| B14 | Granskningsbar AI och transkription | Original, sammanfattning, evidens, osäkerhet och valda aktiviteter kan granskas och sparas tillsammans utan dubbelregistrering. | T23, T18. Bygg adapter och tvetydiga textprov först. Riktigt API/ljudtest kräver faktiskt modellkonto; personligt ChatGPT-abonnemang räcker inte som integrationsbevis. Inga automatiska ändringar av pris, antal eller acceptans. |
+| B15 | Volym, drift och kommersiell överlämning | Paginering/arkivering och index stödjer faktiskt relevanta volymer; dataexport, support, kostnader, ägande och återställningsväg är begripliga för nästa förvaltare. | Fiktivt volymprov kan använda föreslagna 10 000 kunder/50 000 aktiviteter/åtta användare, tydligt märkta som testmål. Avtal, betalare och köpbeslut blir inte verkliga genom att agenten skriver dokument. |
+
+## Nästa praktiska val
+
+Etableringskörning 2026-10-05: B00 har genomförts för aktuell källa och grundkontroller. En avgränsad del av B10 är byggd och automatiskt verifierad: kontaktspärr med bevarad historik vid återimport, källbyte med säker företagsidentitet, explicit återöppning, roller/CAS och aktiv spärr efter återställning. B10:s riktiga datakälla, arbetsställe/CFAR och övriga kontaktvägar återstår. Kontrollera main/live i LOG innan denna del betraktas som publicerad.
+
+Efter B00: välj den minsta kompletta delen av B01 som dagens kod saknar. Finns en annan agent eller öppen PR redan på B01, granska/fortsätt den eller ta en oberoende del av B04/B05. Ett verifierat produktions-, åtkomst- eller återställningsfel går först. Publicera ingen alternativ kodbas och starta ingen ny CRM-app för att en stor leverans behöver flera körningar.
+
+## Acceptansprov T01–T26
+
+Matrisen är samma verksamhetskrav som i [HANDOFF-2026-10-04.md](../HANDOFF-2026-10-04.md), kompletterad med vilken sorts belägg som behövs. Markera aldrig hela ett prov godkänt enbart för att en mockad del är grön. Ange senaste revision, datum, testmiljö och kvarvarande del i verifieringsrapporten.
+
+| ID | Prov och förväntat beteende | Belägg att samla |
+| --- | --- | --- |
+| T01 | Säljare loggar in: egna uppgifter och eget resultat först; konto utan säljarprofil visar förklaringen. | Server-/browserprov och riktig kontoinloggning. |
+| T02 | Sebbe/Pelle växlar mellan egen och teamets vy med rätt scope och bevarad personlig kontext. | Roll/KPI-prov, browserprov och verkliga konton. |
+| T03 | Tryck & leverans kan göra jobbet via UI/API och läsa kopplade filer utan ekonomiska eller privata uppgifter. | Negativa roll-/fil-ID-prov och hostingens autentiseringsgräns. |
+| T04 | Namnbyte, ansvarsbyte och inaktivering bevarar stabilt ansvar/historik och flyttar endast avsett öppet arbete. | ID-migrerings-, konto-, samtidighets- och historiska resultatprov. |
+| T05 | Följ upp fungerar enhetligt för offert, nykund, CSM, onboarding och årshjul; anteckning/resultat/nästa steg sparas tillsammans. | Atomiska skrivningar, konflikt-/återförsöksprov och UI-ingångar. |
+| T06 | Stängd/omladdad mobil återfår privata serverutkast; sparfel och osparad text syns ärligt. | Två enheter, omladdning, kontobyte, nätfel och verklig telefon. |
+| T07 | Upprepad Fortnox-import skapar inga dubbletter; första avstämning läggs utan påhittad kontakt. | Identifierare med inledande nollor, batch/felrapport och faktiskt pilotunderlag. |
+| T08 | Två användare ändrar olika kunder och båda lyckas utan falsk global konflikt. | Riktig databasmigrering/API och injicerad CAS-konkurrens. |
+| T09 | Två ändrar samma underlag; verklig konflikt bevarar text och kollegans ändring även efter omläsning/återförsök. | Föråldrad basis, andra sparförsök, UI och serverutkast. |
+| T10 | 40 accepterade jackor blir 45 före produktion: samma affär/order, revision, nytt relevant godkännande och korrekt värde. | Revision/korrektur/mängdprov och sammanhängande UI-flöde. |
+| T11 | Ändring efter start bevarar redan mottaget, tryckt och skickat och går genom kontrollerat ändringsärende. | Tidigare/föråldrade arbetsversioner, fysiska mängder, tillägg och återförsök. |
+| T12 | 50 beställda, 48 skickade, två kundgodkänt minskade: korrekt avslut, datum, historia och fakturaunderlag. | Mängdrörelser, dokumenterat godkännande, öppet hinder och ny arbetsversion. |
+| T13 | 50 mottagna, tre kasserade, 47 skickade: tre återstår tills ersatta eller faktiskt godkänt minskade. | Kassation före/efter tryck och ersättningsvaror; inget falskt fulllevererat. |
+| T14 | Delleverans har egen försändelse och restantal; avsänt och kundmottaget är skilda. | Radantal, adress, avsändningsdatum, återstående kö och mottagningsbevakning. |
+| T15 | Nytt korrektur/flera moment använder rätt version och upphäver rätt godkännande vid relevant ändring. | Filhash/version, godkännare, momentkoppling, flera leverantörer och filåtkomst. |
+| T16 | Två tar samma jobb; en ansvarig vinner. Hinder har ägare och löses med spårbar orsak/aktör/tid. | Claim/ABA/idempotens, rollprov och spärr vid tom hindertext. |
+| T17 | Direktleverans kräver verkligt leveransunderlag före vanlig slutfaktura även utan internt tryck. | Delleverans, gamla order, radantal, belägg och separat mottagande. |
+| T18 | Dubbelklick, timeout och återförsök ger inga dubbla order, mängdrörelser, återställningar eller externa dokument. | Samma request-ID/innehåll, förlorat commitsvar, verklig extern avstämning när ansluten. |
+| T19 | Resultat använder angiven definition, period och historisk ansvarig samt tydlig kostnadstäckning; krediter och okänd kostnad hanteras. | Egen/team, mål som saknas/noll, svensk kalendermånad, år, kostnadsmodell och fakturavarianter. |
+| T20 | Backup med över 10 MB verkliga testfiler återställs isolerat med korrektur, arbetsfoton, filversioner och alla länkar intakta. | Hashar, slutmarkör, trunkering, filfel, runtime/hosting; konton/anslutningar/utkast har separat rutin. |
+| T21 | Riktigt Outlook-testkonto följer rätt åtkomst och privat/delat, ombokning/radering och återkallad anslutning. | Graph-ersättning som bas, därefter faktisk konto-/tenantanslutning och extern kontroll. |
+| T22 | Behörigt Fortnox-testunderlag matchar kunder och fakturareferenser; timeout skapar ingen dubbel faktura. | Adapter-/kontraktprov, verkligt konto/scopes, dokument-ID och återförsök. |
+| T23 | Tvetydig anteckning ger granskningsbara AI-förslag och synlig osäkerhet utan obeställda utskick eller affärsändringar. | Originalcitat, relativa datum mot mötesdatum/Europe/Stockholm, felstatus och vald inlämning. |
+| T24 | Prospektimport, spärr och samtidig tilldelning bevarar dubblettskydd/kontaktspärr och ger en ansvarig. | Återimport/källbyte, organisationsnummer/CFAR och första aktivitet. |
+| T25 | Saknad leadkontakt och källfel visas korrekt utan uppfunna personer, mejl eller telefoner. | Källa/datum/belägg, fel kontra inga träffar och faktisk dataadapter. |
+| T26 | En ovan användare gör centrala moment utan handledning; tid, misstag, hjälpbehov och senare användning dokumenteras. | Observerat användartest med Sebbe, säljare och produktion; browserprov hålls separat. |
+
+Genomgående orderprov: offert → accept → 40→45 → nytt godkännande → produktion → 43 skickade → två dokumenterat kundgodkända minskningar → avslutat åtagande → korrekt fakturaunderlag. Kör dessutom 50/48/2, kassation, delleverans och två samtidiga användare separat så att en lyckad kedja inte döljer andra fel.
+
+## Hantera öppna uppgifter utan rutinfrågor
+
+| Saknat underlag | Självständigt arbete som kan göras nu | Status tills konkret underlag finns |
+| --- | --- | --- |
+| Orderintag/fakturerat mot budget | Definiera båda separat, gör rapportgrund till inställning och visa faktisk vald grund. Bevara dagens fakturerade grund tills en dokumenterad ändring finns. | Verksamhetsdefinition öppen; inget påstått Sebbe-beslut. |
+| Marginalkostnader | Visa kända kostnadsslag, kostnadstäckning och konfigurerbar beräkningsmodell med tydlig källa. | Ofullständiga kostnader ger okänd marginal. |
+| Exakta konton/rättigheter | Bygg stabil identitet, tydliga rollinställningar, mappning och negativa åtkomstprov. Läs befintliga behöriga kontodata där tillgängliga. | Inga gissade inloggningar/inbjudningar eller utökad insyn utifrån en personalsida. |
+| Fortnox/Microsoft-åtkomst | Förbered adapters, konfigurering, syncstatus, idempotens och kontraktprov med fiktiva svar. | Ej ansluten tills verklig behörig anslutning fungerar. |
+| Webbshopsplattform | Isolera produktkälla, externa ID:n, pris/ålder, kundpris och historiska ögonblicksbilder. | Import/länkar märks som sådana; inget livepris/-saldo utan källa. |
+| Ordervolym och avancerade fall | Samla tillgängliga observationer, bygg syntetiska scenarier och utöka i små leveranser med bevarade mängder. | Testmål skiljs från verkliga ordervolymer. |
+| Vem godkänner minskning/undantag | Gör aktör och delegerad affärsrätt till spårbar policy/inställning, bevara befintlig verifierad regel. | Inga påhittade kundacceptanser eller chefsundantag. |
+| Segment, kontaktintervall och återköpsregler | Konfigurerbara intervall/segment, källbelagda hypoteser och mätbara utfall; märk standarder som förslag. | Inga påhittade köpsannolikheter eller Magnussons-policyer. |
+| Drift, betalare och avtal | Dokumentera faktiskt tillgängliga tjänster, kostnadsgränser, exporter, återställning och överlämning. | Saknat avtal/ägarskap står öppet; skrivna förslag blir inga ingångna avtal. |
+| Eventuell nyare Lovable-version | Sök tillgängliga repos och jämför kod, revision, data och drift när en version faktiskt går att läsa. | Behåll verifierat befintligt repo/Site tills jämförelse ger konkret annat underlag. |
+
+## Mät om arbetet hjälper
+
+Följ när data faktiskt finns: fullföljda nästa steg, tappade uppföljningar, accepterad order → komplett produktionsunderlag, avvikelser/dubbelregistreringar, tillförlitliga fakturaunderlag, användning vecka tre/fyra och tid/hjälpbehov per central uppgift. För prospektering: verifierade användbara kontakter, kvalificerade dialoger per säljtimme, möten, offerter och vunna affärer. Importer, klick och massutskick ska inte ensamma räknas som framgång.

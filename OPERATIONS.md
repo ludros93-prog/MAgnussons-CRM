@@ -1,5 +1,17 @@
 # Magnussons CRM – order, tryck och lager
 
+## Kontaktspärr i Företagsökning, 5 oktober 2026
+
+Säljare och administratör kan välja **Spärra prospektering** eller **Återöppna kontakt**, med en obligatorisk orsak. Beslutet sparar autentiserad aktör, tid och revision; äldre beslut finns kvar. Spärrade poster kan visas genom filtret Kontaktstatus, men kan inte föras till nykundsbearbetning genom `lead_convert`. Kontaktlänkar i den spärrade posten visas som text. Spärren styr Företagsökning; befintliga kundkort och deras aktiviteter behöver separat kontaktpolicy när fler utskicksvägar byggs.
+
+Återimport bevarar beslut och kundkoppling, även när datakällan ändras för samma organisationsnummer. Tioställigt organisationsnummer, med/utan bindestreck, och SCB:s juridiska persons nummer med prefix 16 får samma nyckel. Detta är formatmatchning, ingen kontroll mot ett externt företagsregister. Utan organisationsnummer krävs exakt samma datakälla och källans företags-ID för säker matchning. Namn/ort gör inga företag identiska; tvetydig import som kan motsvara en spärrad post stoppas med krav på kompletterad identitet.
+
+Import kan inte skapa eller skriva över spärrhistorik, flytta befintligt kundansvar eller injicera en återöppning. Gamla dubblettrader med samma företagsidentitet delar effektivt senaste beslut. Samtidig ändring av samma underlag kräver medveten omläsning och behåller användarens orsak och avsikt. Oberoende ändringar och samma request-ID kan återförsökas enligt befintlig CAS/idempotens.
+
+Ingen SQL-migrering behövs: LeadSchema läser gamla poster med tom historik och lagrar nya fält i befintlig JSON. Strömmad CRM-kopia inkluderar historiken. **Återpublicering av äldre kod efter att nya kontaktbeslut skrivits är inte en säker rollback**: äldre LeadSchema kan strippa fälten vid senare skrivning. Bevara nya fält och använd en verifierad återställningsväg vid en sådan ändring.
+
+Det löpande utvecklingsmandatet och körningen finns i [agent/MISSION.md](agent/MISSION.md) och [agent/RUNBOOK.md](agent/RUNBOOK.md). Tekniska resultat finns i [agent/LOG.md](agent/LOG.md) och [VALIDATION.md](VALIDATION.md).
+
 ## Aktuell komplettering 4 oktober 2026
 
 Se [STATUS-2026-10-04.md](STATUS-2026-10-04.md) för aktuell kravmatris. Historiska v12/v13-prov längre ned är inte riktiga hosting-/kontoprov.

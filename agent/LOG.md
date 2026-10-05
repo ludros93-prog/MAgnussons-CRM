@@ -1,0 +1,18 @@
+# Byggagentens verifieringslogg
+
+Loggen innehåller källrevisioner, kontroller och tekniska resultat. Kunduppgifter, bilagor, adresser, kontoutdrag, tokens och inspelningar hör inte hemma i detta publika repo.
+
+## 2026-10-05 – etablering
+
+- Uppdrag: Ludwig begärde en självständig CRM-specialist som fortsätter bygga och förbättra Magnussons, utan återkommande godkännandefrågor.
+- GitHub: `ludros93-prog/MAgnussons-CRM`, bas `37437fb`, branch `feat/crm-builder-agent`. Repot innehåller senare säkerhets- och arbetsyteförbättringar än v13.
+- Sites: befintlig projektidentitet `appgprj_6aa71b309d90819181a32a9af6e6baf2`, observerad v16 med källa `5fed2c64dad162a8a29f58d7042c57440d0a3977`. Begränsad delning. Fullständig aktuell publiceringskvittens kontrolleras före ny publicering.
+- Källor: användarens fullständiga sammanställning, AGENTS/README/PRODUCT/OPERATIONS/OUTLOOK, STATUS/HANDOFF/SOURCE/VALIDATION och officiella leverantörskällor i RESEARCH. Refererad Codex-tråd är inte läst: verktyget `read_thread` är inte tillgängligt.
+- Första grundkontroll: `node tests/outlook.mjs` passerar innan ändringen, inklusive CRM, order-/åtkomst-/arbetsflödessäkerhet, privata utkast och strömmad återställning över 10 MB. Isolerad SQLite och ersättningar för R2/Graph; ingen riktig integrationsanslutning.
+- Första byggarbete: kontaktspärr som bevaras vid prospektåterimport, med explicit återöppning och serverkontroller. Slutlig kandidat, kontroller, merge, publicering och schema kompletteras efter faktisk verifiering.
+- Schema: automationen **Magnussons CRM-byggagent** skapades och bekräftades aktiverad 2026-10-05, `RRULE:FREQ=HOURLY`. Uppdraget läser färsk main och agentpaketet och fortsätter avgränsad utveckling, verifiering, självständig merge och verifierad publicering. Inga tidigare scheman ändrades. Framtida körresultat är ännu inte verifierade; etableringen ovan är den första manuellt startade byggkörningen.
+- Slutkontroll: hela CRM/Outlook-sviten inklusive kontaktspärren, TypeScript, produktionsbygge och lokalt workerd/D1/R2-prov passerar. Återställningsprovet omfattar 13,5 MB binära filer. Se VALIDATION för miljö och begränsningar; ingen riktig integrationsanslutning eller nytt browser-/personalprov.
+- Källkontroll före sparning: fjärr-main är fortfarande basrevisionen. Sites-källan och bas-main har samma träd; v16:s publish är bekräftad lyckad. Slutlig PR/main och nästa publiceringsrevision kompletteras efter verktygskvittens.
+- PR: [#6](https://github.com/ludros93-prog/MAgnussons-CRM/pull/6), kodkandidat `ed0ac8d9f97da0a1d048f3b81584330c9532679e`. Alla lokala kontroller ovan gäller dess kodträd. Efterföljande ändring gäller enbart detta protokoll och RUNBOOK.
+- Extern kontroll 19:39 UTC: GitHub Actions-jobb `111943919915` i körning `37363700313` är köat utan startade steg. [GitHub Status](https://www.githubstatus.com/) rapporterar **Incident with Actions**, investigating, Actions degraded performance sedan 19:11 UTC. Ingen regression har rapporterats. RUNBOOK anger lokal fullständig verifiering som tillåten reservväg för detta fall, med vanlig merge och oförändrade branchregler. Verklig merge/publicering redovisas i PR-kvittensen; nästa körning följer upp det fördröjda GitHub-resultatet.
+- Nästa B01-underlag: read-only granskning bekräftar namnbaserade ansvar och historiska `invoiceOwner`/`qualifiedOwner`. Börja med säljarprofil-UUID skilt från namn, mejl och inloggning, explicit kontokoppling och granskad äldre mappning. Profil och historiskt resultat ska bevaras vid inaktivt konto; överföring av öppet arbete får inte flytta faktura-/prospecthistorik.
