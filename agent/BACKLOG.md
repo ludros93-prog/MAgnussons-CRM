@@ -8,6 +8,8 @@ Varje återkommande körning börjar med färsk `main`, öppna PR:er och dagens 
 
 Ordningen följer kärnflöde och pilotberedskap före integrationer, därefter utökningar. Ett blockerat ärende stoppar inte oberoende förbättringar. Historisk v13-funktionalitet ska testas innan något behandlas som en kvarvarande bugg.
 
+B01a i [PR #7](https://github.com/ludros93-prog/MAgnussons-CRM/pull/7) levererar stabil resultatidentitet, explicit medlemskoppling, ID-mål och skyddad historisk attribution. Granskad initiering sker i produkten; ingen live-mappning har antagits genom publiceringen. Nästa B01b ska migrera operativa kund-/affärs-/order-/aktivitetsansvar och kontrollerad överföring, med oförändrade historiska resultat och utan återbruk av tidigare personidentitet. Följ först PR-kvittensen och aktuellt main/live innan leveransen betraktas som publicerad.
+
 ## Prioriterade leveranser
 
 | Ordning | Leverans | Klart när | Belägg och beroenden |

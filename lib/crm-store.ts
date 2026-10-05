@@ -2,7 +2,7 @@ import {database} from './crm-db';
 import {normalizeState,emptyState,seedState,type State} from './crm';
 import {ensureReceiptTasks} from './order-work';
 export type MutationResult={customerId?:string;dealId?:string;orderId?:string;taskId?:string;eventId?:string};
-export type MutationMeta={result:MutationResult;userId:string;hash:string;restoreEmpty?:boolean};
+export type MutationMeta={result:MutationResult;userId:string;hash:string;restoreEmpty?:boolean;sellerProfileAuthorization?:{actorMemberId:string;actorUserId:string;links:{id:string;owner:string}[]}};
 export type StoredFile={id:string;customerId:string;objectKey:string;metadata:Record<string,unknown>};
 export const names=['customers','deals','orders','tasks','meetings','events','articles','notices','leads','companyEvents'] as const;
 export const tables={customers:'crm_customers',deals:'crm_deals',orders:'crm_orders',tasks:'crm_tasks',meetings:'crm_meetings',events:'crm_events',articles:'crm_articles',notices:'crm_notices',leads:'crm_leads',companyEvents:'crm_company_events'};
@@ -15,7 +15,9 @@ export async function load(space:string):Promise<State>{
 export async function commit(space:string,prev:State,next:State,requestId:string,draft?:{id:string;revision:number;userId:string},mutation:MutationMeta={result:{},userId:"",hash:""},files:StoredFile[]=[]){
  const token=crypto.randomUUID(),gate='EXISTS(SELECT 1 FROM crm_spaces WHERE id=? AND write_token=?)';
  const restoreGate=mutation.restoreEmpty?' AND NOT EXISTS(SELECT 1 FROM crm_files WHERE space=?) AND NOT EXISTS(SELECT 1 FROM crm_drafts WHERE space=? AND archived=0)':'';
- const draftGate=draft?' AND EXISTS(SELECT 1 FROM crm_drafts WHERE space=? AND user_id=? AND id=? AND revision=? AND archived=0)':'';const q=[db().prepare('UPDATE crm_spaces SET version=version+1,write_token=?,settings=? WHERE id=? AND version=?'+draftGate+restoreGate).bind(token,JSON.stringify(next.settings),space,prev.version,...(draft?[space,draft.userId,draft.id,draft.revision]:[]),...(mutation.restoreEmpty?[space,space]:[]))];
+ const authorization=mutation.sellerProfileAuthorization;
+ const profileGate=authorization?" AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND role='admin' AND active=1)"+authorization.links.map(()=>" AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND owner=? AND role IN ('admin','seller') AND active=1)").join(''):'';
+ const draftGate=draft?' AND EXISTS(SELECT 1 FROM crm_drafts WHERE space=? AND user_id=? AND id=? AND revision=? AND archived=0)':'';const q=[db().prepare('UPDATE crm_spaces SET version=version+1,write_token=?,settings=? WHERE id=? AND version=?'+draftGate+restoreGate+profileGate).bind(token,JSON.stringify(next.settings),space,prev.version,...(draft?[space,draft.userId,draft.id,draft.revision]:[]),...(mutation.restoreEmpty?[space,space]:[]),...(authorization?[authorization.actorMemberId,authorization.actorUserId,...authorization.links.flatMap(link=>[link.id,link.owner])]:[]))];
  for(const n of names)for(const item of next[n]){
   if(prev[n].some(old=>old.id===item.id&&JSON.stringify(old)===JSON.stringify(item)))continue;
   const row=item as unknown as {id:string;customerId:string;dealId:string};const cols=['space','id',...(['customers','articles','notices','leads','companyEvents'].includes(n)?[]:['customer_id']),...(n==='orders'?['deal_id']:[]),'data'];const vals=[space,row.id,...(['customers','articles','notices','leads','companyEvents'].includes(n)?[]:[row.customerId]),...(n==='orders'?[row.dealId]:[]),JSON.stringify(item)];

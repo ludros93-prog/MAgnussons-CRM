@@ -9,7 +9,7 @@ class Prepared {constructor(sql,values=[]){this.sql=sql;this.values=values}bind(
 globalThis.__crmEnv={CRM_BOOTSTRAP_ADMINS:JSON.stringify([{email:'ludwig.rosenberg@kraftringen.se',name:'Ludwig Rosenberg',owner:''},{email:'sebastian.hansson@magnussonsreklam.se',name:'Sebastian Hansson',owner:'Sebastian Hansson'}]),DB:{prepare:sql=>new Prepared(sql),batch:async statements=>{sqlite.exec('BEGIN');try{const r=statements.map(s=>s.exec());sqlite.exec('COMMIT');return r}catch(e){sqlite.exec('ROLLBACK');throw e}}}};
 const transpile=(source,target)=>writeFileSync(target,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);
 // Compile server-domain modules with their real dependencies, including v12 storage/recovery.
-const modules={'crm-files':'crm-files','direct-delivery':'direct-delivery','crm':'core','crm-auth':'auth','crm-db':'db','follow-up':'follow-up','record-conflicts':'record-conflicts','production-quantities':'production-quantities','order-work':'order-work','order-revisions':'order-revisions','drafts':'drafts','operations':'operations','crm-operations':'crm-operations','crm-visibility':'crm-visibility','business':'business','crm-store':'crm-store','crm-restore':'crm-restore','crm-backup':'crm-backup','crm-backup-stream':'crm-backup-stream','export-references':'export-references','automation-signals':'automation-signals'};
+const modules={'crm-files':'crm-files','crm-errors':'crm-errors','direct-delivery':'direct-delivery','crm':'core','crm-auth':'auth','crm-db':'db','follow-up':'follow-up','record-conflicts':'record-conflicts','seller-profiles':'seller-profiles','production-quantities':'production-quantities','order-work':'order-work','order-revisions':'order-revisions','drafts':'drafts','operations':'operations','crm-operations':'crm-operations','crm-visibility':'crm-visibility','business':'business','crm-store':'crm-store','crm-restore':'crm-restore','crm-backup':'crm-backup','crm-backup-stream':'crm-backup-stream','export-references':'export-references','automation-signals':'automation-signals'};
 function compileModule(file,target){let source=readFileSync(file,'utf8').replace("import { env } from 'cloudflare:workers';","const env=globalThis.__crmEnv;");for(const [from,to] of Object.entries(modules)){source=source.replaceAll("'./"+from+"'","'./"+to+".mjs'").replaceAll("'@/lib/"+from+"'","'./"+to+".mjs'");}transpile(source,target);}
 for(const [from,to] of Object.entries(modules))compileModule('lib/'+from+'.ts','work/'+to+'.mjs');
 compileModule('app/api/crm/route.ts','work/api.mjs');
@@ -243,7 +243,7 @@ changed=await post(work,'repeat_order',{dealId:guidedDeal.id},'live');assert.equ
 console.log('PASS: read-only receipt projection, dispatch stays visible after invoicing, receipt cannot be ticked away, delayed shipment gets a next check, valid actual receipt closes tracking and schedules one customer follow-up, repeat order copies accepted lines without old approval.');
 
 // Personal dashboards must never inherit team totals or another salesperson's goals.
-transpile(readFileSync('lib/sales-dashboard.ts','utf8').replace("'./crm'","'./core.mjs'"),'work/sales-dashboard.mjs');
+compileModule('lib/sales-dashboard.ts','work/sales-dashboard.mjs');
 const dashboards=await import('../work/sales-dashboard.mjs');
 const metricState=core.emptyState();metricState.viewer={id:'metric-sebbe',name:'Sebbe',email:'sebbe@example.com',role:'admin',owner:'Sebastian Hansson'};
 const own='Sebastian Hansson',otherOwner='Pelle Peolin',metricMonth='2026-09';metricState.settings.budgets[metricMonth]=10000;metricState.settings.annualBudgets['2026']=200000;metricState.settings.sellerGoals[own]={[metricMonth]:{revenue:200,grossProfit:80,qualified:3}};metricState.settings.sellerAnnualGoals[own]={'2026':1000};
@@ -369,3 +369,4 @@ await (await import('./backup-stream.mjs')).verifyBackupStream({core,sqlite,obje
 await (await import('./workflow-safety.mjs')).verifyWorkflowSafety({core,sqlite,get,post,headers,api,conflicts});
 await (await import('./access-safety.mjs')).verifyAccessSafety({core,sqlite,objects,headers,get,post,roleGet});
 await (await import('./prospect-suppression.mjs')).verifyProspectSuppression({core,ops,sqlite,get,post,rolePost,roleGet,headers,api,conflicts});
+await (await import('./seller-profiles.mjs')).verifySellerProfiles({core,sqlite,get,post,headers,api,conflicts,dashboards});
