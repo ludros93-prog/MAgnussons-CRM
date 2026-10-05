@@ -7,6 +7,7 @@ import {receivesNotice,ArticleSchema,ProductionSchema,MovementEntrySchema,LeadSc
 import {leadContactBasis} from './record-conflicts';
 import {orderBasis,ensureReceiptTasks,awaitingReceipt} from './order-work';
 import {AddressSchema,validDate,LineSchema,calculateQuote} from './business';
+import {swedishCalendarDay} from './swedish-calendar';
 const text=z.string().trim().max(4000),id=text.min(1);const must=(v:unknown,m:string)=>{if(!v)throw new RuleError(m)};
 export function applyOperations(st:State,action:Action,actor:Actor):State{
  const now=new Date().toISOString(),today=day(),uid=()=>crypto.randomUUID();
@@ -68,7 +69,8 @@ export function applyOperations(st:State,action:Action,actor:Actor):State{
   must(!v.issue,'Lös det registrerade produktionshindret före kundgodkänd antalminskning.');
   must(['submitted','printed'].includes(v.status)&&o.invoiceValue===null,'Avvikelsen ska registreras på en aktiv, ännu inte fakturerad order.');
   must(p.expectedProduction===productionBasis(v),'Antalen har ändrats. Läs in aktuellt underlag.');
-  must(p.customerApprovedOn<=today&&p.customerApprovedOn>=v.submittedAt.slice(0,10),'Ange kundens godkännandedatum för denna order.');
+  const submittedOn=swedishCalendarDay(v.submittedAt,'Orderns inlämningstidpunkt är ogiltig. Kontrollera orderunderlaget innan kundens godkännande registreras.');
+  must(p.customerApprovedOn<=today&&p.customerApprovedOn>=submittedOn,'Ange kundens godkännandedatum för denna order.');
   must(v.quantityAdjustments.length<100,'Ordern har nått gränsen för antal ändringar.');
   const rows=productionProgress(v),seen=new Set<string>();
   for(const e of p.entries){const r=rows.find(r=>r.line.id===e.lineId);must(r&&!seen.has(e.lineId),'Välj varje befintlig artikelrad högst en gång.');seen.add(e.lineId);must(e.quantity===quantity(e.quantity),'Antal får ha högst sex decimaler.');must(e.quantity<=r!.toReceive&&e.quantity<=r!.remaining,'Minskningen får bara avse varor som saknas. Hanterade varor måste först redovisas korrekt.');}

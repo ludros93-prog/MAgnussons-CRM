@@ -10,7 +10,7 @@ import {isCustomerWorkflowDraft,validateCustomerWorkflowDraftConsumption} from '
 import {CustomerResponsibilityTransferSchema,customerResponsibilityBasis} from '@/lib/customer-responsibility';
 import {collectFileReferences} from '@/lib/export-references';
 import {orderBasis,ensureReceiptTasks,awaitingReceipt} from '@/lib/order-work';
-import {roleActions,ArticleSchema,NoticeSchema,LeadSchema,CompanyEventSchema} from '@/lib/operations';
+import {roleActions,ArticleSchema,NoticeSchema,LeadSchema,CompanyEventSchema,type Role} from '@/lib/operations';
 import {visibleState} from '@/lib/crm-visibility';
 import { database } from '@/lib/crm-db';
 import { member,viewer,AccessError } from '@/lib/crm-auth';
@@ -18,6 +18,10 @@ import { z } from 'zod';
 import { normalizeState, applyAction, emptyState, seedState, day, RuleError, type State,CustomerSchema,DealSchema,OrderSchema,TaskSchema,MeetingSchema,SettingsSchema } from '@/lib/crm';
 const db=database;
 const reply=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
+function authorizeAction(role:Role,type:string){
+ if(roleActions[role]&&!roleActions[role]!.has(type))throw new AccessError('Din roll får inte utföra denna åtgärd.');
+ if(['customer_responsibility_transfer','settings','seller_profiles_init','seller_profile','import_customers','restore','article','article_import','lead_import'].includes(type)&&role!=='admin')throw new AccessError('Denna åtgärd kräver administratör.');
+}
 async function profileAuthorization(req:Request,current:State,type:string,data:unknown):Promise<NonNullable<MutationMeta['sellerProfileAuthorization']>>{
  const actor=await member(req,true,true);
  const links:{id:string;owner:string}[]=[];
@@ -41,14 +45,14 @@ export async function POST(req:Request){try{
  const origin=req.headers.get('origin');if(origin&&origin!==new URL(req.url).origin)return reply({error:'Ogiltigt ursprung.'},403);
  if(!req.headers.get('content-type')?.includes('application/json'))return reply({error:'JSON krävs.'},415);
  const body=await req.text();if(body.length>10000000)return reply({error:'För stor begäran.'},413);
- const user=await member(req,true);
+ let user=await member(req,true);
  const p=z.object({space:z.enum(['demo','live']),version:z.number().int().nonnegative(),requestId:z.string().uuid(),expectedRecord:z.string().max(3000000).optional(),type:z.enum(['customer_responsibility_transfer','production_claim','production_release','prepare_order','receipt_confirm','receipt_issue','customer','deal','order','task','meeting','note','customer_note','follow_up','settings','seller_profiles_init','seller_profile','prospecting','qualify','onboarding','plan','year_need','complete_need','need_deal','products','repeat_order','import_customers','restore','article','article_import','catalog_order','production_submit','production_accept','production_received','production_printed','production_dispatched','production_issue','production_issue_resolve','direct_dispatch','production_cancel','production_scrap_unprinted','production_scrap_printed','order_shortfall','order_amend','order_amend_accept','order_amend_discard','notice_read','lead_import','lead_convert','lead_contact','company_event']),data:z.unknown()}).parse(JSON.parse(body));
- if(roleActions[user.role]&&!roleActions[user.role]!.has(p.type))throw new AccessError('Din roll får inte utföra denna åtgärd.');
- if(['customer_responsibility_transfer','settings','seller_profiles_init','seller_profile','import_customers','restore','article','article_import','lead_import'].includes(p.type)&&user.role!=='admin')throw new AccessError('Denna åtgärd kräver administratör.');
+ authorizeAction(user.role,p.type);
  await initialize(p.space);const hash=await requestHash(p.type,p.data);
  const profileMutation=p.type==='seller_profiles_init'||p.type==='seller_profile',responsibilityMutation=p.type==='customer_responsibility_transfer';
  const safe=responsibilityMutation||profileMutation||p.type==='lead_contact'||p.type==='company_event'||customerWorkflowTypes.has(p.type)||['production_claim','production_release','customer','deal','order','task','meeting','customer_note','follow_up','production_received','production_printed','production_dispatched','production_scrap_unprinted','production_scrap_printed','order_shortfall','direct_dispatch','production_issue','production_issue_resolve','order_amend','order_amend_accept','order_amend_discard','prepare_order','notice_read'].includes(p.type);
  for(let attempt=0;attempt<4;attempt++){
+ user=await member(req,true);authorizeAction(user.role,p.type);
  const persisted=await load(p.space),current=projectState(persisted,p.space);
  const previous=await db().prepare('SELECT result_json,user_id,request_hash FROM crm_mutations WHERE space=? AND id=?').bind(p.space,p.requestId).first<{result_json:string|null;user_id:string;request_hash:string}>();
  if(previous){if(previous.user_id&&previous.user_id!==user.user_id||previous.request_hash&&previous.request_hash!==hash)return reply({error:'Begäran har redan använts för en annan ändring.'},409);return reply({...visibleState(projectState(await load(p.space),p.space),viewer(user)),mutationResult:JSON.parse(previous.result_json||'{}')});}
@@ -87,7 +91,7 @@ export async function POST(req:Request){try{
  }
  const before=new Set(current.events.map(e=>e.id));if(p.type!=='restore'){for(const e of next.events)if(!before.has(e.id))e.actor={id:user.user_id!,name:user.name};}else for(const c of next.customers)next.events.push({id:crypto.randomUUID(),customerId:c.id,dealId:'',text:'Kundens CRM-data återställd från export',kind:'restore',at:new Date().toISOString(),actor:{id:user.user_id!,name:user.name}});
 const result=mutationResult(current,next,p.type,p.data);
- if(!await commit(p.space,persisted,next,p.requestId,draft,{result,userId:user.user_id!,hash,sellerProfileAuthorization})){if(safe)continue;return reply({error:'Underlaget har ändrats. Dina uppgifter finns kvar.',state:visibleState(projectState(await load(p.space),p.space),viewer(user))},409);}
+ if(!await commit(p.space,persisted,next,p.requestId,draft,{result,userId:user.user_id!,hash,actorAuthorization:{memberId:user.id,userId:user.user_id!,role:user.role,owner:user.owner},sellerProfileAuthorization})){user=await member(req,true);authorizeAction(user.role,p.type);if(safe)continue;return reply({error:'Underlaget har ändrats. Dina uppgifter finns kvar.',state:visibleState(projectState(await load(p.space),p.space),viewer(user))},409);}
  return reply({...visibleState(projectState(await load(p.space),p.space),viewer(user)),mutationResult:result});
  }
  return reply({error:'Flera kollegor sparar samtidigt. Dina uppgifter finns kvar; försök igen.',state:visibleState(projectState(await load(p.space),p.space),viewer(user))},409);

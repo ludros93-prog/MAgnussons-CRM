@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {AddressSchema,validDate} from './business';
 import {recordBasis} from './record-conflicts';
 import {productionProgress,quantity} from './production-quantities';
-import {RuleError} from './crm-errors';
+import {swedishCalendarDay} from './swedish-calendar';
 import type {State,Order,Deal} from './crm';
 
 const text=z.string().trim().max(4000),required=text.min(1);
@@ -22,11 +22,4 @@ export function deliveryVerified(st:State,o:Order){
  const rows=directRows(d,o.directShipments);return rows.length>0&&rows.every(r=>r.remaining===0);
 }
 export function legacyUnverified(o:Order){return o.production.status!=='dispatched'&&!o.directShipments.length&&['shipping','delivered','followed'].includes(o.stage);}
-const dispatchDayFormat=new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Stockholm',year:'numeric',month:'2-digit',day:'2-digit'});
-function productionDispatchDay(at:string){
- if(!at)return '';
- const timestamp=new Date(at);
- if(Number.isNaN(timestamp.getTime()))throw new RuleError('Avsändningstidpunkten är ogiltig. Kontrollera leveransunderlaget innan kundens mottagande registreras.');
- return dispatchDayFormat.format(timestamp);
-}
-export function latestDispatch(o:Order){return [productionDispatchDay(o.production.dispatchedAt),...o.directShipments.map(s=>s.dispatchedOn)].sort().at(-1)||'';}
+export function latestDispatch(o:Order){return [swedishCalendarDay(o.production.dispatchedAt,'Avsändningstidpunkten är ogiltig. Kontrollera leveransunderlaget innan kundens mottagande registreras.'),...o.directShipments.map(s=>s.dispatchedOn)].sort().at(-1)||'';}

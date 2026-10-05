@@ -199,3 +199,15 @@ Ingen SQL-migrering tillkommer. Äldre kod, inklusive v18, saknar det nya histor
 D01 ändrar ingen SQL-migration, lagringsmodell, externa ID:n eller bilagekoppling. Produktionsavsändningens befintliga tidsstämpel jämförs med mottagningsdatum som Europe/Stockholm-kalenderdag; direkta försändelser behåller sina uttryckliga datum. Ogiltig icke-tom avsändningstidpunkt ger ett begripligt fel i stället för ett antaget datum. Underlaget skrivs inte om automatiskt. Befintliga backup-/återställningsprov ska köras för slutkandidaten; de är isolerade lokala prov, inte ett återställningsprov i Sites.
 
 Vid problem med den nya presentationen ska en verifierad rättning eller enbart UI-återgång bevara B01b1/B05a-serverregler och befintliga historiker/utkast. Återpublicera inte v18 som skrivande rollback efter nya kundansvarshistoriker. Kod-/live-kvittens och källträd anges i PR för D01; D1/R2-bindningar och delning behålls.
+
+## Mobilheader, aktörskontroll och svenska godkännandedagar
+
+Nästa avgränsade kandidat låter mobilheadern växa när kontrollerna radbryts, så att bannern inte täcker arbetsyteväljarens tryckyta. Befintliga arbetsytebyten, privata utkast, revisionskontroller och rollgränser behålls. Diagnostisk layoutkontroll är inte slut-QA; slutligt bygge, kontroller och publiceringsläge anges i VALIDATION och aktuell status.
+
+Huvudendpointens `POST /api/crm`, inklusive `type=restore`, läser om aktörens medlemskap och rätt till handlingen inför varje CAS-försök. Databasens atomiska skrivvillkor kräver fortfarande aktivt medlemskap med samma medlems-ID, användar-ID, roll och ansvar som servern nyss läst. Om dessa ändras före commit kan begäran inte skriva CRM-data, arkivera sitt utkast eller lagra mutationskvittensen med gammal behörighet. Omförsök kontrollerar aktuell roll igen. Detta kompletterar befintliga målprofillänkar, postunderlag och idempotens.
+
+Den nya commitkontrollen gäller huvudendpointen. Separata fil-, privata draft- och backup-/återställningsendpoints har inte genomgått samma revokationsgranskning i denna del; deras befintliga åtkomstkontroller ska inte tolkas som ny verifiering av alla sådana racefall.
+
+Kundgodkänd antalminskning och accept av orderändring använder en gemensam Europe/Stockholm-kalenderdag för den lagrade inlämnings-/förslagstidpunkten. När tidsstämpeln finns ska kundens uttryckliga godkännandedatum vara tidigast den dagen och inte i framtiden; saknad äldre tidsstämpel förblir okänd. Avsändningsdag använder samma helper; direktleveransens uttryckliga datum behålls. Ogiltig icke-tom tidsstämpel ger ett begripligt fel före skrivning. Inget kundgodkännande eller gammalt underlag skapas eller flyttas automatiskt.
+
+Inga SQL-migreringar, nya tabeller/kolumner, lagrade modellfält eller beroenden tillkommer. Datumhelpern och aktörsvillkoren använder befintligt underlag; hostingbindningar och delning ändras inte. En UI-återgång ska behålla dessa serverkontroller och svenska datumgränser tillsammans med B01/B05-historik och utkast. Återpublicera inte v18 som skrivande rollback. Detta dokument är inte en kvittens på ny merge, deploy, kontoanslutning eller live-återställning.

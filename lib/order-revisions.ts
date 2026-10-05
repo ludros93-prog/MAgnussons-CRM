@@ -2,6 +2,7 @@ import {z} from 'zod';
 import {LineSchema,QuoteSnapshotSchema,validDate,calculateQuote} from './business';
 import {recordBasis} from './record-conflicts';
 import {hasPhysicalWork} from './production-quantities';
+import {swedishCalendarDay} from './swedish-calendar';
 import {RuleError,DealSchema,TaskSchema,validateDeal,day,type State,type Order,type Actor,type Action} from './crm';
 
 const text=z.string().trim().max(4000),required=text.min(1);
@@ -32,7 +33,8 @@ export function applyOrderRevision(st:State,action:Action,actor:Actor):State{
  }else if(action.type==='order_amend_accept'){
   const p=z.object({amendmentId:required,customerApprovedBy:required,customerApprovedOn:validDate.refine(Boolean)}).parse(action.data),pending=order.pendingAmendment;
   need(pending&&pending.id===p.amendmentId,'Ändringsförslaget har bytts ut. Öppna aktuell version.');
-  need(p.customerApprovedOn<=today&&p.customerApprovedOn>=pending!.createdAt.slice(0,10),'Godkännandet ska gälla det nya förslaget och får inte ligga i framtiden.');
+  const proposedOn=swedishCalendarDay(pending!.createdAt,'Ändringsförslagets tidpunkt är ogiltig. Kontrollera förslaget innan kundens godkännande registreras.');
+  need(p.customerApprovedOn<=today&&p.customerApprovedOn>=proposedOn,'Godkännandet ska gälla det nya förslaget och får inte ligga i framtiden.');
   if(!order.revisions.length)order.revisions.push({id:crypto.randomUUID(),snapshot:{version:order.commercialVersion,at:d.wonAt||d.createdAt,reference:d.quoteRef,lines:structuredClone(d.lines),value:d.value,cost:d.cost,deliveryDate:d.deliveryDate,proofDeadline:d.proofDeadline,orderDeadline:d.orderDeadline},reason:'Ursprunglig accepterad order',customerApprovedBy:'',customerApprovedOn:d.wonAt,recordedAt:now,recordedBy:'',historical:true});
   const snapshot=structuredClone(pending!.snapshot);
   order.revisions.push({id:crypto.randomUUID(),snapshot,reason:pending!.reason,customerApprovedBy:p.customerApprovedBy,customerApprovedOn:p.customerApprovedOn,recordedAt:now,recordedBy:actor.name,historical:false});
