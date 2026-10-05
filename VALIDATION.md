@@ -1,3 +1,17 @@
+# Verifiering av byggagent och kontaktspärr 2026-10-05
+
+Bas: GitHub-main `37437fbd793a94a6a209a92cc814728a2c464faf`, med samma källträd som publicerad Sites v16 `5fed2c64dad162a8a29f58d7042c57440d0a3977`. Ändringen ligger på `feat/crm-builder-agent`; PR-head identifierar den slutliga kandidaten.
+
+- `node tests/outlook.mjs`: godkänd för slutliga runtimefiler. Nya `tests/prospect-suppression.mjs` körs från CRM-harness och täcker spärrad konvertering, återimport/källbyte, 10-/12-siffrig företagsmatchning, bevarat kundansvar, ignorerad injicerad historik, null/saknad identitet, tvetydig återimport, äldre dubbletter, spårbar återöppning, roller, oföränderligt underlag, idempotens och riktiga CAS-konflikter. Aktiv spärr bevaras efter strömmad export/återställning och stoppar fortfarande konvertering efter ny import. Listvyns beslutsindex jämförs mot detaljhistoriken.
+- Befintliga CRM/v12/v13-, order-, utkast-, åtkomst- och Outlook-prov passerar. Under verifieringen rättades en oavsiktlig ändring av lagrat orgnummerformat; gamla testförväntningar ändrades inte. De nya testfixturerna isolerades från grundsvitens kunder och återställningen jämför fullständigt innehåll per ID utan att anta databasordning.
+- `node node_modules/typescript/bin/tsc --noEmit --incremental false`: godkänd efter sista UI-ändringen.
+- `pnpm build`: godkänd. Befintlig varning om stora klientpaket kvarstår. Lokalt Node 24.19.0 och pnpm 11.19.0; CI använder repoets 11.25.0.
+- `node tests/runtime-smoke.mjs`: godkänd med byggd Worker, lokal workerd och diskbaserad isolerad D1/R2. 13 500 000 byte filer exporteras/återställs i ett paket på 18 010 644 byte, med verifierade hashar, korrektur-/arbetsfotolänkar, idempotent återförsök och oförändrad källa. Anonyma CRM-anrop avvisas och startsidan renderas.
+- `git diff --check` och relativa agentdokumentlänkar: godkända. Oberoende kod-/källgranskning gav inga kvarvarande blockerande fynd i slutdiffen.
+- Automationen **Magnussons CRM-byggagent** bekräftades skapad och aktiverad för en körning per timme. Detta bevisar schemat; framtida utförda körningar är ännu inte verifierade.
+
+Inget nytt browser-, telefon- eller personalprov har genomförts här. Riktiga Fortnox-/Microsoft-/AI-konton, faktisk hostingåterställning och den refererade Codex-tråden är inte verifierade. Spärren gäller Företagsökning och dess serverkonvertering, inte en ny generell utskickspolicy. Ingen SQL-migrering, ny anslutning, kontoinbjudan eller utökad delning införs. Main/live-kvittens kompletteras i [agent/LOG.md](agent/LOG.md).
+
 # Verifiering 2026-10-04
 
 Utgångspunkt: `main` på `1f3e7bf1235a60e53e7dd0710191cc1376709d2b`.

@@ -368,3 +368,4 @@ await (await import('./order-safety.mjs')).verifyOrderSafety({core,quantities,ge
 await (await import('./backup-stream.mjs')).verifyBackupStream({core,sqlite,objects,headers,get,post,roleHeaders});
 await (await import('./workflow-safety.mjs')).verifyWorkflowSafety({core,sqlite,get,post,headers,api,conflicts});
 await (await import('./access-safety.mjs')).verifyAccessSafety({core,sqlite,objects,headers,get,post,roleGet});
+await (await import('./prospect-suppression.mjs')).verifyProspectSuppression({core,ops,sqlite,get,post,rolePost,roleGet,headers,api,conflicts});

@@ -4,6 +4,10 @@
 
 CRM för ett litet säljteam med gemensamt tryck- och lagerflöde. Användarna är ovana vid CRM. Behåll tydliga svenska ord, konkreta nästa handlingar och skillnaden mellan den egna arbetsdagen och teamets uppföljning.
 
+## Löpande bygguppdrag
+
+Ludwigs uppdrag den 5 oktober 2026 är självständig vidareutveckling utan rutinmässiga godkännandefrågor. Läs [agent/MISSION.md](agent/MISSION.md), [agent/BACKLOG.md](agent/BACKLOG.md) och [agent/RUNBOOK.md](agent/RUNBOOK.md) för aktuellt mandat, prioritering och körning. Detta senare mandat gäller före äldre generella tillståndsfrågor i överlämningen. Saknade verksamhetsbeslut eller kontoanslutningar blir inte fastställda genom mandatet; bygg användbara, tydligt märkta alternativ och fortsätt oberoende arbete.
+
 ## Arbetsflöde
 
 - Läs README.md och relevanta delar av PRODUCT.md, OPERATIONS.md och OUTLOOK.md.
