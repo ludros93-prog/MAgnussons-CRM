@@ -68,6 +68,8 @@ Stagea avsedda filer uttryckligt i delad arbetsyta. Commit och push till arbetsb
 
 När nödvändiga checks är gröna, diffen är begriplig och inget faktiskt hinder återstår: slå samman inom Ludwigs mandat utan en ny godkännandefråga. Bevara plattformens branchregler; skapa inte en teknisk kringväg om merge är blockerad. Hämta sedan färsk `origin/main` och verifiera vilken revision/träd som faktiskt hamnade där. En PR eller lyckad push är inte en merge.
 
+Vid en bekräftad extern Actions-störning kan ett köat, ännu inte startat jobb ersättas av hela CI-sekvensen i lokal miljö på samma slutliga kod. Dokumentera incidentkällan, Node-/paketversioner, exakta resultat och att GitHub-jobbet fortfarande är köat. Kontrollera att senare ändringar endast gäller dokumentation; annars verifieras den nya kodrevisionen. Använd endast vanlig merge som upprätthåller plattformens branchregler. Ett misslyckat check, en obligatorisk blockerande branchregel eller en ofullständig lokal kontroll får aldrig rundas. Följ upp det fördröjda GitHub-resultatet i nästa körning.
+
 Dokumentationsändringar behöver ingen app-publicering när de inte ändrar produktinnehållet. De behöver ändå läsbara länkar, giltigt underlag, ren diff och repoets obligatoriska kontroller.
 
 ## 6. Publicera när leveransen är verifierad
