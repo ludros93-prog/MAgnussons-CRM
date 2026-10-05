@@ -193,3 +193,9 @@ Efter profilinitialisering ändras befintlig kunds ansvar genom detta flöde, in
 Operativa poster använder fortfarande sina befintliga ansvarsetiketter. Det granskade överföringskommandot väljer profiler via stabila ID:n; full migrering av alla operativa referenser återstår. Inga verkliga konton, kundöverlämningar eller personalbeslut antas genom kodpublicering. CRM-kopia behåller ansvarshistoriken och verifierar kund-, profil- och uppgiftskopplingar, medan aktuella kontolänkar fortsatt återställs separat. Produktionsvyn får inte denna kommersiella historik.
 
 Ingen SQL-migrering tillkommer. Äldre kod, inklusive v18, saknar det nya historikfältet och skrivskydden och får inte återpubliceras som skrivande rollback efter att nya överföringar registrerats. Bevara den additiva datamodellen och verifiera återställningsvägen. Isolerade prov är inte en genomförd live-återställning.
+
+## Kundöversikt och svensk avsändningsdag, D01
+
+D01 ändrar ingen SQL-migration, lagringsmodell, externa ID:n eller bilagekoppling. Produktionsavsändningens befintliga tidsstämpel jämförs med mottagningsdatum som Europe/Stockholm-kalenderdag; direkta försändelser behåller sina uttryckliga datum. Ogiltig icke-tom avsändningstidpunkt ger ett begripligt fel i stället för ett antaget datum. Underlaget skrivs inte om automatiskt. Befintliga backup-/återställningsprov ska köras för slutkandidaten; de är isolerade lokala prov, inte ett återställningsprov i Sites.
+
+Vid problem med den nya presentationen ska en verifierad rättning eller enbart UI-återgång bevara B01b1/B05a-serverregler och befintliga historiker/utkast. Återpublicera inte v18 som skrivande rollback efter nya kundansvarshistoriker. Kod-/live-kvittens och källträd anges i PR för D01; D1/R2-bindningar och delning behålls.

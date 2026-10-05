@@ -18,6 +18,21 @@ const api=await import('../work/api.mjs'),core=await import('../work/core.mjs');
 const headers={'oai-authenticated-user-id':'test-admin','oai-authenticated-user-email':'ludwig.rosenberg@kraftringen.se'};
 const get=async(space='demo')=>{const r=await api.GET(new Request('https://crm.test/api/crm?space='+space,{headers}));assert.equal(r.status,200);return r.json()};
 const conflicts=await import('../work/record-conflicts.mjs'),quantities=await import('../work/production-quantities.mjs'),direct=await import('../work/direct-delivery.mjs');
+// Production records instants; receipts and direct shipments record Swedish
+// calendar dates. Midnight differs from UTC by one hour in winter and two in summer.
+const dispatchDayCases=[
+ ['2025-01-15T22:59:59.999Z','2025-01-15'],
+ ['2025-01-15T23:00:00.000Z','2025-01-16'],
+ ['2025-07-15T21:59:59.999Z','2025-07-15'],
+ ['2025-07-15T22:00:00.000Z','2025-07-16']
+];
+for(const [at,date] of dispatchDayCases)assert.equal(direct.latestDispatch({production:{dispatchedAt:at},directShipments:[]}),date,'Swedish dispatch day at '+at);
+assert.equal(direct.latestDispatch({production:{dispatchedAt:''},directShipments:[{dispatchedOn:'2025-07-15'}]}),'2025-07-15','A direct shipment already stores its calendar date.');
+assert.equal(direct.latestDispatch({production:{dispatchedAt:'2025-07-15T22:00:00.000Z'},directShipments:[{dispatchedOn:'2025-07-15'}]}),'2025-07-16','Swedish production day participates in the latest-date comparison.');
+assert.equal(direct.latestDispatch({production:{dispatchedAt:'2025-01-15T23:00:00.000Z'},directShipments:[{dispatchedOn:'2025-01-17'},{dispatchedOn:'2025-01-15'}]}),'2025-01-17','A later direct shipment remains the latest dispatch.');
+assert.equal(direct.latestDispatch({production:{dispatchedAt:''},directShipments:[]}),'');
+assert.throws(()=>direct.latestDispatch({production:{dispatchedAt:'Ogiltig äldre tidpunkt'},directShipments:[]}),/Avsändningstidpunkten är ogiltig/,'An invalid legacy instant cannot become an empty dispatch day.');
+assert.throws(()=>direct.latestDispatch({production:{dispatchedAt:'2025-07-15Tinvalid'},directShipments:[]}),/Avsändningstidpunkten är ogiltig/,'A readable date prefix does not establish a valid dispatch instant.');
 const expectedRecord=(state,type,data)=>{const row=conflicts.editableRecord(state,type,data?.id||'');return row?conflicts.recordBasis(row):undefined};
 // Existing whole-order scenarios explicitly select all currently available rows.
 const movementData=(state,type,data)=>{if(type==='company_event')return {expectedContext:conflicts.companyEventBasis(state,data.id||''),...data};if(['prospecting','onboarding','plan'].includes(type))return {expectedContext:conflicts.customerWorkflowBasis(state,type,data.customerId),...data};if(['production_issue','production_issue_resolve'].includes(type)){const p=state.orders.find(o=>o.id===data.orderId)?.production;return {...data,expectedProduction:data.expectedProduction||quantities.productionBasis(p)};}if(!['production_received','production_printed','production_dispatched'].includes(type))return data;const p=state.orders.find(o=>o.id===data.orderId)?.production;if(!p)return data;const key=type==='production_received'?'toReceive':type==='production_printed'?'toPrint':'toDispatch';return {expectedProduction:quantities.productionBasis(p),entries:quantities.productionProgress(p).filter(r=>r[key]>0).map(r=>({lineId:r.line.id,quantity:r[key]})),address:p.deliveryAddress,...data}};
@@ -236,6 +251,24 @@ work=await get('live');let receiptOrder=work.orders.find(o=>o.id===productionOrd
 sqlite.prepare('DELETE FROM crm_tasks WHERE space=? AND id=?').run('live',receiptTask.id);const beforeBackfill=work.version;work=await get('live');assert.equal(work.version,beforeBackfill);assert.equal(sqlite.prepare('SELECT COUNT(*) AS n FROM crm_tasks WHERE space=? AND id=?').get('live',receiptTask.id).n,0);receiptTask=work.tasks.find(t=>t.kind==='receipt'&&t.dealId===receiptOrder.dealId);assert.ok(receiptTask&&!receiptTask.done);assert.equal(receiptTask.due,receiptOrder.deliveryDate);assert.equal((await get('live')).version,work.version);
 assert.equal((await post(work,'task',{...receiptTask,done:true},'live')).status,400);assert.equal((await post(work,'task',{...receiptTask,kind:'manual',done:true},'live')).status,400);
 const promised=receiptOrder.deliveryDate;changed=await post(work,'receipt_issue',{orderId:receiptOrder.id,message:'Transportören söker paketet',nextCheck:core.plusDays(core.day(),1)},'live');assert.equal(changed.status,200);work=changed.data;receiptOrder=work.orders.find(o=>o.id===receiptOrder.id);assert.equal(receiptOrder.deliveryDate,promised);assert.equal(receiptOrder.deliveryIssue,'Transportören söker paketet');assert.equal(work.tasks.find(t=>t.id===receiptTask.id).due,core.plusDays(core.day(),1));assert.equal(work.tasks.find(t=>t.id===receiptTask.id).done,false);assert.ok(orderWork.awaitingReceipt(receiptOrder));
+// Exercise both HTTP write paths with deterministic past dispatches at Swedish
+// midnight. Rejected receipt dates must not change the order, tasks or version.
+const receiptStored=sqlite.prepare('SELECT data FROM crm_orders WHERE space=? AND id=?').get('live',receiptOrder.id).data;
+try{
+ for(const [at,localDate] of [dispatchDayCases[1],dispatchDayCases[3]]){
+  const fixture=JSON.parse(receiptStored);fixture.production.dispatchedAt=at;
+  sqlite.prepare('UPDATE crm_orders SET data=? WHERE space=? AND id=?').run(JSON.stringify(fixture),'live',fixture.id);
+  const before=await get('live'),order=before.orders.find(o=>o.id===fixture.id),earlyDate=at.slice(0,10);
+  assert.notEqual(earlyDate,localDate);
+  const dedicated=await post(before,'receipt_confirm',{orderId:order.id,deliveredDate:earlyDate,receivedBy:'Syntetisk mottagare före svensk avsändningsdag'},'live');
+  assert.equal(dedicated.status,400,JSON.stringify(dedicated.data));assert.match(dedicated.data.error,/Mottagandet kan inte ligga före utleveransen/);
+  const generic=await post(before,'order',{...order,stage:'delivered',deliveredDate:earlyDate,receivedBy:'Syntetisk mottagare före svensk avsändningsdag'},'live');
+  assert.equal(generic.status,400,JSON.stringify(generic.data));assert.match(generic.data.error,/Mottagandet kan inte ligga före den senaste utleveransen/);
+  assert.deepEqual(await get('live'),before,'Rejected midnight receipt writes must leave CRM unchanged.');
+ }
+}finally{sqlite.prepare('UPDATE crm_orders SET data=? WHERE space=? AND id=?').run(receiptStored,'live',receiptOrder.id);}
+work=await get('live');receiptOrder=work.orders.find(o=>o.id===receiptOrder.id);
+console.log('PASS: Stockholm winter/summer midnight dispatch dates, unchanged direct date-only shipments and latest-date selection, dedicated/generic receipt rejection without partial writes.');
 const receiptInput={orderId:receiptOrder.id,receivedBy:'Anna bekräftade per telefon',note:'Hela leveransen framme',deliveredDate:core.day()};assert.equal((await post(work,'receipt_confirm',{...receiptInput,deliveredDate:core.plusDays(core.day(),1)},'live')).status,400);assert.equal((await post(work,'receipt_confirm',{...receiptInput,deliveredDate:core.plusDays(core.day(),-1)},'live')).status,400);assert.equal((await rolePost('warehouse',await roleGet('warehouse'),'receipt_confirm',receiptInput)).status,403);
 const receiptBefore=work;changed=await post(work,'receipt_confirm',receiptInput,'live');assert.equal(changed.status,200,JSON.stringify(changed.data));work=changed.data;receiptOrder=work.orders.find(o=>o.id===receiptOrder.id);assert.equal(receiptOrder.deliveredDate,core.day());assert.equal(receiptOrder.receivedBy,receiptInput.receivedBy);assert.equal(receiptOrder.deliveryIssue,'');assert.equal(receiptOrder.invoiceValue,1300);assert.equal(receiptOrder.invoiceRef,'F-123');assert.equal(work.tasks.find(t=>t.id===receiptTask.id).done,true);assert.equal(orderWork.awaitingReceipt(receiptOrder),false);assert.equal(work.tasks.filter(t=>t.dealId===receiptOrder.dealId&&t.kind==='delivery').length,1);assert.equal((await post(receiptBefore,'receipt_confirm',receiptInput,'live',changed.id)).status,200);assert.equal((await post(work,'receipt_confirm',receiptInput,'live')).status,400);
 // Repeat selection reuses real accepted lines, while prices and approvals need a fresh confirmation.

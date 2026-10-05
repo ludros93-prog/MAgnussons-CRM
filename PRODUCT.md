@@ -1,6 +1,6 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Uppdaterat med byggkandidaten 2026-10-05. Publicerad bas, kandidat och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
+Uppdaterat med integrerad kod och designkandidaten 2026-10-05. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
 
 ## Syfte och dagligt arbete
 
@@ -69,3 +69,11 @@ Sebbes huvudmått är försäljning mot månads- och årsmål, marginal och nya 
 Kundplan, bearbetning och onboarding får privata serverutkast med återupptagning från Min dag. Ofärdiga uppgifter kan sparas utan att ändra kundens gemensamma CRM. Ursprungligt kundunderlag följer med; en ny global version ersätter det inte tyst. Kundkonflikter och en annan enhets utkastrevision visas separat och texten bevaras. Återupptagning avmarkerar dagens kundavstämning, som måste bekräftas uttryckligen igen.
 
 Explicit sparning i CRM använder exakt utkastversion och arkiverar den atomiskt. Onboardingavslut och affärsskapande kräver egna handlingar. Företagsevent och övriga specialdialogers serverutkast återstår. Verifieringen finns i [VALIDATION.md](VALIDATION.md); kandidatkoden blir live först efter gröna kontroller, merge och lyckad Sites-publicering.
+
+## Designkandidat 5 oktober: tydligare kundkort
+
+Kundkortets översikt grupperar nästa aktivitet, kontaktplan, order/leverans och tidslinje med tydliga rubriker och lokal sektionsnavigation. Försenad, dagens och kommande aktivitet visar status i text tillsammans med datum och ansvarig. Anteckningar benämns som anteckningar i historiken. Magnussons befintliga visuella uttryck och befintliga uppföljnings-/orderhandlingar behålls.
+
+[DESIGN.md](DESIGN.md) ger gemensamma principer för fortsatt gränssnittsarbete med inspiration från Saleshub och Lime. Läs- och säljhandlingar skiljs åt för relevanta roller. Faktiska browser-/slutkontroller och kandidatens publiceringsläge redovisas i VALIDATION och PR-kvittensen; designkandidaten är ingen redan genomförd personalpilot eller ansluten integration.
+
+Slutprovet för D01 upptäckte också en kalenderdagsgräns: produktionsavsändningens tidpunkt måste jämföras i Europe/Stockholm för att mottagande inte ska kunna registreras på dagen före svensk avsändning. Korrigeringen ändrar inga datum i sparat underlag och uppfinner inget kundmottagande.
