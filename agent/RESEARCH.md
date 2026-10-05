@@ -48,6 +48,19 @@ Ludwig lyfte design som huvudkrav 2026-10-05. [Saleshub AI](https://saleshubai.s
 
 Källorna öppnades på nytt den 5 oktober. Lime Go:s illustrativa hjältebilder används inte som belägg för ett faktiskt produktgränssnitt. Layout, mobila tryckytor, tangentbordsfokus och visuella statusar provas i vår egen byggda app. [DESIGN.md](../DESIGN.md) samlar riktningen. Inget personalprov, uppmätt tidsvinst, färdig integration eller världsranking har antagits från leverantörernas marknadsföring.
 
+## Global mobilnavigation och arbetsyteväljare
+
+Officiella källor kontrollerades 2026-10-05 inför det dokumenterade 320 px-fyndet där bannern kan täcka arbetsyteväljarens tryckyta:
+
+- [Salesforce – mobilnavigation](https://trailhead.salesforce.com/content/learn/modules/salesforce1_mobile_app/salesforce1_mobile_app_navigation) dokumenterar App Launcher för appbyte, synligt aktiv app och prioritering av fyra viktiga mobilvägar. Detta gäller Salesforce-appen. Vår tillämpning är ett tydligt aktivt sammanhang och lättåtkomliga dagliga vägar; antalet fyra är ingen regel för Magnussons.
+- [Lime – design av handlingar](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) skiljer kontextuella handlingar från navigation och grupper av val, rekommenderar få relevanta handlingar och normalt ikon tillsammans med begriplig text. Vår arbetsyteväljare behåller sin etikett och befintliga funktion. Saleshubs funktionssida och Lime Split View ovan belägger sammanhängande kundarbete, ingen särskild global mobilmeny.
+- [W3C – Reflow, WCAG 1.4.10 AA](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) kräver omflöde vid 320 CSS px utan förlorad information eller funktion och utan tvådimensionell scroll, med undantag för innehåll som behöver sådan layout. Vår tillämpning låter headern växa och namn radbrytas i stället för att överlappa bannern.
+- [W3C – Focus Not Obscured, WCAG 2.4.11 AA](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) gäller tangentbordsfokus och förbjuder att komponenten helt döljs av eget innehåll. Ett fungerande tangentbordsprov bevisar inte fungerande pointerklick.
+- [W3C – Target Size Minimum, WCAG 2.5.8 AA](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) anger normalt 24×24 CSS px med undantag och avståndsregel; överlapp mellan olika mål räknas inte som fri tryckyta. Projektets 44×44 px är ett starkare designmål motsvarande [Target Size Enhanced, AAA](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html), ingen allmän AA-gräns.
+- [W3C – Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) visar vanlig navigationsknapp med öppet/stängt tillstånd, Tab, Enter/Space och Escape med återfört fokus. Exemplet är vägledning; det motiverar inte automatiskt nya roller för en befintlig kommandoväljare och bevisar inte mobil- eller hjälpmedelsstöd i vår app.
+
+Den avgränsade layoutfixen och dess pointer-, tangentbords- och förstoringsprov är våra implementationsval. Diagnostiska prov, slutligt byggt prov och publicerad version redovisas separat; leverantörernas gränssnitt har inte provats med Magnussons konton.
+
 ## Företagsidentitet i första prospektförbättringen
 
 [SCB – variabelbeskrivning för Företagsregistret](https://www.scb.se/vara-tjanster/bestall-data-och-statistik/foretagsregistret/variabelbeskrivning/) kontrollerades 2026-10-05. För juridiska personer är PeOrgNr prefixet `16` följt av det tioställiga organisationsnumret. Därför kan just dessa format få samma företagsnyckel. Godtyckliga tolvsiffriga nummer, momsnummer och arbetsställets CFAR-ID ska inte klippas till ett organisationsnummer. Utan säkert organisationsnummer krävs samma datakälla och dess företags-ID för säker återimport; namn/ort kan endast motivera att tvetydigt underlag behöver kompletteras.
@@ -67,3 +80,5 @@ Vår avgränsade tillämpning är administratörens granskade kundöverlämning 
 ## Slutprov: svensk kalenderdag för avsändning
 
 Vid lokal körning efter svensk midnatt upptäcktes att `latestDispatch` använde UTC-delen av en tidsstämpel medan dagens gräns använder Europe/Stockholm. [MDN:s Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat), läst 5 oktober UTC, dokumenterar uttrycklig locale och timeZone; detta används för samma svenska kalenderdag. Direkta försändelsers uttryckliga date-only-datum ska behållas. Källan fastställer formatering, inte kundens mottagande eller Magnussons affärsdefinitioner.
+
+Samma dokumenterade datumprincip återanvänds i nästa kandidat för kundgodkänd antalminskning och accept av ändringsförslag: inlämnings-/förslagstidpunkten jämförs som Europe/Stockholm-dag med kundens uttryckliga godkännandedatum. Gemensam datumhelper ändrar inte lagrade tidsstämplar, mängder eller godkännanden; ett ogiltigt icke-tomt underlag avvisas. Tekniska testresultat kvitteras separat.

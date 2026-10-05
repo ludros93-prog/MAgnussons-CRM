@@ -25,7 +25,13 @@ Leverantörskällor och avgränsade designlärdomar dokumenteras i [agent/RESEAR
 
 Designarbetets kvalitetsregel är att kontrollera berörda vyer på dator och mobil med tangentbord, långa värden, tomma data och relevanta roller. D01:s slutbygge 4 har passerat 16 scenarier och 36 layout-/skärmbildskontroller för kundkortet, inklusive kontrollerad textförstoring 200 procent. Det är textstorlek/radhöjd, inte browserns sidzoom. Skärmbilder, mätningar och provgränser finns i [VALIDATION.md](VALIDATION.md). Browserprov visar layout och arbetsflöde; personalens användbarhet behöver observeras i deras verkliga arbete.
 
-Kundkortets normala 390/320 px-vyer visar första handlingen direkt. Extra långa värden på 320 px kräver vertikal scroll. Den globala arbetsyteväljaren kan fortfarande täckas av bannern vid 320 px och behöver en separat layoutfix enligt BACKLOG; tangentbord användes för initieringshinten. D01 är en verifierad lokal kandidat, inte en kvitterad live-version eller fullständig mobil-/personalverifiering. Testresultat och publiceringsläge hålls isär.
+Kundkortets normala 390/320 px-vyer visar första handlingen direkt. Extra långa värden på 320 px kräver vertikal scroll. D01 ingår i den kvitterade publicerade Sites v19 enligt [VALIDATION.md](VALIDATION.md). Det är inte fullständig mobil-/personalverifiering eller ett prov av autentiserad live-UI. Den globala arbetsyteväljarens pointerklick kunde fortfarande täckas av bannern vid 320 px; tangentbord användes för initieringshinten. Detta är underlaget för nästa avgränsade layoutfix.
+
+## Global mobilheader
+
+På smala skärmar ska huvudraden växa när navigationen radbryts, så att arbetsyteväljare och övriga kontroller ryms ovanför arbetsytans banner. Långa vy- och arbetsytenamn får radbrytas inom sin yta. Behåll befintliga färger, texter och byten mellan arbetsytor; den fria tryckytan ska vara minst 44 px hög. Layouten ska fungera med pointer och tangentbord samt förstoring, med befintliga roller och skydden för privata utkast vid arbetsytebyte.
+
+Den nya CSS-kandidaten har ett diagnostiskt browserprov med 13/13 godkända pointerfall. Det är preliminärt underlag; slutprov på faktiskt produktionsbygge och eventuell ny publicering kvitteras separat i VALIDATION och aktuell status. Leverantörs- och tillgänglighetsprinciperna finns i [agent/RESEARCH.md](agent/RESEARCH.md).
 
 ## Fortsatt designarbete
 
