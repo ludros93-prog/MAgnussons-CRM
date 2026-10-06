@@ -397,6 +397,8 @@ assert.equal((await post(fu,'follow_up',{...noReply,expectedContext:followups.fo
 assert.equal((await post(fu,'follow_up',{...noReply,expectedContext:followups.followupBasis(fu,fuNext.id),nextAction:'',nextDate:''},'live')).status,400);
 console.log('PASS: atomic focused follow-up, explicit completion and same-step continuation, idempotent retry, no-reply rescheduling, canonical deal sync, stale context conflict and business-gate protection.');
 
+await (await import('./delivery-followup.mjs')).verifyDeliveryFollowUp({core,get,post,draftWrite,draftRead,sqlite,headers});
+
 await (await import('./v12.mjs')).verifyV12({core,ops,business,quantities,sqlite,objects,headers,get,post,rolePost,roleGet,draftWrite,draftRead,catalogInput,productionData,own,cust});
 
 await (await import('./v13.mjs')).verifyV13({core,ops,business,quantities,sqlite,objects,headers,get,post,rolePost,roleGet,roleHeaders,draftRead,catalogInput,productionData,own,cust,fileApi});
