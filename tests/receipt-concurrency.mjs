@@ -216,7 +216,7 @@ export async function verifyReceiptConcurrency(h){
   for(const missing of [undefined,'']){
    const invalid={...local,expectedContext:missing};if(missing===undefined)delete invalid.expectedContext;
    const before=raw(),result=await receipt(state,type,invalid);
-   assert.equal(result.status,400,'Direct '+type+' must require nonempty original context. '+JSON.stringify(result.data));unchanged(before,'Missing context must not mutate any table.');
+   assert.equal(result.status,400,'Direct '+type+' must require nonempty original context. '+JSON.stringify(result.data));assert.match(result.data.error,/Ladda om CRM-sidan/);unchanged(before,'Missing context must not mutate any table.');
   }
   const before=raw();conflict(await receipt(state,type,{...local,expectedContext:basis(state,b)}),'Another order context must be rejected.');unchanged(before,'Cross-order context must not mutate any table.');
  }
