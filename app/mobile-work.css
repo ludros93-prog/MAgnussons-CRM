@@ -121,6 +121,6 @@
 }
 /* A short viewport needs the editing space rather than a pinned action bar. */
 @media(max-height:540px) {
- .crm-form-sheet { scroll-padding-bottom: 12px; }
+ .crm-form-sheet { scroll-padding-bottom: 24px; }
  .crm-form-sheet .form-footer { position: static; }
 }
