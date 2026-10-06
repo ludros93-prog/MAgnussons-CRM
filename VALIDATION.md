@@ -1,3 +1,54 @@
+# Synliga privata utkastfel och tillgängligt återförsök – v26, 2026-10-06
+
+Startbas var färsk main `535b68ea539836d015414a28b51f37828e1df165` och live v25 från `03d2e61a0559eb03e4b2e5275a0ab95d4c6a34d9`. Egna worktrees/branch och atomisk körningsreservation användes; fjärrrevisioner, PR:er, andra lokala ändringar och Site kontrollerades. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst: endast Slack read_thread är anropbart. Explicit brief och repo-underlag användes.
+
+## Ändrat beteende och avgränsning
+
+FormDraftStatus visade tidigare bara status när ett current-record fanns. En misslyckad utkast-GET gav ready=false och tom lista, vilket dolde både befintlig feltext och Försök igen. Status renderas nu för stödda formulär även före färdig laddning, med formulärets stabila ID. Den befintliga revealFormControl omfattar också .draft-status button inom generiskt .edit-form: samma aktuella fokus-/anslutnings-/dialog-/höjdguard och uppmätta viewport-/footerkanter består. Footer, workorder och andra dialoger är undantagna. Ingen refokus, klick eller sparning utförs av hjälpen.
+
+Netto ändras två render-/selektorrader. Provider, register/flush/consume, identitetsisolering, autosave, CAS, request-ID, serverroller, API, affärsdefinitioner, mängder, lagring, filer, dependencies och hostingmanifest är oförändrade. Ingen migration krävs. Samlad/sticky status, hjälpmedelsannonsering och generell CRM-felpresentation är inte levererade av denna ändring.
+
+## Faktiska slutkontroller
+
+- Node 24.19.0/pnpm 11.25.0. Full CRM/Outlook-regression, TypeScript utan incremental, produktionsbygge, isolerad HTTP workerd/D1/R2 och diff-check passerar på fryst slutkälla `809b77e992deb1244cf9cd06041161df40cf6f4f`. Befintliga 40→45, godkänd syntetisk 50→48, kassation, delleverans och dubbelklick/återförsök har kvar sina förväntningar. Graph/R2-ersättningar i regression är inga riktiga konton.
+- Runtime återställer 13 500 000 råfilbytes i tre testfiler via 18 010 856 paketbytes; filhashar, korrektur-/foto-/versionslänkar, idempotens, privata workflows, atomisk publicering och nekad sen autosave passerar. Hosted återställning är inte verifierad.
+- Installerad Chromium mot verklig byggd Worker och egen migrerad syntetisk D1/R2 passerar **10/10 fall**. Sex återhämtningsfall: 320×844, 390×844 och 390×460, normal text och kontrollerad 200 procent dialogtext. 21 förstoringar verifierar normal 14 px → 28 px och exakt dubblerad line-height efter två browserframes. Detta är ingen browser-/OS-zoom eller WCAG-certifiering.
+- Långsam utkastladdning och lång svensk feltext visas före current-record. Misslyckad stängning behåller text; två vanliga återförsöksklick ger en pågående GET. Efter lyckad laddning sparas ett privat utkast. Efter två kontrollerade sparfel och ny retry bevaras samma request-ID, en privat post får revision 1→2 och senaste text återupptas efter reload.
+- **12 Tab-/pointerkontroller** passerar med fri helbox och oförändrad 0,5 px tolerans. Vid 320×844/200 ligger knappbottnarna 579,34/578,53 före stickyfooter top 591. Vid kort 390×460/200 ligger de 448,33/447,92 inom 460 px. Lång feltext kan vara högre än skärmen och läses med vanlig vertikal scroll; inget krav på samtidigt synligt helt felblock eller hjälpmedelsannonsering har påståtts.
+- Fem nåbara generella formulär visar laddning: kund, affär, uppgift, möte och order. Rent formulär visar inget falskt Sparat, settings får ingen privat status. Generic note stöds i komponenten men är inte nåbar från dagens skapa-anteckning-vy; inget sådant UI-prov påstås.
+- Reader verifieras mot verkligt Workerbesked role=reader/version=5, fieldset.disabled/attribut, **19 inaktiverade kontrollfält och submit**, samt 0 privata GET/POST. Under samtliga fall sker 0 gemensamma CRM-POST; båda syntetiska arbetsytornas versioner och tabellrader är oförändrade.
+- Fel/latens injiceras uttryckligen endast för draft-HTTP i browsern: 7 GET-503 och 12 POST-503. **14 lyckade privata GET och 12 lyckade privata POST** använder verklig Worker/D1. Inga externa anrop, oväntade console-/page-/assetfel eller riktiga kundskrivningar.
+- Rapport `scratch/generic-draft-load-browser/final-809b77e/report.json`, SHA256 `65bf91e453ca7488ada41b38e019db235d0ca65cab2e6fccba09ea366cd88ab2`, reproducible harness, request-ID-/revisionbevis och **38 bilder** ligger utanför Git. Normal 390 px laddningsfel och kort 200-procentig sparstatus är visuellt granskade. Samtliga **96 distfiler** och source/tree/Worker är byteidentiska före/efter; gitclean. Egen PID 67354 stoppad terminal 143, portar 8918/8919 stängda och enbart ägd temporär store borttagen.
+
+## Baseline, rättade prov och ej publicerad kandidat
+
+V25:s verkliga UI visar varken laddning, feltext eller retry före current-record; baseline-rapport SHA256 `9b8f08d7984c23c5f6e7b52b467355084776275b3624ca6af72ca27164f9ced9`. Testets första navigation skedde före hydration och rättades genom att invänta verklig CRM-hämtning. En textprobe råkade senare kumulativt ge 400 procent; originalet sparades och tvåframes/explicit computed-värden infördes utan ändrade krav.
+
+Kandidat `2661b7d4a3d371add0d44944e595ef19ec15a6ee` hade även ett separat **verifierat produktfel vid verklig 200 procent**: rätt retry var Tab-fokuserad med 28 px/42 px line-height men låg y=1094,34–1138,34 utanför 844 px efter över en sekund. Slutkälla 809b77e rättar detta genom den avgränsade källselektorn. 2661b7d pushades/sparades/publicerades aldrig. Vid sista readerfallet klassade Playwrights FIELDSET-hostassertion elementet fel; native disabled-property/attribut och samtliga faktiska kontroller verifierades i stället. Nio redan godkända fall behölls på exakt samma oförändrade artefakt, endast readerfallet fortsattes. Originalrapporter/diagnoser finns kvar. Ingen korrigerande fokus-/scroll-/CSS-fix injicerades i slutbrowsern; bara dokumenterad textförstoring.
+
+## Källkod, main, artefakt och live
+
+| Tillstånd | Verifierat underlag |
+| --- | --- |
+| PR #24 | Exakt head `31230aba03b3019ea9339a402e1dab5a447ea3bd`; grön Actions `37438543012`/jobb `112186280828`, samtliga 13 steg success observerade 08:50:36 UTC. |
+| App-main | Merge `3d5096f9ab7787dd3f7d776639f73ea8b81621c6`, träd `d83c2d726307d7b7336c2023735ce7572725bf5d`. Push-CI `37439320990`/jobb `112188853808`, samtliga 13 steg success observerade 08:57:07 UTC. |
+| Publicerad källa | `809b77e992deb1244cf9cd06041161df40cf6f4f`, exakt samma träd som app-main. Normal, ej tvingad push från 03d2e61 till 809b77e har terminal exit 0 före save/deploy. Credential bara i process/child-env, inget i Git eller fil. |
+| Worker/dist | Worker SHA256 `77756c23ad486b42583a7207bd7a107c21c8ac31a22ac946bac7d9c8e3c30b93`; dist SHA256 `40e79364992ed47bc2eee0eecc31bbc8aad23f3c1bbde3bb12d09997f7910396` över sorted compact JSON records med sorted keys. |
+| Oförändrat originalpaket | 97 filer, endast 96 dist och .openai/hosting.json. Gzip SHA256 `34f460c5546a24756c0e422099b5f8978aa977b25be9f98f7fd5c673cb36c71a` före/efter save; varje medlem jämförd byte för byte. |
+| Sites v26 | `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_375e320951588191abff9d778a9ed699` från exakt source 809b77e. Backendlagrat normaliserat tar: SHA256 `e8c9bc650aeff98de67ceae4043046b87238278a127581470387cccf54e7af74`, 4 229 120 byte/97 filer. |
+| Deploy | `appgdep_6ac4b7f9ef488191991f21a3291b85d7`, succeeded **08:57:51 UTC**, envrevision 1. Samma projekt/URL, custom-policy exakt oförändrad, policyrevision 2/en extern besökare. |
+| Efterkontroll | Färska Site/version-metadata bekräftar source/version/deploy och oförändrad delning. Anonyma GET / och /api/crm: 403/403; svarskroppar kastas. Inga autentiserade live-UI-/kundskrivprov. |
+
+Den efterföljande Markdownkvittensen ändrar ingen appkod och återpublicerar inte appen. Dess exakta PR-head/main/CI kompletteras i PR-kvittensen efter genomförda checks för att undvika att dokumentera sin egen framtida commit.
+
+## Kvarvarande underlag och nästa steg
+
+Samlad spar-/CRM-felstatus, hjälpmedelsannonsering, andra specialdialoger, fokusåtergång och mobilkundlista kvarstår; B01b2, driftbudget/hostingåterställning och personalpilot är fortsatt prioriterade. Inga riktiga Microsoft-, Fortnox-, AI-, produkt- eller leadkontoanslutningar, fysisk telefon/OS-tangentbord, skärmläsare eller personalprov verifieras av denna leverans. Inga verksamhetsbeslut, kundgodkännanden eller kontaktuppgifter har uppfunnits. Officiella Salesforce-/Lime-/W3C-principer och källgränser dokumenteras i RESEARCH.
+
+---
+
+Historiskt v25-underlag följer; dess dåvarande nästa steg läses i den tidigare releasekontexten.
+
 # Generella formulär som ryms på mobil – v25, 2026-10-06
 
 Startbas var färsk main `d79f1bb624e2e77ef7969143af45e90654325b51` och live v24 från `96191a927cc6c66f264909c246f0367cc2362868`. Egen branch/worktree och atomisk reservation användes; färska fjärrrevisioner, PR:er och Site kontrollerades. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst eftersom endast Slack read_thread är anropbart. Den explicita briefen och repo-underlagen användes.
