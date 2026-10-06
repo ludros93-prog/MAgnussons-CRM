@@ -145,3 +145,16 @@ Följande officiella källor öppnades 6 oktober inför den avgränsade visninge
 - [Saleshub AI – funktioner](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Sidan verifierar ingen särskild roll- eller behörighetsmodell för kundvård.
 
 Magnussons-tillämpningen begränsar just Kundvård-listans två affärsskapande knappar med befintlig `canEdit` för admin/seller. Reader behåller listans läsinnehåll och antal öppna affärer; serverrättigheter ändras inte. UI-visningen ska minska meningslösa klick och ersätter ingen API-kontroll. Prov och publicering kvitteras separat; ingen generell rollgranskning eller personalacceptans följer av källorna.
+
+## Generella formulär på mobilen, 2026-10-06
+
+Officiella källor öppnades på nytt inför rättningen av det generella affärsformulärets reproducerade breddfel:
+
+- [MDN – fieldset](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/fieldset) dokumenterar standardens `min-inline-size: min-content` och att disabled låser barnkontroller. Vår befintliga nollminbredd och disabled-semantik behålls; den implicita gridkolumnen behöver dessutom kunna krympa.
+- [MDN – minmax](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/minmax) dokumenterar `minmax(0, 1fr)` och hur auto-minimum beror på barnens storlek. Långa kundnamn och valtext ska radbrytas inom kolumnen, inte döljas för att maskera överbredd.
+- [Salesforce – objektspecifika mobilhandlingar](https://trailhead.salesforce.com/content/learn/modules/salesforce1_mobile_app/salesforce1_mobile_app_actions_objectspecific) behåller handlingens koppling till aktuell kontakt och ordnar formulärfält i en kolumn. Magnussons behåller kundsammanhang, fält och obligatoriska uppgifter med en mobilkolumn.
+- [W3C – Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) beskriver 320 CSS px utan förlorad information/funktion eller tvådimensionell scroll, med angivna undantag. Vertikal scroll och flyttade kontroller är tillåtna. Dokumentets demonstration med 200 procent text är uttryckligen inget konformitetsprov.
+
+Limes redan dokumenterade riktlinjer för relevanta handlingar och begriplig verbtext öppnades också på nytt. Saleshubs funktionssida svarade HTTP 403 i detta försök; dess tidigare daterade inspiration behålls utan nytt verifieringsanspråk.
+
+Tillämpningen avgränsas till generella editorer med bevarade roller, disabled-semantik, privata utkast och sparflöden. Browserprov ska mäta lång text, kort viewport, textförstoring och helt nåbara footerknappar. Källorna bevisar ingen generell WCAG-acceptans, fysisk telefon eller personalanvändbarhet.
