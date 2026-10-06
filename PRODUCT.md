@@ -1,6 +1,6 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Uppdaterat 6 oktober 2026 med leveranser till v27. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
+Uppdaterat 6 oktober 2026 med leveranser till v28. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
 
 ## Syfte och dagligt arbete
 
@@ -108,3 +108,9 @@ Detta är en avgränsad presentation/fokusförbättring. Ingen provider-/CAS-/re
 Generella privata formulärutkast har en bestående textregion med role=status, aria-live=polite och aria-atomic=true. Laddning, väntande, sparning, fel och konflikt uppdateras utan fokusflytt. Tidsstämpel och återförsöks-/versionsknappar ligger utanför regionen. Ett rent formulär har en tom visuellt dold region, utan extra layoutavstånd eller falskt Sparat. Övriga DraftStatus-konsumenter behåller tidigare DOM och beteende. Kund, affär, uppgift, möte och generisk order är browserprovade; generisk note-createUI ingår inte i dessa prov. Inställningar och läsare får inga nya privata skrivningar.
 
 13/13 nya isolerade Worker/Chromiumfall och obligatoriska kontroller passerar, med faktisk privat CAS409 och oförändrade shared-data. Publicerad källa `1a7e8417446a3d1ce3ea0873219f7627e614df8c` och app-main `7288f82a43c90f33f51d5911381bcc0a4badc0ee` har samma träd. Se STATUS/VALIDATION för exakt deploy och gränser. Samlad/sticky privat+CRM-status och faktisk skärmläsar-/personalacceptans återstår.
+
+## Kundkontakt efter mottagen leverans – v28
+
+Kontaktuppgiften efter bekräftad mottagen leverans använder befintligt Följ upp: anteckning, faktiskt kontaktresultat, avslut/omplanering och nästa steg tillsammans. Ett kontaktförsök utan svar eller internt arbete blir ingen kundkontakt. Orderns mottagande, faktura och historiska ansvar samt kundens plan, onboarding och nästa avstämningsdatum behålls. Operativa godkännanden har fortfarande egna handlingar.
+
+V28 är publicerad från `317b640e6d41b9e73dca0200f8208d0a5732701f`. Obligatoriska kontroller, exakt PR-head-/app-main-CI och 16/16 isolerade browserfall är gröna. [VALIDATION](VALIDATION.md) kvitterar källa, main, artefakt och lyckad deploy separat. Ingen ny anslutning, kundacceptans eller personalpilot följer av denna avgränsning.

@@ -1,3 +1,43 @@
+# Kundkontakt efter mottagen leverans – v28, 2026-10-06
+
+## Beteende och avgränsning
+
+Min dag öppnade tidigare hela Order & leverans för en kontaktuppgift skapad efter bekräftat kundmottagande. Öppna `delivery`-uppgifter använder nu det befintliga Följ upp-flödet: skriv vad som hände, välj faktisk kundkontakt, kontaktförsök utan svar eller internt arbete, avsluta/planera om och ange nästa aktivitet. Anteckning, resultat, uppgift och nästa steg sparas atomiskt. Bara faktisk kundkontakt uppdaterar senaste kontakt; kundens separata nästa avstämningsdatum flyttas inte.
+
+Endast `canFollowUp`-urvalet utökas. Order, affär, faktura, produktion, korrektur, mottagningsbelägg, ansvarshistorik, inställningar, kundplan och onboarding behåller sina regler. Mottagande, överlämning, fakturaunderlag samt korrektur-/orderdeadline använder sina särskilda flöden. Serverroller, privat utkastprovider, CAS, begärans-ID:n och atomisk konsumtion ändras inte. Ingen migration eller ny lagringsmodell krävs. V27 är datakompatibel återgång men återför den dokumenterade kontaktvägen via orderredigering; ingen rollback utfördes.
+
+## Faktiska slutprov
+
+- Fryst source `317b640e6d41b9e73dca0200f8208d0a5732701f`, träd `2f9faf8afc3de9b47d98e40fab0c0e8ba535131a`: full CRM/Outlook-regression 37,70 s, TypeScript 8,41 s, pnpm 11.25.0-bygge 9,19 s, isolerad HTTP workerd/D1/R2 5,49 s och diff-check 0,01 s; terminal 0. Node 24.19.0. Befintliga 40→45, syntetiskt godkänd 50→48, kassation, delleverans och dubbelklick/återförsök behåller sina krav.
+- Ett nytt fokuserat regressionsprov skapar syntetisk kund/order, registrerar verkliga API-händelser för avsändning, faktura och mottagande och prövar därefter alla tre kontaktresultat. Utan svar och internt arbete uppdaterar inte `lastContact`. Avslut med nästa aktivitet och avslut utan nästa aktivitet ger avsedda uppgifter. Hela ordern, accepterad affär, inställningar, plan, onboarding och `nextReview` jämförs oförändrade efter varje kontaktåtgärd.
+- Samma prov nekar operativa steg som vanlig kontakt, föråldrat underlag och ändrat innehåll med återanvänt request-ID. Exakt replay duplicerar ingenting. En syntetisk andra enhets privata revision under databasbatchen ger 409 utan CRM-ändring; rätt revision konsumeras atomiskt med inlämning och sen autosparning nekas.
+- Runtime återställer 13 500 000 byte i tre testfiler via 18 010 856 arkivbytes med kontrollerade hashar, korrektur-/fotolänkar, idempotens och privat atomisk publicering. Detta är ingen faktisk hostingåterställning eller ansluten integration.
+- [PR #28](https://github.com/ludros93-prog/MAgnussons-CRM/pull/28), exakt head `51c7e392bb03728b2d4420761df5595ae7cfbc79`: CI `37450177851`/jobb `112224576653`, samtliga 13 steg success, observerat 10:31:41 UTC.
+- Installerad Chromium mot exakt byggd HTTP-Worker och egen migrerad syntetisk D1/R2: **16/16 PASS**, 15 fall i en helt färsk sammanhängande slutmatris samt ett separat 320 px kontakt-/omplaneringsfall. Tre resultat på 390/1440 px, avslut med/utan nästa aktivitet, privat autosparning/stängning/återöppning, kundkortets ingång på båda bredder, faktisk shared-CAS409 från andra syntetiska aktören med bevarad text/val/privat id, vanligt pointer-dubbelklick, separat mottagningsdialog samt reader-UI och verklig server-403.
+- Browserns faktiska HTTP: privata GET 200 **15**/POST 200 **26**, shared GET 200 **16**/POST 200 **11** samt **en faktisk shared 409**. Separata setup-/API-prober innehåller sammanlagt 12 verkliga syntetiska mottagningsbekräftelser via UI/API, en andraaktörsuppdatering, exakt replay 200, obehörig 403 och sen privat autosave 409. Endast ett pågående verkligt anrop hålls för dubbelklick; inga fejkade lyckade svar eller roller.
+- Hela kundunderlaget är oförändrat förutom `lastContact` vid faktisk kontakt. `nextReview`, hela planens `lastReview`, onboarding och övriga kundfält samt samtliga order/produktion/mottagande/faktura, vunna affärer och inställningar jämförs byteidentiska. Varje logisk inlämning ger en anteckning/version/mutation och matchande privat arkivering i samma D1-commit. Replay duplicerar inget och sen autosave återupplivar inget utkast.
+- **28 PNG**, rapport SHA256 `4baf972bb890ac6e0ffe523039a2a072e6722222189935c439d1c423e2c56d5a`, counts, snapshots, request-ID/revisioner och reproducerbar harness utanför Git i `scratch/delivery-followup-browser/final-317b640/`. Root granskade 390 px kontakt/nästa aktivitet och 320 px native-knapp. Alla 96 distfiler/source/tree/Worker oförändrade. Egen PID 74417 stoppad terminal 143, 8930/8931 stängda och endast eget temporärt lager uSRSic borttaget. Inga externa anrop eller oväntade fel.
+
+## Baseline och provdiagnostik
+
+V27-baslinjens faktiska isolerade Worker/Chromium visar på 390 och 1440 px att Min dag öppnar ordereditorn för den genererade kontaktuppgiften; rapport SHA256 `1be6fa5a35cd8ccc779504be6e48e109427311864e3176f2a7f14cc706bba239`. Tre tidigare harnessdiagnoser bevaras: förkortad statusetikett matchade inte faktisk Sparat som privat utkast, relativ has-locator hade fel rot och återanvänd syntetisk kund saknade dagens schema-default `responsibilityTransfers: []`. Ett tidigt startrace nådde bara kontrollsocket före ready och gjorde inga API-anrop. Fixture rättades till aktuell canonical default utan att släppa den fullständiga kundinvarianten. Alla 15 slutfall kördes på nytt i en färsk matris; inga tidigare PASS återanvändes. Inga produktändringar gjordes för dessa provrättningar.
+
+## Källa, main och live
+
+Startbas var main `f3b2913063cefd1aca14abfbfa41db96f03d32d1` och live v27 från `1a7e8417446a3d1ce3ea0873219f7627e614df8c`. PR #28 är sammanslagen till app-main `23344313e0370166f6552ec4bb0f85ae1b07460e`, samma träd `2f9faf8afc3de9b47d98e40fab0c0e8ba535131a` som testad/publik source `317b640e6d41b9e73dca0200f8208d0a5732701f`. App-main-CI `37451525823`/jobb `112228979701` passerade samtliga 13 steg, success observerat 10:44:05 UTC.
+
+Worker SHA256 `fbe4942056fe44d1638f1c1bed9b4ef9a6829cdd0a8d2a2bc2e974f0c900c161`; 96 distfiler, SHA256 `f552c846103ad25d021533192d746b495720665ae7c11eed667771fc9b37eede` enligt sorterade kompakta JSON-poster `{path,sha256,bytes}` med sorterade objektnycklar. Immutable gzip SHA256 `c36c59223a6413a1a90c3bbf94380aea46251caed599962b4c2bd2f6564787f1` är oförändrat före/efter save, 97 filer: 96 dist och hostingmanifest. Exakt kandidat, kontroller och artefaktmanifest finns utanför Git i `scratch/delivery-followup-20261006/`.
+
+- Normal sourcepush `1a7e841` → `317b640`, terminal 0 **före** save/deploy; ingen force-push. Sites-helper saknades, så etablerat stdin/child-env-flöde användes och kort credential rensades utan att sparas i filer eller Git.
+- Sites **v28**, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_f8b7f588c21481918f3f5cbd9fe115d4`, source `317b640e6d41b9e73dca0200f8208d0a5732701f`. Sparad normaliserad tar SHA256 `a680293d64dd478a1e5c60d7d0e74baf6be37d3553cd27fdefd0ce199400028b`, 4 229 120 byte/97 filer.
+- Deploy `appgdep_6ac4d1049f508191a4f50f2489c566f6` **succeeded**, deployedAt `2026-10-06T10:44:41.672329+00:00`, samma [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site). Färska Site-/versionsmetadata verifierar aktiv v28, exakt källa och deploy. Custom-policy är exakt oförändrad, envrevision 1 och samma DB/BUCKET. Anonyma GET `/` och `/api/crm` gav **403/403**, kroppar bortkastade; inga autentiserade live-UI-prov eller kundskrivningar.
+
+## Kvarvarande underlag
+
+Samlad privat/CRM-spar- och felstatus, B01b2, hostingbudget/återställningsrutin och observerad personalpilot kvarstår. Inga riktiga kundorder, konton, kundgodkännanden eller integrationer används i proven. Faktisk skärmläsare, OS/browserzoom, fysisk telefon och autentiserad live-UI är inte prövade. Codex-referensen är oläst eftersom relevant `read_thread` saknas. Officiella Salesforce/Lime-källor och deras begränsningar finns i [RESEARCH](agent/RESEARCH.md). Den separata Markdownkvittensen har egen exakt-head CI och återpublicerar inte appen; slutlig dokumentations-main/checks redovisas i PR-kvittensen.
+
+---
+
 # Bestående status för privata formulärutkast – v27, 2026-10-06
 
 ## Beteende och avgränsning
