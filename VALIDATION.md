@@ -1,3 +1,51 @@
+# Synlig privat sparstatus och ärliga återförsök – v23, 2026-10-06
+
+Bas vid start: GitHub-main `d9a117f11455bdce97d2b0e65a90e5f505497562`, live v22 från `8636a5ef3205a3be590fb5b99ed635a90da275d6`. Egen reservation, branch/worktree och färska fjärr-/PR-/Sitekontroller användes. Ingen konkurrerande PR eller publicering upptäcktes. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` förblir oläst: anropbart Codex `read_thread` saknas. Explicit brief och verifierat repo användes.
+
+## Beteende och slutkontroller
+
+Kundplan, bearbetning och onboarding visar privat utkaststatus under rubriken vid scroll. Laddning, väntande/sparat, fel och konflikt kommer från befintligt serverutkast; färg kompletterar text. Statusknappar når fullständiga fel-/konfliktval med tangentbordsfokus. Portalens faktiskt monterade status/footer mäts för scrollutrymme. Fält och konfliktval bevaras. Oklart CRM-svar beskrivs som obekräftat: ett nekat svar efter legitim servercommit får inte beskrivas som bevisad utebliven skrivning.
+
+Misslyckat onboardingavslut återförsöks med samma `complete:true`, hela payloaden och request-ID. Ett kvarliggande exakt CRM-fel ersätter duplicerad feltoast endast i dessa tre flöden, eftersom toasten täckte sparknappen. Andra formulärs toastbeteende och framgångsnotiser bevaras. Endast `app/page.tsx`, `app/customer-work.css` och `components/customer-workflow-draft.tsx` ändras i appen; backend/Worker/backup, API, utkastformat, basis, roller, CAS, idempotens och atomisk arkivering är oförändrade.
+
+- Node 24.19.0, repoets pnpm **11.25.0** och låsta befintliga beroenden. Hela `node tests/outlook.mjs`, TypeScript `--noEmit --incremental false`, produktionsbygge och `git diff --check` är godkända för slutträdet. Befintliga mängd-/revisionsprov omfattar 40→45, verkligt dokumenterat godkänd 50→48, kassation, delleverans och dubbelklick/återförsök. Inga gamla förväntningar har sänkts.
+- Slutbyggets `node tests/runtime-smoke.mjs` passerar med lokal workerd och isolerad diskbaserad D1/R2: tre filer om **13 500 000 byte**, **18 010 856 byte** strömkopia, hash-/korrektur-/foto-/versionslänkar, idempotent återförsök och oförändrad källa. Privata utkast, atomisk CRM-publicering/arkivering, nekat sent utkast, renderad startsida och nekat anonymt CRM-anrop ingår. Detta är lokal emulering, inte återställning i Sites.
+- Oberoende read-only slutgranskning hittade inga blockerande fynd inom avgränsningen; payload/basis/revision/request-ID och serverregler är bevarade. Officiella Lime-, Salesforce- och WAI-källor och gränsen mot egna designval finns i RESEARCH. Saleshub gav ingen verifierad autosparningsspecifikation.
+- Fryst byggd HTTP-app med Chromium/Playwright och faktisk lokal D1/R2 passerar **26/26 huvudfall + 6/6 extra tangentbordsfall**, processerna exit 0. 320/390/768/1440 px, 320×480 och 390×480 samt kontrollerad 200 procent text provas. 81 bilder, 79 layoutmätningar; ingen horisontell dokument-/dialogöverströmning eller page-/asset-/externanropsfel. Avsiktliga 400/403/409/503 är negativa prov, inte undanröjda fel.
+- De 21 privata fallen använder riktiga lokala POST: väntande→sparat, admin→reader i D1 före nästa autosparning, verklig 403, oförändrad lagrad revision, exakt textbevarande och återställd rättighet/återförsök. En andra syntetisk identitet saknar dessa utkast. Gemensam kund-/affär-/order-/aktivitets-/eventdata är oförändrade. Det är en isolerad identitetskontroll, inget fullständigt samma-enhets-kontobytesprov.
+- Faktisk lokal CRM400 behåller exakt servertext utan duplicerad toast; vanlig pointer utan force når sparknappen och ett andra faktiskt 400. Verkligt kundbasis409, ogiltigt lokalt utkastschema med avstängd CRM-sparning och väntande verklig GET provar konflikt/readiness. Ett uttryckligt **kontrollerat 503 före Worker** följt av faktiskt 200 verifierar hela identiska onboardingpayloaden/request-ID `9a94edcf-033e-4aaa-863f-a760c064b323`, `complete:true` och atomisk arkivering. Det är inget påstått verkligt serveravbrott.
+- Textförstoringen väntar på monterade fält och fördubblar enbart uppmätt font/radhöjd med inline-important för att övervinna tidigare mobilregel 16px-important. Computed fält är **16→32 px**, status **14→28 px**, inputrad 48 px, inneryta 56/ytterhöjd 58 px; ÅÄÖ/gjpq granskades visuellt. Ingen position/bredd/padding/layout injiceras. Detta är textinstrumentering, inte OS/browser-sidzoom, fysisk mobilkeyboard, IME eller skärmläsarprov.
+- Sex extra fall använder verklig Tab från sista fält till footern och mäter båda knapparna fria från status/viewportgräns. I viewport under 540 px ligger footern i scrollflödet och visas när användaren når den; samtidig synlighet under all redigering påstås inte. En lång textarea är delvis synlig (224 av 354 px i kort 2×-fall) och scrollas. Generell fokusbevaring vid workspace-/identitetsremount och övriga formulär ingår inte.
+
+## Exakt källa, artefakt, main och live
+
+| Underlag | Verifierat värde |
+| --- | --- |
+| PR #18 head | `51402713f49846f31582c3089ff5779d8e11f6e9` |
+| PR-head CI | [37411127082](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37411127082), jobb `112099577518`, alla steg success, terminal 03:55:08 UTC |
+| Faktisk app-main efter merge | `2ae9ff048d7ba6f7e26449015bb478d317b6a689` |
+| App-main push-CI | [37411684781](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37411684781), jobb `112101286720`, alla steg success, terminal 04:02:30 UTC |
+| Pushad och publicerad Sites-källa | `5cdc2eee45eee7058bfd8f6898ef7f1085fbe3b6` |
+| Gemensamt exakt Git-träd | `728dbbd6e9d9ca5e89a92cfc7ad77f0efa0157d0` |
+| Worker SHA-256 | `657e4d2ad2345e6924d079877c2c61c5549544e674168c6e4444bd8e347aa3f2` |
+| Dist SHA-256 | `515707ca84a6a5fd1c7a0a5360e9c0b0925c26a125f81ec7610a19d7a7bf0374` |
+| Browserrårapport SHA-256 | `297bc307e18744d610cb0586c1a20281ddc1a69c225b47f552dff6a623778a82` |
+| Lokalt gzip-arkiv SHA-256 | `04b11407a5dca6ce24b7d0b43d04078ffa36ebc2b2f4f3fc9dc34019434cfbbe` |
+| Sites-lagrat tar-arkiv | `sha256:17529e1759d82ba7335deea012c62765451abd54daa62b0ffa73a610fbbe429b`, 4 229 120 byte, 97 filer |
+| Sparad version | **23**, `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_966ec7c7aff08191b8c66126799b05d6` |
+| Lyckad deploy | `appgdep_6ac47327ccec8191b6b83298a8126993`, **succeeded 2026-10-06 04:04:02 UTC** |
+| Befintlig Site | [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), oförändrad projektidentitet |
+
+Dist-hash är SHA-256 av sorterad kompakt JSON med `path`, `sha256`, `bytes` och sorterade objektnycklar. Alla **96 distfiler** var byteidentiska före/efter runtime/browser; publiceringsarkivet har dessa plus `.openai/hosting.json` (97 filer). Det byggdes på exakt Sites-källa före test och packades utan kunddata, testlager, hemligheter eller källkatalog. Lokalt gzip och Sites lagrade tar har skilda format/hashes och jämförs inte som samma bytes. Efter slutprov återanvändes det frysta arkivet utan nytt bygge.
+
+PR merge gjordes med expected head efter grön exakt-head CI och färsk oförändrad bas. Normal Sites-sourcepush kontrollerade tidigare remote `8636a5e…` och efterföljande `5cdc2ee…`; ingen force. Skillnaden i GitHub-/Sites-commithistorik är avsiktlig, trädet är identiskt. Den paketerade Sites-sourcehelpern saknades i den kontrollerade miljön; etablerad lokal fallback bevarade identitetskontroll och använde kortlivad credential via stdin/child-ENV, utan credential i fil, argv eller output. Credentialprocessen avslutades. Ingen ändring av runtimevariabler, medlemskap, kontoinbjudningar, automationsschema/prompt/aktivering eller delning gjordes.
+
+Efter deploy bekräftade färska native Site/version-svar v23/source/deployment och exakt oförändrad custom-access-policy, revision 2/en extern besökare, envrevision 1/DB/BUCKET. Endast anonyma live-GET `/` och `/api/crm` utfördes, **403/403**, med body bortkastad. Inga autentiserade kundorder eller annan verklig data skrevs. Egen browser-worker stoppades, portar 8914/8915 stängdes och eget isolerat D1/R2-lager raderades kl. 04:00:17 UTC.
+
+Denna senare releasekvittens ändrar bara Markdown. Den kräver egen exakt-head CI före merge men ingen app-återpublicering; apprevisionerna och live ovan förblir samma. Ingen SQL-/lagrings-/backupformatändring kräver migration. Återgång till verifierad v22 kräver ingen datamigrering och bevarar dess serverkontroller, men återför mobilstatusens scrollbrist och tidigare footer-retry för onboarding; ingen rollback utfördes.
+
+Autentiserad live-UI/framing, riktiga konton/Fortnox/Outlook/produkt-/AI-anslutningar, fysisk telefon, skärmläsare, personalacceptans, maximal hostingbudget/volym och faktisk hostingåterställning är fortfarande oprövade. Generella formulär och övriga specialdialogers status/utkast, fokusåtergång efter arbetsytebyte, mobilkundlista och B01b2 kvarstår. Testbeläggen är ingen garanti om världsranking.
+
 # Verifiering av byggagent och kontaktspärr 2026-10-05
 
 Bas: GitHub-main `37437fbd793a94a6a209a92cc814728a2c464faf`, med samma källträd som publicerad Sites v16 `5fed2c64dad162a8a29f58d7042c57440d0a3977`. Ändringen ligger på `feat/crm-builder-agent`; PR-head identifierar den slutliga kandidaten.
