@@ -2,6 +2,7 @@ import {z} from 'zod';
 import {ArticleSchema,type Article} from './operations';
 import {recordBasis} from './record-conflicts';
 import {RuleError} from './crm-errors';
+import {DraftInput,type DraftRecord} from './drafts';
 
 // Keep unfinished values exactly as entered. Required business fields, safe
 // URLs and nonnegative prices are checked only on explicit CRM publication.
@@ -26,6 +27,16 @@ export const ArticleDraftEnvelopeSchema=z.object({
 });
 export type ArticleDraftEnvelope=z.infer<typeof ArticleDraftEnvelopeSchema>;
 export const isArticleDraft=(kind:string,context:string)=>kind==='form'&&context==='article';
+
+const ServerArticleDraftSchema=DraftInput.extend({kind:z.literal('form'),context:z.literal('article'),revision:z.number().int().positive(),archived:z.boolean(),updatedAt:z.string().min(1).max(100)});
+// A comparison may contain an old or malformed record. Keep its raw data for
+// reading/copying, but never select a normalized or differently linked version.
+export function articleDraftServerVersion(value:unknown,id:string,articleId?:string):DraftRecord|null{
+ const record=ServerArticleDraftSchema.safeParse(value);if(!record.success||record.data.id!==id)return null;
+ const envelope=ArticleDraftEnvelopeSchema.safeParse(record.data.data);
+ if(!envelope.success||envelope.data.draftId!==id||recordBasis(envelope.data)!==recordBasis(record.data.data)||articleId!==undefined&&envelope.data.base.id!==articleId)return null;
+ return value as DraftRecord;
+}
 
 export function validateArticleDraftConsumption(actionData:unknown,stored:unknown,expectedRecord:string|undefined,currentArticles:Article[],draftId:string){
  const envelope=ArticleDraftEnvelopeSchema.parse(stored),payload=z.record(z.unknown()).parse(actionData);

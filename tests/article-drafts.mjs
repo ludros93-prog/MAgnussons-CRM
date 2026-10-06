@@ -1,10 +1,57 @@
 import assert from 'node:assert/strict';
 
+// Recovery is read-only until the user chooses a version. Rejecting a server
+// comparison must not normalize an incomplete original or mutate either body.
+export function verifyArticleDraftServerVersions({ArticleSchema,contracts,conflicts}) {
+ const id='article-server-comparison',base=ArticleSchema.parse({id:'synthetic-existing-article',sourceId:'synthetic-source',sku:'RECOVERY-SKU',name:'Syntetisk återhämtning'});
+ const envelope=original=>({draftId:id,type:'article',base:original,data:{...original,name:'  Ofärdigt privat namn  ',url:'javascript:unfinished-private-url',price:-7,cost:null},expectedRecord:conflicts.recordBasis(original),initialData:conflicts.recordBasis(original)});
+ const active={id,kind:'form',context:'article',revision:3,requestId:'f7e92f7e-3984-480a-95f8-5c87d856baf0',title:'  Privat rå titel  ',data:envelope(base),archived:false,updatedAt:'2026-10-06T23:00:00.000Z'};
+ const archived={...active,revision:4,archived:true};
+ const newBase=ArticleSchema.parse({sourceId:base.sourceId,sku:'RECOVERY-NEW',name:'Syntetisk ny artikel'}),newDraft={...active,data:envelope(newBase)};
+ for(const record of [active,archived,newDraft]) {
+  const before=JSON.stringify(record),selected=contracts.articleDraftServerVersion(record,id,record.data.base.id);
+  assert.strictEqual(selected,record,'Inspection must return the exact raw server object, including unfinished private values.');
+  assert.equal(JSON.stringify(record),before,'Inspecting a comparison cannot mutate its raw body.');
+ }
+ assert.equal(contracts.articleDraftServerVersion(archived,id,base.id).archived,true,'An archived server record stays archived; inspection must not revive it.');
+ const otherBase={...base,id:'synthetic-other-article'},wrongTarget={...active,data:envelope(otherBase)};
+ const invalid=[
+  ['different requested draft',active,'another-private-draft',base.id],
+  ['different envelope draft', {...active,data:{...active.data,draftId:'another-private-draft'}},id,base.id],
+  ['wrong draft kind',{...active,kind:'catalog'},id,base.id],
+  ['wrong draft context',{...active,context:'customer'},id,base.id],
+  ['unsaved revision',{...active,revision:0},id,base.id],
+  ['fractional revision',{...active,revision:1.5},id,base.id],
+  ['invalid persisted request ID',{...active,requestId:'not-a-uuid'},id,base.id],
+  ['changed original target',wrongTarget,id,base.id],
+  ['malformed envelope',{...active,data:{...active.data,unexpected:'not an article envelope field'}},id,base.id],
+  ['incomplete private values',{...active,data:{...active.data,data:{name:'only one unfinished field'}}},id,base.id]
+ ];
+ const missingArchive=structuredClone(active);delete missingArchive.archived;invalid.push(['missing explicit archived state',missingArchive,id,base.id]);
+ // These envelopes pass the general parser: defaults/trim reconstruct the
+ // canonical original. Recovery must reject that reconstruction rather than
+ // silently presenting it as the server version the user is selecting.
+ const missingDefault=structuredClone(active);delete missingDefault.data.base.active;
+ const trimmedOriginal=structuredClone(active);trimmedOriginal.data.base.name='  '+base.name+'  ';
+ const missingNewId=structuredClone(newDraft);delete missingNewId.data.base.id;
+ for(const [label,record,articleId] of [['missing original default',missingDefault,base.id],['trimmed original basis',trimmedOriginal,base.id],['missing new-article ID',missingNewId,'']]) {
+  assert.equal(contracts.ArticleDraftEnvelopeSchema.safeParse(record.data).success,true,'Fixture must exercise normalization rather than an already malformed envelope: '+label);
+  invalid.push([label,record,id,articleId]);
+ }
+ for(const [label,record,draftId,articleId] of invalid) {
+  const before=JSON.stringify(record);
+  assert.equal(contracts.articleDraftServerVersion(record,draftId,articleId),null,'An unsafe comparison cannot be selected: '+label);
+  assert.equal(JSON.stringify(record),before,'Rejected comparisons must retain their raw text for reading/copying: '+label);
+ }
+ console.log('PASS article draft server comparison: 3 exact raw active/archived/new records; '+invalid.length+' rejected identity, target, persisted-state and envelope/normalization cases; no input mutation.');
+}
+
 // Real authenticated handlers and the SQLite transaction gate. These articles,
 // actors and private texts are fictitious and exist only in the isolated test.
 export async function verifyArticleDrafts({core,sqlite,get,headers,api,draftApi,conflicts}) {
  const {ArticleSchema}=await import('../work/operations.mjs');
  const contracts=await import('../work/article-drafts.mjs');
+ verifyArticleDraftServerVersions({ArticleSchema,contracts,conflicts});
  const store=await import('../work/crm-store.mjs');await store.initialize('live');await store.initialize('demo');
  const suffix=crypto.randomUUID(),space='live';let state=await get(space);
  await get('demo');
