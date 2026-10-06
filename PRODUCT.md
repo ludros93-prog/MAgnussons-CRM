@@ -1,8 +1,10 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Uppdaterat 6 oktober 2026 med verifierad och publicerad v33: artikelpanelens lokala stängningsval efter ändring eller obekräftat sparförsök. Källa, main, live och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Äldre produktunderlag och dess daterade leveranser behålls nedan. Rutiner finns i [OPERATIONS](OPERATIONS.md) och Microsoft-anslutningens omfattning i [OUTLOOK](OUTLOOK.md).
+Uppdaterat 6 oktober 2026 med verifierad och publicerad v34: leveransbesked och mottagande skyddas vid samtidiga ändringar; granskningen behåller säljarens text och sparar ingenting. Källa, main, live och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Äldre produktunderlag och dess daterade leveranser behålls nedan. Rutiner finns i [OPERATIONS](OPERATIONS.md) och Microsoft-anslutningens omfattning i [OUTLOOK](OUTLOOK.md).
 
 ## Syfte och dagligt arbete
+
+Dialogen behåller mottagningsdatum, mottagare, anteckning, problemtext och nästa kontrolldatum, även i det inaktiva läget. Granska aktuell leverans visar sparat besked, ansvar, kontrolluppgifter, avsändningsdatum, mängder, leveransbevis och produktionshinder. Uttrycklig jämförelse krävs före Använd detta underlag och behåll min text. Granskning/adoption gör ingen POST. Ett synkront lås spärrar fält, dubbelklick och stängning under väntan. Bestående feltext och lokal fokusväg finns. Radbrytning är rättad även med förstorad mobiltext.
 
 Artikelpanelen erbjuder Fortsätt redigera eller Kasta formulärets ändringar när osparade uppgifter annars skulle försvinna. Fortsätt behåller text och ursprungligt underlag. Kassering skickar inget till CRM och återställer ingen möjlig tidigare sparning; varningen förklarar att artikeln redan kan ha sparats. Väntspärren består. Lokal fokusåtergång och framrullning omfattar artikelpanelen och dess bekräftelse. Varaktigt privat artikelutkast, omladdningsåterupptagning och toastens visuella överlapp kvarstår.
 

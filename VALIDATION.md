@@ -1,3 +1,27 @@
+# Leveransregistrering – v34, 2026-10-06
+
+Source `bc1b5712220b862ad5640bd958589a6e4a8482b1`, lokal slutkod `2100b0c`, PR #41-head `05abdd66ff55ff6235c8bbea74e9c31dec355797` och app-main `c9c71f94ecf98b9afe2c1d21a26ecdd37a25ce58` delar träd `ed57569bd8f3b3bad9580bfd943cfeb63c308c29`.
+
+## Baseline och slutkontroller
+
+Baseline source `3a162b7`/main `21a839a0` reproducerades med två separata browseraktörer: B sparade, A:s första native POST gav 409 utan skrivning, samma A-innehåll/request-ID med ny global version gav felaktigt 200. Råsnapshot efter B och verklig409 var byteidentiska, SHA256 `f3dca040f64f105e8841675eef28e55976cf7abac553126ab9c3155d6e2152f4`. Regressionen misslyckades avsiktligt med actual200/expected409; logg SHA256 `2b4b01f16ee1c7729e85ca03c05fcfbeec8056ab6614ab3439cf43252e8ae3c5`.
+
+Slutlig fryst kandidat passerade `node tests/outlook.mjs`, icke-incrementell TypeScript, `corepack pnpm build` med pnpm 11.25.0, `node tests/runtime-smoke.mjs` och `git diff --check`. Node 24.19.0. Loggar finns utanför Git i `scratch/crm-next-20261006T1917/v3-{outlook,typescript,build,runtime}.log`; körningskvittensen innehåller deras hashar. Runtime återställde tre syntetiska filer, 13 500 000 byte, med verifierade hashar, korrektur-/fotolänkar, idempotens, privata utkast och atomisk publicering; faktiskt hostingrestore är false.
+
+Det nya rå-API-provet omfattar 33 receipt-anrop: 10 konflikter, fyra saknad/tom-basis400, sex roll403, två exakta lost-ack-replays och två verkliga SQL-CAS-racer. Alla 18 apptabeller råjämförs vid nekade skrivningar/replay. Nio skyddade projektioner och tre orelaterade faktura-/kostnads-/anteckningsprojektioner testas; interna produktionskloner är projektionstest. En faktisk same-order fakturauppdatering följd av originalreceipt med äldre global version ger 200 och bevarar fakturan. Befintliga 40→45, 50→48 med uttryckligt godkännande, kassation och delleveransregressioner passerar.
+
+8/8 frysta Chromium-fall passerar mot byggd Worker vid 320/390/1440 px: verklig issue-/confirm409, ytterligare kollegakonflikt, alla fem lokala fält, granskning/adoption utan skrivning, native Tab/fokus, förlorat faktiskt200, exakt replay, busy/dubbelklick och reader403. Därtill två byggda legacy-API400-prov med svensk feltext och oförändrad rålagring. Med uppmätt 2× teckenstorlek/line-height på 53 text-/granskningselement ryms panelen 366/366; en fokuserad adoptionsknapp är 140 px hög och helt synlig. En tidigare kandidat hade 497/366 och rättades före slutprovet. Samtliga privata/orelaterade/demo-/fil-/R2-/medlems-/inställningsdata samt orderns kommersiella/ fysiska historik bevarades. Oberoende granskning verifierade råsnapshots och käll-/dist-hashar. Egna testprocesser och tempstore avslutades. Slutrapport SHA256 `7b68067b98afebfb4aaac900c798a443e79c6ecc8fa028c88f6080a7d9b71b5b`, 69 artefakter/21 PNG, utanför Git i `scratch/receipt-context-browser/final-2100b0c`.
+
+[PR #41](https://github.com/ludros93-prog/MAgnussons-CRM/pull/41): exakt-head CI `37520308133`/jobb `112463853136`, 13/13 success. [App-main CI](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37520754368) `37520754368`/jobb `112465231686`, 13/13 success. Merge gjordes efter grön exakt head och färsk bas `21a839a0`.
+
+Sites v34 sparades från den pushade källrevisionen och deploy `appgdep_6ac54ef320e481918fe28421c623c6c3` succeeded **2026-10-06 19:42:00.227968 UTC** på https://magnussons-crm.rosen123.chatgpt.site. Samma projekt, ägare, custom-policy och envrevision 1. Återläst version/source/deploy stämmer. Anonyma GET `/` och `/api/crm?space=live` gav 403/403 kl. 19:42:18 UTC; kropparna sparades inte. Inga autentiserade live-UI- eller kundskrivprov gjordes.
+
+Lokala 96 distfiler och 97 tarfiler verifierades byte för byte och förblev oförändrade. Dist-manifest SHA256 `db2367370e10d510b5f17e72b0144ce44258cb039e96694a676dd7d313d7e48b`; råtar `45edc2ddb06db6da24f39c001462683a0aadde405717d6bd327bf177a684a4c8`, gzip `6bdf6f112e241e0c4639bc96be293b2489fa56d69241a32abc659c07adc41ddd`. Native återläst tarhash är `2136a6740817b844519a6ac9a6202f8a668fe31c7671ec525d2a97ca0f38a9a0`, 97 filer/4 280 320 byte. Hashen skiljer sig från lokal råtar; återhämtning nekades med `file could not be authorized or resolved`. Native byteidentitet och orsaken till skillnaden är overifierade. Native save/source/lyckad deploy kvitteras separat.
+
+Alla skrivprov använder syntetiska data i isolerad SQLite eller lokal workerd/D1/R2. Verkliga personal-, konto-, integrations-, telefon-, skärmläsar- och hostingåterställningsprov är oprövade. Codex-referensen `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget Codex read_thread-verktyg finns; brief/repo används. Scheman, prompter och aktivering är oförändrade.
+
+## Tidigare verifieringar
+
 # Artikelpanelen: uttrycklig lokal kassering – v33, 2026-10-06
 
 ## Beteende och avgränsning

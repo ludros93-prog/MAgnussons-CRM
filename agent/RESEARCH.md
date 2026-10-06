@@ -248,3 +248,11 @@ Webbverktygets nya öppning av [Lime – Actions Design Guidelines](https://plat
 [Lime 2025.1](https://platform.docs.lime-crm.com/en/latest/on-premise/releases/2025.1/release-notes/) gav live 429 17:24:20. Endast officiellt indexerat utdrag belägger varning i Protocol/Resource Planner; ingen lyckad ny livehämtning, artikelgaranti eller verifierad warningonunsavedProtocol-nyckel.
 
 Magnussons lokala stängningsval, varning om obekräftad sparning och fokusåtergång är egna tillämpningar. Produktprov och publicering finns i [VALIDATION](../VALIDATION.md); Codex-tasken är oläst.
+
+## Leveransgranskning och intuitiva handlingar – kontrollerat 2026-10-06
+
+- [Salesforce updateRecord](https://developer.salesforce.com/docs/platform/lwc/guide/reference-update-record.html): HTTP200, slut-URL oförändrad kl. 19:21:09.570556 UTC. `clientOptions.ifUnmodifiedSince` använder LastModifiedDate för att upptäcka ändring före update. Magnussons använder egen relevant receipt-projektion och SQL-CAS, kontrollerad efter varje omläsning; exakt replay ligger före konflikt. Salesforce-dokumentationen bevisar inte vår implementation eller drift.
+- [Lime Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/): HTTP200, slut-URL oförändrad kl. 19:21:26.254337 UTC. Få relevanta handlingar, verb samt synlig text/ikon. Tillämpning: Granska aktuell leverans, uttrycklig jämförelse och Använd detta underlag och behåll min text; användaren ser vad som sparas och vad som bara granskas.
+- [Saleshub AI funktioner](https://saleshubai.se/funktioner): HTTP200, slut-URL oförändrad kl. 19:21:26.428634 UTC. Beskriver sammanhängande kund-/affärs-/leveransinformation och nästa aktivitet. Tillämpning: samma underlag visar aktuellt besked, avsändning och kontrolluppgifter utan dubbelregistrering. Marknadsbeskrivning är inget integrationsprov.
+
+Browserbelägget för v34 är 8 syntetiska fall; inga påståenden om uppmätt personalnytta, egna leverantörsintegrationer eller världens bästa CRM görs genom källorna.
