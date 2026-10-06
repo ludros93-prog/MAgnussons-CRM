@@ -6,7 +6,7 @@ type LocalDraft=DraftRecord&{status:'saved'|'pending'|'saving'|'error'|'conflict
 type Workspace={ready:boolean;error:string;records:LocalDraft[];get:(id:string)=>LocalDraft|undefined;create:(kind:DraftRecord['kind'],context:string,data:Record<string,any>,title:string,id?:string)=>string;update:(id:string,data:Record<string,any>,title?:string)=>void;flush:(id:string)=>Promise<{id:string;revision:number}|null>;reconcile:(id:string)=>Promise<boolean>;consume:(id:string)=>void;resolve:(id:string,useServer:boolean)=>void;archive:(id:string)=>Promise<boolean>;retry:()=>void};
 type Scope={key:string;epoch:number;active:boolean;controllers:Set<AbortController>};
 type Session={scope:Scope;epoch:number};
-const draftKinds=['catalog','production','note','followup','form','plan','prospecting','onboarding'];
+const draftKinds=['catalog','production','note','followup','form','plan','prospecting','onboarding','receipt'];
 const Context=createContext<Workspace|null>(null);
 export const useDrafts=()=>{const ctx=useContext(Context);if(!ctx)throw Error('Draft workspace missing');return ctx;};
 export function DraftProvider({space,userId,enabled,children}:{space:string;userId:string;enabled:boolean;children:ReactNode}){
