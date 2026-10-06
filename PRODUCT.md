@@ -1,6 +1,6 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Uppdaterat med integrerad kod och designkandidaten 2026-10-05. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
+Uppdaterat 6 oktober 2026 med leveranser till v25. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
 
 ## Syfte och dagligt arbete
 
@@ -89,3 +89,10 @@ Detta är levererat i v23 för de tre kundflödena. Exakt serverfel ligger kvar 
 ## Levererat i v24: rätt handlingar i Kundvård
 
 Återköp och Merförsäljning visas för säljare/administratörer enligt det redan befintliga canEdit-villkoret. Reader kan läsa kundkort, historik och antalet öppna affärer och erbjuds inte de två formuläringångarna. Säljarens återköpsväljare och nya merförsäljningsaffär behåller sina tidigare flöden; inga serverrättigheter ändras. VALIDATION kvitterar 9/9 lokala roll-/navigeringsfall, 5/5 komponentfall och faktisk v24-publicering. Generella affärsformulärets mobilbredd med långt kundnamn och footerklippning är fortfarande felaktiga, exakt oförändrade mot v23, och rättas separat. Detta är inget konto-/personalprov eller godkännande av hela mobilupplevelsen.
+
+
+## Generella formulär på mobil – v25
+
+Kund-, affärs-, order-, aktivitets-, mötes-, antecknings- och inställningsformulär håller långa värden och befintlig privat sparstatus inom sin bredd. Mobilen har en kolumn; text och knappar får radbrytas. Lång textarea använder befintliga rader och intern scroll. Aktiva generella fält rullas bara vid behov till fri yta efter den verkliga footerhöjden, utan refokus eller sparning.
+
+Privata utkast, konflikter, serverroller och godkännanden behåller sina regler. Kundkortets läsvy, privata workflow-dialoger och workorder/OrderGuide får inte denna markör eller helper. Leveransen inför ingen ny sparstatusfunktion; samlade fel-/återförsöksflöden återstår. Slutprov, publicerad källa och verklig v25-deploy redovisas i VALIDATION; lokal browser är inget personal- eller livekontoprov.
