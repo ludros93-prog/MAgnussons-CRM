@@ -2,7 +2,7 @@
 
 CRM för Magnussons med egen arbetsdag, säljuppföljning, kundvård, order, tryck och lager. Version 13 är ursprunglig utgångspunkt. Aktuell agentetablering finns i [STATUS-2026-10-05.md](STATUS-2026-10-05.md), med tidigare granskning och pilotgränser i [STATUS-2026-10-04.md](STATUS-2026-10-04.md); verksamhetsbeslut och acceptansprov i [HANDOFF-2026-10-04.md](HANDOFF-2026-10-04.md). Ursprunglig källrevision och överföringsstatus finns i [SOURCE.md](SOURCE.md).
 
-Publicerad **v36** gör privata leveransutkast lättare att välja: väljaren för leveransutkast och Min dag visar arbetsmoment och innehåll, och **Visa alla utkastuppgifter** visar fulltext och stabil utkastreferens. **Ändrat** är inte serverkvittens. V35:s privata återupptagning och uttryckliga CRM-registrering består. Kod/main/live och provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md).
+Publicerad **v37** bevarar privata artikelutkast för administratören. Ofärdiga uppgifter kan sparas privat och fortsättas från Min dag med ursprungligt artikelunderlag. **Spara utkast & stäng** ändrar inget artikelregister; **Spara artikel i CRM** är en separat, kontrollerad handling. Kod/main/live och gränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md).
 
 ## Utveckling och kontroller
 

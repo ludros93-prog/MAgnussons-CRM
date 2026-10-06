@@ -1,5 +1,21 @@
 # Magnussons CRM – order, tryck och lager
 
+## Fortsätt privata artikeluppgifter – v37, 2026-10-06
+
+Som administratör: öppna en artikel eller välj att lägga till en artikel. Skriv de uppgifter du har. Tomma eller ofärdiga textfält kan ligga i utkastet; före **Spara artikel i CRM** måste artikeluppgifterna vara giltiga och artikelkällan finnas. Saknad pris-/kostnadsuppgift blir inte automatiskt noll.
+
+**Spara utkast & stäng** sparar bara ditt privata underlag. Vänta på bekräftad privat sparstatus innan du lämnar fliken; sparfel behåller panelen och texten. Fortsätt från **Min dag → Fortsätt där du slutade** efter omladdning. **Visa artikelutkastets uppgifter** visar sparat innehåll och referens, och **Valt privat artikelutkast** visar vilket underlag du arbetar i. Privata utkast visas för din användare i rätt arbetsyta.
+
+**Spara artikel i CRM** är den uttryckliga registerändringen. Servern använder exakt sparade värden, artikelunderlag och privat sparversion och arkiverar utkastet atomiskt med registerändringen. **Ta bort privat utkast** kasserar ditt privata arbete och återställer ingen möjlig tidigare CRM-sparning. Vid okänd kvittens kan artikeln redan vara sparad; **Försök samma CRM-sparning igen** återförsöker samma handling.
+
+Om kollegan har ändrat artikeln: välj **Granska aktuell artikel**, jämför med ditt ursprungliga underlag och välj uttryckligen **Använd detta underlag och behåll mina värden**. Detta väljer underlag i ditt privata utkast. Registerändringen kräver fortfarande **Spara artikel i CRM**. Om ett nytt utkast kolliderar med en befintlig källa/artikelnummer/variant får det inte skriva över den; öppna och granska den registrerade artikeln.
+
+Om du senare har säljarroll kan du läsa/kopiera ditt eget sparade artikelutkast och ta bort en identisk, redan serverbekräftad version. Artikelredigering och CRM-publicering kräver administratör. En annan användares privata underlag blir inte tillgängligt genom chefs-/administratörsroll.
+
+Arkivering med säljarroll gäller bara ett oförändrat, redan serverbekräftat eget artikelutkast. Om lokala ändringar väntar på sparning eller har sparfel när rollen ändras till säljare bevaras de, men servern nekar skrivning med 403 och arkivering kan inte slutföras genom att skriva de lokala ändringarna. Hela privata kuvertet kan läsas/kopieras i förhandsvisningen. Denna begränsning är inte ett färdigt rollbytesflöde; säker hantering och uttryckligt val av den sparade serverversionen är nästa avgränsning.
+
+Typen form och kopplingen article använder befintlig utkastlagring utan SQL-migrering. V36 kan läsa/lista och arkivera dessa formdata; dess generella editor är ingen säker operativ återgång. Behåll V37:s serverskydd och en kompatibel editor, eller stäng av äldre artikelredigering/publicering. Ingen faktisk rollback eller äldre UI-publicering har prövats. CRM-backup innehåller fortfarande inte utkast/konton/Outlook; separat driftåterställning återstår. [VALIDATION](VALIDATION.md) skiljer isolerade prov från riktiga konton, personal och live-UI.
+
 ## Jämför privata leveransutkast – v36, 2026-10-06
 
 Om ordern har flera leveransutkast: jämför **Utkast för mottagningsbesked** eller **Utkast för leveranskontroll** och innehållsraderna innan du väljer **Fortsätt med detta utkast**. På Min dag får leveransutkast samma förhandsvisning. Öppna **Visa alla utkastuppgifter** för alla fem fullständiga fält, valt läge, tid med sekunder och den stabila utkastreferensen. Läs även fält som hör till det andra läget när du behöver jämföra två lika utkast. Referensen identifierar ett visst privat utkast; den anger ingen enhet eller orderrevision.
