@@ -1,8 +1,10 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Uppdaterat 6 oktober 2026 med leveranser till v28. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
+Uppdaterat 6 oktober 2026 med leveranser till v29. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
 
 ## Syfte och dagligt arbete
+
+Sedan v29 samlar generella formulär privat sparstatus och besked från CRM-/stängningsförsök vid handlingsknapparna. Privat utkast sparat betyder inte att CRM har uppdaterats. Fullständiga besked och befintliga konfliktval nås med Visa besked/Granska; texten bevaras när ett försök misslyckas. Inställningar har ingen privat autosparning och reader behåller läsbehörighet. **V29 är faktiskt publicerad** från `1ca6f2b` efter grön exakt-head/main-CI, obligatoriska kontroller och 23/23 isolerade browserfall. [VALIDATION](VALIDATION.md) skiljer source/main/live och provgränser. Andra specialdialoger, fokusåtergång/mobilkundlista och personalpilot återstår.
 
 Säljaren börjar i Min dag: egna uppgifter, order som kräver hjälp, kundmöten, kontaktbehov och privata utkast. Ledning med administratörsroll kan växla till teamets uppgifter och resultat. Ett personligt urval innebär inte sekretess mellan säljarna; säljteamet arbetar med gemensamma kunddata.
 
