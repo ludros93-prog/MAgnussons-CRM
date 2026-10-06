@@ -10,7 +10,9 @@ export function ArticleCatalog({st,save,busy,initialDraftId='',onCreated}:{st:St
  const sourcesChanged=sourcesBasis!==recordBasis(st.settings.catalogSources),articleChanged=!!edit?.id&&editBasis!==recordBasis(st.articles.find(a=>a.id===edit.id));
  const articleSaving=useRef(false),[savingArticle,setSavingArticle]=useState(false),[articleSaveFailed,setArticleSaveFailed]=useState(false);
  const [articleLeave,setArticleLeave]=useState<{next:Article|null}|null>(null);
- const articlePanel=useRef<HTMLDivElement>(null),articleFocus=useRef<HTMLElement|null>(null),articleDiscarding=useRef(false);
+ const articlePanel=useRef<HTMLDivElement>(null),articleFocus=useRef<HTMLElement|null>(null),articleDiscarding=useRef(false),articleFocusCleanup=useRef<()=>void>(()=>{});
+ useEffect(()=>()=>articleFocusCleanup.current(),[]);
+ useEffect(()=>{if(!edit)articleFocusCleanup.current()},[!!edit]);
  const articleLocked=busy||savingArticle;
  const articleNeedsChoice=!!edit&&(recordBasis(edit)!==editBasis||articleSaveFailed);
  const openArticle=(a:Article,discard=false)=>{if(busy||articleSaving.current)return;if(articleNeedsChoice&&!discard){articleDiscarding.current=false;setArticleLeave({next:structuredClone(a)});return}setEdit(structuredClone(a));setEditBasis(recordBasis(a));setArticleSaveFailed(false);setArticleLeave(null)};
@@ -22,15 +24,25 @@ export function ArticleCatalog({st,save,busy,initialDraftId='',onCreated}:{st:St
   const panel=event.currentTarget,control=event.target;
   if(!(control instanceof HTMLElement)||!control.matches('input,textarea,button,[role=combobox]'))return;
   if(panel===articlePanel.current)articleFocus.current=control;
-  requestAnimationFrame(()=>{
-   if(!control.isConnected||document.activeElement!==control||!panel.contains(control))return;
+  articleFocusCleanup.current();
+  let stopped=false,frame=0;
+  // Text transitions and opening animation can finish after native autofocus.
+  // Watch the same control's size and reveal it again without moving focus.
+  const reveal=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{
+   if(stopped)return;
+   if(!control.isConnected||document.activeElement!==control||!panel.contains(control)){stop();return}
    const box=control.getBoundingClientRect(),bounds=panel.getBoundingClientRect(),top=Math.max(0,bounds.top)+12,bottom=Math.min(window.innerHeight,bounds.bottom)-12;
    if(box.height>bottom-top)return;
    if(box.top<top)panel.scrollBy({top:box.top-top,behavior:'instant'});
    else if(box.bottom>bottom)panel.scrollBy({top:box.bottom-bottom,behavior:'instant'});
-  });
+  })};
+  const observer=new ResizeObserver(reveal);
+  function stop(){stopped=true;cancelAnimationFrame(frame);observer.disconnect();panel.removeEventListener('animationend',reveal)}
+  articleFocusCleanup.current=stop;
+  observer.observe(panel);observer.observe(control);panel.addEventListener('animationend',reveal);reveal();
  }
  function restoreArticleFocus(event:Event){
+  articleFocusCleanup.current();
   if(articleDiscarding.current)return;
   event.preventDefault();
   const panel=articlePanel.current,control=articleFocus.current;
