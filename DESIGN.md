@@ -48,3 +48,12 @@ Statusytans och sparhandlingarnas verkliga höjd ger rullningsutrymme för fokus
 ## Kundvårdens relevanta handlingar, v24
 
 Affärsingångarna Återköp/Merförsäljning följer nu befintlig säljar-/adminförmåga; reader behåller läsning och historik utan de två oanvändbara formuläringångarna. Detta är en avgränsad tydlighetsförbättring enligt aktuella leverantörsprinciper i RESEARCH. Roll-/kort-/navigeringsprov på 320/390/1440 px och komponentrender passerar. Det generella affärsformulärets min-content-bredd och fem px klippta footer är däremot belagda gamla fel med långt kundnamn, lika före/efter. Nästa formulärdesign ska rätta dessa mått och provas med sparstatus, textförstoring och kort viewport utan att sänka kraven. Fysiskt mobil-/personalprov är fortsatt oprövat.
+
+
+## Generella formulär – publicerad v25
+
+Långa kundnamn, valtext och befintlig privat sparstatus ryms inom formuläret. Krympbara kolumner ger en kolumn på mobil; svenska handlingar radbryts och har minst 44 px höjd. Footer tar hänsyn till safe-area och ligger i vanligt scrollflöde vid kort viewport. Textareas behåller sina rader, full text, intern scroll och manuell resizing.
+
+Native fokus kan visa en textmarkör samtidigt som fältets nederkant ligger bakom en radbruten footer. Hjälpen mäter därför aktuella kanter för det fortfarande fokuserade generella fältet och rullar bara dialogen vid behov. Den ändrar inga värden, ingen fokusdestination och ingen sparning. Workorder och privata kundflöden är oförändrade.
+
+Slutbygget passerar 18/18 fall och 77 formprov på 320/390/768/1440, kort 390×460 och kontrollerad 200 procent dialogtext, samt åtta dropdowninteraktioner. Alla 1 937 Tab-fältbesök har fri helbox med befintlig tolerans. V24-fyndet ovan är historiskt; faktisk rättning/publicering kvitteras i VALIDATION. Portalernas textförstoring, fysisk telefon/OS-tangentbord, skärmläsare och personalanvändbarhet är inga godkända prov här. Färska leverantörs-/webbstandardkällor finns i RESEARCH.

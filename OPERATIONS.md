@@ -251,3 +251,10 @@ V23 från start-main `d9a117` ändrar endast presentation och klientens felbeske
 ## Kundvårdens rollstyrda affärsingångar, publicerad v24
 
 V24 ändrar endast två knappvisningar i CustomerWorkflows med befintligt canEdit(admin/seller). Ingen lagring, migration, API, autentisering, medlemskoppling, CAS/idempotens, atomisk skrivning, draftmodell, filreferens eller backup ändras. V23 är datakompatibel återgång utan migration men återför missvisande reader-ingångar; ingen rollback utfördes. Samma Site, exakt custom-policy och envrevision 1/DB/BUCKET är bekräftade efter deploy 05:31:01 UTC. Anonyma GET gav 403/403. Backendens normala rollavvisning provades endast med syntetiska lokala konton; faktisk hostinginloggning och återställning kvarstår. Generella formulärs redan befintliga mobilbredd/footerbrist är dokumenterad i VALIDATION och BACKLOG. Den efterföljande dokumentationskvittensen kräver egen CI men ingen app-återpublicering.
+
+
+## Datakompatibilitet och återgång för generella formulär – v25
+
+V25 ändrar generella formulärs layout och residualscroll efter aktivt fältfokus. Ingen databas, draftpayload, API, filreferens, backup, roll, CAS/idempotens eller atomisk skrivning ändras. Ingen migration behövs; DB/BUCKET och envrevision 1 bevaras. Kundkortets läsvy, privata workflows och workorderguiden är undantagna. Textareas behåller full text och intern scroll; överhöga kontroller lämnas åt normalt native scroll, ingen pendling/refokus införs.
+
+V24-källa `96191a927cc6c66f264909c246f0367cc2362868` är datakompatibel återgång men återför kända generella bredd-/footer-/fokusproblem. Ingen rollback utfördes. Samma Site publicerade v25 kl. 07:21:30 UTC med exakt oförändrad custom-policy; färska metadata bekräftar källrevision och deploy. Bara anonyma GET gav 403/403, inga riktiga kundskrivningar. Isolerad återställning med 13,5 MB testfiler är inget verkligt hostingåterställningsprov. Fysisk telefon/visualViewport, personal och riktiga konton/integrationer återstår. Den separata Markdownkvittensen har egen CI och kräver ingen ny app-publicering. Se VALIDATION för exakta hashar och kvit­tenser.

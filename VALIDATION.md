@@ -1,3 +1,50 @@
+# Generella formulär som ryms på mobil – v25, 2026-10-06
+
+Startbas var färsk main `d79f1bb624e2e77ef7969143af45e90654325b51` och live v24 från `96191a927cc6c66f264909c246f0367cc2362868`. Egen branch/worktree och atomisk reservation användes; färska fjärrrevisioner, PR:er och Site kontrollerades. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst eftersom endast Slack read_thread är anropbart. Den explicita briefen och repo-underlagen användes.
+
+## Ändrat beteende och avgränsning
+
+Långa kundnamn breddade tidigare dialogen från 300 till 405 px vid 320 px och från 366 till 405 px vid 390 px. Sparknappar klipptes fem px vid första öppning men blev synliga efter scroll. Generella formulär har nu krympbara kolumner, radbruten valtext och sparstatus, knappar som får växa och en footer som ryms. Vid kort viewport ligger handlingarna i normalt scrollflöde. Textareas behåller sina rader och gör lång text tillgänglig genom intern scroll. Det aktiva generella fältet rullas fram efter uppmätta dialog-, viewport- och footerkanter, endast när fältet ryms men är skymt och fortfarande anslutet/fokuserat. Ingen refokus, värdeändring eller sparning sker från hjälpen.
+
+Kundkortets lässheet, privata kundflöden och workorderguiden får varken markör eller fokushelper. API, serverroller, privat utkastmodell, godkännanden, atomiska skrivningar, CAS/idempotens, lagring, filer, backup, dependencies och hostingmanifest är oförändrade. Ingen migration krävs. Generella formulärs samlade spar-/felstatus och återförsöksupplevelse är fortfarande nästa arbete.
+
+## Faktiska slutkontroller
+
+- Node 24.19.0, pnpm 11.25.0. Full CRM/Outlook-regression, TypeScript `--noEmit --incremental false`, bygge och isolerad workerd/D1/R2-runtime passerar på exakt slutkälla. Befintliga orderfall 40→45, godkänd 50→48 med syntetiskt dokumenterat underlag, kassation, delleverans och dubbelklick/återförsök behåller sina förväntningar.
+- Runtime återställer 13 500 000 byte i tre testfiler genom en strömkopia på 18 010 856 byte med verifierade hashar, korrektur-/foto-/versionslänkar, idempotens, privata utkast, atomisk arkivering och nekad sen autosave. Detta är inget faktiskt Sites-återställningsprov.
+- Faktisk lokal HTTP-Worker/Chromium med migrerad egen D1/R2 passerar **18/18 huvudfall**: 14 seller/admin-kombinationer med **77 formulär**, ett privat utkastflöde och tre readerfall. Bredder 320/390/768/1440, kort 390×460 och faktiskt dubblerad computed dialogtext på 320×844/390×460. Affär, kund, uppgift, möte och order provas; admin även inställningar. Kundens adresser och tre kontaktavsnitt öppnas.
+- **1 937 verkliga Tab-fältbesök**, **170 footerknappsbesök** och sju interna textarea Ctrl+End-prov passerar med oförändrad 0,5 px tolerans. Noll undantag för överhöga kontroller. Normal pointerstängning fungerar utan force; full text och sista tecken bevaras.
+- Privat syntetiskt affärsutkast har lång vald ansvarig, Vunnen och en ofullständig kalkylrad med okänd inköpskostnad. Sju vyer samt verklig sparning/omladdning/återöppning passerar. Exakt en draft-POST, noll gemensamma CRM-POST; Worker-version 5 och kund-/affärs-/orderantal är oförändrade. Acceptansen markeras aldrig och orderknappen skickas aldrig.
+- Separat **4/4 portalvyer, 8/8 dropdowninteraktioner** passerar med pointer, native Tab och Escape, oförändrade värden/data, popup inom viewport och full återfokuserad trigger. Portalernas alternativ behåller normal källtypografi; 200-procentproben gäller dialogens element. Första portalharnessens aria-hidden-locator-timeout bevaras som diagnostik och ersattes av cachad faktisk DOM-mätning utan ändrade krav.
+- 173 huvudbilder, varav 170 måttbilder, och åtta portalbilder. Root har visuellt granskat vanlig 390-affär, 320/200 won-footer och inställningstextarea. Alla 96 byggfiler samt Worker/source/tree är byteoförändrade före/efter; git är rent. Egen PID 62775 stoppades, store BYB0fo raderades och 8916/8917 stängdes **07:18:29 UTC**.
+
+Textproben dubblerar varje dialogelements computed font/line-height i browserminne med !important och behåller viewport/fältbredd. Det är inte browser-/OS-zoom, fysisk telefon eller WCAG-certifiering. Ingen diagnostisk fokus-/layoutfix injicerades i slutbygget. Tidigare underkända källor 30f4f9b/88c4598/6db3e22/379004f/428a28c/765af94 finns som historik i LOG; ingen av dem publicerades eller räknades som slut-PASS.
+
+## Kod, main, artefakt och faktisk publicering
+
+| Underlag | Verifierad uppgift |
+| --- | --- |
+| PR #22 head | `b12ad7422e17c07b6d4235fe39bd6a7c41b962ff` |
+| Exakt-head CI | [37428019931](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37428019931), jobb `112152038541`, alla 13 steg success observerat 07:12:35 UTC |
+| App-main efter merge | `4595bf5db48e157d05824db6613343ee51220fee` |
+| App-main push-CI | [37428943865](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37428943865), jobb `112154998965`, alla 13 steg success, faktisk completed_at 07:21:06 UTC |
+| Pushad/publicerad Sites-källa | `03d2e61a0559eb03e4b2e5275a0ab95d4c6a34d9` |
+| Gemensamt app-main/source-träd | `1001b844d832ceb3902240914e65113f5b2caef9` |
+| Worker SHA-256 | `fe12fbc24e1aee5b3d83ef5687c445a14d747f56e29fc9d40547200a03e924d9` |
+| Dist SHA-256 | `d89e5167b7f497cbc4056010883571d810367edca0e4372c476d0f0f1f834fe0` |
+| Slutbrowserrapport SHA-256 | `d7b95c5f7d1251f4bf867c3e613bd4123b87d131917f55cbae76acb6e930a594` |
+| Lokalt gzip SHA-256 | `c020ca21294565833b5a3408dc60f3d983b5320c670a4775b93e9b817b56bd8e` |
+| Sites-lagrat tar | `sha256:bb200532b2519c9368d7fb0ed65172f5e116682929df4603778d764fceb95ae2`, 4 229 120 byte, 97 filer |
+| Version | **25**, `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_8f560b3c4b2c8191b83b3576e5446c90` |
+| Deploy | `appgdep_6ac4a1658d2081918fb022a2a4e44e89`, **succeeded 2026-10-06 07:21:30 UTC** |
+| Live | [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), samma Site |
+
+Dist är SHA-256 av sorterad kompakt JSON path/sha256/bytes med sorterade objektnycklar. Arkivet innehåller exakt de 96 oförändrade distfilerna och hostingmetadata, inga testlager/kunddata/exporter/hemligheter. Gzip och Sites tar har olika format/hashes; arkivet återanvändes utan nytt bygge. Normal sourcepush från 96191a9 till 03d2e61 bekräftades terminal exit0 före save/deploy. Sourcehelper saknas i kontrollerade pluginrötter; etablerad identitetskontrollerad credential-stdin/childENV-fallback användes utan force eller credentials i filer/argv/output. Ingen publish-on-push begärdes.
+
+Färska native Site/version-svar bekräftar version/källa/deploy, exakt oförändrad custom-policy och envrevision 1; hostingmanifestets DB/BUCKET är oförändrat. Bara anonyma live-GET `/` och `/api/crm` utfördes: **403/403**, svarskroppar bortkastade. Ingen autentiserad live-kundskrivning, konto-/integration-/delnings-/schema-/prompt-/aktiveringsändring gjordes.
+
+V24 är datakompatibel återgång utan migration men återför de dokumenterade layout-/fokusproblemen. Ingen rollback utfördes. Autentiserad live-UI, fysisk telefon/OS-tangentbord/visualViewport, skärmläsare, personalprov, riktiga integrationer och hostingåterställning är fortfarande oprövade. B01b2:s sammanhållna operativa ID-migrering, hostingbudget och pilot kvarstår. Den separata releasekvittensen på `docs/mobile-generic-form-release` ändrar endast Markdown, kräver egen exakt-head CI och återpublicerar inte appen.
+
 # Kundvårdens rollstyrda återköp/merförsäljning – v24, 2026-10-06
 
 Startbas: färsk main `a3a393c79760baa6487215fe5307b804643544bc`, live v23/source `5cdc2eee45eee7058bfd8f6898ef7f1085fbe3b6`. Öppna PR:er, reservationer, publicering och remote kontrollerades. Egen branch/worktree `fix/customer-care-role-actions` och atomisk reservation användes. Codex-referensen är fortsatt oläst eftersom Codex read_thread saknas.
