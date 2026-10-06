@@ -52,13 +52,13 @@ async function prepareBackupStream(space:string,authorize:BackupExportAuthorizat
 }
 
 export async function exportBackupStream(space:string,authorize:BackupExportAuthorization=trustedBackupExport){return (await prepareBackupStream(space,authorize)).body;}
-// Cloudflare ignores a manually assigned Content-Length for ordinary streams.
-// A direct FixedLengthStream body declares/enforces the real expected length,
-// so clean transport EOF cannot turn a truncated export into a full download.
+// Validate the producer's byte count here and carry its trusted length to the
+// final Worker framing layer: Vinext cleanup replaces this inner stream, so
+// HTTP must receive a new FixedLengthStream after the framework has finished.
 export async function exportBackupDownload(space:string,authorize:BackupExportAuthorization){
  const {body,byteLength}=await prepareBackupStream(space,authorize),fixed=new FixedLengthStream(byteLength);
  void body.pipeTo(fixed.writable).catch(()=>{/* The destination body carries the error to HTTP; pipeTo also cancels the source. */});
- return fixed.readable;
+ return {body:fixed.readable,byteLength};
 }
 
 // Split raw bytes before decoding, enforcing a bounded UTF-8 record even across chunks.

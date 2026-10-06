@@ -2,6 +2,7 @@ import {z} from 'zod';
 import {member,viewer,AccessError,sameOrigin,type Member} from '@/lib/crm-auth';
 import {RuleError} from '@/lib/crm';
 import {database} from '@/lib/crm-db';
+import {BACKUP_LENGTH_HEADER} from '@/lib/backup-http';
 import {visibleState} from '@/lib/crm-visibility';
 import {exportBackup,importBackup,BACKUP_MAX_BYTES} from '@/lib/crm-backup';
 import {exportBackupDownload,importBackupStream} from '@/lib/crm-backup-stream';
@@ -20,7 +21,7 @@ async function currentExportMember(initial:Member){
 }
 export async function GET(req:Request){let initial:Member|undefined;try{
  initial=await member(req,false,true);const user=initial,authorize=()=>currentExportMember(user),params=new URL(req.url).searchParams,space=z.enum(['demo','live']).parse(params.get('space'));
- if(params.get('format')==='stream'){const body=await exportBackupDownload(space,authorize);try{await authorize()}catch(error){try{await body.cancel()}catch{}throw error;}return new Response(body,{headers:{'Content-Type':'application/x-ndjson','Cache-Control':'no-store','Content-Disposition':'attachment; filename="magnussons-crm-med-filer-'+space+'.ndjson"'}});}
+ if(params.get('format')==='stream'){const {body,byteLength}=await exportBackupDownload(space,authorize);try{await authorize()}catch(error){try{await body.cancel()}catch{}throw error;}return new Response(body,{headers:{'Content-Type':'application/x-ndjson','Cache-Control':'no-store','Content-Disposition':'attachment; filename="magnussons-crm-med-filer-'+space+'.ndjson"',[BACKUP_LENGTH_HEADER]:String(byteLength)}});}
  const value=await exportBackup(space,authorize),body=JSON.stringify(value);if(new TextEncoder().encode(body).byteLength>BACKUP_MAX_BYTES)throw new RuleError('CRM-kopian är större än 16 MB. Ingen ofullständig kopia skapas.');await authorize();return new Response(body,{headers:{'Content-Type':'application/json','Cache-Control':'no-store','Content-Disposition':'attachment; filename="magnussons-crm-med-filer-'+space+'.json"'}});
  }catch(e){if(initial)try{await currentExportMember(initial)}catch(access){return fail(access)}return fail(e)}}
 export async function POST(req:Request){let initial:Member|undefined;try{
