@@ -51,7 +51,7 @@ Resultatets huvudmått är **försäljning mot månads- och årsmål, marginal s
 - Stabilt användar-/säljar-ID bär ansvar och historik. Namn är visningstext.
 - Kund, kontakt, affär, order, revision, korrektur, material, produktionsmoment, försändelse och faktura har tydliga samband och olika betydelser.
 - Intern anteckning, kontaktförsök och verklig kundkontakt hålls isär. Ett importerat företag eller ett obesvarat mejl blir ingen påhittad dialog eller affär.
-- ”Följ upp” sparar anteckning, resultat, avslut/omplanering och nödvändigt nästa steg tillsammans. Fel bevarar text och utkast.
+- ”Följ upp” sparar anteckning, resultat, avslut/omplanering och nödvändigt nästa steg tillsammans. Fel bevarar text och utkast. En tom anteckning innebär inte att ett privat utkast är tomt: ändrat resultat, datum, avslut och nästa steg ska kunna återupptas efter stängning eller byte till offert/kundflöde. Privat sparning är inte CRM-inlämning; kassering kräver en uttrycklig handling.
 - Kommersiell acceptans och korrekturgodkännande binds till exakt version, person, tid och underlag. Agentens utvecklingsmandat ersätter inte kundens verkliga godkännande i CRM.
 - Ändring efter produktionsstart bevarar mottagna, tryckta, kasserade och skickade mängder. Ny revision får inte nollställa fysisk historik.
 - Kassation minskar inte automatiskt kundens åtagande. Delleverans avslutar inte hela ordern. Tryckt, packat, skickat, kundmottaget och fakturerat är separata händelser.
