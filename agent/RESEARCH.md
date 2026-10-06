@@ -238,3 +238,13 @@ Efter Ludwigs förtydligande 6 oktober öppnades [Saleshub – Funktioner](https
 Webbverktygets nya öppning av [Lime – Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) gav HTTP 429. Principen om få relevanta handlingar med tydliga verb bygger därför fortsatt på den separat daterade HTTP 200-kontrollen kl. 15:33 ovan; ingen ny läsning eller ny Lime-funktion påstås.
 
 [DESIGN](../DESIGN.md#begriplighet-i-det-befintliga-användarprovet) preciserar befintliga T26/B07 med frågor om kund/sammanhang, nästa handling och privat kontra gemensam sparning. Mobilkundlistans läsbarhet och fokusmål efter arbetsytebyte är egna, ännu inte implementerade acceptanskrav. De är inte leverantörsgarantier, nya sparregler eller ett genomfört personalprov.
+
+## Artikelpanelens lokala kassering, kontrollerat 6 oktober 2026
+
+[Salesforce Edit a Record](https://developer.salesforce.com/docs/platform/lwc/guide/data-edit-record.html) och [Saleshub Funktioner](https://saleshubai.se/funktioner) returnerade HTML 17:25:04 UTC. Salesforce skiljer submit/success/error/reset; Saleshub beskriver sammanhängande moduldata. Ingen garanterar vår kassering eller privata utkast.
+
+[Radix AlertDialog](https://www.radix-ui.com/primitives/docs/components/alert-dialog), HTML 17:25:14, beskriver Esc, fokusfälla och Trigger-återgång. [Upstream källkod](https://raw.githubusercontent.com/radix-ui/primitives/main/packages/react/alert-dialog/src/alert-dialog.tsx), text 17:24:22, visar Cancel-fokus/utanförspärr; det ersätter inte kontroll av installerad version. [W3C modal dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) och [kasseringsexempel](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/examples/alertdialog/) returnerade HTML 17:25:14: minst destruktivt initialval, No/Escape utan kassering. Exemplen är ingen WCAG-certifiering.
+
+[Lime 2025.1](https://platform.docs.lime-crm.com/en/latest/on-premise/releases/2025.1/release-notes/) gav live 429 17:24:20. Endast officiellt indexerat utdrag belägger varning i Protocol/Resource Planner; ingen lyckad ny livehämtning, artikelgaranti eller verifierad warningonunsavedProtocol-nyckel.
+
+Magnussons lokala stängningsval, varning om obekräftad sparning och fokusåtergång är egna tillämpningar. Produktprov och publicering finns i [VALIDATION](../VALIDATION.md); Codex-tasken är oläst.
