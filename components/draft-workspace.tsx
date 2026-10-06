@@ -2,6 +2,7 @@
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from 'react';
 import {Button} from '@/components/ui/button';
 import type {DraftRecord} from '@/lib/drafts';
+import {validDate} from '@/lib/business';
 type LocalDraft=DraftRecord&{status:'saved'|'pending'|'saving'|'error'|'conflict';error?:string;server?:DraftRecord|null;generation:number;posted?:boolean};
 type Workspace={ready:boolean;error:string;records:LocalDraft[];get:(id:string)=>LocalDraft|undefined;create:(kind:DraftRecord['kind'],context:string,data:Record<string,any>,title:string,id?:string)=>string;update:(id:string,data:Record<string,any>,title?:string)=>void;flush:(id:string)=>Promise<{id:string;revision:number}|null>;reconcile:(id:string)=>Promise<boolean>;consume:(id:string)=>void;resolve:(id:string,useServer:boolean)=>void;archive:(id:string)=>Promise<boolean>;retry:()=>void};
 type Scope={key:string;epoch:number;active:boolean;controllers:Set<AbortController>};
@@ -185,7 +186,9 @@ export function DraftProvider({space,userId,enabled,children}:{space:string;user
 export function DraftStatus({id,onClosed,onResolved,disabled=false,announce=false}:{id:string;onClosed?:()=>void;onResolved?:(data:Record<string,any>)=>void;disabled?:boolean;announce?:boolean}){
  const w=useDrafts(),d=w.records.find(d=>d.id===id);
  const message=!w.ready?w.error||'Hämtar dina utkast…':!d?'':d.status==='saved'?'Sparat som privat utkast':d.status==='pending'?'Ändringar väntar på sparning':d.status==='saving'?'Sparar utkast…':d.error||'Kontrollera utkastet';
- const timestamp=w.ready&&d?.status==='saved'&&d.updatedAt?' · '+new Date(d.updatedAt).toLocaleTimeString('sv-SE',{timeZone:'Europe/Stockholm',hour:'2-digit',minute:'2-digit'}):'';
+ const updatedAt=typeof d?.updatedAt==='string'?d.updatedAt:'';
+ const savedTime=w.ready&&d?.status==='saved'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/.test(updatedAt)&&validDate.safeParse(updatedAt.slice(0,10)).success?new Date(updatedAt):null;
+ const timestamp=savedTime&&Number.isFinite(savedTime.getTime())?' · '+savedTime.toLocaleTimeString('sv-SE',{timeZone:'Europe/Stockholm',hour:'2-digit',minute:'2-digit'}):'';
  if(w.ready&&!d&&!announce)return null;
  // Generic forms retain this text region even when clean. Retry/version buttons
  // and the changing timestamp stay outside it; announcing never moves focus.

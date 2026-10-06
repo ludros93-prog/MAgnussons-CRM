@@ -56,4 +56,4 @@
 .visual-day .daily-row.daily-receipt-draft>div:first-child{flex-basis:100%}
 .visual-day .daily-row.daily-receipt-draft>.biz-buttons{flex-wrap:wrap;gap:8px;flex-basis:100%}
 .visual-day .daily-row.daily-receipt-draft button{min-width:0;max-width:100%;min-height:44px;height:auto;white-space:normal;overflow-wrap:anywhere;line-height:1.5;text-align:left}
-.visual-day .daily-row.daily-receipt-draft .draft-status,.visual-day .daily-row.daily-receipt-draft .draft-status>span{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.visual-day .daily-row.daily-receipt-draft .draft-status,.visual-day .daily-row.daily-receipt-draft .draft-status>span{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
