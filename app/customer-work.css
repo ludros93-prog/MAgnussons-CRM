@@ -24,6 +24,7 @@
 .wf-sheet .wf-section-head h3{min-width:0;overflow-wrap:anywhere}
 .wf-sheet [data-slot=sheet-title]{overflow-wrap:anywhere}
 .wf-sheet .wf-inset{overflow-wrap:anywhere}
+.wf-sheet .wf-field input{height:auto;min-height:44px}
 .wf-sheet .sheet-body button:not([role=checkbox]){max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:anywhere}
 @media(max-width:767px){.wf-save-status{padding:10px 20px;gap:10px}}
 /* A short viewport needs room to edit, including with enlarged text. */
