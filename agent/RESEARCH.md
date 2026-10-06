@@ -158,3 +158,5 @@ Officiella källor öppnades på nytt inför rättningen av det generella affär
 Limes redan dokumenterade riktlinjer för relevanta handlingar och begriplig verbtext öppnades också på nytt. Saleshubs funktionssida svarade HTTP 403 i detta försök; dess tidigare daterade inspiration behålls utan nytt verifieringsanspråk.
 
 Tillämpningen avgränsas till generella editorer med bevarade roller, disabled-semantik, privata utkast och sparflöden. Browserprov ska mäta lång text, kort viewport, textförstoring och helt nåbara footerknappar. Källorna bevisar ingen generell WCAG-acceptans, fysisk telefon eller personalanvändbarhet.
+
+- [MDN – field-sizing](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/field-sizing), kontrollerad6 oktober2026, HTTP200: content låter textarea växa med texten och gör rows/cols verkningslösa; fixed återför vanlig kontrollstorlek. Magnussons avgränsar detta till generella formulär för befintliga rader och intern scroll. Uppmätt höjd, bevarad text och faktiskt fokus verifieras i slutbygget. MDN:s Baseline2026 gäller senaste versioner sedan juni; äldre browserstöd och fysisk telefon är inte verifierade här.

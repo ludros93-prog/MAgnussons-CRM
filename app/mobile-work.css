@@ -80,6 +80,10 @@
  height: auto;
  min-height: 44px;
 }
+/* Long notes keep their native rows and internal scrolling when focused. */
+.crm-form-sheet textarea {
+ field-sizing: fixed;
+}
 .crm-form-sheet [data-slot=select-trigger] {
  height: auto;
  min-height: 44px;
