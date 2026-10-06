@@ -15,7 +15,15 @@
 .wf-save-status[data-state=error],.wf-save-status[data-state=conflict],.wf-save-status[data-state=notice]{background:#fff4e6;border-color:#e6c28b}
 .wf-save-status[data-state=error] .wf-save-summary,.wf-save-status[data-state=conflict] .wf-save-summary,.wf-save-status[data-state=notice] .wf-save-summary{color:#744a12}
 .wf-save-status button{flex-shrink:0;max-width:48%;min-height:44px;height:auto;white-space:normal;overflow-wrap:anywhere;font-size:.875rem}
-.wf-sheet .form-footer{z-index:1;flex-wrap:wrap}
+.wf-sheet .form-footer{z-index:1;bottom:0;flex-wrap:wrap;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 .wf-sheet .form-footer button{min-height:44px;max-width:100%}
 .wf-sheet [tabindex="-1"]:focus-visible{outline:2px solid var(--ring);outline-offset:3px}
-@media(max-width:767px){.wf-save-status{padding:10px 20px;gap:10px}.wf-sheet .form-footer{bottom:-20px}}
+.wf-sheet .draft-status{white-space:normal;overflow-wrap:anywhere;min-width:0}
+.wf-sheet .draft-status>span{min-width:0}
+.wf-sheet .wf-section-head{flex-wrap:wrap}
+.wf-sheet .wf-section-head h3{min-width:0;overflow-wrap:anywhere}
+.wf-sheet .wf-inset{overflow-wrap:anywhere}
+.wf-sheet .sheet-body button:not([role=checkbox]){max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:767px){.wf-save-status{padding:10px 20px;gap:10px}}
+/* A short viewport needs room to edit, including with enlarged text. */
+@media(max-height:540px){.wf-sheet{scroll-padding-bottom:12px}.wf-sheet .form-footer{position:static}.wf-save-status{flex-wrap:wrap}.wf-save-summary{flex-basis:100%}.wf-save-status button{max-width:100%}}
