@@ -51,8 +51,10 @@ try {
   order=state.orders[0];await post('production_submit',{orderId:order.id,production:{lines:state.deals[0].lines,sketchFileId:proof.id,sketchVersion:proof.version,instructions:'Brösttryck enligt godkänt korrektur',printDeadline:core.plusDays(today,10),dispatchDeadline:core.plusDays(today,20)}});
   order=state.orders[0];await upload('arbetsfoto.png','document',true);await upload('original.pdf','logo');
   const before=await get();
-  const exported=await api('/api/crm/backup?space=live&format=stream',{headers});assert.equal(exported.status,200);
+  // Use the real HTTP listener: RPC dispatch can hide framing/stream errors.
+  const exported=await fetch(new URL('/api/crm/backup?space=live&format=stream',await mf.ready),{headers:{...headers,'Accept-Encoding':'identity'}});assert.equal(exported.status,200);
   const bytes=new Uint8Array(await exported.arrayBuffer()), records=new TextDecoder().decode(bytes).trimEnd().split('\n');
+  assert.equal(Number(exported.headers.get('Content-Length')),bytes.byteLength,'Built workerd declares the exact complete backup length');
   const end=JSON.parse(records.at(-1));assert.equal(end.bytes,13500000);assert.equal(end.files,3);
   await db.prepare('INSERT INTO crm_spaces(id,version,write_token,settings) VALUES(?,0,?,?)').bind('demo','',JSON.stringify(core.emptyState().settings)).run();
   const requestId=crypto.randomUUID(), restoreUrl='/api/crm/backup?space=demo&version=0&requestId='+requestId;

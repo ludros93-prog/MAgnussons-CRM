@@ -17,13 +17,17 @@ type FileRow={id:string;customer_id:string;object_key:string;data:string};
 const fileRows=async(space:string)=>(await database().prepare('SELECT id,customer_id,object_key,data FROM crm_files WHERE space=? ORDER BY id').bind(space).all<FileRow>()).results;
 
 // pull(), rather than start(), keeps export memory to the header and one file record.
-export async function exportBackupStream(space:string,authorize:BackupExportAuthorization=trustedBackupExport):Promise<ReadableStream<Uint8Array>>{
+async function prepareBackupStream(space:string,authorize:BackupExportAuthorization){
  await authorize();const st=await load(space);await authorize();const rows=await fileRows(space);await authorize();
  const files=rows.map(row=>{const file=BackupFileDescriptor.parse({customerId:row.customer_id,metadata:JSON.parse(row.data)});need(file.metadata.id===row.id,'Kundfilens metadata har ett felaktigt ID.');return file;});
  const {viewer:_,...state}=st;
  const header=Header.parse({type:'header',format:BACKUP_STREAM_FORMAT,exportedAt:new Date().toISOString(),sourceSpace:space,state,files});
  const headerBytes=recordBytes(header);need(headerBytes.byteLength<=BACKUP_MAX_BYTES,'CRM-data och filförteckning får vara högst 16 MB.');
  const validated=restoreState(emptyState(),{format:'magnussons-crm-1',state:header.state},true);validateBackupFiles(validated,files,Infinity);
+ // Base64 and SHA256 have fixed ASCII lengths. Compute the exact wire length
+ // from validated metadata without reading R2 or buffering the whole export.
+ const fileBytes=files.reduce((total,file)=>total+file.metadata.size,0),hashLength='0'.repeat(64);
+ const byteLength=headerBytes.byteLength+1+files.reduce((total,file)=>total+recordBytes({type:'file',id:file.metadata.id,content:'',sha256:hashLength}).byteLength+4*Math.ceil(file.metadata.size/3)+1,0)+recordBytes({type:'end',files:files.length,bytes:fileBytes,sha256:hashLength}).byteLength+1;
  const abort=new AbortController();let stopped=false;
  const check=async()=>{abort.signal.throwIfAborted();await authorize();abort.signal.throwIfAborted();};
  async function* records(){
@@ -40,10 +44,21 @@ export async function exportBackupStream(space:string,authorize:BackupExportAuth
   need(JSON.stringify(await load(space))===JSON.stringify(st)&&JSON.stringify(await fileRows(space))===JSON.stringify(rows),'Arbetsytan eller kundfilerna ändrades under exporten. Försök igen.');
   yield encoder.encode(JSON.stringify({type:'end',files:count,bytes,sha256:digest})+'\n');
  }
- const iterator=records();return new ReadableStream<Uint8Array>({
+ const iterator=records();const body=new ReadableStream<Uint8Array>({
   async pull(controller){try{await check();const record=await iterator.next();await check();if(record.done){stopped=true;controller.close();}else controller.enqueue(record.value);}catch(error){if(stopped)return;try{await authorize();}catch(access){error=access;}if(stopped)return;stopped=true;abort.abort();controller.error(error);await iterator.return();}},
   async cancel(){stopped=true;abort.abort();await iterator.return();}
  },{highWaterMark:0});
+ return {body,byteLength};
+}
+
+export async function exportBackupStream(space:string,authorize:BackupExportAuthorization=trustedBackupExport){return (await prepareBackupStream(space,authorize)).body;}
+// Cloudflare ignores a manually assigned Content-Length for ordinary streams.
+// A direct FixedLengthStream body declares/enforces the real expected length,
+// so clean transport EOF cannot turn a truncated export into a full download.
+export async function exportBackupDownload(space:string,authorize:BackupExportAuthorization){
+ const {body,byteLength}=await prepareBackupStream(space,authorize),fixed=new FixedLengthStream(byteLength);
+ void body.pipeTo(fixed.writable).catch(()=>{/* The destination body carries the error to HTTP; pipeTo also cancels the source. */});
+ return fixed.readable;
 }
 
 // Split raw bytes before decoding, enforcing a bounded UTF-8 record even across chunks.

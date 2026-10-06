@@ -3,6 +3,11 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 mkdirSync('work',{recursive:true});
+// Node lacks Cloudflare's FixedLengthStream. Model byte validation here;
+// actual length headers and native HTTP failure are tested with built workerd.
+globalThis.FixedLengthStream=class extends TransformStream{
+ constructor(length){let bytes=0;super({transform(chunk,controller){bytes+=chunk.byteLength;if(bytes>length)throw new TypeError('Fixed-length export overflow');controller.enqueue(chunk);},flush(){if(bytes!==length)throw new TypeError('Fixed-length export underflow');}});}
+};
 const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
 for(const f of readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())sqlite.exec(readFileSync('drizzle/'+f,'utf8'));
 class Prepared {constructor(sql,values=[]){this.sql=sql;this.values=values}bind(...v){return new Prepared(this.sql,v)}async first(){return sqlite.prepare(this.sql).get(...this.values)||null}async run(){return this.exec()}async all(){return this.exec()}exec(){const stmt=sqlite.prepare(this.sql);if(stmt.columns().length)return {results:stmt.all(...this.values),meta:{changes:0}};const r=stmt.run(...this.values);return {results:[],meta:{changes:Number(r.changes)}}}}

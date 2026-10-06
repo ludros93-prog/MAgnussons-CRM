@@ -4,7 +4,7 @@ import {RuleError} from '@/lib/crm';
 import {database} from '@/lib/crm-db';
 import {visibleState} from '@/lib/crm-visibility';
 import {exportBackup,importBackup,BACKUP_MAX_BYTES} from '@/lib/crm-backup';
-import {exportBackupStream,importBackupStream} from '@/lib/crm-backup-stream';
+import {exportBackupDownload,importBackupStream} from '@/lib/crm-backup-stream';
 const reply=(value:unknown,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store'}});
 const fail=(e:unknown)=>e instanceof AccessError?reply({error:e.message},e.status):e instanceof RuleError?reply({error:e.message},400):e instanceof z.ZodError||e instanceof SyntaxError||e instanceof TypeError?reply({error:'CRM-kopian har ett ogiltigt eller avbrutet format.'},400):reply({error:'CRM-kopian kunde inte hanteras. Inga befintliga kunduppgifter skrivs över.'},503);
 async function currentRestoreMember(req:Request,initial:Member){
@@ -20,7 +20,7 @@ async function currentExportMember(initial:Member){
 }
 export async function GET(req:Request){let initial:Member|undefined;try{
  initial=await member(req,false,true);const user=initial,authorize=()=>currentExportMember(user),params=new URL(req.url).searchParams,space=z.enum(['demo','live']).parse(params.get('space'));
- if(params.get('format')==='stream'){const body=await exportBackupStream(space,authorize);await authorize();return new Response(body,{headers:{'Content-Type':'application/x-ndjson','Cache-Control':'no-store','Content-Disposition':'attachment; filename="magnussons-crm-med-filer-'+space+'.ndjson"'}});}
+ if(params.get('format')==='stream'){const body=await exportBackupDownload(space,authorize);try{await authorize()}catch(error){try{await body.cancel()}catch{}throw error;}return new Response(body,{headers:{'Content-Type':'application/x-ndjson','Cache-Control':'no-store','Content-Disposition':'attachment; filename="magnussons-crm-med-filer-'+space+'.ndjson"'}});}
  const value=await exportBackup(space,authorize),body=JSON.stringify(value);if(new TextEncoder().encode(body).byteLength>BACKUP_MAX_BYTES)throw new RuleError('CRM-kopian är större än 16 MB. Ingen ofullständig kopia skapas.');await authorize();return new Response(body,{headers:{'Content-Type':'application/json','Cache-Control':'no-store','Content-Disposition':'attachment; filename="magnussons-crm-med-filer-'+space+'.json"'}});
  }catch(e){if(initial)try{await currentExportMember(initial)}catch(access){return fail(access)}return fail(e)}}
 export async function POST(req:Request){let initial:Member|undefined;try{
