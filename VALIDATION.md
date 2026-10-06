@@ -1,3 +1,44 @@
+# Kundvårdens rollstyrda återköp/merförsäljning – v24, 2026-10-06
+
+Startbas: färsk main `a3a393c79760baa6487215fe5307b804643544bc`, live v23/source `5cdc2eee45eee7058bfd8f6898ef7f1085fbe3b6`. Öppna PR:er, reservationer, publicering och remote kontrollerades. Egen branch/worktree `fix/customer-care-role-actions` och atomisk reservation användes. Codex-referensen är fortsatt oläst eftersom Codex read_thread saknas.
+
+Två Kundvård-knappar öppnade repeatpicker/affärsformulär för reader trots att parent/server nekade sparning. Enda appändringen använder komponentens befintliga canEdit(admin/seller) kring dessa knappar. Historik, kundkort och antal öppna affärer är kvar. Inga ändringar av serverroller, API, privat utkastmodell, basis, CAS/idempotens, atomisk arkivering, lagring, backup, dependency- eller hostingmanifest. Oberoende avgränsad UI-läsgranskning gav inga blockerare. Färska officiella Lime-/Salesforce-/Saleshub-källor i RESEARCH skiljer begripliga UI-handlingar från serverrätt.
+
+## Slutprov och kvarvarande layoutfel
+
+- Node 24.19.0 och repoets pnpm 11.25.0. Full `node tests/outlook.mjs`, TypeScript `--noEmit --incremental false`, sourcebygge och diff-/relativlänkkontroll passerar på slutkandidaten. Befintliga orderprov omfattar 40→45, dokumenterat godkänd 50→48 med syntetiskt underlag, kassation, delleverans och dubbelklick/återförsök. Befintliga förväntningar behålls.
+- Byggd workerd/lokal diskbaserad D1/R2 passerar runtime: 13 500 000 byte i tre testfiler, 18 010 856 byte strömkopia, hash-/korrektur-/foto-/versionslänkar, oförändrad källa, idempotens, privat utkast och atomisk arkivering samt nekat sent utkast. Inget faktiskt Sites-återställningsprov.
+- Faktisk Chromium med den frysta HTTP-appen och migrerad isolerad D1/R2 passerar **9/9 roll-/kort-/navigeringsfall** för reader/seller/admin på 320/390×844 och 1440×1000. 37 bilder, inga page-/asset-/externanropsfel; bara förväntade 403 i console. Långt syntetiskt kundnamn provas utan layout-/CSS-injektion eller force-click. Reader har inga opportunityelement i DOM/Tab och kan läsa/stänga historik/kundkort/anteckningar. Admin/seller öppnar verklig återköpsväljare via pointer och Merförsäljning via Tab/Enter, och stänger utan redigering. Inga godkända CRM-/draft-/fil-POST i dessa nio fall; kontrollsnapshot är oförändrat.
+- Reader får faktisk lokal 403 för repeat_order, deal och form-draft med oförändrat underlag. Detta bekräftar oförändrad normal serveravvisning, inget auth-raceprov. Samma baslinje på v23 belade de missvisande ingångarna i alla tre bredder. Verklig komponent-SSR utan mockar passerar **5/5** för admin/seller/reader/unknown/saknad viewer; unknown/saknad viewer är bara in-memory-render, inget verkligt konto-/API-/hydrationprov.
+- **Generella affärsformulärets mobillayout är fortsatt FAIL**, separat från godkända roll-/navigationprov: fyra seller/admin-fall på 320/390. Sex jämförbara writerfall har exakt samma dialog-/footerknappmått före/efter. Vid 320 är client/scroll 300/405 px; vid 390 är de 366/405 px. Grid min-content blir 385,47 px mot 325,59 px tillgängligt innehåll; kontroller går till x429,88 i 390-vy. Footern slutar y849 i viewport844, fem px utanför. Dessa fel räknas inte som layoutgodkända. Generella form-/CSS-/Sheet-/Select-/pickerfiler är byteidentiska före/efter; listkort och återköpspicker ryms. Nästa avgränsade formulärdesign ska rätta detta utan sänkta krav.
+- Bara normaltext på dessa viewporter är prövad i v24. Ingen fysisk telefon/OSkeyboard, 200 procent text, skärmläsare, personalacceptans, generell rollrevision eller full mobil/WCAG-certifiering. Tidigare harnesslocatorfel med dold sidebar/disabledfieldset/BODY vid Tabslut är bevarade diagnostiker, inga produktfel eller slut-PASS-belägg.
+
+## Exakt kod, main, artefakt och live
+
+| Underlag | Faktiskt verifierat |
+| --- | --- |
+| PR #20 head | `6ec04cdeffdaae54b4771438c774065745cae8d1` |
+| Exakt-head CI | [37418240326](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37418240326), jobb `112121568106`, alla steg success 05:24:30 UTC |
+| Faktisk app-main | `0b91773127aca3ef414efe13add001ab19c89873` |
+| App-main push-CI | [37418818798](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37418818798), jobb `112123369050`, alla steg success 05:31:29 UTC |
+| Pushad/publicerad Sites-källa | `96191a927cc6c66f264909c246f0367cc2362868` |
+| Gemensamt Git-träd | `b23b03ee7ff21d38771d28c64e8d7af310ef5abe` |
+| Worker SHA-256 | `308b3991cc474dacc0eb51a833b31cb394dcb7c9df33343f5bed0190ae03b24c` |
+| Dist SHA-256 | `7d658f5ef5671c5a66db52ae11fb8652eb4c3a4a5a7c09e66276afcf028d162e` |
+| Slutbrowserrapport SHA-256 | `260e99dc6272a60fdb0a962a97f2f5d9781f85b01605564c85039773430e3941` |
+| Baslinjerapport SHA-256 | `58a0d5e8bc7e5735cd712ea059a4932936932f2d76b62d8808adca8236328e7a` |
+| Lokalt gzip SHA-256 | `5cddc0095176b5ee572231d2b194a8b9cc7e2cc1d740eca24450ced06dd7ecfa` |
+| Sites-lagrat tar | `sha256:f1446f3c27eda850ccd8384d1949e561d4350d838dd2700ce46655ce469693cd`, 4 229 120 byte, 97 filer |
+| Sparad version | **24**, `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_dfa9875cc1d08191b8e9a16448cde3dd` |
+| Deploy | `appgdep_6ac4878abb4481919e1ac6dc9739749f`, **succeeded 2026-10-06 05:31:01 UTC** |
+| Live | [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), samma Site |
+
+Distmetoden är SHA-256 av sorterad kompakt JSON med path/sha256/bytes och sorterade objektnycklar. Alla 96 distfilers bytes är identiska före/efter runtime/browser; arkivet har dessa plus hostingmetadata, totalt 97. Lokalt gzip och Sites lagrade tar har olika format/hashes. Det frysta arkivet återanvändes utan nytt bygge efter slutprov, utan kunddata, exporter, testlager, hemligheter eller källkatalog.
+
+Merge skedde med expected head efter alla obligatoriska exakt-head checks och färsk bas. Etablerad credential-stdin/childENV-fallback användes eftersom Sites sourcehelper saknas i kontrollerade pluginrötter; normal append-push kontrollerade tidigare remote 5cdc2eee och pushade 96191a9, utan force/credential i fil/argv/output. Pushens terminala exit0 inväntades och matchande archive-backed version bekräftades före deploy. Ingen automatisk publish-on-push begärdes. Native Site/version-svar efter deploy bekräftar källa/version/deploy, exakt oförändrad custom-access-policy revision 2/en extern besökare och envrevision 1/DB/BUCKET. Bara anonyma live-GET `/` och `/api/crm` utfördes: **403/403**, kroppar bortkastade. Inga autentiserade live-kundskrivningar, konto-/integrations-/delnings-/schema-/prompt-/aktiveringsändringar.
+
+Egen baslinjeserver/lager städades 05:25:57 UTC; egen slutserver/lager 05:29:47 UTC, portar 8916/8917 stängda. Ingen migration krävs; v23 är datakompatibel återgång men återför missvisande reader-knappar, och ingen rollback utfördes. Den senare releasekvittensen ändrar endast Markdown och kräver egen CI före merge men ingen app-publicering. Autentiserad live-UI, verkliga konton/integrationer/personal och hostingåterställning är fortfarande oprövade. B01b2 och övriga editor-/uppföljningsingångar ingår inte i tvåknappfixen.
+
 # Synlig privat sparstatus och ärliga återförsök – v23, 2026-10-06
 
 Bas vid start: GitHub-main `d9a117f11455bdce97d2b0e65a90e5f505497562`, live v22 från `8636a5ef3205a3be590fb5b99ed635a90da275d6`. Egen reservation, branch/worktree och färska fjärr-/PR-/Sitekontroller användes. Ingen konkurrerande PR eller publicering upptäcktes. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` förblir oläst: anropbart Codex `read_thread` saknas. Explicit brief och verifierat repo användes.
