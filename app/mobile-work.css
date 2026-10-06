@@ -30,7 +30,7 @@
 /* Generic editors only: keep long values inside the sheet's available width. */
 .crm-form-sheet {
  scroll-padding-top: 12px;
- scroll-padding-bottom: calc(12rem + env(safe-area-inset-bottom, 0px));
+ scroll-padding-bottom: calc(var(--generic-footer-height, 12rem) + 12px);
 }
 .crm-form-sheet .edit-form {
  min-width: 0;
@@ -117,11 +117,40 @@
 .crm-form-sheet .form-footer button {
  flex: 1 1 13rem;
 }
+.crm-form-sheet .generic-form-save-status {
+ flex: 1 1 100%;
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ min-width: 0;
+ padding: 10px 12px;
+ border: 1px solid #cbdcf0;
+ border-radius: 8px;
+ background: #f3f8ff;
+ color: #254d78;
+ font-size: .875rem;
+ line-height: 1.5;
+ overflow-wrap: anywhere;
+}
+.crm-form-sheet .generic-form-save-copy { flex: 1; min-width: 0; }
+.crm-form-sheet .generic-form-save-summary > span { display: block; }
+.crm-form-sheet .generic-form-save-summary > span:empty { display: none; }
+.crm-form-sheet .generic-form-save-hint,
+.crm-form-sheet .generic-form-save-time { font-size: .8125rem; color: #425d78; }
+.crm-form-sheet .generic-form-save-time { display: block; margin-top: 3px; }
+.crm-form-sheet .generic-form-save-status[data-state=error],
+.crm-form-sheet .generic-form-save-status[data-state=conflict] { background: #fff4e6; border-color: #e6c28b; color: #744a12; }
+.crm-form-sheet .generic-form-save-status button { flex: 0 1 auto; }
+.crm-form-sheet .form-status-details:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+/* An enlarged status/action bar must not occupy most of the editing viewport. */
+.crm-form-sheet[data-footer-flow=true] { scroll-padding-bottom: 24px; }
+.crm-form-sheet[data-footer-flow=true] .form-footer { position: static; }
 @media(max-width:767px) {
- .crm-form-sheet { scroll-padding-bottom: calc(18rem + env(safe-area-inset-bottom, 0px)); }
  .crm-form-sheet .form-grid,
  .crm-form-sheet .biz-grid,
  .crm-form-sheet .quote-numbers { grid-template-columns: minmax(0, 1fr); }
+ .crm-form-sheet .generic-form-save-status { flex-wrap: wrap; }
+ .crm-form-sheet .generic-form-save-copy { flex-basis: 100%; }
 }
 /* A short viewport needs the editing space rather than a pinned action bar. */
 @media(max-height:540px) {
