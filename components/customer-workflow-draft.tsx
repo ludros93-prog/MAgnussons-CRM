@@ -109,7 +109,7 @@ export function CustomerWorkflowDraft({st,request,busy,onSave,onClose,onCustomer
    if(!alive.current)return;
    if(ok){w.consume(draftId);retry.current=null;onClose();return}
    if(status===0||status>=500){retry.current=attempt;setFailure('Sparandet kunde inte bekräftas. Dina uppgifter finns kvar. Försök spara igen med samma uppgifter.'+(message?' '+message:''));}
-   else{retry.current=null;if(status===409)await w.reconcile(draftId);setFailure('Inte sparat i kundens CRM. Dina uppgifter finns kvar. '+(message||'Kontrollera underlaget innan du försöker igen.'));}
+   else{retry.current=null;if(status===409)await w.reconcile(draftId);setFailure('Sparningen i kundens CRM kunde inte bekräftas. Dina uppgifter finns kvar. '+(message||'Kontrollera underlaget innan du försöker igen.'));}
   }finally{if(alive.current){lock.current=false;setWorking(false)}}
  }
  async function adoptBasis(){
