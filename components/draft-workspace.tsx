@@ -3,19 +3,21 @@ import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from 
 import {Button} from '@/components/ui/button';
 import type {DraftRecord} from '@/lib/drafts';
 import {validDate} from '@/lib/business';
+import {isArticleDraft} from '@/lib/article-drafts';
 type LocalDraft=DraftRecord&{status:'saved'|'pending'|'saving'|'error'|'conflict';error?:string;server?:DraftRecord|null;generation:number;posted?:boolean};
-type Workspace={ready:boolean;error:string;records:LocalDraft[];get:(id:string)=>LocalDraft|undefined;create:(kind:DraftRecord['kind'],context:string,data:Record<string,any>,title:string,id?:string)=>string;update:(id:string,data:Record<string,any>,title?:string)=>void;flush:(id:string)=>Promise<{id:string;revision:number}|null>;reconcile:(id:string)=>Promise<boolean>;consume:(id:string)=>void;resolve:(id:string,useServer:boolean)=>void;archive:(id:string)=>Promise<boolean>;retry:()=>void};
+type Workspace={ready:boolean;error:string;records:LocalDraft[];get:(id:string)=>LocalDraft|undefined;create:(kind:DraftRecord['kind'],context:string,data:Record<string,any>,title:string,id?:string)=>string;update:(id:string,data:Record<string,any>,title?:string)=>void;flush:(id:string)=>Promise<{id:string;revision:number}|null>;reconcile:(id:string,reviewServer?:boolean)=>Promise<boolean>;hasLocalCopy:(id:string)=>boolean;consume:(id:string)=>void;resolve:(id:string,useServer:boolean)=>void;archive:(id:string)=>Promise<boolean>;retry:()=>void};
 type Scope={key:string;epoch:number;active:boolean;controllers:Set<AbortController>};
 type Session={scope:Scope;epoch:number};
 const draftKinds=['catalog','production','note','followup','form','plan','prospecting','onboarding','receipt'];
 const Context=createContext<Workspace|null>(null);
 export const useDrafts=()=>{const ctx=useContext(Context);if(!ctx)throw Error('Draft workspace missing');return ctx;};
-export function DraftProvider({space,userId,enabled,children}:{space:string;userId:string;enabled:boolean;children:ReactNode}){
+export function DraftProvider({space,userId,enabled,canEditArticles,children}:{space:string;userId:string;enabled:boolean;canEditArticles:boolean;children:ReactNode}){
  const [records,setRecords]=useState<LocalDraft[]>([]),[ready,setReady]=useState(!enabled),[error,setError]=useState('');
  const entries=useRef<LocalDraft[]>([]),jobs=useRef(new Map<string,Promise<unknown>>()),requests=useRef(new Map<string,{body:any;generation:number}>()),instances=useRef(new Map<string,symbol>());
  const storageKey='magnussons-unsaved-v1:'+space+':'+userId,scopeKey=JSON.stringify([space,userId,enabled]);
  const lifecycle=useRef<Scope>({key:scopeKey,epoch:0,active:false,controllers:new Set()});
  const loaded=useRef<Session|null>(null),loading=useRef<{session:Session;promise:Promise<boolean>}|null>(null);
+ const articleEditing=useRef(canEditArticles);articleEditing.current=canEditArticles;
  // Invalidate old closures as soon as the identity or role changes, before
  // effects run. Async work may finish, but cannot publish into the new scope.
  if(lifecycle.current.key!==scopeKey){lifecycle.current.active=false;lifecycle.current={key:scopeKey,epoch:lifecycle.current.epoch+1,active:false,controllers:new Set()};}
@@ -92,6 +94,7 @@ export function DraftProvider({space,userId,enabled,children}:{space:string;user
    const current=entries.current.find(d=>d.id===id);
    if(!current||current.archived||current.status==='conflict')return null;
    if(current.status==='saved')return {id,revision:current.revision};
+   if(isArticleDraft(current.kind,current.context)&&!articleEditing.current){patch(id,d=>({...d,status:'error',error:'Ditt konto kan läsa det egna artikelutkastet men inte spara artikeländringar. Granska den sparade serverversionen eller behåll underlaget lokalt.'}),session);return null;}
    let request=requests.current.get(id);
    if(!request){request={generation:current.generation,body:{space,id,kind:current.kind,context:current.context,revision:current.revision,requestId:crypto.randomUUID(),title:current.title,data:structuredClone(current.data),archived:false}};requests.current.set(id,request);}
    const c=controller(session);patch(id,d=>({...d,status:'saving',error:'',posted:true}),session);
@@ -112,10 +115,11 @@ export function DraftProvider({space,userId,enabled,children}:{space:string;user
   return isReady(session)&&instances.current.get(id)===instance&&latest?.status==='saved'?{id,revision:latest.revision}:null;
  }
  const flush=(id:string)=>{const session=begin();return serial(id,session,()=>persist(id,session),null);};
- async function reconcile(id:string):Promise<boolean>{
+ async function reconcile(id:string,reviewServer=false):Promise<boolean>{
   const session=begin();
   return serial(id,session,async()=>{
    const original=entries.current.find(d=>d.id===id),instance=instances.current.get(id);if(!original||original.archived||!instance)return false;
+   if(reviewServer&&!isArticleDraft(original.kind,original.context))return false;
    const c=controller(session);
    try{
     if(!active(session)||instances.current.get(id)!==instance)return false;
@@ -127,6 +131,7 @@ export function DraftProvider({space,userId,enabled,children}:{space:string;user
     // while the request runs must not resurrect or overwrite local values.
     const local=entries.current.find(d=>d.id===id);if(!local||local.archived)return false;
     const server:DraftRecord|null=rows.find((d:DraftRecord)=>d.id===id)||null;
+    if(reviewServer){conflict(id,server,server?'Serverversionen är hämtad. Dina lokala uppgifter finns kvar tills du uttryckligen väljer version.':'Ingen sparad serverversion hittades. Dina lokala uppgifter finns kvar.',session);return false;}
     if(!server){
      if(local.revision===0&&local.status==='pending'&&!local.posted&&!local.requestId&&!requests.current.has(id))return true;
      conflict(id,null,'Serverutkastet saknas. Ditt öppna underlag finns kvar; välj hur du vill fortsätta.',session);return false;
@@ -142,21 +147,26 @@ export function DraftProvider({space,userId,enabled,children}:{space:string;user
  const visibleReady=!enabled||ready&&isReady(begin());
  useEffect(()=>{
   const session=begin();if(!visibleReady||!isReady(session))return;
-  const timer=setInterval(()=>{if(!isReady(session))return;for(const d of entries.current)if(!d.archived&&d.status==='pending'&&!jobs.current.has(d.id))void flush(d.id);},700);
+  const timer=setInterval(()=>{if(!isReady(session))return;for(const d of entries.current)if(!d.archived&&d.status==='pending'&&!jobs.current.has(d.id)&&(!isArticleDraft(d.kind,d.context)||articleEditing.current))void flush(d.id);},700);
   const guard=(e:BeforeUnloadEvent)=>{if(isReady(session)&&entries.current.some(d=>!d.archived&&d.status!=='saved')){e.preventDefault();e.returnValue='';}};
   window.addEventListener('beforeunload',guard);return()=>{clearInterval(timer);window.removeEventListener('beforeunload',guard);};
  },[visibleReady,space,userId,enabled]);
  function create(kind:DraftRecord['kind'],context:string,data:Record<string,any>,title:string,id=crypto.randomUUID()){
-  const session=begin();if(!isReady(session))return '';
+  const session=begin();if(!isReady(session)||isArticleDraft(kind,context)&&!articleEditing.current)return '';
   const existing=entries.current.find(d=>d.id===id);if(existing)return existing.archived?'':id;
   instances.current.set(id,Symbol(id));
   put([...entries.current,{id,kind,context,data:structuredClone(data),title,revision:0,requestId:'',archived:false,updatedAt:new Date().toISOString(),status:'pending',generation:1,posted:false}],session);return id;
  }
- function update(id:string,data:Record<string,any>,title?:string){const session=begin();if(!isReady(session))return;patch(id,d=>({...d,data:structuredClone(data),title:title||d.title,generation:d.generation+1,status:d.status==='conflict'?'conflict':'pending',updatedAt:new Date().toISOString()}),session);}
+ function update(id:string,data:Record<string,any>,title?:string){const session=begin();if(!isReady(session))return;const d=get(id);if(d&&isArticleDraft(d.kind,d.context)&&!articleEditing.current)return;patch(id,d=>({...d,data:structuredClone(data),title:title||d.title,generation:d.generation+1,status:d.status==='conflict'?'conflict':'pending',updatedAt:new Date().toISOString()}),session);}
+ function hasLocalCopy(id:string){
+  const current=get(id);if(!current)return false;
+  try{const stored=JSON.parse(localStorage.getItem(storageKey)||'[]');const copy=Array.isArray(stored)?stored.find(d=>d?.id===id):null;return !!copy&&!copy.archived&&copy.kind===current.kind&&copy.context===current.context&&copy.revision===current.revision&&copy.requestId===current.requestId&&copy.title===current.title&&copy.generation===current.generation&&JSON.stringify(copy.data)===JSON.stringify(current.data);}catch{return false;}
+ }
  function consume(id:string){const session=begin();if(!isReady(session))return;requests.current.delete(id);instances.current.delete(id);put(entries.current.filter(d=>d.id!==id),session);}
  function resolve(id:string,useServer:boolean){
   const session=begin();if(!isReady(session))return;
   const current=entries.current.find(d=>d.id===id);if(!current||current.status!=='conflict')return;
+  if(!useServer&&isArticleDraft(current.kind,current.context)&&!articleEditing.current)return;
   requests.current.delete(id);
   patch(id,d=>useServer?d.server?{...d.server,generation:d.generation+1,status:'saved',posted:true}:{...d,archived:true,status:'saved'}:{...d,revision:d.server?.revision||0,requestId:d.server?.requestId||'',status:d.server?.archived?'conflict':'pending',error:d.server?.archived?'Utkastet är redan avslutat på en annan enhet. Öppna det sparade arbetet.':'',generation:d.generation+1,posted:!!d.server},session);
  }
@@ -181,9 +191,9 @@ export function DraftProvider({space,userId,enabled,children}:{space:string;user
   },false);
  }
  function retry(){const session=begin();if(!active(session))return;if(!isReady(session)){void load();return;}for(const d of entries.current)if(d.status==='error')void flush(d.id);}
- return <Context.Provider value={{ready:visibleReady,error:enabled&&active(begin())?error:'',records:enabled&&isReady(begin())?records.filter(d=>!d.archived):[],get,create,update,flush,reconcile,consume,resolve,archive,retry}}>{children}</Context.Provider>
+ return <Context.Provider value={{ready:visibleReady,error:enabled&&active(begin())?error:'',records:enabled&&isReady(begin())?records.filter(d=>!d.archived):[],get,create,update,flush,reconcile,hasLocalCopy,consume,resolve,archive,retry}}>{children}</Context.Provider>
 }
-export function DraftStatus({id,onClosed,onResolved,disabled=false,announce=false}:{id:string;onClosed?:()=>void;onResolved?:(data:Record<string,any>)=>void;disabled?:boolean;announce?:boolean}){
+export function DraftStatus({id,onClosed,onResolved,disabled=false,announce=false,allowActions=true}:{id:string;onClosed?:()=>void;onResolved?:(data:Record<string,any>)=>void;disabled?:boolean;announce?:boolean;allowActions?:boolean}){
  const w=useDrafts(),d=w.records.find(d=>d.id===id);
  const message=!w.ready?w.error||'Hämtar dina utkast…':!d?'':d.status==='saved'?'Sparat som privat utkast':d.status==='pending'?'Ändringar väntar på sparning':d.status==='saving'?'Sparar utkast…':d.error||'Kontrollera utkastet';
  const updatedAt=typeof d?.updatedAt==='string'?d.updatedAt:'';
@@ -196,8 +206,8 @@ export function DraftStatus({id,onClosed,onResolved,disabled=false,announce=fals
  const text=announce?<span><span role="status" aria-live="polite" aria-atomic="true">{message}</span>{timestamp}</span>:!w.ready?message:<span>{message}{timestamp}</span>;
  return <div className={!w.ready?'draft-status':d?'draft-status '+d.status:'sr-only'}>
   {text}
-  {!w.ready&&w.error&&<Button type="button" variant="outline" size="sm" disabled={disabled} onClick={w.retry}>Försök igen</Button>}
-  {w.ready&&d?.status==='error'&&<Button type="button" size="sm" variant="outline" disabled={disabled} onClick={()=>w.flush(id)}>Försök spara igen</Button>}
-  {w.ready&&d?.status==='conflict'&&<>{!d.server&&<p>Utkastet saknas på servern. Underlaget finns bara lokalt; om du kastar utkastet försvinner den lokala texten.</p>}<div className="biz-buttons"><Button type="button" size="sm" variant="outline" disabled={disabled} onClick={()=>{w.resolve(id,true);if(!d.server||d.server.archived)onClosed?.();else if(d.server)onResolved?.(d.server.data)}}>{!d.server?'Kasta mitt lokala utkast':d.server.archived?'Stäng avslutat utkast':'Använd sparad version'}</Button>{!d.server?.archived&&<Button type="button" size="sm" disabled={disabled} onClick={()=>w.resolve(id,false)}>{d.server?'Ersätt med mitt öppna underlag':'Behåll och spara mitt underlag'}</Button>}</div></>}
+  {allowActions&&!w.ready&&w.error&&<Button type="button" variant="outline" size="sm" disabled={disabled} onClick={w.retry}>Försök igen</Button>}
+  {allowActions&&w.ready&&d?.status==='error'&&<Button type="button" size="sm" variant="outline" disabled={disabled} onClick={()=>w.flush(id)}>Försök spara igen</Button>}
+  {allowActions&&w.ready&&d?.status==='conflict'&&<>{!d.server&&<p>Utkastet saknas på servern. Underlaget finns bara lokalt; om du kastar utkastet försvinner den lokala texten.</p>}<div className="biz-buttons"><Button type="button" size="sm" variant="outline" disabled={disabled} onClick={()=>{w.resolve(id,true);if(!d.server||d.server.archived)onClosed?.();else if(d.server)onResolved?.(d.server.data)}}>{!d.server?'Kasta mitt lokala utkast':d.server.archived?'Stäng avslutat utkast':'Använd sparad version'}</Button>{!d.server?.archived&&<Button type="button" size="sm" disabled={disabled} onClick={()=>w.resolve(id,false)}>{d.server?'Ersätt med mitt öppna underlag':'Behåll och spara mitt underlag'}</Button>}</div></>}
  </div>
 }

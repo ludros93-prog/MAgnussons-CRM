@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useRef,useState,type FocusEvent,type MouseEvent} from 'react';
+import {useEffect,useRef,useState,type FocusEvent} from 'react';
 import {Save} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
@@ -8,12 +8,13 @@ import {Sheet,SheetContent,SheetHeader,SheetTitle,SheetDescription} from '@/comp
 import type {State} from '@/lib/crm';
 import {ArticleSchema,type Article} from '@/lib/operations';
 import {recordBasis} from '@/lib/record-conflicts';
-import {ArticleDraftEnvelopeSchema,ArticleDraftValuesSchema,isArticleDraft,type ArticleDraftEnvelope,type ArticleDraftValues} from '@/lib/article-drafts';
+import {ArticleDraftEnvelopeSchema,ArticleDraftValuesSchema,articleDraftServerVersion,isArticleDraft,type ArticleDraftEnvelope,type ArticleDraftValues} from '@/lib/article-drafts';
+import {ArticleDraftPreview} from './article-draft-preview';
 import {DraftStatus,useDrafts} from './draft-workspace';
 import {BusinessField as F,Pick,money} from './business-ui';
 
 export type ArticleSave=(data:unknown,expectedRecord:string,onFailure:(status:number,message?:string)=>void)=>Promise<boolean>;
-export type ArticleEditorProps={st:State;article:Article;draftId?:string;busy:boolean;save:ArticleSave;onClose:()=>void};
+export type ArticleEditorProps={st:State;article:Article|null;draftId?:string;busy:boolean;save:ArticleSave;onClose:()=>void};
 type ArticleAttempt={data:ArticleDraftValues&{draft:{id:string;revision:number}};expectedRecord:string};
 const textFields=[['sku','Artikelnummer *',200],['name','Benämning *',300],['color','Färg',200],['size','Storlek',100],['variant','Övrig variant',4000],['variantId','Variant-ID hos leverantören',200],['unit','Enhet',30],['url','Produktlänk',2000]] as const;
 const draftTitle=(values:ArticleDraftValues)=>('Artikel · '+(values.name.trim()||values.sku.trim()||'Påbörjade artikeluppgifter')).slice(0,200);
@@ -30,12 +31,13 @@ function ArticleSnapshot({article,st}:{article:Article;st:State}){
 }
 
 export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEditorProps){
- const w=useDrafts(),enabled=st.viewer?.role==='admin';
+ const w=useDrafts(),enabled=st.viewer?.role==='admin',canRead=enabled||st.viewer?.role==='seller';
  const opening=useRef(structuredClone(article)),newId=useRef(''),initialized=useRef(false),lock=useRef(false),alive=useRef(true);
  const ws=useRef(w),state=useRef(st),retryAttempt=useRef<ArticleAttempt|null>(null),panel=useRef<HTMLDivElement>(null),status=useRef<HTMLDivElement>(null),review=useRef<HTMLDivElement>(null),focusCleanup=useRef<()=>void>(()=>{});
  ws.current=w;state.current=st;
  const [activeId,setActiveId]=useState(draftId||''),[operation,setOperation]=useState(''),[failure,setFailure]=useState(''),[crmMessage,setCrmMessage]=useState(''),[retry,setRetry]=useState<ArticleAttempt|null>(null),[discard,setDiscard]=useState(false),[reviewArticle,setReviewArticle]=useState<Article|null>(null),[reviewed,setReviewed]=useState(false);
- const local=enabled?w.records.find(row=>row.id===activeId&&isArticleDraft(row.kind,row.context)):undefined;
+ const [serverChoice,setServerChoice]=useState('');
+ const local=canRead?w.records.find(row=>row.id===activeId&&isArticleDraft(row.kind,row.context)):undefined;
  const parsed=local?ArticleDraftEnvelopeSchema.safeParse(local.data):null,envelope=parsed?.success&&parsed.data.draftId===local?.id?parsed.data:undefined,values=envelope?.data;
  const current=envelope?.base.id?st.articles.find(row=>row.id===envelope.base.id):undefined,currentBasis=recordBasis(current);
  const missing=!!envelope?.base.id&&!current,conflict=!!envelope?.base.id&&currentBasis!==envelope.expectedRecord,draftConflict=local?.status==='conflict';
@@ -43,6 +45,10 @@ export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEdit
  const valid=values?ArticleSchema.safeParse(values):null;
  const sourceExists=!!values&&st.settings.catalogSources.some(row=>row.id===values.sourceId);
  const reviewBasis=reviewArticle?recordBasis(reviewArticle):'';
+ const serverVersion=local?.status==='conflict'?articleDraftServerVersion(local.server,activeId,envelope?.base.id):null;
+ const choiceBasis=recordBasis({id:local?.id,generation:local?.generation,data:local?.data,server:local?.server});
+ const recovery=!!local&&(!enabled||local.status==='error'||draftConflict);
+ const archiveReady=!!local&&local.status==='saved'&&!!articleDraftServerVersion(local,activeId,envelope?.base.id);
 
  useEffect(()=>{alive.current=true;return()=>{alive.current=false;focusCleanup.current()}},[]);
  function clearRetry(){retryAttempt.current=null;setRetry(null)}
@@ -51,6 +57,7 @@ export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEdit
  // Private autosave only changes status/revision and cannot clear a CRM notice.
  useEffect(()=>{clearRetry();clearReview();setDiscard(false)},[local?.generation]);
  useEffect(()=>setReviewed(false),[currentBasis]);
+ useEffect(()=>setServerChoice(''),[choiceBasis]);
  function reveal(target:HTMLElement|null){if(!target?.isConnected)return;target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'instant'})}
  function showFailure(message:string){if(!alive.current)return;setFailure(message);requestAnimationFrame(()=>{if(alive.current)reveal(status.current)})}
  function currentEnvelope(){
@@ -60,7 +67,7 @@ export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEdit
   return p.success&&p.data.draftId===record.id?{record,envelope:p.data}:null;
  }
  async function resume(id:string){
-  if(lock.current||busy||!enabled)return;
+  if(lock.current||busy||!canRead)return;
   lock.current=true;setOperation('open');setActiveId(id);
   try{
    await ws.current.reconcile(id);if(!alive.current)return;
@@ -70,7 +77,7 @@ export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEdit
   finally{lock.current=false;if(alive.current)setOperation('')}
  }
  useEffect(()=>{
-  if(initialized.current||!w.ready||!enabled||busy)return;
+  if(initialized.current||!w.ready||!canRead||busy||!draftId&&!enabled)return;
   initialized.current=true;
   if(draftId){void resume(draftId);return}
   const base=ArticleSchema.safeParse(opening.current);
@@ -81,7 +88,7 @@ export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEdit
   const basis=recordBasis(base.data),initial:ArticleDraftEnvelope={draftId:newId.current,type:'article',data:data.data,base:base.data,expectedRecord:basis,initialData:basis};
   const id=w.create('form','article',initial,draftTitle(data.data),newId.current);
   if(id)setActiveId(id);else{initialized.current=false;setFailure('Ditt privata artikelutkast kunde inte öppnas. Försök igen när utkasten har hämtats.')}
- },[w.ready,w.records,enabled,busy,draftId]);
+ },[w.ready,w.records,enabled,canRead,busy,draftId]);
  function update<K extends keyof ArticleDraftValues>(key:K,value:ArticleDraftValues[K]){
   if(!enabled||locked||lock.current)return;
   const saved=currentEnvelope();if(!saved||saved.record.status==='conflict')return;
@@ -93,19 +100,34 @@ export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEdit
   const number=value.trim()===''?null:Number(value);
   if(number===null||Number.isFinite(number))update(key,number);
  }
- function draftAction(event:MouseEvent<HTMLDivElement>){
-  if(!(event.target instanceof Element)||!event.target.closest('button'))return;
-  if(lock.current||busy){event.preventDefault();event.stopPropagation();return}
-  if(draftConflict){clearRetry();clearReview();setDiscard(false)}
+ async function fetchServer(){
+  if(locked||lock.current||!canRead||!local)return;
+  lock.current=true;setOperation('review');setServerChoice('');setFailure('');
+  try{await ws.current.reconcile(activeId,true)}
+  catch{showFailure('Serverversionen kunde inte hämtas. Dina lokala uppgifter finns kvar.')}
+  finally{lock.current=false;if(alive.current)setOperation('')}
+ }
+ function chooseServer(){
+  if(locked||lock.current||serverChoice!==choiceBasis)return;
+  const latest=ws.current.get(activeId),latestBasis=recordBasis({id:latest?.id,generation:latest?.generation,data:latest?.data,server:latest?.server});
+  const server=latest?.status==='conflict'?articleDraftServerVersion(latest.server,activeId,envelope?.base.id):null;
+  if(!server||server.archived||latestBasis!==serverChoice){setServerChoice('');showFailure('Underlaget ändrades. Granska serverversionen igen innan du väljer.');return}
+  ws.current.resolve(activeId,true);clearRetry();clearReview();setDiscard(false);setServerChoice('');setFailure('Den visade serverversionen är vald. Dina tidigare lokala ändringar har ersatts på den här enheten. Inget har arkiverats eller sparats i artikelregistret.');
+ }
+ function keepLocalAndClose(){
+  if(locked||lock.current||!local)return;
+  if(!ws.current.hasLocalCopy(activeId)){showFailure('En lokal reservkopia kunde inte bekräftas. Kopiera dina uppgifter innan du lämnar panelen. Underlaget är kvar här.');return}
+  onClose();
  }
  async function close(){
   if(locked||lock.current)return;
-  if(!enabled){onClose();return}
   // Failed initial loading has exposed no editable values and created no draft.
   // Keep the loading error recoverable without trapping an empty panel.
   if(!initialized.current&&!local){onClose();return}
   if(!ws.current.ready){showFailure('Dina privata utkast har inte hämtats. Försök hämta dem igen innan du lämnar artikelpanelen.');return}
   if(!activeId||!ws.current.get(activeId)){onClose();return}
+  if((!enabled&&local?.status!=='saved')||local?.status==='conflict'){showFailure('Underlaget är inte bekräftat sparat på servern. Granska versionerna eller välj uttryckligen att stänga och behålla underlaget på den här enheten.');return}
+  if(!enabled){onClose();return}
   lock.current=true;setOperation('close');setFailure('');
   try{
    if(await ws.current.flush(activeId)===null){showFailure(ws.current.get(activeId)?.error||'Det privata artikelutkastet kunde inte sparas. Dina uppgifter finns kvar. Försök igen innan du stänger.');return}
@@ -114,19 +136,21 @@ export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEdit
   finally{lock.current=false;if(alive.current)setOperation('')}
  }
  async function remove(){
-  if(locked||lock.current||!enabled||!activeId)return;
+  if(locked||lock.current||!canRead||!activeId)return;
+  const latest=ws.current.get(activeId);
+  if(latest?.status!=='saved'||!articleDraftServerVersion(latest,activeId,envelope?.base.id)){showFailure('Granska och välj en giltig sparad serverversion innan du arkiverar. Dina lokala uppgifter finns kvar.');return}
   lock.current=true;setOperation('discard');setFailure('');
   try{if(await ws.current.archive(activeId)){if(alive.current)onClose()}else showFailure(ws.current.get(activeId)?.error||'Det privata artikelutkastet kunde inte tas bort. Dina uppgifter finns kvar.')}
   catch{showFailure('Det privata artikelutkastet kunde inte tas bort. Dina uppgifter finns kvar.')}
   finally{lock.current=false;if(alive.current)setOperation('')}
  }
  function openReview(){
-  if(locked||lock.current||!envelope||draftConflict||!current)return;
+  if(!enabled||locked||lock.current||!envelope||draftConflict||!current)return;
   setReviewArticle(structuredClone(current));setReviewed(false);
   requestAnimationFrame(()=>{if(alive.current)reveal(review.current)});
  }
  function adopt(){
-  if(locked||lock.current||!reviewArticle||!reviewed)return;
+  if(!enabled||locked||lock.current||!reviewArticle||!reviewed)return;
   const saved=currentEnvelope(),latest=state.current.articles.find(row=>row.id===reviewArticle.id);
   if(!saved||saved.record.status==='conflict'||!latest||recordBasis(latest)!==reviewBasis)return;
   const basis=recordBasis(latest);
@@ -192,13 +216,14 @@ export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEdit
   focusCleanup.current=stop;observer.observe(sheet);observer.observe(control);sheet.addEventListener('animationend',revealControl);revealControl();
  }
  const submitDisabled=locked||!envelope||(!retry&&(conflict||draftConflict||!valid?.success||!sourceExists));
- const operationMessage=operation==='crm'?'Sparar artikeln i CRM. Vänta innan du stänger.':operation==='close'?'Sparar privat artikelutkast inför stängning…':operation==='discard'?'Tar bort privat artikelutkast…':operation==='open'?'Kontrollerar det valda artikelutkastet…':operation?'Kontrollerar och sparar ditt privata utkast…':'';
+ const operationMessage=operation==='crm'?'Sparar artikeln i CRM. Vänta innan du stänger.':operation==='close'?'Sparar privat artikelutkast inför stängning…':operation==='discard'?'Arkiverar sparat privat artikelutkast…':operation==='review'?'Hämtar serverversionen. Dina lokala uppgifter finns kvar.':operation==='open'?'Kontrollerar det valda artikelutkastet…':operation?'Kontrollerar och sparar ditt privata utkast…':'';
  return <Sheet open onOpenChange={open=>{if(!open&&!locked&&!lock.current)void close()}}><SheetContent ref={panel} className="crm-sheet article-draft-editor" showCloseButton={!locked} onFocusCapture={revealFocusedControl} onEscapeKeyDown={event=>{if(locked||lock.current)event.preventDefault()}} onPointerDownOutside={event=>{if(locked||lock.current)event.preventDefault()}} onInteractOutside={event=>{if(locked||lock.current)event.preventDefault()}}>
-  <SheetHeader><SheetTitle>Artikel</SheetTitle><SheetDescription>{enabled?'Privat utkast · bara synligt för dig. Gemensamt artikelregister ändras först när du sparar artikeln i CRM.':'Artikelregistrering kräver administratörsbehörighet.'}</SheetDescription></SheetHeader>
-  {!enabled?<div className="sheet-body"><p>Ditt konto har inte behörighet att öppna privata artikelutkast.</p><Button variant="outline" onClick={onClose}>Stäng</Button></div>:<div className="sheet-body business-ui">
+  <SheetHeader><SheetTitle>Artikel</SheetTitle><SheetDescription>{enabled?'Privat utkast · bara synligt för dig. Gemensamt artikelregister ändras först när du sparar artikeln i CRM.':'Ditt privata artikelutkast · läs, kopiera och granska. Artikeländringar kräver administratörsbehörighet.'}</SheetDescription></SheetHeader>
+  {!canRead?<div className="sheet-body"><p>Ditt konto kan inte öppna privata artikelutkast.</p><Button variant="outline" onClick={onClose}>Stäng</Button></div>:<div className="sheet-body business-ui">
    {local&&<details className="article-draft-identity"><summary>Valt privat artikelutkast</summary><p>{local.title}</p><dl><div><dt>Utkastets id</dt><dd>{local.id}</dd></div></dl></details>}
    {local&&!envelope&&<div className="record-conflict article-draft-recovery"><h3>Artikelutkastets underlag kunde inte läsas</h3><p>Dina bevarade uppgifter har inte ersatts. Kopiera dem innan du öppnar annat arbete. Formatet behöver återställas innan det kan ändras.</p><Button disabled={locked} variant="outline" onClick={()=>void copyValues()}>Kopiera bevarade artikeluppgifter</Button><details><summary>Visa bevarade artikeluppgifter</summary><pre>{JSON.stringify(local.data,null,2)}</pre></details></div>}
-   {envelope&&values&&<fieldset disabled={locked||draftConflict} className="article-draft-fields">
+   {recovery&&<section className="article-draft-recovery" aria-label="Granska privata artikelversioner"><h3>Behåll kontrollen över ditt underlag</h3><p>{!enabled?'Du kan läsa ditt eget utkast och arkivera en sparad version. Du kan inte spara artikeländringar med säljarbehörighet.':'Privat sparning är inte bekräftad. Jämför underlagen innan du väljer version.'}</p><div className="article-draft-comparison"><section aria-label="Mitt lokala artikelunderlag"><h4>Mitt öppna underlag</h4><ArticleDraftPreview draft={local} st={st}/><details><summary>Visa hela mitt bevarade underlag</summary><pre>{JSON.stringify(local.data,null,2)}</pre></details></section>{draftConflict&&<section aria-label="Sparad serverversion"><h4>Hämtad serverversion</h4>{serverVersion?<><p>Revision {serverVersion.revision} · {serverVersion.archived?'Redan arkiverat':'Sparat privat utkast'}</p><ArticleDraftPreview draft={serverVersion} st={st}/><details><summary>Visa hela serverunderlaget</summary><pre>{JSON.stringify(serverVersion.data,null,2)}</pre></details>{serverVersion.archived&&<p>Utkastet är redan avslutat. Dina öppna uppgifter finns kvar; inget nytt arkivbesked har bekräftats här.</p>}</>:<><p>{local.server?'Serverunderlaget kunde inte verifieras. Det kan inte väljas eller arkiveras här.':'Ingen sparad serverversion hittades. Dina uppgifter finns kvar på den här enheten.'}</p>{local.server&&<details><summary>Visa serverns svar</summary><pre>{JSON.stringify(local.server,null,2)}</pre></details>}</>}</section>}</div><Button type="button" variant="outline" disabled={locked} onClick={()=>void fetchServer()}>Hämta sparad serverversion</Button>{serverVersion&&!serverVersion.archived&&<div className="article-draft-server-choice"><p>Detta ersätter ditt öppna underlag på den här enheten med exakt den visade serverversionen. Kopiera dina lokala ändringar först om du vill behålla dem.</p><label className="check-field"><Checkbox checked={serverChoice===choiceBasis} disabled={locked} onCheckedChange={value=>{if(!lock.current&&!busy)setServerChoice(value===true?choiceBasis:'')}}/>Jag vill ersätta mina lokala ändringar med den visade serverversionen</label><Button type="button" disabled={locked||serverChoice!==choiceBasis} onClick={chooseServer}>Använd den visade serverversionen</Button></div>}{enabled&&draftConflict&&!serverVersion?.archived&&<Button type="button" variant="outline" disabled={locked||!!local.server&&!serverVersion} onClick={()=>{if(lock.current||busy)return;ws.current.resolve(activeId,false);clearRetry();clearReview();setFailure('Ditt öppna underlag är valt för privat sparning. Artikelregistret ändras inte.')}}>{serverVersion?'Behåll och spara mitt öppna underlag':'Behåll och spara mitt lokala underlag'}</Button>}</section>}
+   {enabled&&envelope&&values&&<fieldset disabled={locked||draftConflict} className="article-draft-fields">
     {conflict&&<div className="record-conflict article-draft-conflict"><h3>{missing?'Artikeln finns inte längre i arbetsytan':'Artikeln har ändrats i det gemensamma registret'}</h3><p>Dina privata artikelvärden finns kvar. {missing?'Utkastet kan inte ersätta en artikel som saknas. Kopiera uppgifterna eller behåll utkastet.':'Jämför det ursprungliga och senast inlästa artikelunderlaget innan du väljer vilket underlag du ska använda.'}</p><div className="article-draft-actions"><Button type="button" variant="outline" onClick={()=>void copyValues()}>Kopiera mina artikeluppgifter</Button>{current&&<Button type="button" variant="outline" onClick={openReview}>Granska aktuell artikel</Button>}</div><details><summary>Visa ursprungligt artikelunderlag</summary><ArticleSnapshot article={envelope.base} st={st}/></details></div>}
     {reviewArticle&&<div ref={review} tabIndex={-1} className="article-draft-review" aria-label="Granska aktuellt artikelunderlag"><h3>Aktuellt inläst artikelunderlag</h3><ArticleSnapshot article={reviewArticle} st={st}/>{reviewBasis!==currentBasis?<><p>Artikeln ändrades igen. Granska den senaste inlästa versionen innan du väljer underlag.</p><Button type="button" variant="outline" onClick={openReview}>Granska senaste artikelversionen</Button></>:<label className="check-field"><Checkbox checked={reviewed} onCheckedChange={value=>{if(!lock.current&&!busy)setReviewed(value===true)}}/>Jag har jämfört mina värden med denna artikelversion</label>}<Button type="button" disabled={!reviewed||reviewBasis!==currentBasis||missing} onClick={adopt}>Använd detta underlag och behåll mina värden</Button><p>Detta ändrar bara ditt privata utkast. Artikelregistret ändras först vid sparning i CRM.</p></div>}
     {textFields.map(([key,label,max])=><F key={key} label={label}><Input maxLength={max} value={values[key]} onChange={event=>update(key,event.target.value)}/></F>)}
@@ -208,10 +233,11 @@ export function ArticleEditor({st,article,draftId,busy,save,onClose}:ArticleEdit
     {!valid?.success&&<p className="article-draft-hint">Ofärdiga uppgifter kan sparas privat. Före sparning i CRM behöver artikelnummer, benämning, källa, produktlänk och priser vara giltiga.</p>}
     {!sourceExists&&values.sourceId&&<p className="article-draft-hint">Den sparade artikelkällan finns inte längre. Dina värden finns kvar; välj en tillgänglig källa före sparning i CRM.</p>}
    </fieldset>}
-   <div className="article-draft-save" aria-label="Sparstatus för privat artikelutkast" onClickCapture={draftAction}><b>Privat artikelutkast</b><DraftStatus id={activeId} disabled={locked} announce onResolved={()=>{clearRetry();clearReview();setDiscard(false)}} onClosed={()=>{clearRetry();onClose()}}/><p>Privat sparning ändrar inga gemensamma artiklar eller kundorder.</p></div>
+   <div className="article-draft-save" aria-label="Sparstatus för privat artikelutkast"><b>Privat artikelutkast</b><DraftStatus id={activeId} disabled={locked} announce allowActions={false}/>{!w.ready&&w.error&&<Button disabled={locked} variant="outline" onClick={w.retry}>Försök hämta utkasten igen</Button>}{enabled&&local?.status==='error'&&<Button disabled={locked} variant="outline" onClick={()=>void w.flush(activeId)}>Försök spara privat igen</Button>}<p>Privat sparning ändrar inga gemensamma artiklar eller kundorder.</p></div>
    <div ref={status} tabIndex={-1} className="article-draft-message" role="status" aria-live="polite" aria-atomic="true">{operationMessage&&<p><strong>{operationMessage}</strong></p>}{failure&&<p>{failure}</p>}{crmMessage&&<p><strong>Besked från CRM-sparningen:</strong> {crmMessage}</p>}{retry&&<p>Försök igen använder exakt samma uppgifter som förra försöket. Ändrar du ett fält eller väljer annan version blir det en ny sparning.</p>}</div>
-   {local&&envelope&&<div className="article-draft-discard"><Button type="button" disabled={locked} variant="ghost" onClick={()=>setDiscard(true)}>Ta bort privat utkast</Button>{discard&&<><p>Detta tar bort ditt privata utkast. Artikelns sparade CRM-uppgifter ändras inte. En tidigare obekräftad CRM-sparning kan redan ha lyckats.</p><div className="article-draft-actions"><Button type="button" disabled={locked} variant="outline" onClick={()=>void remove()}>Ja, ta bort utkast</Button><Button type="button" disabled={locked} variant="ghost" onClick={()=>setDiscard(false)}>Behåll utkast</Button></div></>}</div>}
-   <div className="article-draft-footer"><Button type="button" disabled={locked} variant="outline" onClick={()=>void close()}>{local?'Spara utkast & stäng':'Stäng'}</Button>{envelope&&<Button type="button" disabled={submitDisabled} onClick={()=>void submit()}><Save size={16}/>{operation==='crm'?'Sparar artikel…':retry?'Försök samma CRM-sparning igen':'Spara artikel i CRM'}</Button>}</div>
+   {local&&<div className="article-draft-discard">{archiveReady?<Button type="button" disabled={locked} variant="ghost" onClick={()=>setDiscard(true)}>Arkivera sparat privat utkast</Button>:<p>För att arkivera: hämta, granska och välj först en giltig sparad serverversion.</p>}{!archiveReady&&!recovery&&<Button type="button" disabled={locked} variant="outline" onClick={()=>void fetchServer()}>Hämta sparad serverversion</Button>}{discard&&archiveReady&&<><p>Detta arkiverar den valda sparade versionen av ditt privata utkast. Artikelns CRM-uppgifter ändras inte. En tidigare obekräftad CRM-sparning kan redan ha lyckats.</p><div className="article-draft-actions"><Button type="button" disabled={locked} variant="outline" onClick={()=>void remove()}>Ja, arkivera utkast</Button><Button type="button" disabled={locked} variant="ghost" onClick={()=>setDiscard(false)}>Behåll utkast</Button></div></>}</div>}
+   {local&&local.status!=='saved'&&<div className="article-draft-local-close"><p>Det öppna underlaget är inte bekräftat sparat på servern. Om du stänger nu behålls en lokal reservkopia på den här enheten.</p><Button type="button" disabled={locked} variant="outline" onClick={keepLocalAndClose}>Stäng och behåll på den här enheten</Button></div>}
+   <div className="article-draft-footer"><Button type="button" disabled={locked} variant="outline" onClick={()=>void close()}>{enabled&&local?'Spara utkast & stäng':'Stäng'}</Button>{enabled&&envelope&&<Button type="button" disabled={submitDisabled} onClick={()=>void submit()}><Save size={16}/>{operation==='crm'?'Sparar artikel…':retry?'Försök samma CRM-sparning igen':'Spara artikel i CRM'}</Button>}</div>
   </div>}
  </SheetContent></Sheet>;
 }
