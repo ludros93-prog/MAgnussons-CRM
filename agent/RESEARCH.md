@@ -219,3 +219,14 @@ Officiella källor hämtades med HTTP 200 i denna körnings research; äldre 403
 - [Saleshub – Funktioner](https://saleshubai.se/funktioner), kl. 14:17:47–14:17:48 UTC, **HTTP 200**: översikt över gemensamma data och offert/order. Inga dokumenterade garantier om formulärbevarande, pending-stängning, sparstatus eller samtidighet. Detta nya offentliga belägg ersätter inte de äldre hämtningarnas faktiska 403.
 
 Magnussons lokala lås, bevarad editor/originalbasis, oförändrat CAS/request-ID och neutralt obekräftatbesked är egna tillämpningar, verifierade i 13 isolerade corefall. Separata idle dirty-close-/toastgränser och Sites failed Unauthorized kvitteras i [VALIDATION](../VALIDATION.md); ingen leverantörskälla förklarar backendfelets orsak. Codex-referensen är fortfarande oläst.
+
+## Följ upp-status och native fokuskontroll, kontrollerat 6 oktober 2026
+
+Sju officiella URL:er omkontrollerades **HTTP 200 kl. 15:33:00–15:33:01 UTC**:
+
+- [Salesforce Edit a Record](https://developer.salesforce.com/docs/platform/lwc/guide/data-edit-record.html): submit/success/error, event.detail.message och fieldErrors. [updateRecord](https://developer.salesforce.com/docs/platform/lwc/guide/reference-update-record.html): ifUnmodifiedSince för samtidig ändring. Detta är inget löfte om vår privata flush/idempotens.
+- [Lime Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/): relevanta upptäckbara handlingar med tydliga verb; ingen egen utkast-/lagringsgaranti.
+- [W3C Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) och [ARIA22](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22): redan närvarande polite/atomic status kan ge besked utan fokusflytt. [Focus Not Obscured Minimum](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) kräver på AA-nivå att kontrollen inte är helt skymd; Magnussons mål om hel synlig knappbox är strängare och provas separat.
+- [Saleshub Funktioner](https://saleshubai.se/funktioner): samlat kund-/nästaaktivitets-/modulflöde, ingen verifierad garanti för privat utkast eller pending-stängning. Äldre 403-/200-belägg ändras inte av denna hämtning.
+
+Magnussons egna tillämpningar är kvarstående privat/CRM/stängningsbesked, exakta tillgängliga serverfel, explicit detaljfokus och lokal scroll av samma native fokuserade kontroll. **22/22 isolerade slutfall** belägger avgränsningen, ingen skärmläsar-/telefon-/WCAG-certifiering. Källorna förklarar varken v31 Unauthorized eller skillnaden mellan lokal råtarhash och native archive_storage-hash; dessa tekniska gränser och faktisk v32-publicering kvitteras i [VALIDATION](../VALIDATION.md). Codex-tasken är fortsatt oläst.
