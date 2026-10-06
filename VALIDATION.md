@@ -1,4 +1,39 @@
-# Följ upp: samlad privat-/CRM-/stängningsstatus – v32, 2026-10-06
+# Artikelpanelen: uttrycklig lokal kassering – v33, 2026-10-06
+
+## Beteende och avgränsning
+
+Ändrade uppgifter eller obekräftad sparning ger ett val vid X/Escape/utanförklick, även efter misslyckad sparning av orörda standardvärden. Fortsätt redigera behåller värden/originalbasis. Kassering gör ingen POST och ångrar ingen möjlig commit. Ren editor kan stängas; pendinglås, explicit konfliktinläsning och identiska återförsök består.
+
+Tre UI-filer ändras: 51 tillägg/5 borttagningar; 225 övriga icke-Markdownfiler är byteoförändrade. API/payload, roller, provider, postbasis/CAS, request-ID, idempotens, lagring, filer, backup och hostingkonfiguration består. Ingen migration, varaktig privat artikelautosparning eller reload-/unmount-/generell navigationsvakt tillkommer.
+
+Tidigare fokus till BODY/underscroll rättas med lokal fokusåtergång och bevakning av samma kontrolls storlek/animation, utan textändring/dataskrivning. Överhöga kontroller använder vanlig scroll; tidigare del-PASS återanvänds inte.
+
+## Faktiska kontroller
+
+- Bas docs-main `03cb8dd`, source `c9fb46f`: 9/9 textförluster vid X/Escape/utanförklick, noll POST, oförändrade råtabeller/R2. Rapport `scratch/article-idle-browser/baseline-c9/report.json`; SHA256 `e6ea96e15f54a985cc8ec6a23ed50d21e4711cd1f385e8e99e56bf2db4698cd7`.
+- Fem lokala kontroller gav terminal 0, 17:44:18–17:45:18 UTC: CRM/Outlook, TypeScript utan incremental, bygge, isolerad HTTP workerd/D1/R2 och diff. Kvittens: `scratch/crm-article-idle-20261006T1720/final-resize-checks/checks.json`. Lokal strömrestore: 13,5 MB/tre filer, 18 010 856 byte, verifierade korrektur-/fotolänkar och filhashar; ingen hostingrestore.
+- Färsk slutmatris: 49/49 PASS, 164 PNG, 49 fallauditer plus en kompletterande råaudit, 63 lagringsövergångar. Rapport `scratch/article-idle-browser/final-3a162b7/report.json`; SHA256 `55bac332d45b6cfda4bd14cc62107ca5e2ace5ae9c3dd2617ac7d1c8ee4e57c7`.
+
+Matrisen omfattar ren/ändrad/återställd editor, fel utan fältändring, sex kontrollerade 503, två verkliga CAS409, två hållna 200 och fyra tappade commitsvar med replay. Åtta avsedda commits gav version 5→13 och två nya artiklar: 18 browser-POST plus två konfliktaktör-POST. Fyra verkliga 200-svar återspelades med byteidentisk kropp/request-ID utan ny mutation. Inställningars standardkassering passerade; seller/reader-UI saknar nya browserprov. Vanligt artikelbyte granskades statiskt utan framtvingade Sheet-klick.
+
+Viewportar: 320×844, 390×844, 1440×1000; 390×320 nåddes genom native navigation vid 390×844, sedan resize. Text200 dubblar uppmätt font/line-height före bekräftelseöppning, utan browser-/OS-zoom. Initial Fortsätt redigera, native Tab/Shift+Tab, Escape och lokal fokusåtergång mättes utan injicerad fokusreparation. Retry/rebase-Tab börjar separat med uttrycklig `Close.focus`.
+
+Två kunder, fyra orderhuvuden, två filposter/två R2-objekt och tre egna/andras privata anteckningsutkast bevarades. Alla 15 orelaterade apptabeller, R2-bytes/metadata och hela demo-arbetsytan var oförändrade; befintlig ledger bevarades och sparade artikelfält matchade payload. Orderrader/produktions-/korrekturreferenser var tomma: inget fullständigt orderåterställningsprov. Ingen extern browsertrafik/riktig kundskrivning. PID 106310 avslutad, temp-lager borttaget, portar 8960/8961 fria. 360 app-/byggfilhashar, inklusive 96 distfiler, oförändrade; oberoende fil-/råaudit utan blockerande fel. Tidigare kandidater och harness-ARIA/navigation/write_token-förväntningar är separat diagnostik; slutmatrisen använde nytt lager.
+
+## Källa, arkiv och publicering
+
+- Source `3a162b71adbc12e27628d0aa80339720f7b5e81c`, träd `b370f350e1ea3028de5b49ced99ec0565854bc72`; app-main `590a9d087acce4c909a7530e3530d92acc6d2079` har samma träd.
+- [PR #39](https://github.com/ludros93-prog/MAgnussons-CRM/pull/39) head `a7281dc18b3cf98294abf9b4c4e66c131fcbf0c0`: CI 37506119925/jobb 112415102366, 13/13 success. [Main-CI 37507881622](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37507881622)/jobb 112421109786: 13/13 success.
+- Normal credential-stdin-push c9fb46f→3a162b7 gav terminal 0 före native save; ingen force eller automatisk publicering före deploy.
+- Worker SHA256 `403777b0489caeffb77dc4f30a5cddab78cec0d14934207278cb49f48d7b92fe`; 96-filsmanifest SHA256 `884ff77b5a282223984e1868ebd7e372cc204f845695eeab7abbd0113d4f2c4d`.
+- Lokalt arkiv: 97 byteverifierade medlemmar. Gzip: 1 112 624 byte, SHA256 `493dad2b0478b8f5dfb7c1aa7b75db71b36fca362cd44864e6ab458c75bc3552`. Råtar: 4 259 840 byte, SHA256 `3f8be6df540b2f086202ef863465f4c4b182bd4dd4d0914b717fc2ab7045a172`.
+- Native v33: `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_44af77950ef0819194baa40ccb677fbc`; 97 filer/4 259 840 byte, tarhash `sha256:dd23093c9940e4a807b71e104901bf4c7fc8414147c176d52ca4c143328b3d57`.
+
+Native hash skiljer sig från lokal råtarhash. Nedladdningen gav **file could not be authorized or resolved**; byteidentitet, normalisering och skillnadens orsak är overifierade. Native save/source/deploy återlästes. Deploy `appgdep_6ac537c8e1408191b9305a748a623a83` succeeded **18:03:13.722109 UTC**, envrevision 1, samma Site/miljö och oförändrad custom-policy/ägare. Anonyma GET `/` och `/api/crm`: **403/403 kl. 18:03:45 UTC**, kroppar kasserade. Ingen autentiserad live-UI/kundskrivning.
+
+V32-återgång innebär UI-regression; ingen rollback utfördes. Artikelutkast/toast/drift/pilot kvarstår. Riktiga konton, live-UI, skärmläsare, fysisk telefon, personal och hostingrestore är oprövade. Codex-tasken är oläst; källor/egna regler/tillgänglighetslöften hålls isär.
+
+# Historik: Följ upp-status – v32, 2026-10-06
 
 ## Beteende och avgränsning
 
