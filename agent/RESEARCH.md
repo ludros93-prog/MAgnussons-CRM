@@ -256,3 +256,13 @@ Magnussons lokala stängningsval, varning om obekräftad sparning och fokusåter
 - [Saleshub AI funktioner](https://saleshubai.se/funktioner): HTTP200, slut-URL oförändrad kl. 19:21:26.428634 UTC. Beskriver kundkort med nästa aktivitet och gemensamma moduldata för affär, projekt och faktura. Tillämpning: samma underlag visar aktuellt besked, avsändning och kontrolluppgifter utan dubbelregistrering. Marknadsbeskrivning är inget integrationsprov.
 
 Browserbelägget för v34 är 8 syntetiska fall; inga påståenden om uppmätt personalnytta, egna leverantörsintegrationer eller världens bästa CRM görs genom källorna.
+
+## Privat sparning och intuitiva leveranshandlingar – kontrollerat 2026-10-06
+
+Officiella sidor öppnades med tillgängligt webbverktyg omkring 20:28 UTC i denna körning:
+
+- [Salesforce Edit a Record](https://developer.salesforce.com/docs/platform/lwc/guide/data-edit-record.html) skiljer submit, success och error samt synliga formulär-/serverbesked. Magnussons tillämpning skiljer privat sparstatus från explicit CRM-inlämning och dess kvittens.
+- [Lime Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) beskriver relevanta handlingar, konkreta verb och beskrivande etiketter. Tillämpning: välj ett bestämt utkast, spara privat och stäng, granska leverans eller registrera faktisk händelse.
+- [Saleshub AI Funktioner](https://saleshubai.se/funktioner) beskriver kundsammanhang, nästa aktivitet och gemensamma moduldata. Tillämpning: återupptagning av samma order med dess ursprungliga underlag, utan ny order eller dubbelregistrering.
+
+Sidinnehållet lästes; ingen ny HTTP-status eller leverantörsgaranti antas. Privat receipt-kuvert, SQL-CAS, atomisk arkivering, identitetsisolering och exakt lost-ack-replay är Magnussons egen implementation och provas separat i [VALIDATION](../VALIDATION.md). Leverantörskällorna bevisar ingen fungerande anslutning, personalacceptans eller världens bästa CRM. Codex-referensen är fortsatt oläst.

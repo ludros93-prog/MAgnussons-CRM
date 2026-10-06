@@ -1,5 +1,17 @@
 # Magnussons CRM – order, tryck och lager
 
+## Privata leveransutkast – v35, 2026-10-06
+
+Öppna en skickad order under På väg till kunden. Välj registrering av mottagande eller problem och fyll i uppgifterna. **Spara utkast & stäng** sparar privat och stänger först när serversparningen är bekräftad. Dialogens provade stängningsvägar följer samma sparning. Vänta på privat Sparat innan du lämnar fliken; lokal reservkopia är inget löfte om offlinefunktion. Utkastet kan fortsättas från Min dag efter omladdning eller på annan enhet. Om flera privata utkast finns för ordern väljer du ett uttryckligen.
+
+Mottagningsdatum, mottagare, anteckning, problemtext, nästa kontroll och valt läge sparas tillsammans med ursprungligt leveransunderlag. Att spara privat ändrar ingen order eller bevakningsuppgift. Saknade datum/fält får ligga i utkastet, men explicit CRM-registrering kräver fortfarande giltiga uppgifter och faktisk bekräftelse. Ta bort i Min dag kasserar utkastet; det återställer ingen redan registrerad leverans.
+
+En kollegas leveransändring kräver Granska aktuell leverans och ditt uttryckliga val av nytt underlag. Valet kan sparas privat men registrerar ingen leverans. En annan enhets privata revision ger i stället utkastkonflikt med uttryckligt versionsval. Fel eller förlorad kvittens bevarar texten; oförändrat CRM-återförsök använder samma sparade privatversion, innehåll och begärans-ID. Servern arkiverar exakt utkastversion atomiskt med leveransändringen.
+
+Ny typ `receipt` använder befintlig `crm_drafts`; inga SQL-tabeller eller kolumner läggs till. V34:s klient kan inte återuppta typen. Vid UI-återgång ska receipt-format, kompatibel klient och serverns roll-/basis-/CAS-/idempotensregler bevaras. Använd inte en äldre klient för att kassera ett okänt utkast. Ingen rollback har genomförts. Gemensam CRM-kopia omfattar fortfarande inte privata utkast, konton eller Microsoft. Aktiva utkast av alla typer hindrar osäker restore; separat konto-/utkastbackup och faktisk hostingåterställning återstår.
+
+Slutkontroller, källrevision, main och faktisk publicering finns i [VALIDATION](VALIDATION.md). Detta är syntetiska utvecklingsprov; verkliga konton, personal, telefon, skärmläsare och autentiserad live-UI är oprövade.
+
 ## Kontaktspärr i Företagsökning, 5 oktober 2026
 
 Säljare och administratör kan välja **Spärra prospektering** eller **Återöppna kontakt**, med en obligatorisk orsak. Beslutet sparar autentiserad aktör, tid och revision; äldre beslut finns kvar. Spärrade poster kan visas genom filtret Kontaktstatus, men kan inte föras till nykundsbearbetning genom `lead_convert`. Kontaktlänkar i den spärrade posten visas som text. Spärren styr Företagsökning; befintliga kundkort och deras aktiviteter behöver separat kontaktpolicy när fler utskicksvägar byggs.

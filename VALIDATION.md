@@ -1,3 +1,32 @@
+# Privata leveransutkast – v35, 2026-10-06
+
+Source `58231a6ce109cc666224e81d2fad07c1d831f65d`, lokal slutkod `b68f0597d0fe1f3d3959dd1fe7cdd50b61a93f0d`, PR #44-head `460ae8b776f550a6e550f807602829e4c07a7fc8` och app-main `308db2e1d2a2df53fc4a5cd36f33aa740f7a0d6c` delar träd `59691759a16ae8891a0f6f316b82dfea5ff70b75`.
+
+## Beteende och verifiering
+
+Baseline v34 reproducerade förlust av alla fem fält och confirm/issue-läget genom X, Escape, utanförklick och omladdning; alla 18 apptabeller och R2 var oförändrade. Slutkandidaten sparar den nya privata typen `receipt` med de sex värdena och originalbasis. Privat sparning/kassering påverkar inte gemensam CRM-version, uppgifter eller leveranshistorik. Explicit CRM-inlämning verifierar aktivt innehåll, valt läge, basis, ägare/context och exakt revision, med atomisk arkivering.
+
+Fryst b68f0597 passerar obligatoriska CRM/Outlook-regressioner, TypeScript med --incremental false, pnpm 11.25-bygge och isolerad byggd workerd/D1/R2-runtime. Node 24.19.0 används lokalt. Exakt-head och app-main CI har vardera 13/13 success. Grundsviten omfattar fortsatt 40→45, godkänd 50→48, kassation, delleverans och dubbelklick; inga verkliga order skrivs.
+
+Nya receipt-regressionen passerar 45 privata skrivförsök och 52 receipt-anrop: 18×400, 16×409, 8×403, två exakta replay, ett parallellt dubbelklickspar, ett privat tvåenhets-CAS, ett verkligt SQL-utkast-race och två SQL-arbetsyte-race. Alla 18 apptabeller jämförs rått vid avvisning/rollback. Båda lägenas framgång arkiverar rätt privat revision atomiskt; sen autosparning och ny konsumtion av avslutat utkast stoppas.
+
+16 unika browserfall i 13 grupper passerar på samma bygge (18 godkända körningar inklusive två omprov efter harnessrättningar). Båda lägena bevarar alla fem fält, läge och basis genom X/Escape/utanför/stängning/omladdning/Min dag. Misslyckad flush behåller dialogen; privat och gemensam konflikt, uttryckligt utkastval, granskad adoption, förlorade verkliga privata/CRM-200-svar, identiskt återförsök utan ny privat flush, dubbelklick, mottagande, fyra nekade roller, user/demo-isolering och felaktigt kuverts läs/kopieringsväg provas. 126/126 fontmått är exakt 2× och tolv native Tab-kontroller passerar vid 320/390/1440 px, plus normal 390-px submit. Root granskade representativa mobilbilder. Distinkta syntetiska titlar bevisar versionsval; igenkänning av naturligt likadana titlar/minutstämplar är en kvarvarande designuppgift.
+
+Browserrevisionen jämför 18 tabeller: fem avsiktliga syntetiska CRM-commits och fyra atomiskt avslutade receipt-utkast; tidigare privata rader, demo, orelaterade rader, kundfiler, två R2-objekts byte/metadata, inställningar och konton är exakta. Accepterade priser/mängder och fysisk leveranshistorik bevaras. Owned testserver stoppad och tillfällig D1/R2-lagring borttagen. Slutrapport: `/workspace/scratch/receipt-draft-browser/final-b68f0597/report.json`, SHA256 `6961db5d9f038fee819703e1252ec4fcf02019932abd3c9984651429e167ba12`. Alla provdata/artefakter är syntetiska och förvaras utanför Git. 252 spårade källfiler och 96 distfiler är oförändrade före/efter proven. 72 artefakter/22 PNG förvaras utanför Git. Lokala 97 tarfiler är återlästa byte för byte. Dist-manifest SHA256 fca30bab2b3b034bbc65db5902b1b0439044e02865ef47270ef07d1fa2f079bf, råtar 9b891a245fcaed075a2494559714cfb1750129d7f1dda31fb384f7699d05b5c6, gzip 4598df208064c64bc33bc1b70c9c4942d6bd7af45eace1bd7e08a42994446066.
+
+## Källa, main och publicering
+
+[PR #44](https://github.com/ludros93-prog/MAgnussons-CRM/pull/44), exakt head `460ae8b776f550a6e550f807602829e4c07a7fc8`: CI `37527824727`/jobb `112489212830`. [App-main CI](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37528502139) `37528502139`/jobb `112491524333` är gröna. Merge skedde efter grön exakt head och färsk bas `c3b768d57fdb543fb0b98aea16f5036d0dcd6e1a`.
+
+Sites sparade **v35** från den pushade källrevisionen. Deploy `appgdep_6ac55de11a208191ad5139e0725f4e69` succeeded **2026-10-06 20:45:34.529467 UTC** på https://magnussons-crm.rosen123.chatgpt.site, samma projekt, ägare och begränsade custom-policy. Anonyma GET / och /api/crm?space=live gav 403/403 kl. 20:45:56 UTC; inga svarskroppar sparades. Återläst native archive_storage har 97 filer/4 300 800 byte och content_hash sha256:9b891a245fcaed075a2494559714cfb1750129d7f1dda31fb384f7699d05b5c6, samma hash som lokala råtaren. Källrevision och deployment-ID stämmer vid återläsning; separat native bytehämtning utfördes inte. Ingen autentiserad live-UI eller kundskrivning gjordes.
+
+## Datakompatibilitet och gränser
+
+Ingen SQL-migrering eller ny tabell/kolumn införs; receipt-typ och kuvert är nya privata JSON-data i befintlig `crm_drafts`. V34:s klient känner inte typen och kan inte återuppta den. Bevara formatet, kompatibel klient och serverregler vid eventuell UI-återgång; ingen rollback utfördes. Gemensam CRM-kopia omfattar inte privata utkast, konton eller Microsoft; aktivt utkast fortsätter spärra osäker restore oavsett typ. Separat konto-/utkastrutin och hostingåterställning är oprövade.
+
+Privat serversparning bevisar inte ett mottagande, ett kundgodkännande eller offlinefunktion. Realistiska businessfall i grundregressionen återverifieras men ersätter inte personalpilot. Faktisk personal-/konto-/integrations-/telefon-/skärmläsar- och hostingnytta är inte uppmätt. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst; relevant read_thread saknas. Scheman, prompter och aktivering är oförändrade.
+
+## Tidigare verifieringar
 # Leveransregistrering – v34, 2026-10-06
 
 Source `bc1b5712220b862ad5640bd958589a6e4a8482b1`, lokal slutkod `2100b0c`, PR #41-head `05abdd66ff55ff6235c8bbea74e9c31dec355797` och app-main `c9c71f94ecf98b9afe2c1d21a26ecdd37a25ce58` delar träd `ed57569bd8f3b3bad9580bfd943cfeb63c308c29`.
