@@ -11,3 +11,10 @@
 .article-discard-dialog{max-height:calc(100dvh - 2rem);overflow-y:auto;overflow-wrap:anywhere}
 .article-discard-dialog [data-slot=alert-dialog-footer]{flex-wrap:wrap}
 .article-discard-dialog button{min-height:44px;height:auto;max-width:100%;white-space:normal;line-height:1.4}
+.receipt-dialog fieldset{min-width:0;border:0;padding:0;margin:0}
+.receipt-dialog button:not([role=checkbox]){min-height:44px;height:auto;white-space:normal;overflow-wrap:anywhere;text-align:left;padding-top:10px;padding-bottom:10px}
+.receipt-status,.receipt-review{min-width:0;overflow-wrap:anywhere;scroll-margin-top:16px}
+.receipt-status{padding:12px 0;line-height:1.6}
+.receipt-review{padding:16px;margin:16px 0;border:1px solid #dce5ed;border-radius:12px;background:#f4f8fb}
+.receipt-dialog [data-slot=sheet-header],.receipt-dialog [data-slot=sheet-title],.receipt-dialog [data-slot=sheet-description]{min-width:0;overflow-wrap:anywhere}
+.receipt-dialog .biz-buttons{min-width:0;flex-wrap:wrap}.receipt-dialog button{min-width:0;max-width:100%}.receipt-dialog button span{min-width:0;overflow-wrap:anywhere}
