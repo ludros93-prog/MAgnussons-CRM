@@ -26,3 +26,105 @@
   overflow-wrap: anywhere;
  }
 }
+
+/* Generic editors only: keep long values inside the sheet's available width. */
+.crm-form-sheet {
+ scroll-padding-top: 12px;
+ scroll-padding-bottom: calc(12rem + env(safe-area-inset-bottom, 0px));
+}
+.crm-form-sheet .edit-form {
+ min-width: 0;
+ overflow-wrap: anywhere;
+}
+.crm-form-sheet .form-input-lock {
+ grid-template-columns: minmax(0, 1fr);
+}
+.crm-form-sheet .draft-status,
+.crm-form-sheet .draft-status > span {
+ min-width: 0;
+ max-width: 100%;
+ white-space: normal;
+ overflow-wrap: anywhere;
+}
+.crm-form-sheet .form-input-lock > *,
+.crm-form-sheet .field,
+.crm-form-sheet .biz-field,
+.crm-form-sheet .form-grid > *,
+.crm-form-sheet .biz-grid > *,
+.crm-form-sheet .quote-numbers > *,
+.crm-form-sheet .category-checks > label {
+ min-width: 0;
+ max-width: 100%;
+}
+.crm-form-sheet .form-grid,
+.crm-form-sheet .biz-grid {
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.crm-form-sheet .quote-numbers {
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.crm-form-sheet .form-customer-context > b {
+ display: block;
+ overflow-wrap: anywhere;
+}
+.crm-form-sheet [data-slot=sheet-title] {
+ overflow-wrap: anywhere;
+}
+.crm-form-sheet input,
+.crm-form-sheet textarea,
+.crm-form-sheet [data-slot=select-trigger] {
+ min-width: 0;
+ max-width: 100%;
+}
+.crm-form-sheet input {
+ height: auto;
+ min-height: 44px;
+}
+/* Long notes keep their native rows and internal scrolling when focused. */
+.crm-form-sheet textarea {
+ field-sizing: fixed;
+}
+.crm-form-sheet [data-slot=select-trigger] {
+ height: auto;
+ min-height: 44px;
+ white-space: normal;
+ text-align: left;
+}
+.crm-form-sheet [data-slot=select-value] {
+ min-width: 0;
+ display: block;
+ overflow: visible;
+ -webkit-line-clamp: unset;
+ white-space: normal;
+ overflow-wrap: anywhere;
+}
+.crm-form-sheet .edit-form button:not([role=checkbox]),
+.crm-form-sheet [data-slot=sheet-header] button {
+ min-width: 0;
+ max-width: 100%;
+ height: auto;
+ min-height: 44px;
+ white-space: normal;
+ overflow-wrap: anywhere;
+ line-height: 1.5;
+}
+.crm-form-sheet .form-footer {
+ bottom: 0;
+ z-index: 1;
+ flex-wrap: wrap;
+ padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+.crm-form-sheet .form-footer button {
+ flex: 1 1 13rem;
+}
+@media(max-width:767px) {
+ .crm-form-sheet { scroll-padding-bottom: calc(18rem + env(safe-area-inset-bottom, 0px)); }
+ .crm-form-sheet .form-grid,
+ .crm-form-sheet .biz-grid,
+ .crm-form-sheet .quote-numbers { grid-template-columns: minmax(0, 1fr); }
+}
+/* A short viewport needs the editing space rather than a pinned action bar. */
+@media(max-height:540px) {
+ .crm-form-sheet { scroll-padding-bottom: 24px; }
+ .crm-form-sheet .form-footer { position: static; }
+}

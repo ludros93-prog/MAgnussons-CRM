@@ -16,6 +16,8 @@ B01b1 i [PR #8](https://github.com/ludros93-prog/MAgnussons-CRM/pull/8) bygger g
 
 ## Prioriterade leveranser
 
+Pågående avgränsad formulärleverans från main `d79f1bb`: `fix/mobile-generic-form-layout` rättar det belagda generella affärsformulärets bredd och footer. Gemensamma kund-/affärs-/order-/aktivitets-/mötes-/antecknings-/inställningseditorer får en isolerad layoutmarkör; kundkortets läsvy, privata kundflöden och workorderguiden behåller sina tidigare regler. Slutkontroller, faktisk main och publicering återstår. Sparstatus för generella formulär och övriga B01b2-/drift-/designärenden är fortsatt separata uppgifter.
+
 | Ordning | Leverans | Klart när | Belägg och beroenden |
 | --- | --- | --- | --- |
 | B00 | Kontrollera dagens källa och återstående fel | Lokal HEAD, fjärr-main, Site-revision, öppna PR:er och befintlig testtäckning är kända. Verifierade fel har reproduktion. | Läs status/kod/drift; kör nödvändig baslinje. T01–T26 är krav, inte redan godkända tester. Ingen nyare Lovable-kodbas får antas finnas. |
