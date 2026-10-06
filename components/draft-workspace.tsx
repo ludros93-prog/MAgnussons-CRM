@@ -189,8 +189,9 @@ export function DraftStatus({id,onClosed,onResolved,disabled=false,announce=fals
  if(w.ready&&!d&&!announce)return null;
  // Generic forms retain this text region even when clean. Retry/version buttons
  // and the changing timestamp stay outside it; announcing never moves focus.
+ // A clean region remains accessible without adding an empty grid row.
  const text=announce?<span><span role="status" aria-live="polite" aria-atomic="true">{message}</span>{timestamp}</span>:!w.ready?message:<span>{message}{timestamp}</span>;
- return <div className={!w.ready?'draft-status':d?'draft-status '+d.status:undefined}>
+ return <div className={!w.ready?'draft-status':d?'draft-status '+d.status:'sr-only'}>
   {text}
   {!w.ready&&w.error&&<Button type="button" variant="outline" size="sm" disabled={disabled} onClick={w.retry}>Försök igen</Button>}
   {w.ready&&d?.status==='error'&&<Button type="button" size="sm" variant="outline" disabled={disabled} onClick={()=>w.flush(id)}>Försök spara igen</Button>}
