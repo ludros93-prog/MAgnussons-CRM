@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useRef,useState,type FocusEvent,type MouseEvent} from 'react';
+import {useEffect,useId,useRef,useState,type FocusEvent,type MouseEvent} from 'react';
 import {CheckCircle2,AlertTriangle} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
@@ -13,12 +13,14 @@ import {ReceiptDraftEnvelopeSchema,type ReceiptDraftEnvelope,type ReceiptDraftVa
 import {directRows,deliveryVerified,latestDispatch} from '@/lib/direct-delivery';
 import {productionProgress} from '@/lib/production-quantities';
 import {DraftStatus,useDrafts} from './draft-workspace';
+import {ReceiptDraftPreview} from './receipt-draft-preview';
 import {BusinessField as F,displayDate} from './business-ui';
 type ReceiptSave=(type:string,data:unknown,close?:boolean,onFailure?:(status:number,message?:string)=>void)=>Promise<boolean>;
 type ReceiptAttempt={type:'receipt_confirm'|'receipt_issue';data:Record<string,unknown>&{draft:{id:string;revision:number}}};
 const usableDate=(value:string)=>!!value&&validDate.safeParse(value).success;
 
 export function ReceiptDialog({o,st,save,busy,onClose,draftId}:{o:Order;st:State;save:ReceiptSave;busy:boolean;onClose:()=>void;draftId?:string}){
+ const choiceId=useId();
  const w=useDrafts(),enabled=['admin','seller'].includes(st.viewer?.role||''),currentBasis=receiptBasis(st,o.id),waiting=awaitingReceipt(o);
  const customer=st.customers.find(c=>c.id===o.customerId),d=st.deals.find(d=>d.id===o.dealId);
  const initial=useRef<ReceiptDraftEnvelope>({values:{mode:'confirm',deliveredDate:day(),receivedBy:'',note:'',message:o.deliveryIssue,nextCheck:plusDays(day(),1)},expectedContext:currentBasis,customerName:customer?.name.slice(0,200),orderTitle:d?.title.slice(0,200)});
@@ -126,7 +128,7 @@ export function ReceiptDialog({o,st,save,busy,onClose,draftId}:{o:Order;st:State
  // control in this sheet; private autosave never focuses or scrolls anything.
  function revealFocusedControl(event:FocusEvent<HTMLDivElement>){
   const sheet=event.currentTarget,control=event.target;
-  if(!(control instanceof HTMLElement)||!control.matches('input,textarea,button,[role=combobox]'))return;
+  if(!(control instanceof HTMLElement)||!control.matches('input,textarea,button,summary,[role=combobox]'))return;
   requestAnimationFrame(()=>{if(!alive.current||!control.isConnected||document.activeElement!==control||!sheet.contains(control))return;const box=control.getBoundingClientRect(),bounds=sheet.getBoundingClientRect(),top=Math.max(0,bounds.top)+12,bottom=Math.min(window.innerHeight,bounds.bottom)-12;if(box.height>bottom-top)return;if(box.top<top)sheet.scrollBy({top:box.top-top,behavior:'instant'});else if(box.bottom>bottom)sheet.scrollBy({top:box.bottom-bottom,behavior:'instant'});});
  }
  const validFields=!!v&&(v.mode==='confirm'?usableDate(v.deliveredDate)&&!!v.receivedBy.trim():usableDate(v.nextCheck)&&!!v.message.trim());
@@ -134,9 +136,9 @@ export function ReceiptDialog({o,st,save,busy,onClose,draftId}:{o:Order;st:State
  const crmStatus=operation==='crm'?'Sparar leveransregistreringen i CRM…':operation==='close'?'Sparar privat utkast inför stängning…':operation==='discard'?'Tar bort privat utkast…':operation?'Kontrollerar ditt privata utkast…':retry?'Det senaste registreringsförsöket kunde inte bekräftas.':!waiting?'Ordern väntar inte längre på mottagningsbekräftelse.':draftConflict?'Välj version av ditt privata utkast innan du fortsätter.':conflict?'Leveransunderlaget har ändrats. Dina uppgifter finns kvar.':failure?'Läs sparbeskedet innan du fortsätter.':'Registrera kundens mottagande eller planera nästa leveranskontroll.';
  return <Sheet open onOpenChange={open=>{if(!open&&!locked&&!lock.current)void close()}}><SheetContent className="crm-sheet receipt-dialog" showCloseButton={!locked} onFocusCapture={revealFocusedControl} onEscapeKeyDown={e=>{if(locked||lock.current)e.preventDefault()}} onPointerDownOutside={e=>{if(locked||lock.current)e.preventDefault()}} onInteractOutside={e=>{if(locked||lock.current)e.preventDefault()}}><SheetHeader><SheetTitle>{enabled?d?.title||'Leveransregistrering':'Leveransunderlag'}</SheetTitle><SheetDescription>{customer?.name} · Utlovad leverans {displayDate(o.deliveryDate)}</SheetDescription></SheetHeader>
  {!enabled?<div className="sheet-body business-ui"><p>Nästa kontroll: {displayDate(o.deliveryNextCheck||o.deliveryDate)}</p>{o.deliveryIssue&&<p>{o.deliveryIssue}</p>}<p>Ditt konto kan läsa leveransunderlaget.</p><Button variant="outline" onClick={onClose}>Stäng</Button></div>:<div className="sheet-body business-ui">
- <div className="receipt-private-status" aria-label="Besked och versioner för ditt privata utkast" onClickCapture={draftAction}><b>Privat utkast · bara synligt för dig</b><DraftStatus id={activeId} disabled={locked} announce onResolved={reset} onClosed={()=>{reset();onClose()}}/><p>Kundens mottagande och leveransbevakning ändras först när du registrerar i CRM.</p></div>
+ <div className="receipt-private-status" aria-label="Besked och versioner för ditt privata utkast" onClickCapture={draftAction}><b>Privat utkast · bara synligt för dig</b>{local&&<details className="receipt-draft-details receipt-selected-draft"><summary>Valt privat utkast</summary><div className="receipt-draft-details-body"><div>{local.title}</div><dl><div><dt>Utkastets id</dt><dd>{local.id}</dd></div></dl></div></details>}<DraftStatus id={activeId} disabled={locked} announce onResolved={reset} onClosed={()=>{reset();onClose()}}/><p>Kundens mottagande och leveransbevakning ändras först när du registrerar i CRM.</p></div>
  <div ref={status} tabIndex={-1} className="form-status-details receipt-status" role="status" aria-live="polite" aria-atomic="true"><b>{crmStatus}</b>{failure&&<p>{failure}</p>}{retry&&<p>Återförsöket använder samma uppgifter som förra försöket. Ändrar du ett fält eller väljer en annan version blir det en ny registrering.</p>}</div>
- {!!choices.length&&<div className="receipt-draft-choices"><h3>Välj privat leveransutkast</h3><p>Det finns flera av dina utkast för ordern. Välj vilket du vill fortsätta med.</p><div className="biz-buttons">{choices.map(id=>{const choice=w.records.find(r=>r.id===id);return choice?<Button key={id} disabled={locked} variant="outline" onClick={()=>void resume(id)}>{choice.title} · {new Date(choice.updatedAt).toLocaleString('sv-SE',{timeZone:'Europe/Stockholm',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</Button>:null})}</div></div>}
+ {!!choices.length&&<div className="receipt-draft-choices"><h3>Välj privat leveransutkast</h3><p>Det finns flera av dina utkast för ordern. Jämför uppgifterna och välj vilket du vill fortsätta med.</p><div className="receipt-draft-choice-list">{choices.map((id,index)=>{const choice=w.records.find(r=>r.id===id),prefix=choiceId+'-'+index;return choice?<article className="receipt-draft-choice" key={id} aria-labelledby={prefix+'-title'}><h4 id={prefix+'-title'}>{choice.title}</h4><ReceiptDraftPreview draft={choice} titleId={prefix+'-title'} summaryId={prefix+'-summary'} identityId={prefix+'-identity'}/><Button disabled={locked} variant="outline" aria-labelledby={prefix+'-continue '+prefix+'-title'} aria-describedby={prefix+'-summary '+prefix+'-identity'} onClick={()=>void resume(id)}><span id={prefix+'-continue'}>Fortsätt med detta utkast</span></Button></article>:null})}</div></div>}
  {local&&!envelope&&<div className="record-conflict"><b>Det sparade utkastet kunde inte läsas</b><p>Dina bevarade uppgifter ersätts inte. Kopiera dem innan du öppnar annat arbete. Utkastets format behöver återställas innan det kan ändras.</p><Button disabled={locked} variant="outline" onClick={async()=>{if(lock.current||busy)return;try{await navigator.clipboard.writeText(JSON.stringify(local.data,null,2));if(alive.current)setFailure('De bevarade utkastuppgifterna är kopierade.')}catch{showFailure('Kunde inte kopiera. Öppna de bevarade uppgifterna nedan och kopiera texten.')}}}>Kopiera bevarade utkastuppgifter</Button><details><summary>Visa bevarade utkastuppgifter</summary><pre>{JSON.stringify(local.data.values??local.data,null,2)}</pre></details></div>}
  {envelope&&v&&<fieldset disabled={locked||draftConflict}>
  {conflict&&<div className="record-conflict"><p>Granska kollegans aktuella besked innan du registrerar i CRM. Dina privata fält ersätts inte.</p><Button variant="outline" onClick={openReview}>Granska aktuell leverans</Button></div>}
