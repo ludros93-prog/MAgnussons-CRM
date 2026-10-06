@@ -208,3 +208,14 @@ Fullständiga besked, skillnaden privat/CRM/stängning, oförändrade återförs
 [W3C – Resize Text, SC 1.4.4](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html) omkontrollerades direkt med HTTP 200 och oförändrad slut-URL kl. **13:44:46 UTC**: ”Except for captions and images of text, text can be resized without assistive technology up to 200 percent without loss of content or functionality.” Sidan beskriver F69 när text, bilder eller kontroller blir ”clipped, truncated or obscured”. Det motiverar att Följ upp-formulärets text och spara-/stänghandlingar ryms och nås vid fördubblad text.
 
 Magnussons egna tillämpningar är att bevara samma ofullständiga privata uppföljning även utan anteckning och att begränsa formulärets min-content-bredd med radbrytning, utan dold text eller mindre typsnitt. Egna isolerade browserprov är inget fullständigt WCAG-godkännande, native zoom-, skärmläsar- eller personalprov. Saleshub hämtades inte på nytt efter tidigare 403; Codex-referensen är fortfarande oläst. Exakta releasebelägg och provgränser hålls i [VALIDATION](../VALIDATION.md).
+
+## Artikelredigering under sparning, kontrollerat 6 oktober 2026
+
+Officiella källor hämtades med HTTP 200 i denna körnings research; äldre 403-historik står kvar:
+
+- [Salesforce – Edit a Record](https://developer.salesforce.com/docs/platform/lwc/guide/data-edit-record.html) och [updateRecord](https://developer.salesforce.com/docs/platform/lwc/guide/reference-update-record.html), kl. 14:17:47–14:17:48 UTC: separata submit/success/error/load-händelser, visningsbara formulärfel och uttrycklig Cancel/reset; ifUnmodifiedSince kan kontrollera samtidig ändring. Detta garanterar inte privata utkast eller fältbevarande i vår egen klient.
+- [Lime – 2025.1](https://platform.docs.lime-crm.com/en/latest/on-premise/releases/2025.1/release-notes/), kl. 14:16:43–14:16:44 UTC: varning om osparade ändringar gäller Protocol/Resource Planner, ingen generell artikel-/autosparningsgaranti.
+- [W3C – Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html), kl. 14:17:47–14:17:48 UTC: vänt-/fel-/resultatbesked kan förmedlas programmatiskt utan fokusflytt; ingen viss placering, automatisk stängning eller WCAG-certifiering följer därav.
+- [Saleshub – Funktioner](https://saleshubai.se/funktioner), kl. 14:17:47–14:17:48 UTC, **HTTP 200**: översikt över gemensamma data och offert/order. Inga dokumenterade garantier om formulärbevarande, pending-stängning, sparstatus eller samtidighet. Detta nya offentliga belägg ersätter inte de äldre hämtningarnas faktiska 403.
+
+Magnussons lokala lås, bevarad editor/originalbasis, oförändrat CAS/request-ID och neutralt obekräftatbesked är egna tillämpningar, verifierade i 13 isolerade corefall. Separata idle dirty-close-/toastgränser och Sites failed Unauthorized kvitteras i [VALIDATION](../VALIDATION.md); ingen leverantörskälla förklarar backendfelets orsak. Codex-referensen är fortfarande oläst.
