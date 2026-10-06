@@ -57,3 +57,11 @@ Långa kundnamn, valtext och befintlig privat sparstatus ryms inom formuläret. 
 Native fokus kan visa en textmarkör samtidigt som fältets nederkant ligger bakom en radbruten footer. Hjälpen mäter därför aktuella kanter för det fortfarande fokuserade generella fältet och rullar bara dialogen vid behov. Den ändrar inga värden, ingen fokusdestination och ingen sparning. Workorder och privata kundflöden är oförändrade.
 
 Slutbygget passerar 18/18 fall och 77 formprov på 320/390/768/1440, kort 390×460 och kontrollerad 200 procent dialogtext, samt åtta dropdowninteraktioner. Alla 1 937 Tab-fältbesök har fri helbox med befintlig tolerans. V24-fyndet ovan är historiskt; faktisk rättning/publicering kvitteras i VALIDATION. Portalernas textförstoring, fysisk telefon/OS-tangentbord, skärmläsare och personalanvändbarhet är inga godkända prov här. Färska leverantörs-/webbstandardkällor finns i RESEARCH.
+
+## Synlig laddning och nåbara statusknappar – publicerad v26
+
+Generella formulär visar nu det befintliga laddnings-/felbeskedet och Försök igen även innan ett privat record finns. Öppna uppgifter kan vara osparade; först ett lyckat privat återförsök ger Sparat som privat utkast. Ett rent formulär och inställningar får ingen falsk privat bekräftelse.
+
+Radix Tab-wrap kan fokusera en knapp utan att rulla den till synlig yta. Den befintliga generella scrollhjälpen omfattar därför även utkastets statusknappar och mäter fri yta före aktuell footer. Den ändrar inte fokus, text eller sparning. Workorder, reader, footer och andra dialogers kontrakt består. Lång feltext får vara större än skärmen och läses med vertikal scroll.
+
+Slutkälla 809b77e passerar 10/10 Worker-/Chromiumfall, sex återhämtningsflöden och 12 native Tab-/pointerkontroller på 320/390, kort 390×460 och kontrollerad exakt 200 procent dialogtext. Samma96 distfiler är oförändrade. Officiella Salesforce/Lime/W3C-principer och deras gränser finns i RESEARCH. Samlad/sticky spar-/CRM-felstatus och hjälpmedelsannonsering är fortsatt nästa arbete. Fysisktelefon/OS-tangentbord, skärmläsare och personalprov är oprövade; ingen generell användbarhetsgaranti följer av dessa kontroller.

@@ -88,7 +88,7 @@ Detta är levererat i v23 för de tre kundflödena. Exakt serverfel ligger kvar 
 
 ## Levererat i v24: rätt handlingar i Kundvård
 
-Återköp och Merförsäljning visas för säljare/administratörer enligt det redan befintliga canEdit-villkoret. Reader kan läsa kundkort, historik och antalet öppna affärer och erbjuds inte de två formuläringångarna. Säljarens återköpsväljare och nya merförsäljningsaffär behåller sina tidigare flöden; inga serverrättigheter ändras. VALIDATION kvitterar 9/9 lokala roll-/navigeringsfall, 5/5 komponentfall och faktisk v24-publicering. Generella affärsformulärets mobilbredd med långt kundnamn och footerklippning är fortfarande felaktiga, exakt oförändrade mot v23, och rättas separat. Detta är inget konto-/personalprov eller godkännande av hela mobilupplevelsen.
+Återköp och Merförsäljning visas för säljare/administratörer enligt det redan befintliga canEdit-villkoret. Reader kan läsa kundkort, historik och antalet öppna affärer och erbjuds inte de två formuläringångarna. Säljarens återköpsväljare och nya merförsäljningsaffär behåller sina tidigare flöden; inga serverrättigheter ändras. VALIDATION kvitterar 9/9 lokala roll-/navigeringsfall, 5/5 komponentfall och faktisk v24-publicering. Generella affärsformulärets mobilbredd med långt kundnamn och footerklippning var vid v24 fortfarande felaktiga, exakt oförändrade mot v23; de rättades i PR #22/v25. Detta är inget konto-/personalprov eller godkännande av hela mobilupplevelsen.
 
 
 ## Generella formulär på mobil – v25
@@ -96,3 +96,9 @@ Detta är levererat i v23 för de tre kundflödena. Exakt serverfel ligger kvar 
 Kund-, affärs-, order-, aktivitets-, mötes-, antecknings- och inställningsformulär håller långa värden och befintlig privat sparstatus inom sin bredd. Mobilen har en kolumn; text och knappar får radbrytas. Lång textarea använder befintliga rader och intern scroll. Aktiva generella fält rullas bara vid behov till fri yta efter den verkliga footerhöjden, utan refokus eller sparning.
 
 Privata utkast, konflikter, serverroller och godkännanden behåller sina regler. Kundkortets läsvy, privata workflow-dialoger och workorder/OrderGuide får inte denna markör eller helper. Leveransen inför ingen ny sparstatusfunktion; samlade fel-/återförsöksflöden återstår. Slutprov, publicerad källa och verklig v25-deploy redovisas i VALIDATION; lokal browser är inget personal- eller livekontoprov.
+
+## Generella privata utkast: tydlig inläsning och återförsök – v26
+
+Laddning, feltext och Försök igen syns nu i stödda generella formulär även före ett läst privat record. Vid nätverks-/sparfel behålls öppna uppgifter; efter lyckat återförsök kan privat utkast återupptas med senaste text. Tab-fokus på utkastets statusknappar rullar dem fritt från verklig footer på den provade ytan.
+
+Detta är en avgränsad presentation/fokusförbättring. Ingen provider-/CAS-/request-ID-/roll-/lagringsändring och ingen automatisk CRM-skrivning eller påhittad kundacceptans. Rent formulär/settings/reader får ingen falsk privat sparbekräftelse. VALIDATION skiljer10/10 isolerade browserfall, full regression/runtime och faktisk v26-publicering från personal-, telefon-, konto- och hostingåterställningsprov. Samlad/sticky status och hjälpmedelsannonsering kvarstår.
