@@ -1,4 +1,38 @@
-# Privata artikelutkast – v37, 2026-10-06
+# Egna artikelutkast efter rollbyte – v38, 2026-10-06
+
+## Beteende och gränser
+
+Egna privata artikelutkast kan öppnas från Min dag och katalogen även efter ändring till säljarroll. Lokala väntande/felande uppgifter kan läsas och kopieras. **Hämta sparad serverversion** gör läsning utan att ersätta dem. Jämförelse, markerad bekräftelse och **Använd den visade serverversionen** krävs före lokalt versionsbyte; ändrat underlag ogiltigförklarar valet. **Arkivera sparat privat utkast** är en separat handling för en giltig, redan sparad egen version. Säljaren får inga nya rättigheter att redigera eller publicera artiklar. **Stäng och behåll på den här enheten** kräver faktisk återläsning av samma lokala reservkopia. Det är ingen bekräftad serversparning eller driftbackup. Saknad, felaktig eller redan arkiverad serverversion får inte väljas som ett aktivt sparat utkast; det öppna underlaget bevaras för kopiering.
+
+Om serverunderlaget har ändrats kan arkivering nekas med 403 av identisk-data-spärren eller med 409 av revisionskontrollen. Ingen ny arkivering görs då; hämta och granska igen. Efter en förlorad arkivkvittens kan en enda commit redan ha lyckats och GET visa ett avslutat utkast. Den lokalt valda råversionen bevaras; ingen ny bekräftad arkivering, exakt arkiveringsreplay eller automatisk rensning av den lokala kopian utlovas.
+
+SQL, enumvärden, lagringsformat och privat localStorage-nyckel är oförändrade. Serverroller, privat ägare/arbetsyta, CAS, atomisk artikelpublicering och CRM-idempotens består. Privat arkivering ändrar inga kundorder, priser eller kundgodkännanden. B05 är inte slutförd.
+
+## Faktiska slutkontroller
+
+På slutkandidaten passerade `node tests/outlook.mjs`, icke-inkrementell TypeScript, `corepack pnpm build`, `node tests/runtime-smoke.mjs` och `git diff --check`: fem exit 0, logghashar återlästa mot checks.json (SHA256 `b32b0de352a6f893f037a8cd2510da5508c2f607ff35e9fcb04ab6ea4d15b360`). Node 24.19/pnpm 11.25.0. Slutbrowser: **73 unika fall, PASS**; 73 = 20 rollfall + 1 extra säljararkivering + 48 adminfall + 4 kompletterande läsfall. De 45 rena läsfallen är en delmängd av dessa 73. 257 källfiler och 96 distfiler ingår i oförändringskontrollen. Egen runtime/store är borttagen. Baslinjens v37-bristreproduktion är inte ett slutv38-prov.
+
+Browserrapport SHA256 `b80b14a9d84db6f7af67e45044a00766f3ab1deef60a663f27d80560c33ca0ce`. Rollrapport `676683a20ec437d73e89ca5d1e3afac6a695efc3d94226b7936c8eb8b001af67`; adminrapport `d970a94fbb286051890146c25b5f54022a37b82a32e8ec4ea75283a0e361a60c`; kompletterande läsrapport `5c8935bbd7283ebe6c6bb0d63e2fae6665bcc4aece45e49b08aa7e108796cf06`. Rena läsfall och avsedda syntetiska privata skrivfall redovisas var för sig; ingen riktig kundorder används.
+
+Tilläggstestet för direkt arkivering av redan sparat eget säljarutkast har SHA256 `138a8069d4c747a2d6a9e707e867c455999ac342f06d4bc3d2604e6daae43db9`. Helperprovet omfattar tre giltiga råa serverversioner och 14 avvisade identitets-/mål-/kuvert-/normaliseringsfall utan mutation. Befintliga orderprov för 40→45, 50→48 med dokumenterat godkännande, kassation, delleverans och dubbelregistrering passerade i regressionen.
+
+45 rena läsfall hade noll API-skrivningar och oförändrade 18 råtabeller/R2. Huvudlagringens avsedda syntetiska skrivfall gav sju CRM-version-/ledgerökningar och 51 privata revisionsökningar (45 privata sparningar och sex atomiska CRM-avslut). Privat: 53 POST totalt; fyra kontrollerade 503 utan backend och 49 verkliga backendförsök = 45 nya commit + två identiska replay + en 403 + en 409. CRM: tio POST = sju nya commit + två identiska replay + en 400. Orelaterade rader och R2-byte/metadata bevarades. De fyra kompletterande fallen använde separat oförändrad lagring. Dessa siffror är revisionsbelägg, inte antal unika browserfall.
+
+Föregående kandidat `48de3f8` återkallades efter att säljarpanelen visade en administratörshint. Dess fyra godkända fall och två avbrutna harnessförsök med fel förväntan på 403/409 ingår inte i de 73 slutfallen. Slutkandidaten `e566ffb` visar redigeringsfält/hint endast för administratör och har inga avbrutna slutfall. Egna servrar, testlagringar och portar 9060/9061/9070/9071 är avvecklade.
+
+## Källa, main och live
+
+Fryst lokal kandidat `e566ffb1abe5f5d35f9178a1473486331d21f779`, träd `bbd78b553bd6abced835316c68a35c0341022244`; [app-PR #50](https://github.com/ludros93-prog/MAgnussons-CRM/pull/50)-head `8d2acae096a027b9df5952dea12b1bf6d3c82325`, app-main `7bab4f8f714d7db6326cfb4df4aab203bb634c74` och pushad Sites-källa `dc5d3eeb705f5319407bf137b2aa632f2e41400f` redovisas separat. Exakt-head CI [37547691708](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37547691708)/jobb `112555535418` och app-main CI [37548744005](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37548744005)/jobb `112558935144` är success med 13 respektive 13 lyckade steg.
+
+Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2` publicerade **v38**: deploy `appgdep_6ac58981d45c8191896b6b5368a03df5`, **succeeded 2026-10-06T23:51:50.287834+00:00**, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_a701f862d5ac8191b38776febf9f524e`, på https://magnussons-crm.rosen123.chatgpt.site. Custom-delningen, bindingarna och env_set_revision 1 är bekräftat oförändrade. Anonyma GET för `/` och `/api/crm?space=live` gav 403/403; det är inget autentiserat användarprov. Dokumentationens senare main/checks kvitteras separat; en docsmerge återpublicerar inte appen.
+
+Lokalt publiceringspaket: 97 filer (dist + hosting.json), 4382720 råtarbytes; råtar SHA256 `39c40b2e2aaae6e9cf2f998ff5c290f88c8f2714d4604e575fa3c039c58d1cde`, gzip SHA256 `749e321b58719854b0b7b50d5e3f078b1f094d76d3926d73635516613e562430`. Lokal byteåterläsning/native metadata är separata belägg; ingen separat lyckad native arkivbytehämtning påstås.
+
+## Återgång och kvarvarande arbete
+
+V37 är formatkompatibel som UI-återgång men återför rollbytesbristen. V36:s tidigare begränsning för säker operativ artikelåtergång kvarstår: behåll v37:s serverskydd med kompatibel editor eller stäng av äldre artikelredigering/publicering. Ingen faktisk rollback har gjorts. CRM-backup omfattar fortfarande inte privata utkast, konton eller Outlook. Nästa avgränsning: **Privata företagsevent med bevarat ursprungligt underlag och separat CRM-inlämning efter isolerad bristreproduktion**. Företagsevent använder lokal useState/stängning utan useDrafts enligt kodgranskning; separat browserförlustprov ska göras innan sådan förlust påstås. Global sidebaröverlagring vid 390×360 är ett separat observerat navigeringsfel och är inte rättat här; jämför äldre byggd runtime innan det kallas tidigare befintligt. B01b2, övriga specialdialoger, mobilkundlista/fokus, separat konto-/utkast-/Outlookbackup, hostingåterställning och personalpilot kvarstår. Inga autentiserade live-UI-, verkliga personal-/konto-/integrations-/telefon-/skärmläsarprov eller faktisk hostingåterställning påstås. Skrivprov använder syntetiska data i isolerad runtime. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant read_thread saknas; brief/repo används. Scheman, prompter och aktivering är oförändrade; inga kundmejl eller riktiga kundskrivprov ingår.
+
+# Historik: Privata artikelutkast – v37, 2026-10-06
 
 ## Beteende, roller och skrivgräns
 

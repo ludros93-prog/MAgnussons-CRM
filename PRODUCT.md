@@ -1,8 +1,20 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Uppdaterat 6 oktober 2026 med verifierad och publicerad v37: artikelpanelen bevarar privata utkast och kan återupptas från Min dag med ursprungligt underlag. Privat sparning ändrar inget gemensamt artikelregister. Källa, main, live och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Daterade tidigare leveranser behålls nedan. Rutiner finns i [OPERATIONS](OPERATIONS.md) och Microsoft-anslutningens omfattning i [OUTLOOK](OUTLOOK.md).
+Publicerad v38 förtydligar återhämtning av egna artikelutkast vid rollbyte. Källa, main, live och provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md). Daterade tidigare leveranser behålls nedan; driftinstruktioner finns i [OPERATIONS](OPERATIONS.md).
 
 ## Syfte och dagligt arbete
+
+Egna privata artikelutkast kan öppnas från Min dag och katalogen även efter ändring till säljarroll. Lokala väntande/felande uppgifter kan läsas och kopieras. **Hämta sparad serverversion** gör läsning utan att ersätta dem. Jämförelse, markerad bekräftelse och **Använd den visade serverversionen** krävs före lokalt versionsbyte; ändrat underlag ogiltigförklarar valet. **Arkivera sparat privat utkast** är en separat handling för en giltig, redan sparad egen version. Säljaren får inga nya rättigheter att redigera eller publicera artiklar.
+
+**Stäng och behåll på den här enheten** kräver faktisk återläsning av samma lokala reservkopia. Det är ingen bekräftad serversparning eller driftbackup. Saknad, felaktig eller redan arkiverad serverversion får inte väljas som ett aktivt sparat utkast; det öppna underlaget bevaras för kopiering.
+
+SQL, enumvärden, lagringsformat och privat localStorage-nyckel är oförändrade. Serverroller, privat ägare/arbetsyta, CAS, atomisk artikelpublicering och CRM-idempotens består. Privat arkivering ändrar inga kundorder, priser eller kundgodkännanden. B05 är inte slutförd.
+
+Om serverunderlaget har ändrats kan arkivering nekas med 403 av identisk-data-spärren eller med 409 av revisionskontrollen. Ingen ny arkivering görs då; hämta och granska igen. Efter en förlorad arkivkvittens kan en enda commit redan ha lyckats och GET visa ett avslutat utkast. Den lokalt valda råversionen bevaras; ingen ny bekräftad arkivering, exakt arkiveringsreplay eller automatisk rensning av den lokala kopian utlovas. Se [VALIDATION](VALIDATION.md) för faktiska prov.
+
+Nästa avgränsning: **Privata företagsevent med bevarat ursprungligt underlag och separat CRM-inlämning efter isolerad bristreproduktion**. Företagsevent använder lokal useState/stängning utan useDrafts enligt kodgranskning; separat browserförlustprov ska göras innan sådan förlust påstås. Global sidebaröverlagring vid 390×360 är ett separat observerat navigeringsfel och är inte rättat här; jämför äldre byggd runtime innan det kallas tidigare befintligt. B01b2, övriga specialdialoger, mobilkundlista/fokus, separat konto-/utkast-/Outlookbackup, hostingåterställning och personalpilot kvarstår.
+
+### Historik: produktläget i v37
 
 Sedan **publicerad v37** kan administratören skriva artikeluppgifter som ett privat utkast och fortsätta från Min dag. Bekräftad privat sparning bevarar även ofärdiga fält, källa, variant, pris/kostnad och ursprunglig artikelversion. **Spara utkast & stäng** behåller arbetet; **Spara artikel i CRM** uppdaterar artikelregistret och avslutar exakt det sparade utkastet tillsammans. Kollegans ändring eller en annan enhets sparversion kräver uttrycklig granskning. Ett nytt utkast får inte tyst skriva över en artikel med samma källa, artikelnummer och variant.
 
