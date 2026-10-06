@@ -65,3 +65,9 @@ Generella formulär visar nu det befintliga laddnings-/felbeskedet och Försök 
 Radix Tab-wrap kan fokusera en knapp utan att rulla den till synlig yta. Den befintliga generella scrollhjälpen omfattar därför även utkastets statusknappar och mäter fri yta före aktuell footer. Den ändrar inte fokus, text eller sparning. Workorder, reader, footer och andra dialogers kontrakt består. Lång feltext får vara större än skärmen och läses med vertikal scroll.
 
 Slutkälla 809b77e passerar 10/10 Worker-/Chromiumfall, sex återhämtningsflöden och 12 native Tab-/pointerkontroller på 320/390, kort 390×460 och kontrollerad exakt 200 procent dialogtext. Samma96 distfiler är oförändrade. Officiella Salesforce/Lime/W3C-principer och deras gränser finns i RESEARCH. Samlad/sticky spar-/CRM-felstatus och hjälpmedelsannonsering är fortsatt nästa arbete. Fysisktelefon/OS-tangentbord, skärmläsare och personalprov är oprövade; ingen generell användbarhetsgaranti följer av dessa kontroller.
+
+## Bestående textstatus utan extra mellanrum – publicerad v27
+
+Generella formulär behåller en text-only polite/atomic statusregion även när ingen sparning pågår. Clean-regionen klipps visuellt med befintlig sr-only-utility och ligger utanför gridflödet; den tas inte bort eller göms från hjälpmedel. Tider och handlingsknappar ligger utanför regionen. Väntande arbete, privata sparningar, fel och konflikt använder tidigare svenska texter och visuella statusar utan fokusflytt.
+
+Slutbrowser 13/13 på 1a7e841 verifierar samma nod, exakt oförändrade clean-mått mot v26, native Tab/pointer, verklig 200-procenttext och faktisk privat CAS409. Första kandidatens extra 14 px är rättade. 96 byggfiler är oförändrade efter prov. Ingen faktisk skärmläsaruppläsning eller generell tillgänglighetscertifiering påstås. Officiella W3C/Salesforce/Lime-källor och deras gränser finns i RESEARCH; samlad privat-/CRM-felstatus är nästa avgränsning.
