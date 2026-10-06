@@ -39,6 +39,13 @@
 .crm-form-sheet .form-input-lock {
  grid-template-columns: minmax(0, 1fr);
 }
+.crm-form-sheet .draft-status,
+.crm-form-sheet .draft-status > span {
+ min-width: 0;
+ max-width: 100%;
+ white-space: normal;
+ overflow-wrap: anywhere;
+}
 .crm-form-sheet .form-input-lock > *,
 .crm-form-sheet .field,
 .crm-form-sheet .form-grid > *,
