@@ -1,6 +1,18 @@
 # Magnussons CRM – order, tryck och lager
 
-## Fortsätt privata artikeluppgifter – v37, 2026-10-06
+## Återhämta eget artikelutkast – v38, 2026-10-06
+
+1. Öppna ditt utkast från **Min dag → Fortsätt där du slutade** eller **Mina artikelutkast** i katalogen. Med säljarroll kan du läsa och kopiera egna uppgifter; redigering/publicering kräver administratör.
+2. Läs **Mitt öppna underlag** och **Visa hela mitt bevarade underlag**. Kopiera lokala ändringar om du vill behålla dem inför versionsbyte.
+3. Välj **Hämta sparad serverversion** och jämför **Hämtad serverversion**. Hämtningen ersätter inte dina lokala uppgifter.
+4. Markera **Jag vill ersätta mina lokala ändringar med den visade serverversionen** och välj **Använd den visade serverversionen** endast om du vill ersätta det öppna underlaget. Detta arkiverar inget och ändrar ingen CRM-artikel.
+5. Arkivering är ett eget val: **Arkivera sparat privat utkast → Ja, arkivera utkast**. Bara en giltig, redan sparad egen version får arkiveras; förändrat underlag kräver ny granskning.
+
+**Stäng och behåll på den här enheten** kräver faktisk återläsning av samma lokala reservkopia. Det är ingen bekräftad serversparning eller driftbackup. Saknad, felaktig eller redan arkiverad serverversion får inte väljas som ett aktivt sparat utkast; det öppna underlaget bevaras för kopiering. Om reservkopian inte kan bekräftas stannar panelen öppen: kopiera underlaget innan du lämnar det. Rensad enhetslagring skyddas inte av denna lokala kopia.
+
+Om serverunderlaget har ändrats kan arkivering nekas med 403 av identisk-data-spärren eller med 409 av revisionskontrollen. Ingen ny arkivering görs då; hämta och granska igen. Efter en förlorad arkivkvittens kan en enda commit redan ha lyckats och GET visa ett avslutat utkast. Den lokalt valda råversionen bevaras; ingen ny bekräftad arkivering, exakt arkiveringsreplay eller automatisk rensning av den lokala kopian utlovas. En tidigare obekräftad CRM-sparning kan redan ha lyckats; privat återhämtning/arkivering återställer ingen sådan ändring. [VALIDATION](VALIDATION.md) anger provgränser och separat backupbehov.
+
+## Historik: Fortsätt privata artikeluppgifter – v37, 2026-10-06
 
 Som administratör: öppna en artikel eller välj att lägga till en artikel. Skriv de uppgifter du har. Tomma eller ofärdiga textfält kan ligga i utkastet; före **Spara artikel i CRM** måste artikeluppgifterna vara giltiga och artikelkällan finnas. Saknad pris-/kostnadsuppgift blir inte automatiskt noll.
 

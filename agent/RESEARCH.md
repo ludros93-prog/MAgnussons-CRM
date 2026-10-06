@@ -290,3 +290,14 @@ Sju officiella offentliga källor hämtades omkring **22:16 UTC** med status 200
 - [W3C Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) beskriver status som kan presenteras av hjälpmedel utan fokusflytt. [Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) beskriver bevarad information/funktion vid 320 CSS px. [Focus Not Obscured](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) beskriver fokus som inte helt döljs av eget innehåll. Verifiering av de specificerade browserfallen är inte full WCAG-certifiering eller faktisk skärmläsaranvändning.
 
 Magnussons egen lösning använder form/article-kuvert, beständig privat ursprungsbasis, strikt serverroll, identisk seller-arkivering, naturlig nyckelspärr för ny artikel, atomisk consume och identiskt ledger-replay. Dessa kontrakt följer inte automatiskt av leverantörernas funktionssidor och kräver våra egna prov i [VALIDATION](../VALIDATION.md). Källorna ger inga privata lagringsgarantier, faktisk Magnussons-anslutning, personalacceptans eller världsranking. Codex-tasken är fortsatt oläst.
+
+## Rollbyte och artikelåterhämtning – v38
+
+Fem officiella källor hämtades med HTTP 200 och elva kontrollerade utdrag 2026-10-06. Evidens: `/workspace/scratch/article38-research/official-evidence.json`, SHA256 `a6d5282863a00c3d368af16cc0bfd884b38e17b424a69aa1c4c91317a10a2dfb`.
+
+- [Lime Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/): konkreta verb och relevanta handlingar. Egen tillämpning: läsning/jämförelse före separat, mindre framträdande arkivering.
+- [Salesforce updateRecord](https://developer.salesforce.com/docs/platform/lwc/guide/reference-update-record.html): ifUnmodifiedSince och uttrycklig uppdateringskvittens. Egen tillämpning: bevara revision/CAS och skilj GET från sparning; ingen Salesforce-anslutning.
+- [Saleshub AI Funktioner](https://saleshubai.se/funktioner): sammanhängande kontext och nästa aktivitet. Egen tillämpning: fortsätt samma privata artikelarbete från Min dag med bevarad identitet; sidan belägger inget särskilt rollbyteskontrakt.
+- [W3C Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) och [Focus Not Obscured Minimum](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html): tydlig status utan bakgrundsfokusflytt och nåbara kritiska val. Avgränsade Chromiumprov är ingen fysisk telefon-/skärmläsarverifiering eller tillgänglighetscertifiering.
+
+Strikt kuvertgranskning, versionsbunden bekräftelse, återläst lokal reservkopia och saved-only-arkivering är Magnussons egen implementation; [VALIDATION](../VALIDATION.md) anger faktiska prov. Leverantörskällorna bevisar inga privata lagringsgarantier, riktiga anslutningar, personalacceptans eller världsranking. Codex-tasken är fortfarande oläst.
