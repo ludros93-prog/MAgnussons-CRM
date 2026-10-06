@@ -239,3 +239,10 @@ Behörighetsfrågor görs per fil/post, inte per godtycklig R2-chunk. Cloudflare
 Den kända längden sätts vid den sista Worker-gränsen, efter Vinexts vanliga handler. Vinext omsluter API-kroppen i en vanlig TransformStream för request-context-cleanup och förlorar annars källans längd. Den validerade backupresponsen lämnar en intern längdmarkör; custom-Worker verifierar metod, exakt endpoint, format, status, innehållstyp, encoding och positiv säker heltalslängd, tar bort markören och ger HTTP en verklig FixedLengthStream. Saknad/ogiltig markör för målresponsen stoppar kroppen med generiskt 503. Klientheaders används inte som längdkälla; andra omärkta svar går oförändrade genom samma handler.
 
 V22 är faktiskt publicerad kl. 02:15:53 UTC med grön exakt-head/main-CI. Byggd lokal HTTP och native Chromium visar rätt komplett längd, misslyckad partial-download vid återkallelse och fullständigt återförsök; se VALIDATION för exakta käll-/artefakt-/deploykvittenser och gränser. Faktisk Sites-framing med autentiserat livekonto, maximal hostingvolym och återställning där är fortfarande oprövade. Inga data- eller formatmigrationer krävs; återgång måste behålla v20/v21/v22:s serverkontroller och fil-/utkasthistorik.
+
+
+## Datakompatibilitet för mobilstatuskandidaten 6 oktober
+
+Kandidaten från main `d9a117` ändrar endast presentation och klientens felbesked/återförsöksval i privata kundplaner, bearbetning och onboarding. API, draftdata, databas, R2, backupformat, identitet, CAS och atomisk arkivering är oförändrade. Saknat godkännande eller anslutning uppfinns inte. Fälttext och befintliga versionsval bevaras.
+
+Återgång till den verifierade v22-källan `8636a5ef3205a3be590fb5b99ed635a90da275d6` kräver ingen datamigrering och kan återanvända samma DB/BUCKET och delning. Återgång återför dock mobilstatusens scrollbrist och det gamla footer-återförsökets skillnad mellan sparad checklista och onboardingavslut; ingen rollback har utförts här. Slutartefakt, runtime/browser och faktisk publicering kvitteras separat i VALIDATION.
