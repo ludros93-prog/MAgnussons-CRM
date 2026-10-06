@@ -22,6 +22,7 @@
 .wf-sheet .draft-status>span{min-width:0}
 .wf-sheet .wf-section-head{flex-wrap:wrap}
 .wf-sheet .wf-section-head h3{min-width:0;overflow-wrap:anywhere}
+.wf-sheet [data-slot=sheet-title]{overflow-wrap:anywhere}
 .wf-sheet .wf-inset{overflow-wrap:anywhere}
 .wf-sheet .sheet-body button:not([role=checkbox]){max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:anywhere}
 @media(max-width:767px){.wf-save-status{padding:10px 20px;gap:10px}}
