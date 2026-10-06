@@ -38,8 +38,8 @@ Den publicerade v20-artefakten har passerat 13/13 vanliga pointerklick utan forc
 Efter kundkortet: en konsekvent visuell hierarki för kundregister, offertunderlag och Tryck & leverans; gemensamma statusord och datum; formulär med få nödvändiga uppgifter först. Fortsätt från observerad friktion och bevara Min dags fokus på personligt arbete. Månads-/årsförsäljning, marginal och nya prospects är huvudmåtten; TB blir inget huvudmått.
 
 
-## Synlig status i privata kundflöden
+## Synlig status i privata kundflöden – publicerad v23
 
 Vid arbete långt ned i kundplan, bearbetning och onboarding ska en kort statusyta fortsätta visa privat serversparning och en relevant nästa handling. Kundens CRM ändras först vid uttrycklig sparning där. Färg kompletterar statusorden. Långa fel och revisionsval ligger kvar i formuläret med en fokuserbar väg från statusytan; de ska inte låsas över mobilens arbetsfält.
 
-Statusytans och sparhandlingarnas verkliga höjd ger rullningsutrymme för fokus även när texten radbryts. Fälttext, serverfel och befintliga konfliktval bevaras. Förstoring, kort viewport och tangentbord provas på byggd kandidat; fysisk telefon, skärmläsare och personalacceptans kräver separat prov. Detta är en kandidat tills VALIDATION kvitterar slutkontroller och publicering.
+Statusytans och sparhandlingarnas verkliga höjd ger rullningsutrymme för fokus även när texten radbryts. Fälttext, serverfel och befintliga konfliktval bevaras. Det frysta v23-bygget passerar 26/26 browserfall och 6/6 tangentbordsfall med kontrollerad 200 procent fälttext, kort viewport och faktisk lokal sparning/konflikt/återförsök. Under 540 px höjd ligger nedersta handlingarna i normalt scrollflöde; de kan nås och rullas fram med Tab utan att döljas helt av statusytan. En stor textarea visas delvis och scrollas. En duplicerad CRM-feltoast tas bort endast i dessa flöden; exakt fel ligger kvar i dialogen. VALIDATION kvitterar faktisk v23-publicering. Fysisk telefon, skärmläsare och personalacceptans kräver separat prov; automatisk browserkontroll är ingen allmän tillgänglighetscertifiering.

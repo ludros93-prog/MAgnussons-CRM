@@ -79,8 +79,8 @@ Kundkortets översikt grupperar nästa aktivitet, kontaktplan, order/leverans oc
 Slutprovet för D01 upptäckte också en kalenderdagsgräns: produktionsavsändningens tidpunkt måste jämföras i Europe/Stockholm för att mottagande inte ska kunna registreras på dagen före svensk avsändning. Korrigeringen ändrar inga datum i sparat underlag och uppfinner inget kundmottagande.
 
 
-## Designkandidat 6 oktober: synlig status vid privat kundarbete
+## Levererat i v23: synlig status vid privat kundarbete
 
 Kundplan, bearbetning och onboarding får en kompakt statusyta som följer med när användaren rullar formuläret. Den skiljer privat utkast från kundens gemensamma CRM och återanvänder befintlig serversparning och återförsök. Feltext och versionsval får plats i normalt flöde; en knapp flyttar fokus till rätt besked utan att kasta texten. Ett misslyckat onboardingavslut återförsöks med samma avslutsavsikt.
 
-Detta är en avgränsad kandidat för de tre kundflödena. Generella kund-/orderformulär, övriga specialdialoger och personalprov återstår. Slutkontroller och faktisk publicering kvitteras i VALIDATION.
+Detta är levererat i v23 för de tre kundflödena. Exakt serverfel ligger kvar utan en duplicerad toast över sparknappen. I kort mobilvy rullas de nedersta handlingarna fram; en lång textarea behöver fortsatt scroll. Generella kund-/orderformulär, övriga specialdialoger och personalprov återstår. VALIDATION kvitterar 26/26 browserfall, 6/6 tangentbordsfall, grön exakt-head/main-CI och faktisk publicering; proven använder syntetiska data och lokal lagring.
