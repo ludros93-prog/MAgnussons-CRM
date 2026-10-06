@@ -35,6 +35,7 @@
 .follow-dialog .follow-status-details { scroll-margin-top: 1rem; }
 .follow-dialog .follow-status-details:focus { outline: 2px solid var(--ring); outline-offset: 4px; border-radius: 8px; }
 .follow-dialog .follow-status-details p { white-space: pre-wrap; }
+.follow-dialog .draft-status button { min-height: 44px; }
 @media(max-width:767px) {
  .follow-dialog .biz-grid { grid-template-columns: minmax(0, 1fr); }
 }

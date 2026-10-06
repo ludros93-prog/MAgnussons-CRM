@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useState,useRef} from 'react';
+import {useEffect,useState,useRef,type FocusEvent} from 'react';
 import {Phone,Check} from 'lucide-react';
 import {Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {Button} from '@/components/ui/button';import {Input} from '@/components/ui/input';import {Textarea} from '@/components/ui/textarea';import {Checkbox} from '@/components/ui/checkbox';
@@ -39,7 +39,20 @@ export function FollowUpDialog({st,taskId,save,busy,onClose,onDeal,onWorkflow}:{
   }finally{lock.current=false;if(alive.current&&attempt.current===run){setSubmitting(false);setOperation('');}}
  }
  function showDetails(details:FollowUpDetails){const target={draft:draftDetails,record:recordDetails,save:saveDetails,close:closeDetails}[details].current;if(target){target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'instant'});}}
- return <Dialog open onOpenChange={v=>{if(!v&&!busy)void leave()}}><DialogContent className="follow-dialog business-ui"><DialogHeader><DialogTitle><Phone size={20}/>Följ upp {task.kind==='quote'?'offerten':'kundkontakten'}</DialogTitle><DialogDescription>{customer?.name} · {task.owner}</DialogDescription></DialogHeader><div className="follow-context"><b>{task.title}</b>{deal&&<span>{deal.title}</span>}</div><div className="follow-status-details" ref={draftDetails} tabIndex={-1} aria-label="Besked och versioner för ditt privata utkast"><DraftStatus id={current.id} disabled={busy} onClosed={onClose}/></div><form onSubmit={e=>{e.preventDefault();void submit()}}><fieldset disabled={busy||current.status==='conflict'}><div className="biz-grid"><F label="Vad hände?"><Pick label="Resultat av uppföljning" value={v.outcome} onChange={value=>update('outcome',value)} items={[{id:'contact',label:'Vi hade kontakt'},{id:'no_reply',label:'Jag fick inget svar'},{id:'internal',label:'Jag arbetade med uppgiften'}]}/></F><F label="Datum"><Input type="date" required max={day()} value={v.occurredOn} onChange={e=>update('occurredOn',e.target.value)}/></F></div><F label={v.outcome==='contact'?'Vad kom ni överens om?':'Kort anteckning'}><Textarea autoFocus required rows={4} maxLength={49000} value={v.note} onChange={e=>update('note',e.target.value)} placeholder="Kundens besked, frågor och vad du lovade…"/></F>
+ // Radix's native Tab wrap can use preventScroll. Reveal the same focused
+ // control inside this scrollable dialog; status updates never refocus it.
+ function revealFocusedControl(event:FocusEvent<HTMLDivElement>){
+  const sheet=event.currentTarget,control=event.target;
+  if(!(control instanceof HTMLElement)||!control.matches('input,textarea,button,[role=combobox]'))return;
+  requestAnimationFrame(()=>{
+   if(!alive.current||!control.isConnected||document.activeElement!==control||!sheet.contains(control))return;
+   const box=control.getBoundingClientRect(),bounds=sheet.getBoundingClientRect(),top=Math.max(0,bounds.top)+12,bottom=Math.min(window.innerHeight,bounds.bottom)-12;
+   if(box.height>bottom-top)return;
+   if(box.top<top)sheet.scrollBy({top:box.top-top,behavior:'instant'});
+   else if(box.bottom>bottom)sheet.scrollBy({top:box.bottom-bottom,behavior:'instant'});
+  });
+ }
+ return <Dialog open onOpenChange={v=>{if(!v&&!busy)void leave()}}><DialogContent className="follow-dialog business-ui" onFocusCapture={revealFocusedControl}><DialogHeader><DialogTitle><Phone size={20}/>Följ upp {task.kind==='quote'?'offerten':'kundkontakten'}</DialogTitle><DialogDescription>{customer?.name} · {task.owner}</DialogDescription></DialogHeader><div className="follow-context"><b>{task.title}</b>{deal&&<span>{deal.title}</span>}</div><div className="follow-status-details" ref={draftDetails} tabIndex={-1} aria-label="Besked och versioner för ditt privata utkast"><DraftStatus id={current.id} disabled={busy} onClosed={onClose}/></div><form onSubmit={e=>{e.preventDefault();void submit()}}><fieldset disabled={busy||current.status==='conflict'}><div className="biz-grid"><F label="Vad hände?"><Pick label="Resultat av uppföljning" value={v.outcome} onChange={value=>update('outcome',value)} items={[{id:'contact',label:'Vi hade kontakt'},{id:'no_reply',label:'Jag fick inget svar'},{id:'internal',label:'Jag arbetade med uppgiften'}]}/></F><F label="Datum"><Input type="date" required max={day()} value={v.occurredOn} onChange={e=>update('occurredOn',e.target.value)}/></F></div><F label={v.outcome==='contact'?'Vad kom ni överens om?':'Kort anteckning'}><Textarea autoFocus required rows={4} maxLength={49000} value={v.note} onChange={e=>update('note',e.target.value)} placeholder="Kundens besked, frågor och vad du lovade…"/></F>
  {!protectedWork&&<><label className="check-field"><Checkbox checked={v.completed} onCheckedChange={value=>update('completed',value===true)}/>Den tidigare aktiviteten är utförd</label><p className="biz-hint">{v.completed?'Den avslutas när du sparar.':'Den ligger kvar och får nästa datum och aktivitet nedan.'}</p></>}
  {protectedWork&&<p className="biz-callout">Kontakten sparas här. Kontrollpunkter, kundärenden och inköpsbehov avslutas i sitt arbetsflöde.</p>}
  <F label={'Nästa aktivitet'+(required?' *':' (valfritt)')}><Input required={required} maxLength={240} value={v.nextAction} onChange={e=>update('nextAction',e.target.value)} placeholder="Till exempel: Skicka uppdaterat prisförslag"/></F>{(required||v.nextAction.trim())&&<F label="När ska du göra det?"><Input required type="date" min={day()} value={v.nextDate} onChange={e=>update('nextDate',e.target.value)}/></F>}{v.outcome==='no_reply'&&<p className="biz-hint">Kontaktförsöket sparas. Senaste kundkontakt ändras först när ni har haft kontakt.</p>}</fieldset>
