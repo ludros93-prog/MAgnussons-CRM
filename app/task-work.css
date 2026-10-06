@@ -26,10 +26,22 @@
 .follow-dialog .draft-status > span { white-space: normal; overflow-wrap: anywhere; }
 .follow-dialog button:not([role=checkbox]) { min-width: 0; max-width: 100%; height: auto; white-space: normal; overflow-wrap: anywhere; }
 .follow-dialog .follow-footer { flex-wrap: wrap; }
+.follow-dialog .follow-save-status { flex: 1 0 100%; display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; padding: .85rem; border: 1px solid var(--border); border-radius: 12px; background: var(--muted); }
+.follow-dialog .follow-save-copy { min-width: 0; }
+.follow-dialog .follow-save-copy [role=status] { display: grid; gap: .25rem; line-height: 1.5; }
+.follow-dialog .follow-save-copy p { margin: .35rem 0 0; font-size: .875rem; }
+.follow-dialog .follow-save-time { display: block; margin-top: .3rem; color: var(--muted-foreground); font-size: .875rem; }
+.follow-dialog .follow-save-status[data-state=error], .follow-dialog .follow-save-status[data-state=conflict] { border-color: #bb7c27; background: #fff6e6; color: #573914; }
+.follow-dialog .follow-status-details { scroll-margin-top: 1rem; }
+.follow-dialog .follow-status-details:focus { outline: 2px solid var(--ring); outline-offset: 4px; border-radius: 8px; }
+.follow-dialog .follow-status-details p { white-space: pre-wrap; }
+.follow-dialog .draft-status button { min-height: 44px; }
 @media(max-width:767px) {
  .follow-dialog .biz-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media(max-width:640px) {
  .follow-dialog .follow-footer { display: grid; grid-template-columns: minmax(0, 1fr); }
  .follow-dialog .follow-footer > button { width: 100%; min-height: 44px; }
+ .follow-dialog .follow-save-status { flex-direction: column; }
+ .follow-dialog .follow-save-status > button { width: 100%; min-height: 44px; }
 }
