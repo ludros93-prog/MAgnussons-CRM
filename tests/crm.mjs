@@ -3,13 +3,18 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 mkdirSync('work',{recursive:true});
+// Node lacks Cloudflare's FixedLengthStream. Model byte validation here;
+// actual length headers and native HTTP failure are tested with built workerd.
+globalThis.FixedLengthStream=class extends TransformStream{
+ constructor(length){let bytes=0;super({transform(chunk,controller){bytes+=chunk.byteLength;if(bytes>length)throw new TypeError('Fixed-length export overflow');controller.enqueue(chunk);},flush(){if(bytes!==length)throw new TypeError('Fixed-length export underflow');}});}
+};
 const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
 for(const f of readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())sqlite.exec(readFileSync('drizzle/'+f,'utf8'));
 class Prepared {constructor(sql,values=[]){this.sql=sql;this.values=values}bind(...v){return new Prepared(this.sql,v)}async first(){return sqlite.prepare(this.sql).get(...this.values)||null}async run(){return this.exec()}async all(){return this.exec()}exec(){const stmt=sqlite.prepare(this.sql);if(stmt.columns().length)return {results:stmt.all(...this.values),meta:{changes:0}};const r=stmt.run(...this.values);return {results:[],meta:{changes:Number(r.changes)}}}}
 globalThis.__crmEnv={CRM_BOOTSTRAP_ADMINS:JSON.stringify([{email:'ludwig.rosenberg@kraftringen.se',name:'Ludwig Rosenberg',owner:''},{email:'sebastian.hansson@magnussonsreklam.se',name:'Sebastian Hansson',owner:'Sebastian Hansson'}]),DB:{prepare:sql=>new Prepared(sql),batch:async statements=>{sqlite.exec('BEGIN');try{const r=statements.map(s=>s.exec());sqlite.exec('COMMIT');return r}catch(e){sqlite.exec('ROLLBACK');throw e}}}};
 const transpile=(source,target)=>writeFileSync(target,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);
 // Compile server-domain modules with their real dependencies, including v12 storage/recovery.
-const modules={'crm-files':'crm-files','crm-errors':'crm-errors','swedish-calendar':'swedish-calendar','direct-delivery':'direct-delivery','crm':'core','crm-auth':'auth','crm-db':'db','follow-up':'follow-up','record-conflicts':'record-conflicts','seller-profiles':'seller-profiles','customer-workflow-drafts':'customer-workflow-drafts','customer-responsibility':'customer-responsibility','production-quantities':'production-quantities','order-work':'order-work','order-revisions':'order-revisions','drafts':'drafts','operations':'operations','crm-operations':'crm-operations','crm-visibility':'crm-visibility','business':'business','crm-store':'crm-store','crm-restore':'crm-restore','crm-backup':'crm-backup','crm-backup-stream':'crm-backup-stream','export-references':'export-references','automation-signals':'automation-signals'};
+const modules={'backup-http':'backup-http','crm-files':'crm-files','crm-errors':'crm-errors','swedish-calendar':'swedish-calendar','direct-delivery':'direct-delivery','crm':'core','crm-auth':'auth','crm-db':'db','follow-up':'follow-up','record-conflicts':'record-conflicts','seller-profiles':'seller-profiles','customer-workflow-drafts':'customer-workflow-drafts','customer-responsibility':'customer-responsibility','production-quantities':'production-quantities','order-work':'order-work','order-revisions':'order-revisions','drafts':'drafts','operations':'operations','crm-operations':'crm-operations','crm-visibility':'crm-visibility','business':'business','crm-store':'crm-store','crm-restore':'crm-restore','crm-backup':'crm-backup','crm-backup-stream':'crm-backup-stream','export-references':'export-references','automation-signals':'automation-signals'};
 function compileModule(file,target){let source=readFileSync(file,'utf8').replace("import { env } from 'cloudflare:workers';","const env=globalThis.__crmEnv;");for(const [from,to] of Object.entries(modules)){source=source.replaceAll("'./"+from+"'","'./"+to+".mjs'").replaceAll("'@/lib/"+from+"'","'./"+to+".mjs'");}transpile(source,target);}
 for(const [from,to] of Object.entries(modules))compileModule('lib/'+from+'.ts','work/'+to+'.mjs');
 compileModule('app/api/crm/route.ts','work/api.mjs');
@@ -401,6 +406,7 @@ await (await import('./order-safety.mjs')).verifyApprovalCalendar({core,sqlite,q
 
 await (await import('./backup-stream.mjs')).verifyBackupStream({core,sqlite,objects,headers,get,post,roleHeaders});
 await (await import('./backup-authorization.mjs')).verifyBackupAuthorization({core});
+await (await import('./backup-export-authorization.mjs')).verifyBackupExportAuthorization({core});
 await (await import('./private-api-authorization.mjs')).verifyPrivateApiAuthorization({core,sqlite,fileApi,draftApi});
 await (await import('./workflow-safety.mjs')).verifyWorkflowSafety({core,sqlite,get,post,headers,api,conflicts});
 await (await import('./access-safety.mjs')).verifyAccessSafety({core,sqlite,objects,headers,get,post,roleGet});

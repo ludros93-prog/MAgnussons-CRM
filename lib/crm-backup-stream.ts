@@ -3,7 +3,7 @@ import {database,bucket} from './crm-db';
 import {load,requestHash} from './crm-store';
 import {restoreState} from './crm-restore';
 import {emptyState,type Actor,type State} from './crm';
-import {BACKUP_MAX_BYTES,BackupFileDescriptor,backupNeed as need,checksum,encodeBackupFile,decodeBackupFile,validateBackupFiles,backupMutation,backupRestoreTarget,remapBackupFiles,cleanupBackupFiles,finishBackupRestore} from './crm-backup';
+import {BACKUP_MAX_BYTES,BackupFileDescriptor,backupNeed as need,checksum,encodeBackupFile,decodeBackupFile,validateBackupFiles,backupMutation,backupRestoreTarget,remapBackupFiles,cleanupBackupFiles,finishBackupRestore,readBackupFile,trustedBackupExport,type BackupExportAuthorization} from './crm-backup';
 
 export const BACKUP_STREAM_FORMAT='magnussons-crm-backup-2';
 const FILE_RECORD_BYTES=6700000;
@@ -17,27 +17,48 @@ type FileRow={id:string;customer_id:string;object_key:string;data:string};
 const fileRows=async(space:string)=>(await database().prepare('SELECT id,customer_id,object_key,data FROM crm_files WHERE space=? ORDER BY id').bind(space).all<FileRow>()).results;
 
 // pull(), rather than start(), keeps export memory to the header and one file record.
-export async function exportBackupStream(space:string):Promise<ReadableStream<Uint8Array>>{
- const st=await load(space),rows=await fileRows(space),files=rows.map(row=>{const file=BackupFileDescriptor.parse({customerId:row.customer_id,metadata:JSON.parse(row.data)});need(file.metadata.id===row.id,'Kundfilens metadata har ett felaktigt ID.');return file;});
+async function prepareBackupStream(space:string,authorize:BackupExportAuthorization){
+ await authorize();const st=await load(space);await authorize();const rows=await fileRows(space);await authorize();
+ const files=rows.map(row=>{const file=BackupFileDescriptor.parse({customerId:row.customer_id,metadata:JSON.parse(row.data)});need(file.metadata.id===row.id,'Kundfilens metadata har ett felaktigt ID.');return file;});
  const {viewer:_,...state}=st;
  const header=Header.parse({type:'header',format:BACKUP_STREAM_FORMAT,exportedAt:new Date().toISOString(),sourceSpace:space,state,files});
  const headerBytes=recordBytes(header);need(headerBytes.byteLength<=BACKUP_MAX_BYTES,'CRM-data och filförteckning får vara högst 16 MB.');
  const validated=restoreState(emptyState(),{format:'magnussons-crm-1',state:header.state},true);validateBackupFiles(validated,files,Infinity);
+ // Base64 and SHA256 have fixed ASCII lengths. Compute the exact wire length
+ // from validated metadata without reading R2 or buffering the whole export.
+ const fileBytes=files.reduce((total,file)=>total+file.metadata.size,0),hashLength='0'.repeat(64);
+ const byteLength=headerBytes.byteLength+1+files.reduce((total,file)=>total+recordBytes({type:'file',id:file.metadata.id,content:'',sha256:hashLength}).byteLength+4*Math.ceil(file.metadata.size/3)+1,0)+recordBytes({type:'end',files:files.length,bytes:fileBytes,sha256:hashLength}).byteLength+1;
+ const abort=new AbortController();let stopped=false;
+ const check=async()=>{abort.signal.throwIfAborted();await authorize();abort.signal.throwIfAborted();};
  async function* records(){
   let digest=await checksum(headerBytes),bytes=0,count=0;
   yield encoder.encode(JSON.stringify(header)+'\n');
   for(let i=0;i<files.length;i++){
-   const file=files[i],object=await bucket().get(rows[i].object_key);need(object,'Kundfilen '+file.metadata.name+' saknas i fillagringen. Kopian stoppades.');
-   need(object!.size===undefined||object!.size===file.metadata.size,'Filstorleken stämmer inte för '+file.metadata.name+'.');
-   const content=new Uint8Array(await object!.arrayBuffer());need(content.byteLength===file.metadata.size,'Filstorleken stämmer inte för '+file.metadata.name+'.');
-   const record=recordBytes({type:'file',id:file.metadata.id,content:encodeBackupFile(content),sha256:await checksum(content)});digest=await advanceDigest(digest,record);count++;bytes+=content.byteLength;
-   yield record;yield encoder.encode('\n');
+   const file=files[i],object=await bucket().get(rows[i].object_key);
+   // Keep the body cancellable even when access changed while get() awaited.
+   let content:Uint8Array;try{if(!object){await check();need(object,'Kundfilen '+file.metadata.name+' saknas i fillagringen. Kopian stoppades.');}need(object!.size===undefined||object!.size===file.metadata.size,'Filstorleken stämmer inte för '+file.metadata.name+'.');content=await readBackupFile(object!,file.metadata.size,file.metadata.name,check,abort.signal);}catch(error){if(typeof object?.body?.cancel==='function'&&!object.body.locked)try{await object.body.cancel();}catch{}throw error;}
+   const record=encoder.encode(JSON.stringify({type:'file',id:file.metadata.id,content:encodeBackupFile(content),sha256:await checksum(content)})+'\n');digest=await advanceDigest(digest,record.subarray(0,record.byteLength-1));count++;bytes+=content.byteLength;
+   yield record;
   }
   // Files have separate mutations and can change without the workspace version changing.
   need(JSON.stringify(await load(space))===JSON.stringify(st)&&JSON.stringify(await fileRows(space))===JSON.stringify(rows),'Arbetsytan eller kundfilerna ändrades under exporten. Försök igen.');
   yield encoder.encode(JSON.stringify({type:'end',files:count,bytes,sha256:digest})+'\n');
  }
- const iterator=records();return new ReadableStream<Uint8Array>({async pull(controller){try{const record=await iterator.next();if(record.done)controller.close();else controller.enqueue(record.value);}catch(error){controller.error(error);}},async cancel(){await iterator.return();}});
+ const iterator=records();const body=new ReadableStream<Uint8Array>({
+  async pull(controller){try{await check();const record=await iterator.next();await check();if(record.done){stopped=true;controller.close();}else controller.enqueue(record.value);}catch(error){if(stopped)return;try{await authorize();}catch(access){error=access;}if(stopped)return;stopped=true;abort.abort();controller.error(error);await iterator.return();}},
+  async cancel(){stopped=true;abort.abort();await iterator.return();}
+ },{highWaterMark:0});
+ return {body,byteLength};
+}
+
+export async function exportBackupStream(space:string,authorize:BackupExportAuthorization=trustedBackupExport){return (await prepareBackupStream(space,authorize)).body;}
+// Validate the producer's byte count here and carry its trusted length to the
+// final Worker framing layer: Vinext cleanup replaces this inner stream, so
+// HTTP must receive a new FixedLengthStream after the framework has finished.
+export async function exportBackupDownload(space:string,authorize:BackupExportAuthorization){
+ const {body,byteLength}=await prepareBackupStream(space,authorize),fixed=new FixedLengthStream(byteLength);
+ void body.pipeTo(fixed.writable).catch(()=>{/* The destination body carries the error to HTTP; pipeTo also cancels the source. */});
+ return {body:fixed.readable,byteLength};
 }
 
 // Split raw bytes before decoding, enforcing a bounded UTF-8 record even across chunks.
