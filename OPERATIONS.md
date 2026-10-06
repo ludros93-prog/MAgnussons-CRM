@@ -200,14 +200,26 @@ D01 ändrar ingen SQL-migration, lagringsmodell, externa ID:n eller bilagekoppli
 
 Vid problem med den nya presentationen ska en verifierad rättning eller enbart UI-återgång bevara B01b1/B05a-serverregler och befintliga historiker/utkast. Återpublicera inte v18 som skrivande rollback efter nya kundansvarshistoriker. Kod-/live-kvittens och källträd anges i PR för D01; D1/R2-bindningar och delning behålls.
 
-## Mobilheader, aktörskontroll och svenska godkännandedagar
+## Mobilheader, aktörskontroll och svenska godkännandedagar, v20
 
-Nästa avgränsade kandidat låter mobilheadern växa när kontrollerna radbryts, så att bannern inte täcker arbetsyteväljarens tryckyta. Befintliga arbetsytebyten, privata utkast, revisionskontroller och rollgränser behålls. Diagnostisk layoutkontroll är inte slut-QA; slutligt bygge, kontroller och publiceringsläge anges i VALIDATION och aktuell status.
+V20 publicerades den 5 oktober med en mobilheader som växer när kontrollerna radbryts, så att bannern inte täcker arbetsyteväljarens tryckyta. Befintliga arbetsytebyten, privata utkast, revisionskontroller och rollgränser behålls. Slutprov på byggd artefakt och publiceringskvittens anges i VALIDATION och aktuell status; de är inte fysisk telefon- eller personalverifiering.
 
 Huvudendpointens `POST /api/crm`, inklusive `type=restore`, läser om aktörens medlemskap och rätt till handlingen inför varje CAS-försök. Databasens atomiska skrivvillkor kräver fortfarande aktivt medlemskap med samma medlems-ID, användar-ID, roll och ansvar som servern nyss läst. Om dessa ändras före commit kan begäran inte skriva CRM-data, arkivera sitt utkast eller lagra mutationskvittensen med gammal behörighet. Omförsök kontrollerar aktuell roll igen. Detta kompletterar befintliga målprofillänkar, postunderlag och idempotens.
 
-Den nya commitkontrollen gäller huvudendpointen. Separata fil-, privata draft- och backup-/återställningsendpoints har inte genomgått samma revokationsgranskning i denna del; deras befintliga åtkomstkontroller ska inte tolkas som ny verifiering av alla sådana racefall.
+V20:s commitkontroll gäller huvudendpointen. Separata fil-, privata draft- och backup-/återställningsendpoints omfattades inte av den delens revokationsgranskning; nästa kandidat nedan hanterar avgränsade skriv- och svarsvägar där.
 
 Kundgodkänd antalminskning och accept av orderändring använder en gemensam Europe/Stockholm-kalenderdag för den lagrade inlämnings-/förslagstidpunkten. När tidsstämpeln finns ska kundens uttryckliga godkännandedatum vara tidigast den dagen och inte i framtiden; saknad äldre tidsstämpel förblir okänd. Avsändningsdag använder samma helper; direktleveransens uttryckliga datum behålls. Ogiltig icke-tom tidsstämpel ger ett begripligt fel före skrivning. Inget kundgodkännande eller gammalt underlag skapas eller flyttas automatiskt.
 
 Inga SQL-migreringar, nya tabeller/kolumner, lagrade modellfält eller beroenden tillkommer. Datumhelpern och aktörsvillkoren använder befintligt underlag; hostingbindningar och delning ändras inte. En UI-återgång ska behålla dessa serverkontroller och svenska datumgränser tillsammans med B01/B05-historik och utkast. Återpublicera inte v18 som skrivande rollback. Detta dokument är inte en kvittens på ny merge, deploy, kontoanslutning eller live-återställning.
+
+## Kandidat 6 oktober: separata återställnings-, fil- och utkastsvägar
+
+Avgränsningen är `POST /api/crm/backup` för både äldre JSON och strömmad NDJSON, fil- och privata draftskrivningar samt aktuella behörighetskontroller före berörda läs-, replay- och konfliktsvar. Backupåterställning ska kräva aktuell administratör även vid SQL-commit och före återlämnad CRM-state. Filvägen ska behålla kund-/order-/arbetsversionsrättigheter; privata utkast ska behålla autentiserad användare, arbetsyta, koppling, revision och arkiveringsskydd.
+
+Aktivt medlemskap, medlems-/användar-ID, roll och ansvar ska ingå i serverns skrivvillkor. När ett villkor inte längre matchar ska efterföljande CRM-/filmetadata-/kvittensskrivningar eller utkaständringar inte utföras med den gamla behörigheten. Ny kontroll före ett privat svar ska hindra att gammal roll eller viewer återanvänds vid läsning, exakt replay eller konflikt. Det är ingen garanti att redan skickade bytes kan återkallas eller att ett pågående svar kan stoppas efter senaste behörighetskontrollen.
+
+D1:s SQL-batch och R2-filer är separata steg, ingen gemensam transaktion. Bekräftat avslag städar endast operationens nya R2-objekt. En förlorad commitkvittens behöver avstämmas mot sparad begäran och filreferenser innan något raderas; okänt utfall behåller objekten. Ett nekat svar efter en lyckad commit får inte radera registrerade kundfiler. Behörighetskontrollen ska bevara dessa regler för båda backupformaten och filuppladdningens återförsök.
+
+Separat `GET /api/crm/backup` och strömexport, Outlook, medlemsadministration och faktisk hosting ingår inte i denna granskning. CRM-kopia omfattar fortsatt inte konton, Outlook eller privata utkast. Inga schema-/datamodell-/beroende-/backupformatändringar eller nya affärsdefinitioner planeras. Kompatibel återgång ska behålla nya serverkontroller tillsammans med B01/B05:s historik/utkast och v20:s aktörs-, svenska datum- och orderregler; äldre kod utan dessa skydd är ingen säker skrivande rollback.
+
+Detta är kandidatens kontrakt. Färdig implementation, slutkontroller, exakt GitHub-head/main och eventuell publicering kvitteras efter faktisk verifiering i VALIDATION och aktuell status. Ingen ny deploy, riktig kontoanslutning, kundskrivning eller hostingåterställning påstås. Scheman, prompter och aktivering ändras inte. Officiella källor och gränser finns i [agent/RESEARCH.md](agent/RESEARCH.md).

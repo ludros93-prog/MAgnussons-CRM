@@ -43,7 +43,10 @@ export async function finishBackupRestore(space:string,current:State,next:State,
  let committed=false,uncertain=false,replayed=false;
  try{
   const now=new Date().toISOString();for(const c of next.customers)next.events.push({id:crypto.randomUUID(),customerId:c.id,dealId:'',kind:'restore',at:now,text:'CRM-data och kundfiler återställda från kopia daterad '+exportedAt,actor:{id:actor.id,name:actor.name}});
-  try{committed=await commit(space,current,next,requestId,undefined,{result:{},userId:actor.id,hash,restoreEmpty:true},stored);}
+  // HTTP restore supplies both server-read IDs. Trusted internal helpers that
+  // do not carry a member snapshot retain their existing calling contract.
+  const actorAuthorization=actor.memberId?{memberId:actor.memberId,userId:actor.id,role:'admin' as const,owner:actor.owner}:undefined;
+  try{committed=await commit(space,current,next,requestId,undefined,{result:{},userId:actor.id,hash,restoreEmpty:true,actorAuthorization},stored);}
   catch(error){
    uncertain=true;
    try{const recorded=await backupMutation(space,requestId);replayed=recorded?.user_id===actor.id&&recorded?.request_hash===hash;uncertain=false;
