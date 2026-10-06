@@ -133,3 +133,15 @@ Följande officiella källor kontrollerades 6 oktober för långa formulär i ku
 Den valda tillämpningen är en bestående synlig statusyta medan formuläret rullas, med skillnad mellan väntande ändring, sparning, serverkvitterat privat utkast, fel och konflikt. Privat utkast betyder inte publicerade kunduppgifter. Statusen använder `role="status"`, explicit `aria-live="polite"` och `aria-atomic="true"`; handlingsknappar ligger som syskon utanför annonseringsregionen. Fokus ska stanna i redigeringen. Sticky-synlighet, 44 px-knappmål och scrollpadding anpassad till uppmätt statushöjd är våra implementationsval, inte krav från 4.1.3 eller 2.4.11.
 
 Byggda browserprov ska kontrollera status och fria kontroller vid 320/390 px, lång fel-/konflikttext, rullning och textförstoring. Provresultat och publicering kvitteras separat; källorna eller ARIA-attributen bevisar ingen generell WCAG-acceptans, fysisk telefon eller personalprov.
+
+## Relevanta handlingar i Kundvårds läsvy, 2026-10-06
+
+Följande officiella källor öppnades 6 oktober inför den avgränsade visningen av Återköp och Merförsäljning:
+
+- [Lime – design av handlingar](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) rekommenderar få kontextuellt relevanta handlingar och att handlingar som inte är aktuella hålls undan. Det är en princip för begriplighet, inte en serverbehörighet.
+- [Lime – Object Access](https://platform.docs.lime-crm.com/en/latest/configuration/object-access/) skiljer typbehörighet från rätt att läsa, ändra eller radera ett visst objekt. Läsrätt innebär inte automatiskt ändringsrätt.
+- [Salesforce – behörighetsstyrda Dynamic Actions](https://admin.salesforce.com/blog/2021/selectively-show-components-to-users-using-custom-permissions) visar synlighetsfilter med Custom Permissions och rekommenderar att dölja åtgärder användaren inte kan utföra. Artikeln är från 2021; äldre uppgifter om funktionslanseringar används inte.
+- [Salesforce – serverbehörighet](https://developer.salesforce.com/docs/platform/lwc/guide/apex-security.html) skiljer CRUD-/fältbehörigheter från postdelning. Att visa eller dölja en komponent ersätter inte kontrollerna på servern.
+- [Saleshub AI – funktioner](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Sidan verifierar ingen särskild roll- eller behörighetsmodell för kundvård.
+
+Magnussons-tillämpningen begränsar just Kundvård-listans två affärsskapande knappar med befintlig `canEdit` för admin/seller. Reader behåller listans läsinnehåll och antal öppna affärer; serverrättigheter ändras inte. UI-visningen ska minska meningslösa klick och ersätter ingen API-kontroll. Prov och publicering kvitteras separat; ingen generell rollgranskning eller personalacceptans följer av källorna.
