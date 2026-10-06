@@ -6,6 +6,26 @@ import {collectFileReferences} from './export-references';
 import {RuleError,emptyState,type State,type Actor} from './crm';
 
 export const BACKUP_MAX_BYTES=16000000;
+export type BackupExportAuthorization=()=>Promise<void>;
+export const trustedBackupExport:BackupExportAuthorization=async()=>{};
+// HTTP exports supply a server-bound check. Internal recovery tests may omit it.
+// Real R2 bodies remain cancellable while a file is being read.
+export async function readBackupFile(object:Pick<R2ObjectBody,'arrayBuffer'> & {body?:ReadableStream<Uint8Array>},size:number,name:string,authorize:BackupExportAuthorization,signal?:AbortSignal){
+ const check=async()=>{signal?.throwIfAborted();await authorize();signal?.throwIfAborted();};
+ let reader:ReadableStreamDefaultReader<Uint8Array>|undefined;
+ const cancel=()=>{void reader?.cancel().catch(()=>{});};
+ try{
+  await check();
+  if(typeof object.body?.getReader!=='function'){const bytes=new Uint8Array(await object.arrayBuffer());await check();backupNeed(bytes.byteLength===size,'Filstorleken stämmer inte för '+name+'.');return bytes;}
+  reader=object.body.getReader();signal?.addEventListener('abort',cancel,{once:true});
+  signal?.throwIfAborted();const bytes=new Uint8Array(size);let offset=0;
+  // A file is bounded to 5 MB and stays private until its final access check.
+  // Cancellation is checked per chunk; membership is checked per file rather
+  // than per arbitrary R2 chunk, which could exhaust D1's query budget.
+  while(true){signal?.throwIfAborted();const item=await reader.read();signal?.throwIfAborted();if(item.done)break;backupNeed(offset+item.value.byteLength<=size,'Filstorleken stämmer inte för '+name+'.');bytes.set(item.value,offset);offset+=item.value.byteLength;}
+  await check();backupNeed(offset===size,'Filstorleken stämmer inte för '+name+'.');return bytes;
+ }finally{signal?.removeEventListener('abort',cancel);if(reader){try{await reader.cancel();}catch{/* Already failed or cancelled. */}reader.releaseLock();}else if(typeof object.body?.cancel==='function')try{await object.body.cancel();}catch{/* No bytes are released on failed authorization. */}}
+}
 const FILE_BYTES=10000000;
 export const BackupFileMeta=z.object({id:z.string().min(1).max(100),name:z.string().min(1).max(200),version:z.string().min(1).max(100),kind:z.enum(['logo','proof','document']),size:z.number().int().positive().max(5000000),at:z.string(),uploadedBy:z.string(),purpose:z.literal('production').optional(),orderId:z.string().min(1).max(100).optional(),workId:z.string().min(1).max(100).optional()});
 export const BackupFileDescriptor=z.object({customerId:z.string().min(1).max(100),metadata:BackupFileMeta});
@@ -59,16 +79,18 @@ export async function finishBackupRestore(space:string,current:State,next:State,
   return await load(space);
  }finally{if(!committed&&!uncertain)await cleanupBackupFiles(staged);}
 }
-export async function exportBackup(space:string){
- const st=await load(space),rows=await database().prepare('SELECT customer_id,object_key,data FROM crm_files WHERE space=? ORDER BY id').bind(space).all<{customer_id:string;object_key:string;data:string}>();
+export async function exportBackup(space:string,authorize:BackupExportAuthorization=trustedBackupExport){
+ await authorize();const st=await load(space);await authorize();
+ const rows=await database().prepare('SELECT customer_id,object_key,data FROM crm_files WHERE space=? ORDER BY id').bind(space).all<{customer_id:string;object_key:string;data:string}>();await authorize();
  const files:z.infer<typeof BackupSchema>['files']=[];let total=0;
  for(const row of rows.results){
   const metadata=BackupFileMeta.parse(JSON.parse(row.data));total+=metadata.size;need(total<=FILE_BYTES,'CRM-kopian stöder högst 10 MB kundfiler totalt. Ingen ofullständig kopia skapas.');
-  const object=await bucket().get(row.object_key);need(object,'Kundfilen '+metadata.name+' saknas i fillagringen. Kopian stoppades.');
-  const bytes=new Uint8Array(await object!.arrayBuffer());need(bytes.byteLength===metadata.size,'Filstorleken stämmer inte för '+metadata.name+'.');
+  await authorize();const object=await bucket().get(row.object_key);if(!object){await authorize();need(object,'Kundfilen '+metadata.name+' saknas i fillagringen. Kopian stoppades.');}
+  const bytes=await readBackupFile(object!,metadata.size,metadata.name,authorize);
   files.push({customerId:row.customer_id,metadata,content:encodeBackupFile(bytes),sha256:await checksum(bytes)});
+  await authorize();
  }
- const current=await load(space);need(current.version===st.version,'Arbetsytan ändrades under exporten. Försök igen.');
+ const current=await load(space);await authorize();need(current.version===st.version,'Arbetsytan ändrades under exporten. Försök igen.');
  const {viewer:_,...state}=st;
  const result=BackupSchema.parse({format:'magnussons-crm-backup-1',exportedAt:new Date().toISOString(),sourceSpace:space,state,files});
  const validated=restoreState(emptyState(),{format:'magnussons-crm-1',state:result.state},true);validateBackupFiles(validated,result.files);return result;

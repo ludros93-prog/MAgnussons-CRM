@@ -401,6 +401,7 @@ await (await import('./order-safety.mjs')).verifyApprovalCalendar({core,sqlite,q
 
 await (await import('./backup-stream.mjs')).verifyBackupStream({core,sqlite,objects,headers,get,post,roleHeaders});
 await (await import('./backup-authorization.mjs')).verifyBackupAuthorization({core});
+await (await import('./backup-export-authorization.mjs')).verifyBackupExportAuthorization({core});
 await (await import('./private-api-authorization.mjs')).verifyPrivateApiAuthorization({core,sqlite,fileApi,draftApi});
 await (await import('./workflow-safety.mjs')).verifyWorkflowSafety({core,sqlite,get,post,headers,api,conflicts});
 await (await import('./access-safety.mjs')).verifyAccessSafety({core,sqlite,objects,headers,get,post,roleGet});
