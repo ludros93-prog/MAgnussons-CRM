@@ -7,3 +7,29 @@
 @media(max-width:640px){.day-actions{grid-template-columns:1fr}.day-actions>button{min-height:72px}.day-actions>button>svg:last-child{display:block}.day-scope{align-items:flex-start;flex-direction:column}.day-result{gap:.75rem}.day-result>[data-slot=progress]{min-width:100%}.day-secondary{grid-template-columns:1fr}.my-day .daily-row{flex-wrap:wrap}.my-day .daily-row>div{min-width:180px}.follow-footer{flex-wrap:wrap}.guide-nav b{font-size:.8rem;overflow-wrap:anywhere}.guide-nav{gap:0}.section-nav{gap:0}.main .page-heading h1{font-size:1.8rem}.topbar .saved{display:none}}
 .form-customer-context{padding:1rem;background:#edf5ff;border-radius:12px;color:#173660}.form-customer-context>span{display:block;font-size:.875rem}.form-customer-context>b{font-size:1.125rem}.form-customer-context .biz-details{margin:.5rem 0 0;padding:.5rem;background:transparent;border:0}.next-action-fields{padding:1rem;border:1px solid #bdd4f0;border-left:4px solid #397cc3;border-radius:10px;background:#f5f9ff}.next-action-fields h3{margin:0 0 1rem}.next-action-fields .field{margin:.8rem 0}.crm-app .main{font-size:1rem}.crm-app .page-heading>div>p{font-size:1rem;line-height:1.6}.crm-app .field>span,.crm-app .check-field{font-size:.875rem;line-height:1.5}.crm-app .crm-sidebar [data-slot=sidebar-menu-button]{min-height:44px;font-size:.95rem}
 .my-day{gap:1rem}.day-scope,.day-actions,.day-result{margin-bottom:0}.main[data-view=today] .page-heading .eyebrow,.main[data-view=today] .page-heading p{display:none}.main[data-view=today] .page-heading{margin-bottom:1rem}.guide-step h3:focus-visible{outline:2px solid var(--ring);outline-offset:6px;border-radius:4px}
+
+/* Follow-up only: enlarged text must not widen the form or its leave action. */
+.follow-dialog { grid-template-columns: minmax(0, 1fr); overflow-wrap: anywhere; }
+.follow-dialog > *,
+.follow-dialog form,
+.follow-dialog fieldset,
+.follow-dialog .biz-field,
+.follow-dialog .biz-grid > * { min-width: 0; max-width: 100%; }
+.follow-dialog form,
+.follow-dialog fieldset { grid-template-columns: minmax(0, 1fr); }
+.follow-dialog input,
+.follow-dialog textarea,
+.follow-dialog [data-slot=select-trigger],
+.follow-dialog .draft-status,
+.follow-dialog .draft-status > span { min-width: 0; max-width: 100%; }
+.follow-dialog .draft-status,
+.follow-dialog .draft-status > span { white-space: normal; overflow-wrap: anywhere; }
+.follow-dialog button:not([role=checkbox]) { min-width: 0; max-width: 100%; height: auto; white-space: normal; overflow-wrap: anywhere; }
+.follow-dialog .follow-footer { flex-wrap: wrap; }
+@media(max-width:767px) {
+ .follow-dialog .biz-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media(max-width:640px) {
+ .follow-dialog .follow-footer { display: grid; grid-template-columns: minmax(0, 1fr); }
+ .follow-dialog .follow-footer > button { width: 100%; min-height: 44px; }
+}
