@@ -1,6 +1,6 @@
 # Magnussons CRM – designriktning
 
-Ludwig betonade den 5 oktober 2026 att designen är ett huvudkrav och ska utvecklas med inspiration från Saleshub och Lime. Målet är att CRM-ovan personal snabbt förstår kunden, sitt ansvar och nästa handling. Designarbetet ingår i vidareutvecklingen av den befintliga appen.
+Designen är ett huvudkrav och ska utvecklas med inspiration från Saleshub, Lime och Salesforce. Målet är att CRM-ovan personal snabbt förstår kunden, sitt ansvar och nästa handling. Designarbetet ingår i vidareutvecklingen av den befintliga appen.
 
 ## Gemensamt uttryck
 
@@ -24,6 +24,19 @@ Kontaktuppgifter och ansvar får en kompakt, läsbar presentation. Interna antec
 Leverantörskällor och avgränsade designlärdomar dokumenteras i [agent/RESEARCH.md](agent/RESEARCH.md). Vår tillämpning är anpassad till Magnussons arbetsmoment; leverantörernas färger, varumärken och produktlöften återanvänds inte som våra.
 
 Designarbetets kvalitetsregel är att kontrollera berörda vyer på dator och mobil med tangentbord, långa värden, tomma data och relevanta roller. D01:s tidigare slutbygge 4 och den exakta v19-artefakten passerade 16 scenarier och 36 layout-/skärmbildskontroller för kundkortet, inklusive kontrollerad textförstoring 200 procent. Det är historiskt kundkortsunderlag med textstorlek/radhöjd, inte browserns sidzoom. Skärmbilder, mätningar och provgränser finns i [VALIDATION.md](VALIDATION.md). Browserprov visar layout och arbetsflöde; personalens användbarhet behöver observeras i deras verkliga arbete.
+
+### Begriplighet i det befintliga användarprovet
+
+I T26 och B07:s befintliga pilotmoment ska en CRM-ovan användare kunna svara på tre frågor utifrån den berörda vyn: Vilken kund och egen-/team-/arbetsyta arbetar jag i? Vad behöver min uppmärksamhet och vilken handling kommer härnäst? Är mina uppgifter sparade som privat utkast eller inlämnade till gemensamt CRM?
+
+Observera vad personen faktiskt väljer och registrera feltolkningar, backningar och behov av hjälp per moment. Ett förlorat eller nekat svar får inte tolkas som bekräftad CRM-sparning. Använd befintliga pilotuppgifter och fiktivt underlag; detta inför inget nytt testprogram eller påhittat tidsmål. Browserprov ska kontrollera att rätt information och handling går att nå. De besvarar inte frågan om personalen förstår vyn utan handledning.
+
+Två redan öppna designuppgifter får följande konkreta mål. De är krav för nästa implementation, inte verifierat slutbeteende:
+
+| Arbetsmoment | Önskat beteende och avgränsad kontroll |
+| --- | --- |
+| Hitta en kund på mobilen | På 320/390 px ska kundlistan visa kundnamn, ansvarig och nästa aktivitet eller ett ärligt besked om att den saknas. Kundkortet ska kunna öppnas med vanlig pointer och tangentbord. Långa värden ska vara läsbara inom vyn utan att kundens viktigaste handling kräver horisontell scroll; inga påhittade ansvariga eller aktiviteter fyller tomma fält. |
+| Byta arbetsyta | Efter ett användarvalt byte ska vald arbetsyta framgå i text och tangentbordsfokus återgå till motsvarande väljare i den nya vyn, eller en namngiven start om väljaren inte finns. Fokus får inte tappas till BODY. Bakgrundsladdning och autosparning får inte stjäla fokus. Prova vanligt tangentbordsbyte och efterföljande Tab; bevara skydden för privata utkast och rätt roll/sammanhang. |
 
 Kundkortets normala 390/320 px-vyer visar första handlingen direkt i de tidigare proven. Extra långa värden på 320 px kräver vertikal scroll. D01 publicerades i v19 och kvarstår i v22 enligt [VALIDATION.md](VALIDATION.md). Vid v19 kunde bannern täcka den globala arbetsyteväljarens pointerklick på 320 px och tangentbord användes för initieringshinten. Detta fynd ligger till grund för den slutprovade och publicerade v20-rättningen nedan. Autentiserad live-UI och personalens användbarhet är fortfarande inte verifierade.
 

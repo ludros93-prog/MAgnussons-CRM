@@ -230,3 +230,11 @@ Sju officiella URL:er omkontrollerades **HTTP 200 kl. 15:33:00–15:33:01 UTC**:
 - [Saleshub Funktioner](https://saleshubai.se/funktioner): samlat kund-/nästaaktivitets-/modulflöde, ingen verifierad garanti för privat utkast eller pending-stängning. Äldre 403-/200-belägg ändras inte av denna hämtning.
 
 Magnussons egna tillämpningar är kvarstående privat/CRM/stängningsbesked, exakta tillgängliga serverfel, explicit detaljfokus och lokal scroll av samma native fokuserade kontroll. **22/22 isolerade slutfall** belägger avgränsningen, ingen skärmläsar-/telefon-/WCAG-certifiering. Källorna förklarar varken v31 Unauthorized eller skillnaden mellan lokal råtarhash och native archive_storage-hash; dessa tekniska gränser och faktisk v32-publicering kvitteras i [VALIDATION](../VALIDATION.md). Codex-tasken är fortsatt oläst.
+
+## Intuitiv design: arbetsmoment och begriplighet
+
+Efter Ludwigs förtydligande 6 oktober öppnades [Saleshub – Funktioner](https://saleshubai.se/funktioner) och [Salesforce – Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) på nytt via webbverktyget. Saleshub beskriver gemensamma moduldata och kundkort med nästa aktivitet. Salesforce beskriver dagens uppgifter/möten, prioriterad aktivitet och planerat/utfört arbete i tidslinjen. Vår tillämpning är sammanhang, arbetsordning och en synlig nästa handling; källorna bevisar ingen användbarhet eller personalacceptans hos Magnussons.
+
+Webbverktygets nya öppning av [Lime – Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) gav HTTP 429. Principen om få relevanta handlingar med tydliga verb bygger därför fortsatt på den separat daterade HTTP 200-kontrollen kl. 15:33 ovan; ingen ny läsning eller ny Lime-funktion påstås.
+
+[DESIGN](../DESIGN.md#begriplighet-i-det-befintliga-användarprovet) preciserar befintliga T26/B07 med frågor om kund/sammanhang, nästa handling och privat kontra gemensam sparning. Mobilkundlistans läsbarhet och fokusmål efter arbetsytebyte är egna, ännu inte implementerade acceptanskrav. De är inte leverantörsgarantier, nya sparregler eller ett genomfört personalprov.
