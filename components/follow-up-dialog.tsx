@@ -12,7 +12,7 @@ export function FollowUpDialog({st,taskId,save,busy,onClose,onDeal,onWorkflow}:{
  busy=busy||submitting;
  const protectedWork=protectedFollowUp(task),canonical=['quote','discovery','csm','prospecting'].includes(task.kind);
  useEffect(()=>{if(w.ready&&!current&&!task.done&&!readonly)w.create('followup',taskId,{taskId,expectedContext:followupBasis(st,taskId),outcome:'contact',occurredOn:day(),note:'',completed:false,nextAction:task.title,nextDate:plusDays(day(),1)},'Uppföljning · '+(customer?.name||task.title));},[w.ready,current?.id,taskId,task.done]);
- async function leave(next=onClose){if(lock.current)return;if(!current||readonly){next();return}lock.current=true;setSubmitting(true);try{const blank=!current.data.note?.trim();if(blank?await w.archive(current.id):await w.flush(current.id))next();}finally{lock.current=false;setSubmitting(false)}}
+ async function leave(next=onClose){if(lock.current)return;if(!current||readonly){next();return}lock.current=true;setSubmitting(true);try{if(await w.flush(current.id))next();}finally{lock.current=false;setSubmitting(false)}}
  if(!current)return <Dialog open onOpenChange={v=>{if(!v)onClose()}}><DialogContent><DialogHeader><DialogTitle>Följ upp aktiviteten</DialogTitle><DialogDescription>{task.title}</DialogDescription></DialogHeader>{readonly?<p>Ditt konto har läsbehörighet.</p>:task.done?<p>Aktiviteten är redan avslutad.</p>:<DraftStatus id=""/>}</DialogContent></Dialog>;
  const v=current.data,changed=v.expectedContext!==followupBasis(st,taskId),required=canonical||protectedWork||v.outcome==='no_reply'||!v.completed;
  const update=(key:string,value:unknown)=>w.update(current.id,{...v,[key]:value});
