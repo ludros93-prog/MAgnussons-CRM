@@ -5,3 +5,27 @@
 /* Long conflict actions must fit the customer editor on a phone. */
 .wf-sheet .form-input-lock{grid-template-columns:minmax(0,1fr)}
 .wf-sheet .record-conflict button{max-width:100%;white-space:normal;height:auto;min-height:44px}
+
+/* Keep a short, honest status visible; long errors and conflict choices remain in flow. */
+.wf-sheet{scroll-padding-top:calc(var(--wf-status-height,100px) + 12px);scroll-padding-bottom:calc(var(--wf-footer-height,100px) + 12px)}
+.wf-save-status{position:sticky;top:0;z-index:2;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:12px 30px;background:#f3f8ff;border-bottom:1px solid #cbdcf0;box-shadow:0 3px 6px #2029340a}
+.wf-save-summary{flex:1;min-width:0;font-size:.875rem;line-height:1.5;overflow-wrap:anywhere;color:#254d78}
+.wf-save-summary strong,.wf-save-summary span{display:block}
+.wf-save-summary span{font-size:.8125rem;color:#425d78;margin-top:3px}
+.wf-save-status[data-state=error],.wf-save-status[data-state=conflict],.wf-save-status[data-state=notice]{background:#fff4e6;border-color:#e6c28b}
+.wf-save-status[data-state=error] .wf-save-summary,.wf-save-status[data-state=conflict] .wf-save-summary,.wf-save-status[data-state=notice] .wf-save-summary{color:#744a12}
+.wf-save-status button{flex-shrink:0;max-width:48%;min-height:44px;height:auto;white-space:normal;overflow-wrap:anywhere;font-size:.875rem}
+.wf-sheet .form-footer{z-index:1;bottom:0;flex-wrap:wrap;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.wf-sheet .form-footer button{min-height:44px;max-width:100%}
+.wf-sheet [tabindex="-1"]:focus-visible{outline:2px solid var(--ring);outline-offset:3px}
+.wf-sheet .draft-status{white-space:normal;overflow-wrap:anywhere;min-width:0}
+.wf-sheet .draft-status>span{min-width:0}
+.wf-sheet .wf-section-head{flex-wrap:wrap}
+.wf-sheet .wf-section-head h3{min-width:0;overflow-wrap:anywhere}
+.wf-sheet [data-slot=sheet-title]{overflow-wrap:anywhere}
+.wf-sheet .wf-inset{overflow-wrap:anywhere}
+.wf-sheet .wf-field input{height:auto;min-height:44px}
+.wf-sheet .sheet-body button:not([role=checkbox]){max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:767px){.wf-save-status{padding:10px 20px;gap:10px}}
+/* A short viewport needs room to edit, including with enlarged text. */
+@media(max-height:540px){.wf-sheet{scroll-padding-bottom:12px}.wf-sheet .form-footer{position:static}.wf-save-status{flex-wrap:wrap}.wf-save-summary{flex-basis:100%}.wf-save-status button{max-width:100%}}

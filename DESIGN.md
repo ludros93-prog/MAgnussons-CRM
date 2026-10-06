@@ -25,7 +25,7 @@ Leverantörskällor och avgränsade designlärdomar dokumenteras i [agent/RESEAR
 
 Designarbetets kvalitetsregel är att kontrollera berörda vyer på dator och mobil med tangentbord, långa värden, tomma data och relevanta roller. D01:s tidigare slutbygge 4 och den exakta v19-artefakten passerade 16 scenarier och 36 layout-/skärmbildskontroller för kundkortet, inklusive kontrollerad textförstoring 200 procent. Det är historiskt kundkortsunderlag med textstorlek/radhöjd, inte browserns sidzoom. Skärmbilder, mätningar och provgränser finns i [VALIDATION.md](VALIDATION.md). Browserprov visar layout och arbetsflöde; personalens användbarhet behöver observeras i deras verkliga arbete.
 
-Kundkortets normala 390/320 px-vyer visar första handlingen direkt i de tidigare proven. Extra långa värden på 320 px kräver vertikal scroll. D01 publicerades i v19 och kvarstår i aktuell v20 enligt [VALIDATION.md](VALIDATION.md). Vid v19 kunde bannern täcka den globala arbetsyteväljarens pointerklick på 320 px och tangentbord användes för initieringshinten. Detta fynd ligger till grund för den slutprovade och publicerade v20-rättningen nedan. Autentiserad live-UI och personalens användbarhet är fortfarande inte verifierade.
+Kundkortets normala 390/320 px-vyer visar första handlingen direkt i de tidigare proven. Extra långa värden på 320 px kräver vertikal scroll. D01 publicerades i v19 och kvarstår i v22 enligt [VALIDATION.md](VALIDATION.md). Vid v19 kunde bannern täcka den globala arbetsyteväljarens pointerklick på 320 px och tangentbord användes för initieringshinten. Detta fynd ligger till grund för den slutprovade och publicerade v20-rättningen nedan. Autentiserad live-UI och personalens användbarhet är fortfarande inte verifierade.
 
 ## Global mobilheader
 
@@ -36,3 +36,10 @@ Den publicerade v20-artefakten har passerat 13/13 vanliga pointerklick utan forc
 ## Fortsatt designarbete
 
 Efter kundkortet: en konsekvent visuell hierarki för kundregister, offertunderlag och Tryck & leverans; gemensamma statusord och datum; formulär med få nödvändiga uppgifter först. Fortsätt från observerad friktion och bevara Min dags fokus på personligt arbete. Månads-/årsförsäljning, marginal och nya prospects är huvudmåtten; TB blir inget huvudmått.
+
+
+## Synlig status i privata kundflöden
+
+Vid arbete långt ned i kundplan, bearbetning och onboarding ska en kort statusyta fortsätta visa privat serversparning och en relevant nästa handling. Kundens CRM ändras först vid uttrycklig sparning där. Färg kompletterar statusorden. Långa fel och revisionsval ligger kvar i formuläret med en fokuserbar väg från statusytan; de ska inte låsas över mobilens arbetsfält.
+
+Statusytans och sparhandlingarnas verkliga höjd ger rullningsutrymme för fokus även när texten radbryts. Fälttext, serverfel och befintliga konfliktval bevaras. Förstoring, kort viewport och tangentbord provas på byggd kandidat; fysisk telefon, skärmläsare och personalacceptans kräver separat prov. Detta är en kandidat tills VALIDATION kvitterar slutkontroller och publicering.
