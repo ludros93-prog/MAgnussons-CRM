@@ -1,8 +1,10 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Uppdaterat 6 oktober 2026 med leveranser till v29. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
+Uppdaterat 6 oktober 2026 med leveranser till v30. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
 
 ## Syfte och dagligt arbete
+
+Sedan **publicerad v30** bevarar Följ upp även utkast utan anteckning. Du kan ändra kontaktresultat, datum, avslut och nästa steg, spara privat och fortsätta efter omladdning. Spara utkast & stäng, X/Escape och dialogens offert-/kundflödesvägar kräver lyckad privat sparning. Även ett orört redan skapat utkast behålls tills det kasseras uttryckligt. Privat sparning avslutar ingen CRM-uppgift eller kundkontakt; CRM-inlämning kräver fortfarande giltig anteckning och nästa steg där reglerna kräver det. Följ upp-knapparna radbryts och ryms även i kort mobilvy med fördubblad text. **28/28 isolerade browserfall**, obligatoriska kontroller och exakt-head/main-CI passerar på publicerad source `6883f97`; [VALIDATION](VALIDATION.md) skiljer kod, main, live och provgränser. Samlad specialdialogstatus/exakta CRM-fel och artikelpanelens stängningsvakt återstår som separata uppgifter.
 
 Sedan v29 samlar generella formulär privat sparstatus och besked från CRM-/stängningsförsök vid handlingsknapparna. Privat utkast sparat betyder inte att CRM har uppdaterats. Fullständiga besked och befintliga konfliktval nås med Visa besked/Granska; texten bevaras när ett försök misslyckas. Inställningar har ingen privat autosparning och reader behåller läsbehörighet. **V29 är faktiskt publicerad** från `1ca6f2b` efter grön exakt-head/main-CI, obligatoriska kontroller och 23/23 isolerade browserfall. [VALIDATION](VALIDATION.md) skiljer source/main/live och provgränser. Andra specialdialoger, fokusåtergång/mobilkundlista och personalpilot återstår.
 
