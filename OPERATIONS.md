@@ -1,5 +1,15 @@
 # Magnussons CRM – order, tryck och lager
 
+## Jämför privata leveransutkast – v36, 2026-10-06
+
+Om ordern har flera leveransutkast: jämför **Utkast för mottagningsbesked** eller **Utkast för leveranskontroll** och innehållsraderna innan du väljer **Fortsätt med detta utkast**. På Min dag får leveransutkast samma förhandsvisning. Öppna **Visa alla utkastuppgifter** för alla fem fullständiga fält, valt läge, tid med sekunder och den stabila utkastreferensen. Läs även fält som hör till det andra läget när du behöver jämföra två lika utkast. Referensen identifierar ett visst privat utkast; den anger ingen enhet eller orderrevision.
+
+**Ändrat** kan beskriva en lokal ändring. Den befintliga privata sparstatusen visar separat om servern har bekräftat sparningen, om ändringar väntar eller om ett fel/en konflikt behöver hanteras. Valet öppnar utkastet med dess befintliga originalunderlag. Förhandsvisning och innehållsvisning sparar eller registrerar inget i CRM. Under **Valt privat utkast** i dialogen kan du se vilket privat utkast du arbetar i; mottagande/leveranskontroll registreras endast genom den uttryckliga CRM-handlingen.
+
+Om innehållet inte kan läsas visas ett tydligt besked. Förhandsvisningen fyller inte i egna standardvärden och ersätter inte dina bevarade uppgifter. Använd den befintliga återhämtnings-/kopieringsvägen i dialogen.
+
+Lagring, kuvert, API och serverregler är oförändrade från v35; ingen SQL-migrering behövs. V35 är datakompatibel vid UI-återgång, men återför den äldre väljaren. Separat konto-/utkastbackup och hostingåterställning är fortsatt oprövade. [VALIDATION](VALIDATION.md) skiljer lokala syntetiska prov från verkliga konton/personal/live-UI.
+
 ## Privata leveransutkast – v35, 2026-10-06
 
 Öppna en skickad order under På väg till kunden. Välj registrering av mottagande eller problem och fyll i uppgifterna. **Spara utkast & stäng** sparar privat och stänger först när serversparningen är bekräftad. Dialogens provade stängningsvägar följer samma sparning. Vänta på privat Sparat innan du lämnar fliken; lokal reservkopia är inget löfte om offlinefunktion. Utkastet kan fortsättas från Min dag efter omladdning eller på annan enhet. Om flera privata utkast finns för ordern väljer du ett uttryckligen.
