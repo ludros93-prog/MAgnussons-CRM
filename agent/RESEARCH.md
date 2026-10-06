@@ -174,3 +174,13 @@ Tillämpningen avgränsas till generella editorer med bevarade roller, disabled-
 [W3C – Status Messages 4.1.3](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html), HTTP 200, beskriver hur väntan, förlopp och felstatus ska kunna förmedlas utan fokusbyte. V26 visar det redan befintliga laddnings-/fel-/retryflödet före current-record och håller fokuserade statusknappar fria; semantisk hjälpmedelsannonsering återstår och ingen WCAG-/skärmläsargaranti lämnas. [Error Identification 3.3.1](https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html), också HTTP 200, gäller upptäckta inmatningsfel och används inte som direkt krav för nätverksfelet vid utkastladdning.
 
 Saleshub öppnades inte på nytt efter den tidigare dokumenterade 403-begränsningen. Ingen ny Saleshub-funktion antas. Bevarad text, två retryklick/en pågående GET, request-ID och lyckad privat autosave/återupptagning verifieras i Magnussons egna isolerade slutprov i VALIDATION.
+
+## Bestående generella formulärstatusar, 6 oktober 2026
+
+Följande officiella källor öppnades denna dag och gav HTTP 200:
+
+- [W3C ARIA22](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22): role=status har implicit polite live-region; explicit aria-atomic=true rekommenderas och regionen ska finnas före uppdateringen. Magnussons behåller en textregion även i clean-formulär; inga återförsöksknappar eller tidsstämpel ingår.
+- [W3C Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) och [Alert Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/) uppmärksammar alltför pratiga besked och täta avbrott. Vår opt-in-region uppdaterar text utan fokusflytt och ändrar inga andra befintliga status-/toastkanaler. Samlad privat/CRM-status kräver en senare avgränsning.
+- [Salesforce Toast Notifications](https://developer.salesforce.com/docs/platform/lwc/guide/use-toast.html) skiljer beskedstyper och beskriver toastköer. [Limes handlingsriktlinjer](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) rekommenderar få relevanta handlingar och begripliga etiketter. Vi behåller rätt privat retry/versionval utanför textregionen och tydlig benämning Sparat som privat utkast. Detta är ingen bekräftelse av gemensam CRM-sparning.
+
+Faktisk DOM-nodpersistens, fokus/markering, clean-layout, privat autosave, CAS409 och oförändrade shared-data är verifierade i våra egna slutprov (VALIDATION). DOM-semantik bevisar inte skärmläsaruppläsning, initialmountannonsering, personalanvändbarhet eller allmän WCAG-acceptans. Saleshub öppnades inte på nytt efter tidigare dokumenterad 403; inga nya Saleshub-fakta eller konto-/integrationsanspråk görs.

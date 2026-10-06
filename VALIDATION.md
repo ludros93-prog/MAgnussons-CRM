@@ -1,3 +1,45 @@
+# Bestående status för privata formulärutkast – v27, 2026-10-06
+
+## Beteende och avgränsning
+
+Generella privata formulärutkast har en bestående textregion med role=status, aria-live=polite och aria-atomic=true. Laddning, väntande, sparning, fel och konflikt uppdateras utan fokusflytt. Tidsstämpel och återförsöks-/versionsknappar ligger utanför regionen. Ett rent formulär har en tom visuellt dold region, utan extra layoutavstånd eller falskt Sparat. Övriga DraftStatus-konsumenter behåller tidigare DOM och beteende.
+
+Ändringen är opt-in endast från FormDraftStatus. Provider, effekter, register/flush/consume, identitets-/arbetsytegräns, serverroller, CAS, request-ID, atomisk publicering, API, lagring, filer, backup, beroenden och hostingmanifest är oförändrade. Ingen migration krävs. V26 är datakompatibel återgång men återför avsaknad av generella hjälpmedelsstatusar; ingen rollback utfördes.
+
+## Faktiska slutprov
+
+- Fryst source `1a7e8417446a3d1ce3ea0873219f7627e614df8c`: full CRM/Outlook-regression (36,82 s), TypeScript (8,42 s), pnpm 11.25.0-bygge (8,81 s), isolerad workerd/D1/R2-runtime (5,51 s) och diff-check, terminal 0. Node 24.19.0. Befintliga mängd-/revisions-/acceptans-/CAS-/idempotenskrav behålls. Detta är syntetiska tekniska prov, inga riktiga kundorder eller kundgodkännanden.
+- Runtime återställer 13 500 000 byte i tre testfiler, arkiv 18 010 856 byte, verifierade hashar, korrektur-/fotolänkar, idempotent retry, privata arbetsflöden och atomisk publicering. Ingen faktisk hostingåterställning påstås.
+- Chromium mot exakt byggd HTTP-Worker och egen migrerad syntetisk D1/R2: **13/13 PASS** i en helt färsk slutkörning. Sex återhämtningsfall på 320×844, 390×844 och kort 390×460, normal och kontrollerad exakt 200 procent computed dialogtext. **23** förstoringar, **12** faktiska retry-Tab-/pointerkontroller, två konfliktknappar med Tab och en vanlig pointer-ersättning. Ingen OS/browser-zoom eller fysisk telefon påstås.
+- MutationObserver: 23 spår/152 snapshots, noll observerfel. Samma text-only polite/atomic nod genom loading → fel → tom sr-only clean → pending → saving → saved → sparfel → saved. Inga tider/knappar inne i regionen eller aria-hidden/display:none/visibility:hidden-ancestors. Inputfokus och markering bevaras. DOM-semantik är inget prov av faktisk skärmläsaruppläsning.
+- Fem loaderformtyper (kund, affär, uppgift, möte, generisk order), clean, settings och faktisk readerroll passerar. Reader har 19 disabled kontroller samt submit och inga privata anrop. Generisk note-createUI är inte nådd. Befintlig kundplan behåller exakt en egen wf-save-summary-status och ingen ny nästlad live-region i DraftStatus-detaljer.
+- **19** verkliga privata GET 200, **19** POST 200 (andra syntetiska aktören ingår), **en faktisk Worker-CAS409**. Samma enda privata id går revision 1→2→3 i konfliktfallet. Åtta GET 503 och 13 POST 503 är kontrollerade browserresponses; lyckade läsningar/skrivningar går till verklig Worker. Text och request-ID bevaras vid misslyckat försök och stängning. **0 shared CRM POST**; båda arbetsytors samtliga delade tabeller/settings/version matchar hela fixture.
+- Clean 390×460: första input och footer relativt formtop har **0 px** skillnad mot v26; inputhöjd 44 px och hela formhöjden är oförändrade. Tom status lägger inget nytt gridavstånd.
+- **42 bilder** och reproducibel harness utanför Git. Root granskade final sparstatus och faktisk CAS409 vid 200 procent text. Samtliga **96 distfiler/source/tree/Worker** är byteidentiska före/efter; gitclean. Egen PID 70874 stoppad terminal 143, portar 8920/8921 stängda och bara ägd temporär store NxK7UH borttagen.
+- Slutrapport `scratch/generic-draft-announcements-browser/final-1a7e841/report.json`, SHA256 `c3ec0220fc1c8ae96bf1d9b6434dcaca2df65f95bf9c4c540e9a08ad2c573603`. counts, request-ID-/revisioner, snapshots, artefaktindex, source-integrity, teardown och bilder ligger utanför det publika repot.
+
+## Baseline och ej publicerad kandidat
+
+Faktisk v26/809b77e-baseline visar synlig laddning och fel/retry men inga role=status/aria-live/aria-atomic i generellt DraftStatus. Verkligt retry-GET 200 utan privat POST och oförändrade snapshots. Baselinjerapport SHA256 `fbc30ff610714d72a9f83befa51e2160d3edcd57b68a4512bfa4eae7a1509261`.
+
+Första källa c653839 passerade 13 fall men gav extra 14 px clean-gridgap. Den har aldrig pushats till Sites, sparats eller publicerats. Två defaultkundplan-locatorfel (förifylld textarea i labelnamn och fel relativ has-scope) korrigerades utan produkt-/kravändring; originalrapporter bevaras. De första tolv PASS återanvändes endast inom den kandidatens fortsättning. Final 1a7-körningen är däremot helt färsk 13/13 utan continuation eller återanvänt kandidat-PASS. Båda kandidatservrar/lager och baselineserver städades separat.
+
+## Källa, main, artefakt och live
+
+[PR #26](https://github.com/ludros93-prog/MAgnussons-CRM/pull/26), exakt head `d4b5930fb17c63c0396144bb62ce175fd06e92f3`, passerade samtliga 13 CI-steg i körning 37443819268/jobb 112203701566, success observerat 09:35:36 UTC. App-main `7288f82a43c90f33f51d5911381bcc0a4badc0ee` och Sites-källa `1a7e8417446a3d1ce3ea0873219f7627e614df8c` har samma träd `93b957280fea53cff897101e03d267a70be06a64`. Även app-main-CI 37444304647/jobb 112205295134 passerade alla 13 steg, observerat 09:40:00 UTC. V27 publicerades 09:40:40 UTC på samma [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), med lyckad deploy, exakt oförändrad custom-policy och envrevision 1/DB/BUCKET. Färska metadata verifierar källa/version/deploy; anonyma GET / och /api/crm gav 403/403 med bortkastade kroppar. Inga riktiga kundskrivningar.
+
+- Worker SHA256 `865528f9038ce8f5e82175c72cec03ca89ecb8867611598e78ae941ad65ecebe`.
+- Dist SHA256 `dd1ed3e28f87f9c62b1fed9b6d9f2e2581c96c10609cd654c2f96acd45b0a0af`: sorterad kompakt JSON av path/sha256/bytes, sorterade objektnycklar.
+- Normal Sites-source-push 809b77e→1a7e841 bekräftades terminal 0 före save/deploy. Ingen force eller publish-on-push. Saknad officiell helper hanterades med etablerad stdin/childENV-fallback; inga credentials i filer/argv/output, credentials rensade efter användning.
+- Gzip SHA256 `8128e9efc979f9779a269c39960d032e97956c8b28135156c789f4f85ac8e203`, **97 filer** endast dist och hostingmanifest; oförändrat efter save. Version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_04634ba28790819186fa4eeb37d3ee90`. Backendens normaliserade tar `sha256:626918e163e5d46a2dc224f7f02e9ba00ff743900ba9efd51764742ade9a9ffe`, 4229120 byte/97 filer.
+- Deploy `appgdep_6ac4c202a3208191a50a8901f6ec6973` succeeded, deployedAt `2026-10-06T09:40:40.058127+00:00`. Ingen ny Site, databas, R2-binding, miljörevision eller delning.
+
+## Nästa underlag
+
+Samlad/sticky privat- och CRM-spar-/felstatus, stängningsbesked, andra specialdialogers hjälpmedelsarbete, fokusåtergång och mobilkundlista kvarstår. B01b2, hostingbudget/återställningsrutin och personalpilot är fortsatt prioriterade. Faktisk skärmläsaruppläsning, initialmountuppläsning, fysisk telefon/OS-tangentbord, autentiserad live-UI, personal och riktiga integrationer är oprövade. Codex-referensen är oläst eftersom relevant read_thread saknas. Den efterföljande Markdownkvittensen har egen exakt-head CI och återpublicerar inte appen; slutlig dokumentations-main/checks rapporteras i PR-kvittensen.
+
+---
+
 # Synliga privata utkastfel och tillgängligt återförsök – v26, 2026-10-06
 
 Startbas var färsk main `535b68ea539836d015414a28b51f37828e1df165` och live v25 från `03d2e61a0559eb03e4b2e5275a0ab95d4c6a34d9`. Egna worktrees/branch och atomisk körningsreservation användes; fjärrrevisioner, PR:er, andra lokala ändringar och Site kontrollerades. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst: endast Slack read_thread är anropbart. Explicit brief och repo-underlag användes.

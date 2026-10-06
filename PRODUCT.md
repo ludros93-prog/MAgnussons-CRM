@@ -1,6 +1,6 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Uppdaterat 6 oktober 2026 med leveranser till v25. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
+Uppdaterat 6 oktober 2026 med leveranser till v27. Verifierad main, publicerad bas och kvarvarande pilotkrav skiljs åt i [STATUS-2026-10-05.md](STATUS-2026-10-05.md). Det ursprungliga v13-underlaget nedan utgår från arbetet den 16 september. Dagliga rutiner, driftgränser och verifieringsresultat finns i OPERATIONS.md. Microsoft-anslutningens omfattning finns i OUTLOOK.md.
 
 ## Syfte och dagligt arbete
 
@@ -102,3 +102,9 @@ Privata utkast, konflikter, serverroller och godkännanden behåller sina regler
 Laddning, feltext och Försök igen syns nu i stödda generella formulär även före ett läst privat record. Vid nätverks-/sparfel behålls öppna uppgifter; efter lyckat återförsök kan privat utkast återupptas med senaste text. Tab-fokus på utkastets statusknappar rullar dem fritt från verklig footer på den provade ytan.
 
 Detta är en avgränsad presentation/fokusförbättring. Ingen provider-/CAS-/request-ID-/roll-/lagringsändring och ingen automatisk CRM-skrivning eller påhittad kundacceptans. Rent formulär/settings/reader får ingen falsk privat sparbekräftelse. VALIDATION skiljer10/10 isolerade browserfall, full regression/runtime och faktisk v26-publicering från personal-, telefon-, konto- och hostingåterställningsprov. Samlad/sticky status och hjälpmedelsannonsering kvarstår.
+
+## Privat utkaststatus i generella formulär – v27
+
+Generella privata formulärutkast har en bestående textregion med role=status, aria-live=polite och aria-atomic=true. Laddning, väntande, sparning, fel och konflikt uppdateras utan fokusflytt. Tidsstämpel och återförsöks-/versionsknappar ligger utanför regionen. Ett rent formulär har en tom visuellt dold region, utan extra layoutavstånd eller falskt Sparat. Övriga DraftStatus-konsumenter behåller tidigare DOM och beteende. Kund, affär, uppgift, möte och generisk order är browserprovade; generisk note-createUI ingår inte i dessa prov. Inställningar och läsare får inga nya privata skrivningar.
+
+13/13 nya isolerade Worker/Chromiumfall och obligatoriska kontroller passerar, med faktisk privat CAS409 och oförändrade shared-data. Publicerad källa `1a7e8417446a3d1ce3ea0873219f7627e614df8c` och app-main `7288f82a43c90f33f51d5911381bcc0a4badc0ee` har samma träd. Se STATUS/VALIDATION för exakt deploy och gränser. Samlad/sticky privat+CRM-status och faktisk skärmläsar-/personalacceptans återstår.
