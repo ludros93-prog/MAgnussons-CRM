@@ -22,6 +22,7 @@ compileModule('app/api/crm/backup/route.ts','work/backup-api.mjs');
 const api=await import('../work/api.mjs'),core=await import('../work/core.mjs');
 const headers={'oai-authenticated-user-id':'test-admin','oai-authenticated-user-email':'ludwig.rosenberg@kraftringen.se'};
 const get=async(space='demo')=>{const r=await api.GET(new Request('https://crm.test/api/crm?space='+space,{headers}));assert.equal(r.status,200);return r.json()};
+const orderWork=await import('../work/order-work.mjs');
 const conflicts=await import('../work/record-conflicts.mjs'),quantities=await import('../work/production-quantities.mjs'),direct=await import('../work/direct-delivery.mjs');
 // Production records instants; receipts and direct shipments record Swedish
 // calendar dates. Midnight differs from UTC by one hour in winter and two in summer.
@@ -40,7 +41,7 @@ assert.throws(()=>direct.latestDispatch({production:{dispatchedAt:'Ogiltig äldr
 assert.throws(()=>direct.latestDispatch({production:{dispatchedAt:'2025-07-15Tinvalid'},directShipments:[]}),/Avsändningstidpunkten är ogiltig/,'A readable date prefix does not establish a valid dispatch instant.');
 const expectedRecord=(state,type,data)=>{const row=conflicts.editableRecord(state,type,data?.id||'');return row?conflicts.recordBasis(row):undefined};
 // Existing whole-order scenarios explicitly select all currently available rows.
-const movementData=(state,type,data)=>{if(type==='company_event')return {expectedContext:conflicts.companyEventBasis(state,data.id||''),...data};if(['prospecting','onboarding','plan'].includes(type))return {expectedContext:conflicts.customerWorkflowBasis(state,type,data.customerId),...data};if(['production_issue','production_issue_resolve'].includes(type)){const p=state.orders.find(o=>o.id===data.orderId)?.production;return {...data,expectedProduction:data.expectedProduction||quantities.productionBasis(p)};}if(!['production_received','production_printed','production_dispatched'].includes(type))return data;const p=state.orders.find(o=>o.id===data.orderId)?.production;if(!p)return data;const key=type==='production_received'?'toReceive':type==='production_printed'?'toPrint':'toDispatch';return {expectedProduction:quantities.productionBasis(p),entries:quantities.productionProgress(p).filter(r=>r[key]>0).map(r=>({lineId:r.line.id,quantity:r[key]})),address:p.deliveryAddress,...data}};
+const movementData=(state,type,data)=>{if(['receipt_issue','receipt_confirm'].includes(type))return {expectedContext:orderWork.receiptBasis(state,data.orderId),...data};if(type==='company_event')return {expectedContext:conflicts.companyEventBasis(state,data.id||''),...data};if(['prospecting','onboarding','plan'].includes(type))return {expectedContext:conflicts.customerWorkflowBasis(state,type,data.customerId),...data};if(['production_issue','production_issue_resolve'].includes(type)){const p=state.orders.find(o=>o.id===data.orderId)?.production;return {...data,expectedProduction:data.expectedProduction||quantities.productionBasis(p)};}if(!['production_received','production_printed','production_dispatched'].includes(type))return data;const p=state.orders.find(o=>o.id===data.orderId)?.production;if(!p)return data;const key=type==='production_received'?'toReceive':type==='production_printed'?'toPrint':'toDispatch';return {expectedProduction:quantities.productionBasis(p),entries:quantities.productionProgress(p).filter(r=>r[key]>0).map(r=>({lineId:r.line.id,quantity:r[key]})),address:p.deliveryAddress,...data}};
 const post=async(st,type,data,space='demo',id=crypto.randomUUID())=>{const r=await api.POST(new Request('https://crm.test/api/crm',{method:'POST',headers:{...headers,'Content-Type':'application/json',Origin:'https://crm.test'},body:JSON.stringify({space,version:st.version,requestId:id,expectedRecord:expectedRecord(st,type,data),type,data:movementData(st,type,data)})}));return{status:r.status,data:await r.json(),id}};
 let st=await get();assert.equal(st.customers.length,8);assert.equal((await get()).version,st.version);assert.equal((await get('live')).customers.length,0);
 let result=await post(st,'deal',{...st.deals[0],stage:'won',confirmed:false});assert.equal(result.status,400);
@@ -216,7 +217,7 @@ console.log('PASS: role-specific queues/visibility, real print and warehouse API
 
 // Daily-work drafts have their own revision and private identity partition.
 compileModule('app/api/crm/drafts/route.ts','work/draft-api.mjs');
-const draftApi=await import('../work/draft-api.mjs'),orderWork=await import('../work/order-work.mjs');
+const draftApi=await import('../work/draft-api.mjs');
 const draftRead=async(id='',who=headers,space='live')=>{const r=await draftApi.GET(new Request('https://crm.test/api/crm/drafts?'+new URLSearchParams({space,...(id?{id}:{})}),{headers:who}));return{status:r.status,data:await r.json()}};
 const draftWrite=async(data,who=headers,space='live')=>{const r=await draftApi.POST(new Request('https://crm.test/api/crm/drafts',{method:'POST',headers:{...who,Origin:'https://crm.test','Content-Type':'application/json'},body:JSON.stringify({space,...data})}));return{status:r.status,data:await r.json()}};
 assert.equal((await draftApi.GET(new Request('https://crm.test/api/crm/drafts?space=live'))).status,401);
@@ -416,3 +417,5 @@ await (await import('./prospect-suppression.mjs')).verifyProspectSuppression({co
 await (await import('./seller-profiles.mjs')).verifySellerProfiles({core,sqlite,get,post,headers,api,conflicts,dashboards});
 await (await import('./customer-responsibility.mjs')).verifyCustomerResponsibility({core,ops,sqlite,get,post,headers,api,conflicts,dashboards});
 await (await import('./customer-workflow-drafts.mjs')).verifyCustomerWorkflowDrafts({core,sqlite,get,headers,api,conflicts});
+
+await (await import('./receipt-concurrency.mjs')).verifyReceiptConcurrency({core,get,post,api,headers,sqlite});
