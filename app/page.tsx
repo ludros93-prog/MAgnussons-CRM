@@ -56,7 +56,7 @@ function Empty({children}:{children:ReactNode}){return <div className="empty"><d
 // Keep the active form control clear of the actual, possibly wrapped action bar.
 function revealFormControl(event:FocusEvent<HTMLDivElement>){
  const field=event.target;
- if(!(field instanceof HTMLElement)||!field.matches('input,textarea,[role=combobox]')||!field.closest('.edit-form')||field.closest('.form-footer'))return;
+ if(!(field instanceof HTMLElement)||!field.matches('input,textarea,[role=combobox],.draft-status button')||!field.closest('.edit-form')||field.closest('.form-footer'))return;
  const sheet=event.currentTarget;
  requestAnimationFrame(()=>{
   if(!field.isConnected||document.activeElement!==field||!sheet.contains(field))return;

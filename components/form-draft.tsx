@@ -14,5 +14,5 @@ export function FormDraftStatus({form,register,onResolved,onClosed}:{form:FormDr
   else if(current&&recordBasis(current.data)!==recordBasis(form))w.update(current.id,form,title);
  },[form,current?.id,w.ready,supported]);
  useEffect(()=>{register(supported?{flush:()=>!w.ready?Promise.resolve(null):current?w.flush(current.id):Promise.resolve(dirty?null:undefined),consume:()=>{if(current)w.consume(current.id)}}:null);return()=>register(null);},[form.draftId,current?.id,w.ready,supported,dirty]);
- return supported&&current?<DraftStatus id={current.id} onClosed={onClosed} onResolved={data=>onResolved(data as FormDraft)}/>:null;
+ return supported&&(!w.ready||current)?<DraftStatus id={form.draftId} onClosed={onClosed} onResolved={data=>onResolved(data as FormDraft)}/>:null;
 }
