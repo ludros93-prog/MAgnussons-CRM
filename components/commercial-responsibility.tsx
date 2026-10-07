@@ -1,5 +1,6 @@
 'use client';
 
+import {restoreHandoverFocus} from './handover-focus';
 import {useEffect,useRef,useState,type FocusEvent} from 'react';
 import {AlertTriangle,ArrowRightLeft} from 'lucide-react';
 import {Button} from '@/components/ui/button';
@@ -14,7 +15,7 @@ import {BusinessField as F,displayDate,type SaveAction} from './business-ui';
 
 type Snapshot=ReturnType<typeof commercialResponsibilityCandidates>;
 type Draft={expectedContext:string;snapshot:Snapshot;targetProfileId:string;selectedTaskIds:string[];reason:string;reviewed:boolean};
-type Props={st:State;targetType:'deal'|'order';targetId:string;save:SaveAction;busy:boolean;refresh:()=>Promise<void>;onClose:()=>void};
+type Props={st:State;targetType:'deal'|'order';targetId:string;save:SaveAction;busy:boolean;refresh:()=>Promise<void>;onClose:()=>void;returnFocus?:()=>HTMLElement|null};
 const profileLabel=(profile:Snapshot['targetProfiles'][number])=>profile.displayName+' · '+profile.legacyOwnerName;
 const buttonClass='h-auto min-h-11 max-w-full min-w-0 whitespace-normal';
 const taskMeta=(task:Task)=>displayDate(task.due)+' · ansvarig '+task.owner;
@@ -23,7 +24,7 @@ function takeSnapshot(st:State,targetType:Props['targetType'],targetId:string):S
  return structuredClone(commercialResponsibilityCandidates(st,targetType,targetId));
 }
 
-export function CommercialResponsibility({st,targetType,targetId,save,busy,refresh,onClose}:Props){
+export function CommercialResponsibility({st,targetType,targetId,save,busy,refresh,onClose,returnFocus}:Props){
  const currentBasis=commercialResponsibilityBasis(st,targetType,targetId);
  const [draft,setDraft]=useState<Draft>(()=>{
   const snapshot=takeSnapshot(st,targetType,targetId);
@@ -100,7 +101,7 @@ export function CommercialResponsibility({st,targetType,targetId,save,busy,refre
 
  return <>
   <Dialog open onOpenChange={value=>{if(!value)close();}}>
-   <DialogContent className="business-ui max-h-[90dvh] overflow-y-auto break-words sm:max-w-2xl" showCloseButton={false} onFocusCapture={revealFocusedControl} onEscapeKeyDown={e=>{if(locked||submitLock.current)e.preventDefault();}} onInteractOutside={e=>{if(locked||submitLock.current)e.preventDefault();}} onCloseAutoFocus={e=>{if(opener.current?.isConnected){e.preventDefault();opener.current.focus({preventScroll:true});}}}>
+   <DialogContent className="business-ui max-h-[90dvh] overflow-y-auto break-words sm:max-w-2xl" showCloseButton={false} onFocusCapture={revealFocusedControl} onEscapeKeyDown={e=>{if(locked||submitLock.current)e.preventDefault();}} onInteractOutside={e=>{if(locked||submitLock.current)e.preventDefault();}} onCloseAutoFocus={e=>{if(returnFocus){restoreHandoverFocus(e,opener.current,returnFocus);return;}if(opener.current?.isConnected){e.preventDefault();opener.current.focus({preventScroll:true});}}}>
     <DialogHeader className="min-w-0">
      <div className="flex items-start justify-between gap-3"><DialogTitle className="flex min-w-0 flex-1 items-center gap-2"><ArrowRightLeft className="shrink-0" size={19}/><span className="min-w-0">{title}</span></DialogTitle><Button type="button" className={buttonClass} variant="outline" disabled={locked} onClick={close}>Stäng</Button></div>
      <DialogDescription>{snapshot.customer?.name||'Kundkopplingen saknas'} · {recordName}. Välj ny ansvarig och granska de öppna åtagandena.</DialogDescription>

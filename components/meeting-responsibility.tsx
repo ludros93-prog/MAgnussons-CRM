@@ -1,5 +1,6 @@
 'use client';
 
+import {restoreHandoverFocus} from './handover-focus';
 import {useEffect,useId,useRef,useState,type FocusEvent} from 'react';
 import {AlertTriangle,ArrowRightLeft} from 'lucide-react';
 import {Button} from '@/components/ui/button';
@@ -14,13 +15,13 @@ import {BusinessField as F,displayDate,type SaveAction} from './business-ui';
 
 type Snapshot=ReturnType<typeof meetingResponsibilityCandidates>;
 type Draft={identity:string;expectedContext:string;snapshot:Snapshot;targetProfileId:string;reason:string;reviewed:boolean};
-type Props={st:State;meetingId:string;space:string;save:SaveAction;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void};
+type Props={st:State;meetingId:string;space:string;save:SaveAction;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void;returnFocus?:()=>HTMLElement|null};
 const buttonClass='h-auto min-h-11 max-w-full min-w-0 whitespace-normal';
 const identityFor=(st:State,space:string,meetingId:string)=>JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',st.viewer?.role||'',meetingId]);
 const profileLabel=(profile:Snapshot['targetProfiles'][number])=>profile.displayName+(profile.displayName===profile.legacyOwnerName?'':' · '+profile.legacyOwnerName);
 const takeSnapshot=(st:State,meetingId:string):Snapshot=>structuredClone(meetingResponsibilityCandidates(st,meetingId));
 
-export function MeetingResponsibility({st,meetingId,space,save,busy,refresh,onClose}:Props){
+export function MeetingResponsibility({st,meetingId,space,save,busy,refresh,onClose,returnFocus}:Props){
  const selectedProfileDescriptionId=useId(),identity=identityFor(st,space,meetingId),currentIdentity=useRef(identity);currentIdentity.current=identity;
  const currentBasis=meetingResponsibilityBasis(st,meetingId),admin=st.viewer?.role==='admin',initialized=st.settings.sellerProfilesInitialized;
  const [draft,setDraft]=useState<Draft>(()=>({identity,expectedContext:currentBasis,snapshot:takeSnapshot(st,meetingId),targetProfileId:'',reason:'',reviewed:false}));
@@ -102,7 +103,7 @@ export function MeetingResponsibility({st,meetingId,space,save,busy,refresh,onCl
 
  return <>
   <Dialog open={visible} onOpenChange={value=>{if(!value)close();}}>
-   <DialogContent className="business-ui meeting-responsibility-dialog max-h-[90dvh] overflow-y-auto break-words sm:max-w-2xl" showCloseButton={false} onFocusCapture={revealFocusedControl} onEscapeKeyDown={event=>{if(locked||submitLock.current||discard)event.preventDefault();}} onInteractOutside={event=>{if(locked||submitLock.current||discard)event.preventDefault();}} onCloseAutoFocus={event=>{if(opener.current?.isConnected){event.preventDefault();opener.current.focus({preventScroll:true});}}}>
+   <DialogContent className="business-ui meeting-responsibility-dialog max-h-[90dvh] overflow-y-auto break-words sm:max-w-2xl" showCloseButton={false} onFocusCapture={revealFocusedControl} onEscapeKeyDown={event=>{if(locked||submitLock.current||discard)event.preventDefault();}} onInteractOutside={event=>{if(locked||submitLock.current||discard)event.preventDefault();}} onCloseAutoFocus={event=>{if(returnFocus){restoreHandoverFocus(event,opener.current,returnFocus);return;}if(opener.current?.isConnected){event.preventDefault();opener.current.focus({preventScroll:true});}}}>
     <DialogHeader className="min-w-0">
      <div className="meeting-responsibility-head"><DialogTitle className="flex items-start gap-2"><ArrowRightLeft className="shrink-0" size={19}/><span className="min-w-0">{title}</span></DialogTitle><Button type="button" className={buttonClass} variant="outline" disabled={locked||discard} onClick={close}>Stäng</Button></div>
      <DialogDescription>{snapshot.customer?.name||'Kundkopplingen saknas'} · {meeting?.title||'Mötet finns inte längre'}. Granska ansvar för det här mötet.</DialogDescription>
