@@ -1,6 +1,19 @@
 # Magnussons CRM – order, tryck och lager
 
-## Läsa arbetsdagen med större text – v46
+## Hitta kunden och öppna kundkortet – v47
+
+1. Öppna **Kunder**. Sök som tidigare eller välj ansvarig för att begränsa urvalet.
+2. Läs kundnamn, kontaktperson och kundansvarig. Ett besked om äldre/felaktig ansvarskoppling är ett granskningsbehov; visningen tilldelar ingen person automatiskt.
+3. Läs **Nästa öppna uppgift** eller **Nästa planerade CRM-möte**. Datum, eventuell mötestid och ansvarig kommer från befintligt arbete. Om inget sådant finns visas det uttryckligen. Kundens **Nästa avstämning** står separat och är inte en automatiskt skapad aktivitet.
+4. Välj **Öppna kundkort** med pointer eller Tab/Enter för att fortsätta i samma befintliga kundkort. Att öppna eller läsa registrerar ingen kontakt, avslutar inget arbete och ändrar inget ansvar.
+
+Ett tomt sökurval ber dig ändra sökning eller ansvarsurval. Ett verkligt tomt register får ett eget besked. Endast administratör/säljare får skapa-kund-knappen; serverns roller och produktionsvy gäller fortsatt.
+
+Ändringen omfattar fyra presentationsfiler: nya `components/customer-register.tsx` och `app/customer-register.css`, importen i `app/layout.tsx` och kundregisterrenderingen i `app/page.tsx`. Övriga 272 spårade basfiler är byteidentiska; modeller, provider, API, serverroller, privat sparning, CAS/idempotens, DB/R2 och driftkonfiguration består. Ingen SQL-migration eller nytt lagringsformat införs. Kvitto `/workspace/scratch/crm47/compatibility.json`, SHA256 `d1cf6440b490580c73cd0f1d571891a5253aaf839e7ff48cc08dbf032b89fa0e`. V46 är formatkompatibel som UI-återgång men återför den breda kundtabellen. Äldre modellbundna återgångsgränser, inklusive v44:s risk att skriva bort mötesprofil/historia, består. Ingen faktisk live-rollback eller hostingåterställning utfördes.
+
+Fem slutkontroller och 17 lokala browserfall passerar på slutkandidat `418531aa80e359ece524352a22a26a6cbc571e8d`; app-PR #68 är sammanslagen till app-main `6102c4eb2b47913a303ba03da6ffdd1e9f807f6b` med gröna exakt-head/main-checks. Sites v47 är publicerad 2026-10-07 08:52:19 UTC från verifierad source `b3118e0671a1967e90c14f3e2d9fd46893b05452`. Riktiga konto-/personalprov återstår. [VALIDATION](VALIDATION.md) anger slutkandidat och provgränser. Ett separat prov visade att stängning av kundkortet med Escape tappar fokus till BODY både i v46 och v47; återgång till öppningsknappen är inte verifierad och behöver rättas separat, tillsammans med fokus efter arbetsytebyte. Autentiserad live-UI, fysisk telefon och observerat personalarbete återstår att prova.
+
+## Historik: Läsa arbetsdagen med större text – v46
 
 I **Min dag** får privat utkaststatus, fokusetikett och tomma paneltexter radbrytas inom sin yta. Läs hela statusbeskedet före nästa handling. **Privat utkast** och **inlämnat till CRM** betyder fortfarande olika saker; att texten får plats ändrar inte sparutfallet. Fortsätt med befintliga **Fortsätt**, **Följ upp** och kund-/möteshandlingar.
 
