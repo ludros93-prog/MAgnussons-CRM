@@ -1,4 +1,62 @@
-# Mobilmeny på korta skärmar – v40, 2026-10-07
+# Granskat affärs- och orderansvar – v41, 2026-10-07
+
+## Beteende och avgränsning
+
+Administratören kan välja **Byt affärsansvar** för en öppen affär som varken är vunnen/förlorad eller har en order, och **Byt orderansvar** för en order som ännu inte är uppföljd. Välj en annan aktiv, granskad säljarprofil, ange orsak och granska överlämningen. Nödvändiga öppna affärs-/orderåtaganden följer alltid med; valfria kopplade aktiviteter väljs uttryckligen och är inte valda från början. Valet av ny ansvarig börjar tomt.
+
+Överföringen förankrar affärens eller orderns ansvar i ett stabilt `ownerProfileId`. Serverägd historia bevarar gamla/nya profil-ID:n, namn-/ansvarssnapshots, berörda uppgifter, orsak, tid och autentiserad aktör. Ansvar, valda uppgifter och historik skrivs tillsammans med fryst underlag, CAS och befintligt request-ID-skydd. Föråldrat underlag kräver ny granskning; generella formulär/import får inte kringgå det kontrollerade ansvarsbytet eller skriva egen överföringshistorik. Ett fel eller obekräftat svar bevarar orsak och val; första försöket kan redan ha lyckats.
+
+Detta är en avgränsad B01b2-del. Kundansvar, historiska fakturor, vunna affärers ansvar, prospectattribution och mål flyttas inte. Produktionsanspråk, registrerade mängder, revisioner och kundgodkännanden bevaras. Befintliga tomma ansvar-ID:n migreras inte automatiskt från namn eller mejl. Stabilt ID används efter uttrycklig granskning och underlag; hela kund-/uppgifts-/mötes-/specialflödesmigreringen och personalavveckling är inte genomförda. Säljar-, läsar- och produktionsroller får ingen ny administrativ eller privat åtkomst. Ingen integration, kundacceptans, faktura eller utskick skapas.
+
+## Faktiska slutprov
+
+På faktisk main-bas a495e67 reproducerades i isolerad domän/minneslagring att generiskt orderansvarsbyte från A till B lämnade överlämningsuppgift hos A, utan stabilt ansvar-ID eller historik. Detta är en domänreproduktion, inte ett live-UI-prov.
+
+Endast run-024601 räknas. Tidigare partiella/gröna omkörningar är diagnostik, inklusive korrigerade harness-ID:n, historikflik och produktions-assignee user_id. Slutlig harness kräver alla verkliga tabellnycklar; tidigare felaktiga Outlook-tabellnamn/.get(None) ersattes av explicita existens- och oförändratprov. Appens upptäckta smalskärmsöverflöde rättades före fryst slutkandidat. Inga tidigare fall adderas till slutantalet.
+
+Superseded kandidater, avbrutna harnessförsök och tidigare del-PASS räknas inte som slutprov.
+
+Slutkandidaten passerade `node tests/outlook.mjs`, icke-inkrementell TypeScript (`--noEmit --incremental false`), `corepack pnpm build`, `node tests/runtime-smoke.mjs` och `git diff --check`: samtliga fem exit 0. Kvitto `/workspace/scratch/crm41/final-checks-4/checks.json`, SHA256 `0a2a4169b2fb54d36077855ab3009ad3d10061ab90cd7dd6a198be2e46b334cf`. Node 24.19.0/pnpm 11.25.0: alla fem obligatoriska slutkontroller passerade på ren oförändrad kandidat: CRM/Outlook-regressioner, TypeScript, Worker-/klientbygge, isolerad runtime-smoke och diff-kontroll. Regressionerna täcker bland annat 40→45 med förnyad accept, 50→48 med dokumenterat godkännande, kassation, delleverans, dubbelklick, behörigheter, CAS och privat utkastflöde. Testkonton och data är syntetiska; detta verifierar inte faktiska integrationer eller personalens användning.
+
+21 unika browserfall passerade på b382ddc/tree4e47 med samma byggda Worker och oförändrad distmanifest. Rapporten har inga browserfel eller externa anrop.
+
+Granskad affärs-/orderöverlämning, obligatoriska/valfria uppgifter, faktiskt dubbelklick och en överlämningshistorik, förlorad kvittens med samma intent/ID, transportfel, verkligt lokalt samtidig API-ändring och 409 följt av explicit nytt underlag och ny granskning, busy/stängningsskydd, osparad råtext/native beforeunload och fokus. Säljare/läsare/produktion/tryck/lager saknar adminingång; produktionens Ditt jobb bevaras för faktisk syntetisk user_id. Viewport 320×360, 390×844 och 1280×900; uppmätt dubblerad text i dialog och Select, Tab/ShiftTab och synligt fokus.
+
+Egen faktisk byggd HTTP Worker, migrerad D1 och R2 med syntetiska identiteter. Positiva överlämningar tillåter endast crm_spaces, målets crm_deals eller crm_orders, crm_tasks, crm_events och crm_mutations. Alla 18 verkliga tabellnycklar krävs, övriga 13 tabeller jämförs oförändrade, inklusive outlook_connections/items/oauth_states. Två icke-tomma R2-filer och annan arbetsyta bevaras. Egna portar 9092/9093 stängdes och egen temporär lagring raderades. Transportfel/held/lost ACK simuleras endast i lokal transport; själva positiva skrivningen använder den byggda API:n.
+
+Root har sett slutrapportens 390x844.png, 320x360-text200.png och 390x844-select.png. Textval och fokus syns utan horisontellt överflöde; dialogen går att rulla. Dubblerad text är endast mätt för dialog/Select, inte full browserzoom, skärmläsare, fysisk telefon eller personalprov.
+
+Definitiv browserrapport run-024601: `/workspace/scratch/crm41-browser/run-024601/report.json`, SHA256 `da9b79c1c9bfb95842084865aaedbd160efd24562f0b74e9680b8e6bb4ec21db`.
+
+Rootens slutbrowserkvitto: `/workspace/scratch/crm41/browser-receipt.json`, SHA256 `75094dec60d2e405117a78c803a593ae81a8baf40615c54fadc62cf863ab11de`.
+
+Slutlig byggd workerd med egen persisterad D1/R2 återställer tre syntetiska filer om totalt 13 500 000 byte med verifierade hashvärden, korrektur-/fotolänkar och referenser. Första fulla filbackuppaketet är 18 010 954 byte. Ett senare separat backup-/återställningsprov efter kommersiell överlämning verifierar nya ansvar-ID:n/historik, filhashar/länkar och rensade kontolänkar; dess Content-Length verifieras i runtime men den paketstorleken redovisas inte som första paketets. Äldre format läses med standardvärden i isolerad API/regression. Detta är inte återställning i faktisk hosting. Isolerat restorekvitto `/workspace/scratch/crm41/runtime-restore-receipt.json`, SHA256 `613ad0fba029e677b147a00ff4c2a1e4408b689734a5c26955c07a450c98ec8c`; kompatibilitetskvitto `/workspace/scratch/crm41/data-compatibility-receipt.json`, SHA256 `a2b55eca0686e7f6b75d352659b36a7c872623971ee00cf092171f5f4ac170fe`. Detta är ingen faktisk hostingåterställning.
+
+## Källa, main och live
+
+Fryst lokal kandidat `b382ddc641425a55ab61f2ed3e86cbf715bcfa26`, träd `4e47ac0afea31f7ceb62510b10a6792737225759`; [app-PR #56](https://github.com/ludros93-prog/MAgnussons-CRM/pull/56)-head `89b13f0699d867a8344dd2aa08784d3ea64a963d`, app-main `a6f01de68876d87307b0aca8dd4aa80e71f0dbc3` och pushad Sites-källa `aeca68c4d0b222ae1a7cc9517d9d1d982ed61b2c` har samma hela källträd och redovisas separat. Exakt-head CI [37562980627](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37562980627)/jobb `112604247780` och app-main CI [37563859649](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37563859649)/jobb `112607018384` är completed/success med samtliga 13 steg vardera.
+
+Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2` publicerade **v41** från den verifierade källrevisionen: version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_a32e858aa4a88191826161af9fde9f82`, deploy `appgdep_6ac5b3f483dc8191a36b42d1aa8f8818`, **succeeded 2026-10-07T02:52:46.615703+00:00**, på https://magnussons-crm.rosen123.chatgpt.site. Ägare, begränsad custom-delning, DB/BUCKET och envrevision 1 är verifierat bevarade. Anonyma GET `/` och `/api/crm?space=live` gav 403/403 vid `2026-10-07T02:53:09.988580+00:00`; kropparna sparades inte. Detta är inget autentiserat kontoprov. Senare dokumentations-main/checks kvitteras separat; docsmerge återpublicerar inte appen.
+
+Publiceringspaketet innehåller 97 filer och 4485120 råtarbytes, råtar SHA256 `1f05ebbf0d2c687e647ba4ebe221980b2bb349226ccbfc800156eac7a9a7d322`, gzip SHA256 `10c733f060b2b77c54429c3fb413556b4153a899705dffe4e3c98e96ee6f02f2`. Native metadata har exakt `sha256:1f05ebbf0d2c687e647ba4ebe221980b2bb349226ccbfc800156eac7a9a7d322`, samma antal/byte­längd. Alla 264 spårade källfiler bytejämfördes mellan kandidat och pushad source. Manifest och 96 byggfiler verifierades mot canonical tar med root hostingmanifest och dist-prefix: 97 filer, lexikal ordning, mode0644/uid0/gid0/mtime0. Lokal gzip/råtarhash och native återläst arkivmetadata matchar. Ingen hämtning av native arkivbytes påstås.
+
+Fryst kandidats källmanifest: `/workspace/scratch/crm41/candidate-manifest.json`, SHA256 `23a6db60cbf07166dd15a35808b0e4582caa329ebddad16e04fd104eb1243330`.
+
+Fryst slutbygges manifest: `/workspace/scratch/crm41/dist-manifest.json`, SHA256 `7a0bfee693a201ac14dcad657a9d40ae78f3485c1f61ea491140d4a02f43bca9`.
+
+## Datakompatibilitet och kvarstående arbete
+
+Additiva ID-/historikfält lagras i befintliga JSON-poster; ingen SQL-migrering krävs. Äldre exporter kan läsas med tomma standardvärden för de nya fälten. Det gör **inte v40 till en säker skrivande rollback**: dess äldre scheman kan strippa nya ansvar-ID:n och historik vid nästa skrivning. Behåll den nya modellen, serverreglerna och kompatibel klient genom en schemabevarande framåträttning eller verifierad datamedveten återställningsväg. Ingen faktisk live-rollback eller hostingåterställning har genomförts. CRM-backup bevarar kommersiella ID:n/historik men aktuella kontolänkar rensas i målmiljön och måste väljas uttryckligt igen. Privata utkast, konton och Outlook ingår fortfarande inte.
+
+Nästa avgränsning: **B01b2:s återstående operativa ID-migrering och granskade personalöverlämning med bevarad historisk attribution**. Full B01b2, separat affärschefsroll, övriga privata specialdialoger, mobilkundlista/fokus efter arbetsytebyte, separat utkast-/konto-/Outlookbackup, hostingbudget/återställningsrutin, faktiska integrationer och personalpilot kvarstår.
+
+Alla skrivprov använder syntetiska data i isolerad SQLite/workerd/D1/R2. Browser-/CI-prov är inga autentiserade live-UI-, verkliga personal-/konto-/integrations-, fysisk telefon/OS-tangentbords-, skärmläsar- eller hostingåterställningsprov. Ingen WCAG-certifiering, världsranking eller personalacceptans utlovas. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas; explicit brief/repo används. Scheman, prompter och aktivering är oförändrade. Inga kundmejl eller riktiga kundorder skrivs.
+
+---
+
+Tidigare v40-underlag behålls nedan:
+
+# Historik: Mobilmeny på korta skärmar – v40, 2026-10-07
 
 ## Beteende och avgränsning
 

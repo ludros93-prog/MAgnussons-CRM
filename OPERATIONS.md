@@ -1,5 +1,22 @@
 # Magnussons CRM – order, tryck och lager
 
+## Byt affärs- eller orderansvar – v41, 2026-10-07
+
+1. Som administratör: öppna den relevanta affären/orderpanelen och välj **Byt affärsansvar** eller **Byt orderansvar**.
+2. Välj ny aktiv säljarprofil. Visningsnamn och ursprunglig ansvarskoppling skiljer profiler med samma namn åt. Ange varför ansvaret byts.
+3. Läs **Nödvändiga åtaganden**; dessa följer alltid med. Välj endast de **Valfria uppgifter** som också ska överföras.
+4. Jämför vad som överförs och vad som behåller sitt ansvar. Bekräfta granskningen och använd den uttryckliga sparhandlingen.
+5. Vid konflikt: hämta aktuella uppgifter och välj nytt granskningsunderlag uttryckligen. Orsak och tillåtna val bevaras; granskningen måste göras igen.
+6. Ett obekräftat svar kan följa efter att ändringen sparats. Behåll samma val för återförsök eller hämta/granska det registrerade utfallet. Under pågående sparning är ändring/stängning spärrade.
+
+Detta är en avgränsad B01b2-del. Kundansvar, historiska fakturor, vunna affärers ansvar, prospectattribution och mål flyttas inte. Produktionsanspråk, registrerade mängder, revisioner och kundgodkännanden bevaras. Befintliga tomma ansvar-ID:n migreras inte automatiskt från namn eller mejl. Stabilt ID används efter uttrycklig granskning och underlag; hela kund-/uppgifts-/mötes-/specialflödesmigreringen och personalavveckling är inte genomförda. Säljar-, läsar- och produktionsroller får ingen ny administrativ eller privat åtkomst. Ingen integration, kundacceptans, faktura eller utskick skapas.
+
+Additiva ID-/historikfält lagras i befintliga JSON-poster; ingen SQL-migrering krävs. Äldre exporter kan läsas med tomma standardvärden för de nya fälten. Det gör **inte v40 till en säker skrivande rollback**: dess äldre scheman kan strippa nya ansvar-ID:n och historik vid nästa skrivning. Behåll den nya modellen, serverreglerna och kompatibel klient genom en schemabevarande framåträttning eller verifierad datamedveten återställningsväg. Ingen faktisk live-rollback eller hostingåterställning har genomförts. CRM-backup bevarar kommersiella ID:n/historik men aktuella kontolänkar rensas i målmiljön och måste väljas uttryckligt igen. Privata utkast, konton och Outlook ingår fortfarande inte.
+
+Överlämningsformuläret har lokal text-/stängningsvakt; detta är inget nytt varaktigt privat serverutkast. Kopiera osparad orsak före omladdning. Alla skrivprov använder syntetiska data i isolerad SQLite/workerd/D1/R2. Browser-/CI-prov är inga autentiserade live-UI-, verkliga personal-/konto-/integrations-, fysisk telefon/OS-tangentbords-, skärmläsar- eller hostingåterställningsprov. Ingen WCAG-certifiering, världsranking eller personalacceptans utlovas. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas; explicit brief/repo används. Scheman, prompter och aktivering är oförändrade. Inga kundmejl eller riktiga kundorder skrivs.
+
+[VALIDATION](VALIDATION.md) skiljer faktisk testmiljö från drift/personal.
+
 ## Använd mobilmenyn – v40, 2026-10-07
 
 1. Välj menyknappen i huvudraden (**Öppna meny**). Panelen **Meny** har en synlig **Stäng** överst.
