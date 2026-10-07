@@ -1,8 +1,18 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Publicerad v47 gör Kundregister responsivt med verklig nästa aktivitet och en separat avstämning. V46:s Min dag-förbättringar består. Tidigare granskade kund-, uppgifts-, affärs-, order- och mötesöverlämningar består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och kompatibilitet.
+V47-underlaget nedan gör Kundregister responsivt med verklig nästa aktivitet och en separat avstämning. V46:s Min dag-förbättringar består. Tidigare granskade kund-, uppgifts-, affärs-, order- och mötesöverlämningar består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och kompatibilitet.
 
-## Hitta kund och nästa arbete – v47
+
+## Fortsätt efter stängt kundkort – v48
+
+V48 återför fokus efter användarens stängning av kundkortet till samma öppningskontroll, eller till vyns namngivna rubrik om kontrollen saknas. Bakgrundsladdning och navigation flyttar inte fokus genom denna funktion. Arbetsytebytets separata fokuslucka och observerad personalpilot kvarstår.
+
+Samma kund-ID, konto/roll, arbetsyta och vy krävs för återgång. Sparning och kundansvarsöverlämning behåller sina stängningsspärrar. Kundkontakt, privat sparning, ansvar och resultat förändras inte.
+
+V48 är publicerad på samma Site; [VALIDATION](VALIDATION.md) anger källa, main, live och faktiska prov. Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmåtten.
+
+
+## Historik: Hitta kund och nästa arbete – v47
 
 Kundregistret visar fullständigt kundnamn och kontaktperson, kundansvarig, nästa verkliga öppna uppgift eller planerade CRM-möte och en separat nästa avstämning. Raderna staplas på mobil och använder flera kolumner när utrymmet finns. **Öppna kundkort** är en egen svensk knapp med minst 44 px höjd; det långa namnet ligger utanför knappen så även en kort skärm kan visa hela den fokuserade kontrollen. Samma kund-ID, befintliga sök-/ansvarsfilter, ordning och kundkort används.
 
