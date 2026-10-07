@@ -73,3 +73,9 @@
 .yearwheel-month-need small{display:block;white-space:normal;overflow-wrap:anywhere}
 .yearwheel .year-months .yearwheel-month-need button{display:flex;align-items:center;gap:.4rem;margin-top:.35rem;font-weight:600}
 .yearwheel-month-need button svg,.yearwheel-customer button svg{flex-shrink:0}
+
+/* Keep the status word readable beside a wrapped need title. */
+.yearwheel .need-card>.biz-head{flex-wrap:wrap}
+.yearwheel .need-card>.biz-head>div{flex:1 1 12rem}
+.yearwheel .need-card>.biz-head>.pill{flex:0 0 auto;white-space:nowrap;overflow-wrap:normal;word-break:normal}
+.yearwheel-heading,.yearwheel button{scroll-margin:12px}
