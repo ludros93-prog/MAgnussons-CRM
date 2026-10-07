@@ -7,8 +7,9 @@ import {Input} from '@/components/ui/input';
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from '@/components/ui/select';
 import type {State} from '@/lib/crm';
 import {staffHandoverRows,type StaffHandoverAction,type StaffHandoverRow} from '@/lib/staff-handover';
+import {SellerProfileRetirement,type RetirementSave} from './seller-profile-retirement';
 
-type Props={st:State;onAction:(action:StaffHandoverAction)=>void;refresh:()=>Promise<void>};
+type Props={st:State;space:'demo'|'live';save:RetirementSave;busy:boolean;onAction:(action:StaffHandoverAction)=>void;refresh:()=>Promise<State>};
 const unresolvedChoice='__unresolved';
 const pageSize=20;
 const identityLabel:Record<StaffHandoverRow['identity'],string>={
@@ -24,10 +25,10 @@ function displayDue(value:string){
  return Number.isNaN(date.getTime())?value:date.toLocaleDateString('sv-SE',{day:'numeric',month:'short',year:'numeric'});
 }
 function profileLabel(profile:State['settings']['sellerProfiles'][number]){
- return profile.displayName+(profile.displayName!==profile.legacyOwnerName?' · '+profile.legacyOwnerName:'')+(profile.active?'':' · Inaktiv profil');
+ return profile.displayName+(profile.displayName!==profile.legacyOwnerName?' · '+profile.legacyOwnerName:'')+(profile.active?'':' · Historisk profil');
 }
 
-export function StaffHandover({st,onAction,refresh}:Props){
+export function StaffHandover({st,space,save,busy,onAction,refresh}:Props){
  const profileDescriptionId=useId(),rowId=useId();
  const [selectedProfileId,setSelectedProfileId]=useState(''),[query,setQuery]=useState(''),[kind,setKind]=useState('all'),[visibleCount,setVisibleCount]=useState(pageSize);
  const [refreshing,setRefreshing]=useState(false),[refreshError,setRefreshError]=useState(''),[refreshNotice,setRefreshNotice]=useState('');
@@ -92,7 +93,7 @@ export function StaffHandover({st,onAction,refresh}:Props){
     <label className="biz-field"><span>Sök i valt ansvar</span><div className="staff-handover-search"><Search size={18} aria-hidden="true"/><Input aria-label="Sök kund eller arbetsuppgift i överlämningen" placeholder="Kund eller arbetsuppgift…" value={query} onChange={event=>changeQuery(event.target.value)} disabled={!selectedProfileId||refreshing}/></div></label>
    </div>
    {selectedProfileId&&<div id={profileDescriptionId} className={'staff-handover-profile'+(stale?' staff-handover-warning':'')}>
-    <UserRound size={20} aria-hidden="true"/><div>{unresolved?<><b>Ansvar som behöver granskas</b><p>Här syns poster med saknad, omappad eller motsägande ansvarskoppling. Översikten gissar ingen ansvarig.</p></>:profile?<><b>{profile.displayName}</b><p>{profile.active?'Aktiv profil.':'Inaktiv profil. Kvarvarande öppet arbete behöver fortfarande granskas.'} <b>Äldre ansvarskoppling:</b> {profile.legacyOwnerName}.</p><p><b>Profil-ID:</b> {profile.id}. {profile.memberId?'Profilen har en registrerad kontolänk.':'Ingen kontolänk är registrerad.'}</p></>:<><b>Den tidigare valda profilen finns inte i aktuellt underlag</b><p>Välj en profil på nytt. Ett tomt urval visar inte att arbetet har lämnats över.</p></>}{stale&&profile&&<p>Profilens namnkoppling är inte entydig. Granska säljarprofilerna innan den här översikten används för personen.</p>}</div>
+    <UserRound size={20} aria-hidden="true"/><div>{unresolved?<><b>Ansvar som behöver granskas</b><p>Här syns poster med saknad, omappad eller motsägande ansvarskoppling. Översikten gissar ingen ansvarig.</p></>:profile?<><b>{profile.displayName}</b><p>{profile.active?'Aktuell resultatprofil.':'Historisk resultatprofil. Kvarvarande öppet arbete behöver fortfarande granskas.'} <b>Äldre ansvarskoppling:</b> {profile.legacyOwnerName}.</p><p><b>Profil-ID:</b> {profile.id}. {profile.memberId?'Profilen har en registrerad kontolänk.':'Ingen kontolänk är registrerad.'}</p></>:<><b>Den tidigare valda profilen finns inte i aktuellt underlag</b><p>Välj en profil på nytt. Ett tomt urval visar inte att arbetet har lämnats över.</p></>}{stale&&profile&&<p>Profilens namnkoppling är inte entydig. Granska säljarprofilerna innan den här översikten används för personen.</p>}</div>
    </div>}
    {!!selectedProfileId&&!stale&&<>
     <div className="staff-handover-summary">
@@ -112,11 +113,12 @@ export function StaffHandover({st,onAction,refresh}:Props){
       </article>
      </li>)}
     </ol>
-    {!matches.length&&<div className="staff-handover-empty"><b>{filtered?'Inga poster matchar dina filter.':'Inga poster finns i de här ansvarsdelarna.'}</b><p>{filtered?'Återställ filter för att granska allt ansvar i det valda urvalet.':'Det här är en inventering av de angivna ansvarsdelarna. Kontot, profilen och andra ansvar är separata och har inte avvecklats.'}</p></div>}
+    {!matches.length&&<div className="staff-handover-empty"><b>{filtered?'Inga poster matchar dina filter.':'Inga poster finns i de här ansvarsdelarna.'}</b><p>{filtered?'Återställ filter för att granska allt ansvar i det valda urvalet.':'Ett tomt inventeringsurval är ingen kvittens på profilavslut eller kontoavstängning. Profilstatus, CRM-konto och sidåtkomst granskas separat.'}</p></div>}
     {shown.length<matches.length&&<div className="staff-handover-more"><Button type="button" variant="outline" disabled={refreshing} onClick={()=>setVisibleCount(value=>value+pageSize)}>Visa fler ansvarsposter</Button><p>{matches.length-shown.length} ytterligare poster matchar urvalet.</p></div>}
    </>}
-   {!selectedProfileId&&<div className="staff-handover-empty"><b>Välj en profil för att börja.</b><p>Även inaktiva profiler kan ha kvarvarande öppet arbete. Du kan också välja Ansvar som behöver granskas.</p></div>}
+   {!selectedProfileId&&<div className="staff-handover-empty"><b>Välj en profil för att börja.</b><p>Även historiska profiler kan ha kvarvarande öppet arbete. Du kan också välja Ansvar som behöver granskas.</p></div>}
   </>}
+  {profile&&!stale&&<SellerProfileRetirement key={profile.id} st={st} space={space} profileId={profile.id} save={save} busy={busy} refresh={refresh}/>}
   {refreshing&&<p className="staff-handover-refresh" role="status">Hämtar aktuellt CRM-underlag. Det tidigare underlaget visas tills hämtningen är klar.</p>}
   {refreshNotice&&<p className="staff-handover-refresh" role="status">{refreshNotice}</p>}
   {refreshError&&<p className="error staff-handover-refresh" role="alert">{refreshError} Din valda profil och dina filter finns kvar.</p>}
