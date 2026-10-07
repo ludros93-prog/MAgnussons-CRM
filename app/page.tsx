@@ -145,8 +145,8 @@ export default function CRM(){
   if(!target)return;
   target.focus({preventScroll:true});
   if(document.activeElement!==target){customerHeading.current?.focus();return}
-  const bounds=target.getBoundingClientRect();
-  if(bounds.top<0||bounds.bottom>window.innerHeight||bounds.left<0||bounds.right>window.innerWidth)target.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
+  const bounds=target.getBoundingClientRect(),inset=target===customerHeading.current?8:0;
+  if(bounds.top<inset||bounds.bottom>window.innerHeight-inset||bounds.left<inset||bounds.right>window.innerWidth-inset)target.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
  }
 
  async function closeForm(){if(busy)return;if(form?.type==='settings'&&recordBasis(form.data)!==form.initialData){setDiscard(true);return}if(form&&form.type!=='workorder'&&recordBasis(form.data)!==form.initialData&&formDraft.current){const identity=activeIdentity.current,draftId=form.draftId;setBusy(true);try{if(await formDraft.current.flush()===null){if(activeIdentity.current===identity)setFormCloseFailure({draftId,message:'Utkastet kunde inte sparas. Dina uppgifter finns kvar i formuläret. Försök igen innan du stänger.'});return}}finally{setBusy(false)}}finishForm()}

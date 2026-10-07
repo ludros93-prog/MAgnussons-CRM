@@ -51,4 +51,5 @@
  .cr-owner .cr-label svg { display: inline-block; vertical-align: middle; margin: 0 .4rem 0 0; }
 }
 
+.main .customer-return-heading { scroll-margin-block: 8px; }
 .main .customer-return-heading:focus-visible { outline: 3px solid var(--ring); outline-offset: 4px; border-radius: 4px; }
