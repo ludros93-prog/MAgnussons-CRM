@@ -52,8 +52,8 @@
 .onboarding-responsibility-dialog .onboarding-responsibility-select [data-slot=select-value] > .onboarding-responsibility-choice-label { display:-webkit-box; width:100%; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
 .onboarding-responsibility-options { max-width:calc(100vw - 2rem); }
 .onboarding-responsibility-options [data-slot=select-item] > span { min-width:0; overflow-wrap:anywhere; }
-.onboarding-responsibility-dialog textarea { min-width:0; max-width:100%; font-size:1rem; }
-.onboarding-responsibility-dialog .check-field { align-items:flex-start; }
+.onboarding-responsibility-dialog textarea { min-width:0; max-width:100%; font-size:1rem; field-sizing:fixed; max-height:min(14rem,calc(100dvh - 5rem)); overflow-y:auto; }
+.onboarding-responsibility-dialog .check-field { align-items:flex-start; min-height:44px; }
 .onboarding-responsibility-dialog .check-field > span { min-width:0; }
 .onboarding-responsibility-dialog .check-field small { display:block; }
 .onboarding-responsibility-dialog .biz-buttons { align-items:stretch; }
