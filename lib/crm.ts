@@ -11,6 +11,7 @@ import {SellerProfileRetireSchema,retireSellerProfile,protectRetiredSellerRespon
 import {RuleError} from './crm-errors';
 import {CommercialResponsibilityHistorySchema,CommercialResponsibilityTransferSchema,transferCommercialResponsibility,validateCommercialResponsibilityReferences} from './commercial-responsibility';
 import {CustomerResponsibilityHistorySchema,CustomerResponsibilityTransferSchema,transferCustomerResponsibility,validateCustomerResponsibilityReferences} from './customer-responsibility';
+import {CustomerReopenSchema,reopenCustomer} from './customer-reopen';
 import {TaskResponsibilityHistorySchema,TaskResponsibilityTransferSchema,protectTaskResponsibility,assignTaskResponsibilities,validateTaskResponsibilityReferences,transferTaskResponsibility,recordTaskBundleTransfers} from './task-responsibility';
 import {MeetingResponsibilityHistorySchema,MeetingResponsibilityTransferSchema,protectMeetingResponsibility,validateMeetingResponsibilityReferences,transferMeetingResponsibility} from './meeting-responsibility';
 import {OnboardingResponsibilityHistorySchema,OnboardingResponsibilityTransferSchema,protectOnboardingResponsibility,validateOnboardingResponsibilityReferences,transferOnboardingResponsibility} from './onboarding-responsibility';
@@ -153,6 +154,9 @@ export function applyAction(current:State,action:Action,actor?:Actor):State{
  }
  if(action.type==='customer_responsibility_transfer'){
   need(actor,'Logga in för att överföra kundansvar.');const input=CustomerResponsibilityTransferSchema.parse(action.data);transferCustomerResponsibility(st,input,actor!);recordTaskBundleTransfers(current,st,'customer',st.customers.find(row=>row.id===input.customerId)!.responsibilityTransfers.at(-1)!.id);validateCustomerResponsibilityReferences(st);return finish(assignTaskResponsibilities(current,st));
+ }
+ if(action.type==='customer_reopen'){
+  need(actor,'Logga in för att återöppna kundrelationen.');const input=CustomerReopenSchema.parse(action.data);reopenCustomer(st,input,actor!);validateCustomerResponsibilityReferences(st);return finish(assignTaskResponsibilities(current,st));
  }
  if(action.type==='task_responsibility_transfer'){
   need(actor,'Logga in för att ändra uppgiftsansvar.');transferTaskResponsibility(st,TaskResponsibilityTransferSchema.parse(action.data),actor!);return finish(st);

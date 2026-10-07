@@ -1,0 +1,38 @@
+.customer-reopen{grid-column:1/-1;min-width:0;border:1px solid #dce5ef;border-radius:10px;background:#f7fafc;padding:.85rem;margin-top:.5rem;overflow-wrap:anywhere}
+.customer-reopen-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;min-width:0}
+.customer-reopen-head>div{flex:1 1 16rem;min-width:0}
+.customer-reopen-head h3,.customer-reopen-head [data-slot=dialog-title]{display:flex;align-items:flex-start;gap:.5rem;min-width:0;line-height:1.4}
+.customer-reopen-head [data-slot=dialog-title]{flex:1 1 16rem}
+.customer-reopen-head svg,.customer-reopen-warning svg,.customer-reopen-current h3 svg{flex-shrink:0;margin-top:.15rem}
+.customer-reopen-head span{min-width:0}
+.customer-reopen p,.customer-reopen-dialog p{margin:.5rem 0;overflow-wrap:anywhere;white-space:normal;line-height:1.6}
+.customer-reopen button:not([role=checkbox]),.customer-reopen-dialog button:not([role=checkbox]),.customer-reopen-select [role=option]{height:auto;min-height:44px;min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.customer-reopen-dialog{width:calc(100vw - 2rem);max-width:680px!important;max-height:calc(100dvh - 2rem);overflow-y:auto;min-width:0;overflow-wrap:anywhere;scroll-padding:12px}
+.customer-reopen-dialog [data-slot=dialog-header]{min-width:0;text-align:left}
+.customer-reopen-dialog form,.customer-reopen-dialog fieldset{margin:0;padding:0;border:0;min-width:0}
+.customer-reopen-current,.customer-reopen-review{min-width:0;border:1px solid #dce5ef;border-radius:10px;background:#f7fafc;padding:.85rem;margin-bottom:1rem}
+.customer-reopen-current h3,.customer-reopen-review h3{font-size:1rem;line-height:1.5;display:flex;align-items:flex-start;gap:.5rem;min-width:0}
+.customer-reopen-warning{display:flex;align-items:flex-start;gap:.5rem;padding:.75rem;border-radius:8px;background:#fff3dc;color:#795417}
+.customer-reopen-warning>span{min-width:0}
+.customer-reopen-success{padding:.75rem;border:1px solid #b7d7cc;border-radius:8px;background:#eff8f4;color:#12685f}
+.customer-reopen-dialog .biz-field{min-width:0}
+.customer-reopen-dialog input,.customer-reopen-dialog textarea{min-width:0;max-width:100%;min-height:44px;font-size:1rem}
+.customer-reopen-dialog input[type=date]{width:100%;min-width:0;box-sizing:border-box}
+.customer-reopen-dialog textarea{field-sizing:fixed;max-height:min(14rem,calc(100dvh - 5rem));overflow-y:auto}
+.customer-reopen-dialog [data-slot=select-trigger]{width:100%;min-width:0;text-align:left}
+.customer-reopen-dialog [data-slot=select-trigger]>[data-slot=select-value]{min-width:0;flex:1;overflow:hidden}
+.customer-reopen-selected-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;max-height:2.8em;line-height:1.4;min-width:0;flex:1;text-align:left}
+.customer-reopen-selected-details{font-size:.9rem;color:#5e6e83}
+.customer-reopen-select{max-width:calc(100vw - 2rem);overflow-wrap:anywhere}
+.customer-reopen-select [role=option]>span:last-child{min-width:0;overflow-wrap:anywhere;white-space:normal}
+.customer-reopen-dialog .check-field{align-items:flex-start;min-height:44px}
+.customer-reopen-dialog .check-field>span{min-width:0;line-height:1.6}
+.customer-reopen-dialog .biz-buttons{align-items:stretch}
+.customer-reopen-dialog .biz-buttons>button{flex:1 1 13rem}
+.customer-reopen-dialog summary{min-height:44px;min-width:0;line-height:1.6;padding-block:.5rem}
+.customer-reopen-inventory ol{list-style:decimal;padding-left:1.3rem;margin-block:.7rem}
+.customer-reopen-inventory li{min-width:0;padding-block:.75rem;border-top:1px solid #dce5ef}
+.customer-reopen-inventory li>b{display:block;line-height:1.5}
+.customer-reopen-dialog .customer-reopen-reason{white-space:pre-wrap}
+.customer-reopen button:focus-visible,.customer-reopen [tabindex="-1"]:focus,.customer-reopen-dialog [tabindex="-1"]:focus,.customer-reopen-dialog button:focus-visible,.customer-reopen-dialog input:focus-visible,.customer-reopen-dialog textarea:focus-visible,.customer-reopen-dialog summary:focus-visible{outline:3px solid var(--ring);outline-offset:3px;scroll-margin:12px}
+@media(max-width:767px){.customer-reopen-head>button{width:100%}.customer-reopen-dialog .customer-reopen-head>button{width:auto}.customer-reopen-discard [data-slot=alert-dialog-footer]{display:flex;flex-direction:column}.customer-reopen-discard [data-slot=alert-dialog-footer]>button{width:100%}}
