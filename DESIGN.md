@@ -13,6 +13,18 @@ Utgå från CRM:ets befintliga logotyp, mörka navigation, ljusa arbetsytor och 
 - Använd läsbar löptext, synligt tangentbordsfokus och mobila handlingar på minst 44 px. Långa namn, mejladresser och instruktioner ska brytas inom sin yta.
 - Visa tomt läge och saknat underlag med en begriplig nästa handling. Inga dekorativa prognoser, påhittade resultat eller falska integrationsstatusar.
 
+## Läsbar Min dag med större text – v46
+
+Den privata sparstatusen kan brytas på flera rader, fokusetikettens text kan krympa och radbrytas bredvid sin ikon, och långa ord i tomma paneler bryts inom panelen. Det rättar klippningen av privat sparstatus och tom kontakttext samt fokusetikettens överbredd utan att förkorta statusmeddelanden eller dölja text. Min dags knappar i privat sparstatus, exempelvis återförsök, ryms och kan radbrytas inom sin yta med minst 44 px höjd. Den höjdgränsen gäller dessa knappar, inte alla CRM-kontroller. Befintliga färger, ikoner, kundsammanhang och primära handlingar används fortsatt.
+
+Privat utkaststatus ska visa hela beskedet i sin egen yta. Fokusetiketten behåller både ikon och ord, så färg ensam inte bär betydelsen. Den tomma kontaktpanelen visar ett ärligt besked om att aktuella uppföljningssignaler saknas. Att radbryta texten skapar varken nya kundbehov eller en sparningskvittens.
+
+På slutkandidat `04dfa5cd` passerade 29 Chromium-fall på 320×360, 390×844 och 1280×900, med normal/exakt fördubblad beräknad måltext. Textnoder mättes mot egen yta och klippande föräldrar i båda riktningarna; privat status, fulla långa fel och återhämtningshandlingar rymdes. Native Tab/Enter provade relevanta handlingar. Root granskade fem faktiska slutbilder; normal mobil/desktop behöll arbetsordningen och fördubblad 320 px-text radbröts med synlig ikon. Rapport SHA256 `46cf88a30f0963b67c0cc623efc8cf7883db106f2ba223adb273fc8e12ac60cf`. Det är avgränsade lokala syntetiska prov, ingen helsidig zoom, fysisk telefon, skärmläsare eller personalacceptans.
+
+Riktningen följer Saleshub, Lime och Salesforce: samlat kundsammanhang, tydlig nästa aktivitet och begriplig arbetsordning. Den konkreta radbrytningen och våra prov är Magnussons egen tillämpning; officiella källor och deras gränser finns i [agent/RESEARCH.md](agent/RESEARCH.md). Befintlig mörk navigation, ljusa arbetsytor, röda handlingar och gröna kundvårdsmarkeringar består.
+
+B07:s personalobservation återstår. Mobilkundlistan och fokus efter arbetsytebyte behåller sina mål nedan. [VALIDATION](VALIDATION.md) anger aktuell prov-/publiceringsgräns; detta avsnitt gör ingen allmän tillgänglighets- eller användargaranti.
+
 ## Kundkortets första designleverans
 
 Kundöversikten samlar nästa steg, kontaktplan, order/leverans och tidslinje i tydliga sektioner. Lokal sektionsnavigation hjälper användaren att hitta rätt utan att lämna kunden. Försenad, dagens och kommande aktivitet använder text tillsammans med färg. Nästa aktivitet behåller samma befintliga uppföljningsflöde.

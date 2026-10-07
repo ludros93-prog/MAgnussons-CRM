@@ -1,5 +1,13 @@
 # Magnussons CRM – order, tryck och lager
 
+## Läsa arbetsdagen med större text – v46
+
+I **Min dag** får privat utkaststatus, fokusetikett och tomma paneltexter radbrytas inom sin yta. Läs hela statusbeskedet före nästa handling. **Privat utkast** och **inlämnat till CRM** betyder fortfarande olika saker; att texten får plats ändrar inte sparutfallet. Fortsätt med befintliga **Fortsätt**, **Följ upp** och kund-/möteshandlingar.
+
+Endast de två presentationsfilerna ändras; övriga 272 spårade filer är byteidentiska med basen. Modeller, provider, API, roller, privat sparning, CAS/idempotens, DB/R2 och driftkonfiguration består. Ingen SQL-migration eller nytt lagringsformat införs. V45 är formatkompatibel som UI-återgång men återför klippning/överbredd; äldre modellbundna återgångsgränser, inklusive v44:s risk att skriva bort mötesprofil/historia, består. Ingen faktisk live-rollback eller hostingåterställning utfördes. Kvitto `/workspace/scratch/crm46/compatibility.json`, SHA256 `aaf9b4604eb6446bc38a47e9bfa495066ff9e00cbbe486847d2dcb25298ce32d`.
+
+Fem slutkontroller och 29 lokala browserfall passerar på slutkandidat `04dfa5cd`; app-PR #66 är sammanslagen till main `acc744d1` med gröna exakt-head/main-checks. Sites v46 är publicerad 2026-10-07 07:45:58 UTC från verifierad source `c8c922b3`. Riktiga konto-/personalprov återstår. [VALIDATION](VALIDATION.md) anger kontroller och gränser. Autentiserad live-UI, fysisk telefon och observerat personalarbete återstår att prova.
+
 ## Byt eller förankra mötesansvar – v45
 
 1. Som administratör: öppna **Min dag** för dagens/kommande möten eller **Kalender → Kundmöten i CRM** för andra datum. Välj vid behov teamets möten och hitta ett nu planerat möte. Granskade säljarprofiler behöver finnas.
