@@ -2,7 +2,7 @@
 
 CRM för Magnussons med egen arbetsdag, säljuppföljning, kundvård, order, tryck och lager. Version 13 är ursprunglig utgångspunkt. Aktuell agentetablering finns i [STATUS-2026-10-05.md](STATUS-2026-10-05.md), med tidigare granskning och pilotgränser i [STATUS-2026-10-04.md](STATUS-2026-10-04.md); verksamhetsbeslut och acceptansprov i [HANDOFF-2026-10-04.md](HANDOFF-2026-10-04.md). Ursprunglig källrevision och överföringsstatus finns i [SOURCE.md](SOURCE.md).
 
-Publicerad **v39**: Säljare och administratörer kan planera en företagsaktivitet som ett eget privat utkast och fortsätta från **Min dag** eller **Mina privata aktivitetsutkast** i företagskalendern. Rubrik, rå text med radbrytningar/mellanslag, ofärdiga datum, ansvar, status och alla förberedelser bevaras privat; ursprungligt kalenderunderlag följer samma utkast. **Spara utkast & stäng** väntar på privat sparning. **Spara i företagskalendern** är ett separat uttryckligt val: aktiviteten uppdateras och exakt den sparade privata revisionen avslutas atomiskt. Privat autosparning ändrar inte teamets kalender. Källa/main/live och provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md).
+Publicerad **v40**: Mobilens menyknapp (**Öppna meny**) visar panelen **Meny** med synlig **Stäng** och egen rullning även på korta skärmar. Arbetsområdesval stänger panelen; Stäng/Escape återför fokus till öppnaren med bevarat sidläge. Även sidmenyn på breda, korta skärmar får en sammanhängande rullningsyta. Vanlig hög desktoplayout och privata/serverbaserade arbetsflöden behålls. Källa/main/live och faktiska provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md).
 
 ## Utveckling och kontroller
 

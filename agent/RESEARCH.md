@@ -313,3 +313,15 @@ Fem officiella källor hämtades med HTTP 200, med tolv kontrollerade utdrag 202
 - [W3C Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html): begriplig spar-/felstatus utan fokusflytt vid bakgrundsändring. Faktiska tangentbords-/layoutprov är avgränsade Chromiumprov, ingen fysisk telefon-/skärmläsarcertifiering.
 
 Strikt rått privat kuvert, fullständig versionsjämförelse, markerat val, atomisk kalenderpublicering och exakt CRM-ledgerreplay är Magnussons egen implementation. Leverantörskällorna bevisar inga privata lagringsgarantier, fungerande kundanslutningar, personalacceptans eller världsranking. [VALIDATION](../VALIDATION.md) anger provgränser. Codex-referensen är fortfarande oläst.
+
+## Mobilmeny och fokus – v40, 2026-10-07
+
+9 officiella källor hämtades med HTTP 200 och 24 kontrollerade utdrag; evidenskvitto upprättat `2026-10-07T01:20:49.352918+00:00`: `/workspace/scratch/nav40-research/official-evidence.json`, SHA256 `16fcde8f172f0f1bcee6b2ec32d2419263e9198a47962aa3e49e55da74d69f49`.
+
+- [Lime – Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/): relevanta verb och ikon tillsammans med begriplig text. Egen tillämpning: synlig svensk Meny/Stäng och tydliga arbetsområden.
+- [Saleshub AI – funktioner](https://saleshubai.se/funktioner): sammanhängande kundkontext och nästa aktivitet. Navigationen bevarar befintliga arbetsflöden; sidan belägger inget meny-/fokuskontrakt.
+- [Salesforce – mobilnavigation](https://trailhead.salesforce.com/content/learn/modules/salesforce1_mobile_app/salesforce1_mobile_app_navigation) och [button-menu](https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-button-menu.html): nåbara viktiga vägar, tydligt namn och öppet/stängt tillstånd. En ny bottenmeny, fyrgräns eller menu-roll kopieras inte till Magnussons.
+- [W3C – modal dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/), [Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) och [Radix Dialog](https://www.radix-ui.com/primitives/docs/components/dialog): synlig stängning, native Tab-ring, Escape och meningsfull fokusåtergång. Befintlig externa SidebarTrigger är ingen automatisk SheetTrigger; faktisk återgång provas i vår app.
+- [W3C – Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) och [Focus Not Obscured](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html): små viewporter behöver hanterbar fixed/sticky-navigation och synligt fokus. Hela knappboxen synlig är vårt starkare avgränsade provmål, ingen allmän WCAG-certifiering.
+
+Fullpanelsrullning i mobilmodalen och i sidmenyn på breda, korta skärmar, fokusreservmål, `preventScroll`, modalgenvägsvakt och stängning vid breddbyte är Magnussons egna implementationsval. Leverantörskällor ersätter inte våra runtimeprov och verifierar inga kundanslutningar, fysiska telefoner, skärmläsare eller personalacceptans. Codex-referensen är fortsatt oläst.

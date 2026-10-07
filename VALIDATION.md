@@ -1,4 +1,68 @@
-# Privata företagsaktiviteter – v39, 2026-10-07
+# Mobilmeny på korta skärmar – v40, 2026-10-07
+
+## Beteende och avgränsning
+
+Mobilens menyknapp (**Öppna meny**) öppnar panelen **Meny** med synlig **Stäng** överst. Hela menyn har egen vertikal rullning under stängningsraden, så även de sista arbetsområdena och **Inställningar** i säljarbetsytan går att nå på korta skärmar. Val av ett arbetsområde stänger panelen; den valda sidan visas i den vanliga arbetsytan. Stäng/Escape återför fokus till den verkliga öppnaren, med menyknappen som reservmål när öppnaren försvunnit. Fokusåtergång använder `preventScroll` för att bevara sidans rullningsläge. Tangentbordets Tab/Shift+Tab stannar i den öppna modala panelen.
+
+Ctrl/Cmd+B öppnar inte mobilmenyn när en annan modal dialog är öppen. När viewporten går över till desktopbredd stängs den mobila panelen; den återöppnas inte automatiskt när skärmen blir smal igen. Desktopens befintliga menyval och tangentbordsväxel behålls. Breda, korta skärmar använder den befintliga sidmenyn i sidans layout. Vid minst 768 px bredd och högst 540 px höjd får hela den menyn egen vertikal rullning; header, val och footer ligger i samma rullningsyta. Menyns val pressas därmed inte ihop till en smal remsa mellan header och footer. Den vanliga höga desktoplayouten behålls. I mobilpanelen och den breda, korta sidmenyn får svenska menyval, företagsnamn och profiltext radbrytas inom sin yta. Magnussons symbol får en innehållsanpassad box när texten förstoras; menyknapparnas höjd växer med texten och är minst 44 px.
+
+Detta är en avgränsad navigeringsändring. API, CRM- och utkastprovider, serverroller, privata utkastformat, SQL/schema, localStorage-nycklar, CAS, atomiska skrivningar och idempotens ändras inte. Ingen ny integration, kontakt, kundacceptans eller fakturering införs. B05 och B01b2 förblir öppna.
+
+## Faktiska kontroller
+
+Den faktiskt byggda v39-baslinjen provades i fem isolerade browserkontexter. På 390/320×360 hade mobilmenyn en 0 px innehållsyta; primärval täcktes och Stäng var dold. Escape återförde fokus till BODY, även vid 390×844; Kunder-val lämnade panelen öppen. En separat v39-kontext vid 844×390 verifierade sidmenyns 22 px remsa för 44 px primärval. Det är observerade fel i den äldre byggda versionen.
+
+Kandidat b827a95 stoppades före merge/publicering när den breda korta sidmenyn fortfarande klippte val. Kandidat 14011bc stoppades när 200 procent textförstoring gav avklippt varumärke/menytext i bred kort layout. De tidigare 21 respektive 50 godkända delfallen räknas inte i slutkandidatens bevis. Harnessdiagnostik rättades för aria-current=true, dubbla main-element och Playwrights avsiktliga autoscroll till en offscreen-trigger; dessa är inte appfel eller nya godkända slutkontexter.
+
+De stoppade kandidaternas tidigare godkända delfall räknas inte som slutprov för den korrigerade kandidaten. Merge och publicering bygger på den nya kompletta slutmatrisen och slutrevisionens egna kontroller.
+
+Slutkandidaten passerade `node tests/outlook.mjs`, icke-inkrementell TypeScript (`--noEmit --incremental false`), `corepack pnpm build`, `node tests/runtime-smoke.mjs` och `git diff --check`: fem exit 0. Checks-kvitto `/workspace/scratch/nav40/final-checks-3/checks.json` SHA256 `3d58daf3342d315271b2b73627fdf0a957d9167f306d8926d4022071d3401a3e`. Node 24.19.0/pnpm 11.25.0. Regressionerna omfattar syntetisk 40→45 med ny accept, 50→48 med dokumenterat godkännande, kassation, delleverans, CAS och återförsök/dubbelklick. Isolerad runtime återställde tre filer, 13 500 000 filbytes och 18 010 856 arkivbytes med hash-/korrektur-/fotokopplingar och idempotent återförsök; ingen faktisk hostingåterställning.
+
+52 unika färska Chromiumkontexter PASS för fryst slutkandidat 776d1a43: 20 pointer, 3 tangentbord, 2 initial Shift+Tab, 4 sök-/avbryt, 2 långsidrullning, 4 breddbyte, 5 roller, 2 andra modaler, 6 desktop med samtliga val, 2 mobil textförstoring och 2 bred kort textförstoring. Extra textförstoringsbilder är visuell evidens och tillför inga fall.
+
+Mobil 320/390×360/844 och 767×390: Stäng, Escape, backdrop och val; verklig native Tab/Shift+Tab, synlig full knappbox och hit-test, verklig Ctrl+B-öppnare från sökfält med bevarat huvudtext-/scrolläge. Inline 768×390, 844×260/390/540/541 och 1280×900: samtliga sex val via Tab/Shift+Tab och pointer. Breddbyte stänger utan återöppning; seller/reader/production/print/warehouse, företagsdialog och portalled Select. Kontrollerad exakt 200 procent font (15,2→30,4 px), inte full browserzoom, vid 320/390×360 och 768/844×390.
+
+Root jämförde fulla råa före-/efter-snapshots: alla 18 D1-tabeller, 305 rader inklusive 15 privata utkast, två R2-filers bytes/metadata identiska. Noll appskrivningar/non-GET och noll CRM-ledgercommits. Samtliga 261 spårade källfiler och 96 distfiler byteidentiska före/efter browserprovet. Egen runtimeprocess avslutad, eget temporärt datalager borttaget och portar 9090/9091 stängda.
+
+Slutmatris 52 unika: `/workspace/scratch/nav40-browser/final-776d1a43/report.json`, SHA256 `4455c9242d3f46098a98143d0fc34a989ac375766f2ce1200a0452ec2ddfe2d1`.
+
+Slutmatris isoleringskvitto: `/workspace/scratch/nav40-browser/final-776d1a43/receipt.json`, SHA256 `249bb5f2051160f35313a6f397c37fbfa1db2b1fc4648d07c0b37f92ecda5875`.
+
+Root oberoende rådata-/filgranskning: `/workspace/scratch/nav40/independent-audit.json`, SHA256 `05bb2edb3b3e7db4bb88f0b769b85725b0252cbb2f32a592c9a57d587afc8e4a`.
+
+Byggd v39 mobilbaslinje: `/workspace/scratch/nav40-browser/baseline-v39/report.json`, SHA256 `95dc792e037ec96d4047e7e60d65d570d8c265adadb617d2e77545908cfaecc1`.
+
+Byggd v39 bred kort baslinje: `/workspace/scratch/nav40-browser/baseline-v39-wide/report.json`, SHA256 `d8fd548873f7f20027881af3d5b3a5e90fca7fd5c30e204d4142846403a0ac87`.
+
+Root granskade slutkandidatens 390×360-mobilpanel och 844×390-inline samt 200 procent text vid 390×360 och 844×390. Bilderna visar verklig renderad layout i respektive scrolläge, inte en syntetisk designmock.
+
+## Källa, main och live
+
+Fryst lokal kandidat `776d1a436da813df4e9f49b5a51d69336dbac69c`, träd `9150f0f176e41874a2de23dcd9bc5a4463c9a7fe`; [app-PR #54](https://github.com/ludros93-prog/MAgnussons-CRM/pull/54)-head `67c68e242325f29ec52561a3aa6c5edb90e4cc01`, app-main `c296f9750e9fb2cc608b1807a72584e77ffb421c` och pushad Sites-källa `3e71b32cdefa1d2a6f55d612377d01eee6185a3e` redovisas separat och har samma källträd. Exakt-head CI [37557886299](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37557886299)/jobb `112588221264` och app-main CI [37558311989](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37558311989)/jobb `112589579052` är success med samtliga 13 steg vardera.
+
+Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2` publicerade **v40** från den pushade källrevisionen: version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_e67e4ff9a8b08191a8d914e1f532d07d`, deploy `appgdep_6ac5a47359508191bb56978837b90c84`, **succeeded 2026-10-07T01:46:46.921115+00:00**, på https://magnussons-crm.rosen123.chatgpt.site. Begränsad custom-delning och envrevision 1 är verifierat bevarade. Anonyma GET `/` och `/api/crm?space=live` gav 403/403; detta är inget autentiserat kontoprov. Senare dokumentations-main/checks kvitteras separat. En docsmerge återpublicerar inte appen.
+
+Första save avvisades före version/deploy: den platta dist-listan placerade server/index.js utanför stödda dist/server/index.js. Enbart paketstrukturen rättades efter felbesked; samma verifierade source/dist användes. Det avvisade platta arkivets hashar och medlemslista används inte som slutligt publiceringsunderlag. Det korrigerade paketet behåller root `.openai/hosting.json` och samtliga byggfiler under `dist/`, inklusive `dist/server/index.js`. Paketeringsrättningen ändrade inga käll- eller distbytes.
+
+Publiceringspaketet innehåller 97 filer och 4433920 råtarbytes. Canonical råtar SHA256 `43d9fe1a2258d1232591d39ea5a075393063c1d3ed3dfb0f86fa427e3e7906e5`, gzip SHA256 `94df9fdbfb11bd48881ddc4050b6066d0d16c22a94d1555c244accdd60f1e8c1`; native metadata anger exakt `sha256:43d9fe1a2258d1232591d39ea5a075393063c1d3ed3dfb0f86fa427e3e7906e5`. 97 unika lexikografiskt sorterade reguljära filer, mode 0644 och noll uid/gid/mtime. Root hostingmanifest och samtliga 96 distfiler under dist/ lästes tillbaka lokalt byte för byte. Native save/get-version verifierade exakt källrevision, råtarhash, filantal och storlek. Native arkivbytes laddades inte ned; ingen lyckad native bytehämtning eller live-rollback påstås.
+
+Slutkandidatens 261 källfiler: `/workspace/scratch/nav40/candidate-manifest.json`, SHA256 `9dcc1cc621ea4bcc789684691646b1916deec8593e0fc8a60c92652fb24a341d`.
+
+Slutbyggets 96 distfiler: `/workspace/scratch/nav40/dist-manifest.json`, SHA256 `99973ebee28eeff65b4c8e7da9964e62ee93b4f02732859a6f9483032f62ee24`.
+
+## Lagring, återgång och kvarvarande arbete
+
+Ingen datamigrering krävs. V39 använder samma server- och privata utkastformat och är en datakompatibel UI-återgång för just menyändringen; den återför de rättade navigeringsfelen. Ingen faktisk live-rollback eller hostingåterställning har genomförts. Tidigare begränsningar för återgång till äldre utkastformat gäller fortsatt. CRM-backup omfattar fortfarande inte privata utkast, konton eller Outlook.
+
+Nästa avgränsning: **B01b2: stabil ansvarig för öppna affärer och order, med granskad överföring och bevarat historiskt resultat**. B01b2:s stabila kommersiella ansvar, övriga specialdialoger, fokus efter arbetsytebyte, mobilkundlista, separat utkast-/konto-/Outlookbackup, hostingbudget/återställning och personalpilot kvarstår.
+
+Browserprov avser isolerad Chromium/runtime med syntetiska data. Autentiserad live-UI, verkliga personal-/konto-/integrationsprov, fysisk telefon/OS-tangentbord, skärmläsare och faktisk hostingåterställning är oprövade. Ingen allmän WCAG-certifiering, världsranking eller personalacceptans utlovas. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas; explicit brief/repo används. Scheman, prompter och aktivering är oförändrade. Inga kundmejl eller riktiga kundorder skrivs.
+
+---
+
+Tidigare v39-underlag behålls nedan:
+
+# Historik: Privata företagsaktiviteter – v39, 2026-10-07
 
 ## Beteende och avgränsning
 

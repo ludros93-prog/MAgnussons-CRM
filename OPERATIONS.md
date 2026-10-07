@@ -1,5 +1,20 @@
 # Magnussons CRM – order, tryck och lager
 
+## Använd mobilmenyn – v40, 2026-10-07
+
+1. Välj menyknappen i huvudraden (**Öppna meny**). Panelen **Meny** har en synlig **Stäng** överst.
+2. Rulla inne i menyn för att nå de nedersta verktygen på en kort skärm. Stängningsraden ligger kvar.
+3. Välj ett arbetsområde. Menyn stängs och den valda sidan visas.
+4. Välj **Stäng** eller tryck Escape för att återgå till öppnaren. Tab och Shift+Tab går mellan panelens kontroller när den är öppen.
+
+Ctrl/Cmd+B öppnar inte mobilmenyn när en annan modal dialog är öppen. När viewporten går över till desktopbredd stängs den mobila panelen; den återöppnas inte automatiskt när skärmen blir smal igen. Desktopens befintliga menyval och tangentbordsväxel behålls. Breda, korta skärmar använder den befintliga sidmenyn i sidans layout. Vid minst 768 px bredd och högst 540 px höjd får hela den menyn egen vertikal rullning; header, val och footer ligger i samma rullningsyta. Menyns val pressas därmed inte ihop till en smal remsa mellan header och footer. Den vanliga höga desktoplayouten behålls. I mobilpanelen och den breda, korta sidmenyn får svenska menyval, företagsnamn och profiltext radbrytas inom sin yta. Magnussons symbol får en innehållsanpassad box när texten förstoras; menyknapparnas höjd växer med texten och är minst 44 px.
+
+Ingen datamigrering krävs. V39 använder samma server- och privata utkastformat och är en datakompatibel UI-återgång för just menyändringen; den återför de rättade navigeringsfelen. Ingen faktisk live-rollback eller hostingåterställning har genomförts. Tidigare begränsningar för återgång till äldre utkastformat gäller fortsatt. CRM-backup omfattar fortfarande inte privata utkast, konton eller Outlook.
+
+Detta är en avgränsad navigeringsändring. API, CRM- och utkastprovider, serverroller, privata utkastformat, SQL/schema, localStorage-nycklar, CAS, atomiska skrivningar och idempotens ändras inte. Ingen ny integration, kontakt, kundacceptans eller fakturering införs. B05 och B01b2 förblir öppna. Browserprov avser isolerad Chromium/runtime med syntetiska data. Autentiserad live-UI, verkliga personal-/konto-/integrationsprov, fysisk telefon/OS-tangentbord, skärmläsare och faktisk hostingåterställning är oprövade. Ingen allmän WCAG-certifiering, världsranking eller personalacceptans utlovas. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas; explicit brief/repo används. Scheman, prompter och aktivering är oförändrade. Inga kundmejl eller riktiga kundorder skrivs.
+
+Källa/main/live och provbelägg finns i [VALIDATION](VALIDATION.md).
+
 ## Fortsätt en privat företagsaktivitet – v39, 2026-10-07
 
 1. Välj **Ny aktivitet** i företagskalendern eller öppna ditt eget utkast från **Min dag → Fortsätt där du slutade** eller **Mina privata aktivitetsutkast**. Sälj- eller administratörsbehörighet krävs.

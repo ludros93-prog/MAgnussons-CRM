@@ -1,6 +1,16 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Publicerad v39 tillför privata företagsaktiviteter med bevarat underlag och separat publicering i teamets kalender. Källa/main/live och provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md); arbetsinstruktioner finns i [OPERATIONS](OPERATIONS.md).
+Publicerad v40 tillför en mobilmeny som går att rulla och stänga även på korta skärmar, med uttryckligt menyval och bevarat fokus/sidläge. Sidmenyn får en sammanhängande rullningsyta även på breda, korta skärmar. V39:s privata företagsaktiviteter och tidigare arbetsflöden består. Källa/main/live och provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md); arbetsinstruktioner finns i [OPERATIONS](OPERATIONS.md).
+
+## Mobil navigation – v40
+
+Mobilens menyknapp (**Öppna meny**) öppnar panelen **Meny** med synlig **Stäng** överst. Hela menyn har egen vertikal rullning under stängningsraden, så även de sista arbetsområdena och **Inställningar** i säljarbetsytan går att nå på korta skärmar. Val av ett arbetsområde stänger panelen; den valda sidan visas i den vanliga arbetsytan. Stäng/Escape återför fokus till den verkliga öppnaren, med menyknappen som reservmål när öppnaren försvunnit. Fokusåtergång använder `preventScroll` för att bevara sidans rullningsläge. Tangentbordets Tab/Shift+Tab stannar i den öppna modala panelen.
+
+Ctrl/Cmd+B öppnar inte mobilmenyn när en annan modal dialog är öppen. När viewporten går över till desktopbredd stängs den mobila panelen; den återöppnas inte automatiskt när skärmen blir smal igen. Desktopens befintliga menyval och tangentbordsväxel behålls. Breda, korta skärmar använder den befintliga sidmenyn i sidans layout. Vid minst 768 px bredd och högst 540 px höjd får hela den menyn egen vertikal rullning; header, val och footer ligger i samma rullningsyta. Menyns val pressas därmed inte ihop till en smal remsa mellan header och footer. Den vanliga höga desktoplayouten behålls. I mobilpanelen och den breda, korta sidmenyn får svenska menyval, företagsnamn och profiltext radbrytas inom sin yta. Magnussons symbol får en innehållsanpassad box när texten förstoras; menyknapparnas höjd växer med texten och är minst 44 px.
+
+Detta är en avgränsad navigeringsändring. API, CRM- och utkastprovider, serverroller, privata utkastformat, SQL/schema, localStorage-nycklar, CAS, atomiska skrivningar och idempotens ändras inte. Ingen ny integration, kontakt, kundacceptans eller fakturering införs. B05 och B01b2 förblir öppna.
+
+[VALIDATION](VALIDATION.md) redovisar faktiska prov och gränser. Nästa avgränsning: **B01b2: stabil ansvarig för öppna affärer och order, med granskad överföring och bevarat historiskt resultat**. B01b2:s stabila kommersiella ansvar, övriga specialdialoger, fokus efter arbetsytebyte, mobilkundlista, separat utkast-/konto-/Outlookbackup, hostingbudget/återställning och personalpilot kvarstår.
 
 ## Företagsaktiviteter – v39
 
