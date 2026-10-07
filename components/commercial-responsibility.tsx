@@ -1,7 +1,7 @@
 'use client';
 
 import {restoreHandoverFocus} from './handover-focus';
-import {useEffect,useRef,useState,type FocusEvent} from 'react';
+import {useEffect,useId,useRef,useState,type FocusEvent} from 'react';
 import {AlertTriangle,ArrowRightLeft} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
@@ -25,6 +25,7 @@ function takeSnapshot(st:State,targetType:Props['targetType'],targetId:string):S
 }
 
 export function CommercialResponsibility({st,targetType,targetId,save,busy,refresh,onClose,returnFocus}:Props){
+ const selectedProfileDescriptionId=useId();
  const currentBasis=commercialResponsibilityBasis(st,targetType,targetId);
  const [draft,setDraft]=useState<Draft>(()=>{
   const snapshot=takeSnapshot(st,targetType,targetId);
@@ -111,7 +112,8 @@ export function CommercialResponsibility({st,targetType,targetId,save,busy,refre
      <p>Nuvarande ansvar: <b>{currentOwner}</b>.</p>
      <p className="biz-hint">Profilens namn följs av dess ursprungliga ansvarskoppling. Det skiljer profiler med samma visningsnamn åt.</p>
      {snapshot.blockedReason&&<p className="biz-callout" role="alert">{snapshot.blockedReason}</p>}
-     <F label="Ny ansvarig *"><Select value={draft.targetProfileId||'_none'} onValueChange={value=>update({targetProfileId:value==='_none'?'':value})}><SelectTrigger aria-label="Ny ansvarig" style={{height:'auto',minHeight:44,width:'100%',minWidth:0,whiteSpace:'normal'}}><SelectValue style={{display:'block',overflow:'visible',WebkitLineClamp:'unset',minWidth:0}}/></SelectTrigger><SelectContent className="max-w-[calc(100vw-2rem)]"><SelectItem value="_none" className="min-h-11 whitespace-normal">Välj ny ansvarig</SelectItem>{snapshot.targetProfiles.map(profile=><SelectItem key={profile.id} value={profile.id} className="min-h-11 whitespace-normal break-words"><span className="min-w-0">{profileLabel(profile)}</span></SelectItem>)}</SelectContent></Select></F>
+     <F label="Ny ansvarig *"><Select value={draft.targetProfileId||'_none'} onValueChange={value=>update({targetProfileId:value==='_none'?'':value})}><SelectTrigger className="*:data-[slot=select-value]:min-w-0 *:data-[slot=select-value]:flex-1 *:data-[slot=select-value]:overflow-hidden" aria-label="Ny ansvarig" aria-describedby={target?selectedProfileDescriptionId:undefined} style={{height:'auto',minHeight:44,width:'100%',minWidth:0,whiteSpace:'normal'}}><SelectValue><span className="commercial-responsibility-selected">{target?profileLabel(target):'Välj ny ansvarig'}</span></SelectValue></SelectTrigger><SelectContent className="max-w-[calc(100vw-2rem)]"><SelectItem value="_none" className="min-h-11 whitespace-normal">Välj ny ansvarig</SelectItem>{snapshot.targetProfiles.map(profile=><SelectItem key={profile.id} value={profile.id} className="min-h-11 whitespace-normal break-words"><span className="min-w-0">{profileLabel(profile)}</span></SelectItem>)}</SelectContent></Select></F>
+     {target&&<p id={selectedProfileDescriptionId} className="biz-hint mb-4"><b>Vald ansvarig:</b> {profileLabel(target)}. Profil-ID: {target.id}.</p>}
      <F label="Varför byts ansvaret? *"><Textarea required rows={3} maxLength={4000} placeholder="Beskriv överlämningen och varför ansvaret byts." value={draft.reason} onChange={e=>update({reason:e.target.value})}/></F>
      <section className="biz-group" aria-label="Nödvändiga åtaganden"><h3>Nödvändiga åtaganden ({snapshot.requiredTaskIds.length})</h3><p className="biz-hint">Dessa öppna åtaganden följer alltid med till den nya ansvariga. De kan inte väljas bort i överlämningen.</p>
       {snapshot.eligible.filter(task=>requiredIds.has(task.id)).map(task=><label className="check-field" key={task.id}><Checkbox checked disabled aria-label={'Nödvändigt åtagande: '+task.title}/><span><b>{task.title}</b><small className="block">{taskMeta(task)}</small></span></label>)}
