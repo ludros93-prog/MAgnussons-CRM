@@ -4,6 +4,19 @@
 /* Keep wrapped navigation inside the header, above the workspace banner. */
 .crm-app .workspace-choice { scroll-margin: 8px; }
 .crm-app .workspace-choice:focus-visible { outline: 3px solid var(--ring); outline-offset: 4px; }
+@media(min-width:768px) {
+ .crm-app .topbar { flex-wrap: wrap; gap: 8px; height: auto; min-height: 70px; padding-block: 12px; }
+ .crm-app .top-actions { flex-wrap: wrap; gap: 8px; min-width: 0; max-width: 100%; }
+ .crm-app .workspace-choice { min-width: 0; max-width: 100%; height: auto; min-height: 44px; white-space: normal; }
+ .crm-app .workspace-choice [data-slot=select-value] {
+  min-width: 0;
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+  white-space: normal;
+  overflow-wrap: anywhere;
+ }
+}
 @media(max-width:767px) {
  .crm-app .topbar { height: auto; min-height: 62px; }
  .crm-app .crumb { min-width: 0; max-width: 100%; flex: 1 1 12rem; }
