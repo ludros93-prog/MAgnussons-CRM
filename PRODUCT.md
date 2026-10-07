@@ -1,6 +1,18 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Publicerad v38 förtydligar återhämtning av egna artikelutkast vid rollbyte. Källa, main, live och provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md). Daterade tidigare leveranser behålls nedan; driftinstruktioner finns i [OPERATIONS](OPERATIONS.md).
+Publicerad v39 tillför privata företagsaktiviteter med bevarat underlag och separat publicering i teamets kalender. Källa/main/live och provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md); arbetsinstruktioner finns i [OPERATIONS](OPERATIONS.md).
+
+## Företagsaktiviteter – v39
+
+Säljare och administratörer kan planera en företagsaktivitet som ett eget privat utkast och fortsätta från **Min dag** eller **Mina privata aktivitetsutkast** i företagskalendern. Rubrik, rå text med radbrytningar/mellanslag, ofärdiga datum, ansvar, status och alla förberedelser bevaras privat; ursprungligt kalenderunderlag följer samma utkast. **Spara utkast & stäng** väntar på privat sparning. **Spara i företagskalendern** är ett separat uttryckligt val: aktiviteten uppdateras och exakt den sparade privata revisionen avslutas atomiskt. Privat autosparning ändrar inte teamets kalender.
+
+En annan enhets privata version och en ändrad gemensam aktivitet är olika konflikter. Hela underlaget visas före val; jämförelse och en versionsbunden markerad bekräftelse krävs. Ändrade uppgifter ogiltigförklarar valet. Nytt granskat kalenderunderlag kan väljas med egna råvärden kvar, men en borttagen aktivitet återbildas inte tyst. Oförändrat CRM-återförsök efter förlorad kvittens behåller värden, originalbasis, privat revision och begärans-ID; ledgern kan återspela första framgång.
+
+Misslyckad privat sparning behåller panelen och full kopierbar text. **Stäng och behåll på denna enhet** kräver återläsning av samma lokala reservkopia; det är ingen bekräftad serversparning eller driftbackup och skyddar inte mot rensad enhetslagring. **Ta bort privat utkast** är ett separat bekräftat val och tar inte bort en gemensam kalenderaktivitet. Efter förlorad arkivkvittens kan en enda commit redan ha lyckats; exakt arkiveringsreplay eller automatisk lokal rensning utlovas inte.
+
+Befintlig utkasttyp `form` med context `company_event` används med ett nytt strikt kuvert. SQL, enumvärden och privat localStorage-nyckel är oförändrade. Ägare/arbetsyta, serverroller, CAS, atomiska skrivningar och idempotens består; privata utkast delas inte med andra användare. Kalenderinbjudningar skickas inte. B05 är bara delvis levererad.
+
+Tidigare arbetsflöden från v38 och äldre behålls nedan.
 
 ## Syfte och dagligt arbete
 

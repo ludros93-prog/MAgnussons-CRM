@@ -301,3 +301,15 @@ Fem officiella källor hämtades med HTTP 200 och elva kontrollerade utdrag 2026
 - [W3C Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) och [Focus Not Obscured Minimum](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html): tydlig status utan bakgrundsfokusflytt och nåbara kritiska val. Avgränsade Chromiumprov är ingen fysisk telefon-/skärmläsarverifiering eller tillgänglighetscertifiering.
 
 Strikt kuvertgranskning, versionsbunden bekräftelse, återläst lokal reservkopia och saved-only-arkivering är Magnussons egen implementation; [VALIDATION](../VALIDATION.md) anger faktiska prov. Leverantörskällorna bevisar inga privata lagringsgarantier, riktiga anslutningar, personalacceptans eller världsranking. Codex-tasken är fortfarande oläst.
+
+## Privata företagsaktiviteter – v39
+
+Fem officiella källor hämtades med HTTP 200, med tolv kontrollerade utdrag 2026-10-07 00:21:32–00:21:33 UTC. Evidens: `/workspace/scratch/event39-research/official-evidence.json`, SHA256 `50db5a73e81740056aeeae193d196305b750167e6ab93315578bf1db260d2159`.
+
+- [Lime Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/): relevanta handlingar och konkreta verb; arkivering är mindre framträdande. Egen tillämpning: privata utkast, kalenderpublicering och borttagning har olika handlingar.
+- [Lime 2025.1 release notes](https://platform.docs.lime-crm.com/en/latest/on-premise/releases/2025.1/release-notes/): varning när Protocol/Resource Planner lämnas med osparade ändringar. Egen tillämpning: invänta privat sparning före stängning; detta är inget belägg för Limes privata autosparningsmodell.
+- [Salesforce updateRecord](https://developer.salesforce.com/docs/platform/lwc/guide/reference-update-record.html): `ifUnmodifiedSince` för konfliktkontroll och en uppdateringskvittens. Egen tillämpning: fryst ursprungsbasis, exakt privat revision och explicit konfliktval. Ingen Salesforce-anslutning införs.
+- [Saleshub AI Funktioner](https://saleshubai.se/funktioner): kundkontext/nästa aktivitet och projektboard med uppgifter, flera ansvariga och statusrader. Egen tillämpning: samma privata aktivitetsarbete från Min dag och kalender, med förberedelser och ansvar.
+- [W3C Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html): begriplig spar-/felstatus utan fokusflytt vid bakgrundsändring. Faktiska tangentbords-/layoutprov är avgränsade Chromiumprov, ingen fysisk telefon-/skärmläsarcertifiering.
+
+Strikt rått privat kuvert, fullständig versionsjämförelse, markerat val, atomisk kalenderpublicering och exakt CRM-ledgerreplay är Magnussons egen implementation. Leverantörskällorna bevisar inga privata lagringsgarantier, fungerande kundanslutningar, personalacceptans eller världsranking. [VALIDATION](../VALIDATION.md) anger provgränser. Codex-referensen är fortfarande oläst.
