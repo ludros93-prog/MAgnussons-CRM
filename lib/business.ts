@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import {YearwheelResponsibilityHistorySchema} from './yearwheel-responsibility-schema';
 
 const text = z.string().trim().max(4000);
 const required = text.min(1, 'Fyll i obligatoriska uppgifter.');
@@ -6,7 +7,7 @@ export const validDate = z.string().refine(v => v === '' || (/^\d{4}-\d{2}-\d{2}
 const amount = z.number().finite().min(0).max(1e9);
 export const AddressSchema = z.object({ street: text.default(''), postalCode: text.default(''), city: text.default(''), country: text.default('Sverige'), reference: text.default('') });
 export const SiteSchema = z.object({ id: text.default(''), name: required, address: AddressSchema.default({}), contact: text.default('') });
-export const NeedSchema = z.object({ id: text.default(''), title: required.max(200), category: text.default(''), due: validDate.refine(Boolean, 'Ange när kunden behöver leveransen.'), leadDays: z.number().int().min(0).max(730).default(30), owner: required, intervalMonths: z.number().int().min(0).max(36).default(0), notes: text.default(''), status: z.enum(['planned','done','cancelled']).default('planned'), completedAt: text.default(''), dealId: text.default('') });
+export const NeedSchema = z.object({ ownerProfileId:z.union([z.literal(''),z.string().uuid()]).default(''),responsibilityTransfers:z.array(YearwheelResponsibilityHistorySchema).max(1000).default([]),id: text.default(''), title: required.max(200), category: text.default(''), due: validDate.refine(Boolean, 'Ange när kunden behöver leveransen.'), leadDays: z.number().int().min(0).max(730).default(30), owner: required, intervalMonths: z.number().int().min(0).max(36).default(0), notes: text.default(''), status: z.enum(['planned','done','cancelled']).default('planned'), completedAt: text.default(''), dealId: text.default('') });
 export const VariantFields = {variantId:text.max(200).default(''),color:text.max(200).default(''),size:text.max(100).default(''),unit:text.max(30).default('st')};
 export const LineSchema = z.object({ id: text.default(''), sourceId:text.default(''),productUrl:z.string().max(2000).default(''),kind: z.enum(['product','marking','setup','freight','other']).default('product'), description: required.max(300), article: text.default(''), variant: text.default(''), ...VariantFields, quantity: z.number().finite().positive().max(1e6), unitPrice: amount, unitCost: amount.nullable().default(null) });
 export const variantLabel=(line:{variant?:string;color?:string;size?:string})=>[line.color,line.size,line.variant].filter(Boolean).join(' · ');

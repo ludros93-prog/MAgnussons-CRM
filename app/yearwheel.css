@@ -1,0 +1,75 @@
+.yearwheel,.yearwheel-editor{min-width:0;overflow-wrap:anywhere}
+.yearwheel .biz-head>div{min-width:0}
+.yearwheel-heading{display:flex;align-items:flex-start;gap:.55rem;line-height:1.4}
+.yearwheel-heading svg{flex-shrink:0;margin-top:.15rem}
+.yearwheel-scope{display:flex;gap:.5rem;flex-wrap:wrap;margin-block:1rem .65rem}
+.yearwheel-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(6rem,9rem) auto;align-items:end;gap:.75rem;margin-block:1rem .5rem}
+.yearwheel-search{display:flex;align-items:center;gap:.45rem;min-width:0}
+.yearwheel-search svg{flex-shrink:0}
+.yearwheel-search input{min-width:0}
+.yearwheel-contact{margin-block:.65rem 1rem}
+.yearwheel .year-months>div{min-width:0}
+.yearwheel .year-months button{width:100%;text-align:left}
+.yearwheel .year-months button,.yearwheel .year-months button small{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+.yearwheel .year-months button small{display:block}
+.yearwheel .need-card{min-width:0}
+.yearwheel .need-card h3,.yearwheel .need-card p{white-space:normal;overflow-wrap:anywhere}
+.yearwheel-responsibility{border:1px solid #dce5ef;border-radius:10px;background:#f7fafc;padding:.75rem 1rem;margin-block:.75rem}
+.yearwheel-responsibility p{margin:.3rem 0}
+.yearwheel .biz-buttons{align-items:stretch}
+.yearwheel .biz-buttons>button{flex:1 1 12rem}
+.yearwheel button,.yearwheel-editor button:not([role=checkbox]),.yearwheel [data-slot=select-trigger],.yearwheel-editor [data-slot=select-trigger]{min-height:44px;min-width:0;max-width:100%;height:auto;white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.yearwheel-editor input,.yearwheel-editor textarea{min-height:44px;font-size:1rem;min-width:0;max-width:100%}
+.yearwheel-editor textarea{field-sizing:fixed;max-height:min(14rem,calc(100dvh - 5rem));overflow-y:auto}
+.yearwheel-editor [data-slot=select-value]{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;-webkit-line-clamp:unset;line-height:1.5}
+.yearwheel-editor [data-slot=sheet-header]{min-width:0;padding-right:3rem}
+.yearwheel-editor{scroll-padding-block:12px calc(var(--yearwheel-footer-height,0px) + 12px)}
+.yearwheel-editor fieldset{padding:0;margin:0;border:0;min-width:0}
+.yearwheel-edit-footer{position:sticky;bottom:-1.75rem;background:white;border-top:1px solid #dce5ef;padding:1rem 0;margin-top:1rem;z-index:2;min-width:0;overflow-wrap:anywhere}
+.yearwheel-editor[data-footer-flow=true] .yearwheel-edit-footer{position:static}
+.yearwheel-editor[data-footer-flow=true]{scroll-padding-bottom:12px}
+.yearwheel-edit-footer .biz-buttons{display:flex;flex-wrap:wrap;align-items:stretch;gap:.5rem}
+.yearwheel-edit-footer .biz-buttons>button{flex:1 1 12rem}
+.yearwheel-edit-footer p{margin:.4rem 0;white-space:normal;overflow-wrap:anywhere}
+.yearwheel-editor summary{min-height:44px;line-height:1.6;padding-block:.5rem}
+.yearwheel-edit-review dl{display:grid;gap:.75rem}
+.yearwheel-edit-review dl>div{min-width:0;border-bottom:1px solid #dce5ef;padding-bottom:.5rem}
+.yearwheel-edit-review dt{font-weight:650}
+.yearwheel-edit-review dd{white-space:pre-wrap;margin:.25rem 0}
+.yearwheel-editor .check-field{min-height:44px;align-items:flex-start}
+.yearwheel-editor .check-field>span{min-width:0}
+.yearwheel button:focus-visible,.yearwheel input:focus-visible,.yearwheel [tabindex="-1"]:focus-visible,.yearwheel-editor button:focus-visible,.yearwheel-editor input:focus-visible,.yearwheel-editor textarea:focus-visible,.yearwheel-editor summary:focus-visible,.yearwheel-editor [tabindex="-1"]:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
+.yearwheel-responsibility-dialog{width:calc(100vw - 2rem);max-width:640px!important;max-height:calc(100dvh - 2rem);overflow-y:auto;min-width:0;overflow-wrap:anywhere;scroll-padding:12px}
+.yearwheel-responsibility-dialog [data-slot=dialog-header]{min-width:0;text-align:left}
+.yearwheel-responsibility-dialog form,.yearwheel-responsibility-dialog fieldset{min-width:0;margin:0;padding:0;border:0}
+.yearwheel-responsibility-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.yearwheel-responsibility-head [data-slot=dialog-title]{display:flex;align-items:flex-start;gap:.5rem;flex:1 1 14rem;min-width:0;line-height:1.4}
+.yearwheel-responsibility-head [data-slot=dialog-title]>span{min-width:0}
+.yearwheel-responsibility-head svg{flex-shrink:0;margin-top:.15rem}
+.yearwheel-responsibility-current{padding:.8rem 1rem;margin-bottom:1rem;border:1px solid #dce5ef;border-radius:10px;background:#f7fafc}
+.yearwheel-responsibility-current p{margin:.3rem 0}
+.yearwheel-responsibility-dialog button:not([role=checkbox]),.yearwheel-responsibility-options [data-slot=select-item]{min-width:0;max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.yearwheel-responsibility-dialog .yearwheel-responsibility-select{width:100%}
+.yearwheel-responsibility-dialog [data-slot=select-value],.yearwheel-responsibility-dialog [data-slot=select-value]>span{min-width:0;white-space:normal;overflow:visible;overflow-wrap:anywhere;-webkit-line-clamp:unset;line-height:1.5}
+.yearwheel-responsibility-dialog .yearwheel-responsibility-select [data-slot=select-value]{flex:1}
+.yearwheel-responsibility-options{max-width:calc(100vw - 2rem)}
+.yearwheel-responsibility-options [data-slot=select-item]>span{min-width:0;overflow-wrap:anywhere;white-space:normal}
+.yearwheel-responsibility-dialog textarea{min-width:0;max-width:100%;font-size:1rem;field-sizing:fixed;max-height:min(14rem,calc(100dvh - 5rem));overflow-y:auto}
+.yearwheel-responsibility-dialog .check-field{align-items:flex-start;min-height:44px}
+.yearwheel-responsibility-dialog .check-field>span{min-width:0}
+.yearwheel-responsibility-dialog .check-field small{display:block}
+.yearwheel-responsibility-dialog .biz-buttons{align-items:stretch}
+.yearwheel-responsibility-dialog .biz-buttons>button{flex:1 1 13rem}
+.yearwheel-responsibility-dialog summary{min-width:0;min-height:44px;line-height:1.6;padding-block:.5rem}
+.yearwheel-responsibility-dialog button:focus-visible,.yearwheel-responsibility-dialog input:focus-visible,.yearwheel-responsibility-dialog textarea:focus-visible,.yearwheel-responsibility-dialog summary:focus-visible,.yearwheel-responsibility-dialog [tabindex="-1"]:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
+@media(max-width:767px){.yearwheel-toolbar{grid-template-columns:minmax(0,1fr)}.yearwheel-scope>button{flex:1 1 8rem}.yearwheel .year-months{grid-template-columns:repeat(2,minmax(0,1fr))}.yearwheel-editor .biz-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-height:450px){.yearwheel-edit-footer{position:static}.yearwheel-editor{scroll-padding-bottom:12px}}
+
+.yearwheel-responsibility-dialog .yearwheel-responsibility-select [data-slot=select-value]>.yearwheel-responsibility-choice-label,.yearwheel-editor .yearwheel-profile-choice [data-slot=select-value]>.yearwheel-profile-label{display:-webkit-box;width:100%;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.yearwheel-editor .yearwheel-profile-choice [data-slot=select-value]{flex:1;min-width:0}
+
+.yearwheel-month-need,.yearwheel-customer{min-width:0;overflow-wrap:anywhere}
+.yearwheel-month-need p,.yearwheel-customer p{margin:.4rem 0;white-space:normal;overflow-wrap:anywhere}
+.yearwheel-month-need small{display:block;white-space:normal;overflow-wrap:anywhere}
+.yearwheel .year-months .yearwheel-month-need button{display:flex;align-items:center;gap:.4rem;margin-top:.35rem;font-weight:600}
+.yearwheel-month-need button svg,.yearwheel-customer button svg{flex-shrink:0}

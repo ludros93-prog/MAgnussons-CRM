@@ -9,7 +9,7 @@ const required=z.string().trim().min(1).max(4000),recordId=required.max(100),own
 const recordedProfileId=z.union([z.literal(''),profileId]);
 export const TaskResponsibilityHistorySchema=z.object({
  id:profileId,taskId:recordId,customerId:recordId,dealId:z.string().trim().max(100),
- source:z.enum(['task','customer','deal','order','onboarding','customer_issue']),sourceTransferId:recordedProfileId,action:z.enum(['anchor','transfer']),
+ source:z.enum(['task','customer','deal','order','onboarding','customer_issue','yearwheel']),sourceTransferId:recordedProfileId,action:z.enum(['anchor','transfer']),
  fromRecordedProfileId:recordedProfileId,fromProfileId:profileId,toProfileId:profileId,
  fromOwner:ownerName,toOwner:ownerName,fromDisplayName:ownerName,toDisplayName:ownerName,
  reason:required,at:z.string().datetime(),byId:required,byMemberId:required,byName:required
@@ -122,8 +122,8 @@ export function transferTaskResponsibility(st:State,input:TaskResponsibilityTran
 
 // Selected tasks keep their own chain when an existing customer/commercial
 // bundle moves them. The actual parent audit supplies the immutable source.
-export function recordTaskBundleTransfers(previousState:State,nextState:State,source:'customer'|'deal'|'order'|'onboarding'|'customer_issue',sourceTransferId:string){
- const parent=source==='customer_issue'?nextState.customers.flatMap(row=>row.plan.issueResponsibilityTransfers).find(row=>row.id===sourceTransferId):source==='onboarding'?nextState.customers.flatMap(row=>row.onboarding.responsibilityTransfers).find(row=>row.id===sourceTransferId):source==='customer'?nextState.customers.flatMap(row=>row.responsibilityTransfers).find(row=>row.id===sourceTransferId):[...nextState.deals,...nextState.orders].flatMap(row=>row.responsibilityTransfers).find(row=>row.id===sourceTransferId);
+export function recordTaskBundleTransfers(previousState:State,nextState:State,source:'customer'|'deal'|'order'|'onboarding'|'customer_issue'|'yearwheel',sourceTransferId:string){
+ const parent=source==='yearwheel'?nextState.customers.flatMap(customer=>customer.yearNeeds.flatMap(row=>row.responsibilityTransfers)).find(row=>row.id===sourceTransferId):source==='customer_issue'?nextState.customers.flatMap(row=>row.plan.issueResponsibilityTransfers).find(row=>row.id===sourceTransferId):source==='onboarding'?nextState.customers.flatMap(row=>row.onboarding.responsibilityTransfers).find(row=>row.id===sourceTransferId):source==='customer'?nextState.customers.flatMap(row=>row.responsibilityTransfers).find(row=>row.id===sourceTransferId):[...nextState.deals,...nextState.orders].flatMap(row=>row.responsibilityTransfers).find(row=>row.id===sourceTransferId);
  need(parent,'Den granskade överlämningens ansvarshistorik saknas.');
  for(const taskId of parent!.selectedTaskIds){
   const old=previousState.tasks.find(row=>row.id===taskId),task=nextState.tasks.find(row=>row.id===taskId),from=old?taskResponsibleProfile(previousState,old):undefined,to=sellerProfileById(nextState.settings,parent!.toProfileId);
@@ -131,7 +131,7 @@ export function recordTaskBundleTransfers(previousState:State,nextState:State,so
   need((old!.responsibilityTransfers||[]).length<1000,'En vald uppgift har nått gränsen för ansvarshistorik. Granska överlämningen utan den uppgiften.');
   const displayParent=parent as typeof parent&{fromDisplayName?:string;toDisplayName?:string};
   const row=TaskResponsibilityHistorySchema.parse({
-   id:crypto.randomUUID(),taskId:task!.id,customerId:task!.customerId,dealId:task!.dealId,source,sourceTransferId:parent!.id,action:(source==='onboarding'||source==='customer_issue')&&parent!.fromProfileId===parent!.toProfileId?'anchor':'transfer',
+   id:crypto.randomUUID(),taskId:task!.id,customerId:task!.customerId,dealId:task!.dealId,source,sourceTransferId:parent!.id,action:(source==='onboarding'||source==='customer_issue'||source==='yearwheel')&&parent!.fromProfileId===parent!.toProfileId?'anchor':'transfer',
    fromRecordedProfileId:old!.ownerProfileId||'',fromProfileId:parent!.fromProfileId,toProfileId:parent!.toProfileId,
    fromOwner:parent!.fromOwner,toOwner:parent!.toOwner,fromDisplayName:displayParent.fromDisplayName||from!.displayName,toDisplayName:displayParent.toDisplayName||to!.displayName,
    reason:parent!.reason,at:parent!.at,byId:parent!.byId,byMemberId:parent!.byMemberId,byName:parent!.byName
@@ -141,6 +141,13 @@ export function recordTaskBundleTransfers(previousState:State,nextState:State,so
 }
 
 function derivedTaskProfileId(st:State,task:Task){
+ // New yearwheel reminders copy the exact recorded need identity, including
+ // a legacy blank, even when an inactive owner needs a reviewed handover.
+ if(task.kind.startsWith('year:')&&!task.dealId){
+  const yearNeed=st.customers.find(row=>row.id===task.customerId)?.yearNeeds.find(row=>'year:'+row.id===task.kind);
+  need(yearNeed?.status==='planned'&&task.owner===yearNeed.owner,'En ny årshjulsuppgift måste följa det planerade inköpsbehovets ansvar.');
+  return yearNeed!.ownerProfileId;
+ }
  // New issue work copies the exact recorded issue identity, including a legacy
  // blank. The customer, order and alias must never fill that blank.
  if(task.kind==='csm_issue'&&!task.dealId){
@@ -169,7 +176,7 @@ function derivedTaskProfileId(st:State,task:Task){
  return st.settings.sellerProfilesInitialized?sellerProfileForOwner(st.settings,task.owner)?.id||'':'';
 }
 
-export function assignTaskResponsibilities(previousState:State,nextState:State,exactNewMeetingOwners?:ReadonlyMap<string,string>,exactNewOnboardingOwners?:ReadonlyMap<string,string>){
+export function assignTaskResponsibilities(previousState:State,nextState:State,exactNewMeetingOwners?:ReadonlyMap<string,string>,exactNewOnboardingOwners?:ReadonlyMap<string,string>,exactNewNeedDealOwners?:ReadonlyMap<string,string>){
  const previous=new Map(previousState.tasks.map(task=>[task.id,task]));
  // Only these server-created tasks copy an exact recorded source ID,
  // including a blank. Other generators retain their derivation rules.
@@ -181,6 +188,10 @@ export function assignTaskResponsibilities(previousState:State,nextState:State,e
   const task=nextState.tasks.find(row=>row.id===taskId),customer=task?nextState.customers.find(row=>row.id===task.customerId):undefined;
   need(!previous.has(taskId)&&task&&task.kind==='onboarding'&&!task.dealId&&customer?.onboarding.startedAt&&task.owner===customer.onboarding.owner&&ownerId===customer.onboarding.ownerProfileId&&(ownerId===''||matchingProfileId(nextState.settings,task.owner,ownerId)),'Onboardingens exakta uppgiftsansvar får bara kopieras till en ny onboardinguppgift.');
  }
+ for(const [taskId,ownerId] of exactNewNeedDealOwners||[]){
+  const task=nextState.tasks.find(row=>row.id===taskId),deal=task?nextState.deals.find(row=>row.id===task.dealId&&row.customerId===task.customerId):undefined,yearNeed=deal?nextState.customers.find(row=>row.id===deal.customerId)?.yearNeeds.find(row=>row.dealId===deal.id):undefined;
+  need(!previous.has(taskId)&&task&&task.kind==='discovery'&&deal&&yearNeed&&task.owner===yearNeed.owner&&ownerId===yearNeed.ownerProfileId&&deal.ownerProfileId===ownerId&&(ownerId===''||matchingProfileId(nextState.settings,task.owner,ownerId)),'Årshjulets exakta ansvar får bara kopieras till den nya behovsaffärens uppgift.');
+ }
  for(const task of nextState.tasks){
   const old=previous.get(task.id);
   const oldHistory=old?.responsibilityTransfers||[],audited=!!old&&task.responsibilityTransfers.length>oldHistory.length;
@@ -188,7 +199,7 @@ export function assignTaskResponsibilities(previousState:State,nextState:State,e
   else need(!task.responsibilityTransfers.length,'En ny uppgift får inte ärva en annan uppgifts ansvarshistorik.');
   if(!audited){
    need(!old||!oldHistory.length||old.owner===task.owner,'Uppgiftens granskade ansvar måste överföras i dess överlämning.');
-   task.ownerProfileId=exactNewMeetingOwners?.has(task.id)?exactNewMeetingOwners.get(task.id)!:exactNewOnboardingOwners?.has(task.id)?exactNewOnboardingOwners.get(task.id)!:old&&old.owner===task.owner?old.ownerProfileId||'':derivedTaskProfileId(nextState,task);
+   task.ownerProfileId=exactNewNeedDealOwners?.has(task.id)?exactNewNeedDealOwners.get(task.id)!:exactNewMeetingOwners?.has(task.id)?exactNewMeetingOwners.get(task.id)!:exactNewOnboardingOwners?.has(task.id)?exactNewOnboardingOwners.get(task.id)!:old&&old.owner===task.owner?old.ownerProfileId||'':derivedTaskProfileId(nextState,task);
   }
  }
  validateTaskResponsibilityReferences(nextState);
@@ -209,14 +220,18 @@ export function validateTaskResponsibilityReferences(st:State){
    // An onboarding anchor can review a task whose matching ID was already
    // recorded. Its unchanged recorded ID remains explicit in the audit; the
    // ordinary standalone-task anchor still requires a previously blank ID.
-   need(row.action==='anchor'?(row.source==='task'&&!row.fromRecordedProfileId||row.source==='onboarding'||row.source==='customer_issue')&&row.fromProfileId===row.toProfileId:row.fromProfileId!==row.toProfileId,'Uppgiftshistoriken har en ogiltig förankring eller överföring.');
+   need(row.action==='anchor'?(row.source==='task'&&!row.fromRecordedProfileId||row.source==='onboarding'||row.source==='customer_issue'||row.source==='yearwheel')&&row.fromProfileId===row.toProfileId:row.fromProfileId!==row.toProfileId,'Uppgiftshistoriken har en ogiltig förankring eller överföring.');
    need(!previous||previous.toProfileId===row.fromProfileId&&previous.toProfileId===row.fromRecordedProfileId&&previous.toOwner===row.fromOwner,'Uppgiftens överföringar bildar inte en sammanhängande ansvarskedja.');
    if(row.source==='task'){
     need(!row.sourceTransferId&&!row.dealId&&independentKinds.has(task.kind),'En fristående uppgiftsöverföring har en felaktig arbetsflödeskoppling.');
    }else{
-    const parent=row.source==='customer_issue'?st.customers.find(customer=>customer.id===row.customerId)?.plan.issueResponsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='onboarding'?st.customers.find(customer=>customer.id===row.customerId)?.onboarding.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='customer'?st.customers.find(customer=>customer.id===row.customerId)?.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):(row.source==='deal'?st.deals:st.orders).flatMap(target=>target.responsibilityTransfers).find(history=>history.id===row.sourceTransferId);
+    const parent=row.source==='yearwheel'?st.customers.find(customer=>customer.id===row.customerId)?.yearNeeds.flatMap(yearNeed=>yearNeed.responsibilityTransfers).find(history=>history.id===row.sourceTransferId):row.source==='customer_issue'?st.customers.find(customer=>customer.id===row.customerId)?.plan.issueResponsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='onboarding'?st.customers.find(customer=>customer.id===row.customerId)?.onboarding.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='customer'?st.customers.find(customer=>customer.id===row.customerId)?.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):(row.source==='deal'?st.deals:st.orders).flatMap(target=>target.responsibilityTransfers).find(history=>history.id===row.sourceTransferId);
     need(parent&&parent.customerId===row.customerId&&parent.selectedTaskIds.includes(row.taskId)&&parent.fromProfileId===row.fromProfileId&&parent.toProfileId===row.toProfileId&&parent.fromOwner===row.fromOwner&&parent.toOwner===row.toOwner&&parent.reason===row.reason&&parent.at===row.at&&parent.byId===row.byId&&parent.byMemberId===row.byMemberId&&parent.byName===row.byName,'Uppgiftshistoriken motsäger den granskade kund-, affärs- eller orderöverlämningen.');
     if(row.source==='customer')need(!row.dealId&&independentKinds.has(task.kind),'Kundöverlämningen innehåller en affärskopplad eller skyddad uppgift.');
+    else if(row.source==='yearwheel'){
+     const yearwheel=parent as NonNullable<typeof parent>&{needId?:string;action?:string;fromDisplayName?:string;toDisplayName?:string};
+     need(!row.dealId&&task.kind==='year:'+yearwheel.needId&&yearwheel.action===row.action&&yearwheel.fromDisplayName===row.fromDisplayName&&yearwheel.toDisplayName===row.toDisplayName,'Uppgiftshistoriken har en bruten årshjulsöverlämning.');
+    }
     else if(row.source==='customer_issue'){
      const issue=parent as NonNullable<typeof parent>&{action?:string;fromDisplayName?:string;toDisplayName?:string};
      need(!row.dealId&&task.kind==='csm_issue'&&issue.action===row.action&&issue.fromDisplayName===row.fromDisplayName&&issue.toDisplayName===row.toDisplayName,'Uppgiftshistoriken har en bruten ärendeöverlämning.');

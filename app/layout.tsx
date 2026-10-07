@@ -13,6 +13,7 @@ import "./customer-overview.css";
 import "./task-responsibility.css";
 import "./meeting-responsibility.css";
 import "./customer-register.css";
+import "./yearwheel.css";
 
 export const metadata: Metadata = {
   title: "Magnussons CRM",
