@@ -13,7 +13,13 @@ Utgå från CRM:ets befintliga logotyp, mörka navigation, ljusa arbetsytor och 
 - Använd läsbar löptext, synligt tangentbordsfokus och mobila handlingar på minst 44 px. Långa namn, mejladresser och instruktioner ska brytas inom sin yta.
 - Visa tomt läge och saknat underlag med en begriplig nästa handling. Inga dekorativa prognoser, påhittade resultat eller falska integrationsstatusar.
 
-## Responsivt kundregister – v47
+## Återgå till rätt kund efter stängning – v48
+
+Användarens stängning återför fokus till samma kundkontroll i samma identitet/vy; bakgrundsladdning/navigation flyttar inget fokus genom funktionen. En borttagen, dold, inaktiverad eller ändrad kontroll ersätts av vyns namngivna rubrik med synligt fokus. Reservrubrikens fokusram får 8 px scrollmarginal och behöver utrymme för ramens 3 px plus 4 px offset; vanliga öppningskontroller behåller sin scrollregel. Sparspärrar och annan öppen dialog skyddas.
+
+[VALIDATION](VALIDATION.md) anger faktiskt slutprov och visuellt underlag. Officiella W3C-/Radixprinciper och CRM-inspiration finns i [RESEARCH](agent/RESEARCH.md). Personalens förståelse återstår. Extrema långa sökträffar på kort mobilskärm har en separat observerad layoutgräns; se VALIDATION/BACKLOG.
+
+## Historik: Responsivt kundregister – v47
 
 Kundregistret visar fullständigt kundnamn och kontaktperson, kundansvarig, nästa verkliga öppna uppgift eller planerade CRM-möte och en separat nästa avstämning. Raderna staplas på mobil och använder flera kolumner när utrymmet finns. **Öppna kundkort** är en egen svensk knapp med minst 44 px höjd; det långa namnet ligger utanför knappen så även en kort skärm kan visa hela den fokuserade kontrollen. Samma kund-ID, befintliga sök-/ansvarsfilter, ordning och kundkort används.
 
@@ -59,12 +65,12 @@ I T26 och B07:s befintliga pilotmoment ska en CRM-ovan användare kunna svara p�
 
 Observera vad personen faktiskt väljer och registrera feltolkningar, backningar och behov av hjälp per moment. Ett förlorat eller nekat svar får inte tolkas som bekräftad CRM-sparning. Använd befintliga pilotuppgifter och fiktivt underlag; detta inför inget nytt testprogram eller påhittat tidsmål. Browserprov ska kontrollera att rätt information och handling går att nå. De besvarar inte frågan om personalen förstår vyn utan handledning.
 
-Mobilkundregistrets avgränsade implementation och lokala prov finns i v47-avsnittet ovan; personalens förståelse återstår. Fokusåtergång efter stängt kundkort och fokus efter arbetsytebyte är fortsatt öppna mål. Följande krav hålls åtskilda från faktiska prov:
+Mobilkundregistrets lokala prov finns i det historiska v47-avsnittet; v48 ovan rättar kundkortets avgränsade fokusåtergång. Personalens förståelse och fokus efter arbetsytebyte återstår. Följande krav hålls åtskilda från faktiska prov:
 
 | Arbetsmoment | Önskat beteende och avgränsad kontroll |
 | --- | --- |
 | Hitta en kund på mobilen | På 320/390 px ska kundlistan visa kundnamn, ansvarig och nästa aktivitet eller ett ärligt besked om att den saknas. Kundkortet ska kunna öppnas med vanlig pointer och tangentbord. Långa värden ska vara läsbara inom vyn utan att kundens viktigaste handling kräver horisontell scroll; inga påhittade ansvariga eller aktiviteter fyller tomma fält. |
-| Stänga kundkortet | Efter användarens stängning ska fokus återgå till samma kunds öppningsknapp när den finns, annars en namngiven start. Native Tab/Enter följt av Escape tappar ännu fokus till BODY i både v46 och v47; det är ett negativt diagnostikprov och kräver separat rättning/slutprov. Bevara kund-ID, scrolläge, roller och privata utkast. |
+| Stänga kundkortet | V48 återför efter användarens stängning fokus till samma öppningskontroll i samma kund-/identitets-/vysammanhang, annars vyns namngivna rubrik. Bakgrund/navigation/annan dialog flyttar inte fokus genom denna funktion. Bevara kund-ID, scrolläge, roller och privata utkast. Slutprov och gränser finns i VALIDATION; personalacceptans återstår. |
 | Byta arbetsyta | Efter ett användarvalt byte ska vald arbetsyta framgå i text och tangentbordsfokus återgå till motsvarande väljare i den nya vyn, eller en namngiven start om väljaren inte finns. Fokus får inte tappas till BODY. Bakgrundsladdning och autosparning får inte stjäla fokus. Prova vanligt tangentbordsbyte och efterföljande Tab; bevara skydden för privata utkast och rätt roll/sammanhang. |
 
 Kundkortets normala 390/320 px-vyer visar första handlingen direkt i de tidigare proven. Extra långa värden på 320 px kräver vertikal scroll. D01 publicerades i v19 och kvarstår i v22 enligt [VALIDATION.md](VALIDATION.md). Vid v19 kunde bannern täcka den globala arbetsyteväljarens pointerklick på 320 px och tangentbord användes för initieringshinten. Detta fynd ligger till grund för den slutprovade och publicerade v20-rättningen nedan. Autentiserad live-UI och personalens användbarhet är fortfarande inte verifierade.

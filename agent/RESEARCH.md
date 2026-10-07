@@ -1,5 +1,11 @@
 # CRM-källor för Magnussons byggagent
 
+## Kundkortets fokusåtergång – källkontroll för v48, 2026-10-07
+
+Officiella källor kontrollerades 2026-10-07 09:25:25 UTC via webverktyget, som inte rapporterade HTTP-status. [W3C Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) säger ”When a dialog closes, focus returns to the element that invoked the dialog”, med logisk reservplats när öppnaren saknas. [Radix Dialog](https://www.radix-ui.com/primitives/docs/components/dialog) dokumenterar `onCloseAutoFocus`. [Salesforce Global Focus](https://www.lightningdesignsystem.com/2e1ef8501/p/92a50f-global-focus) stöder återgång till öppnaren via officiellt sökindex; direct open gav 0 textrader. [Saleshub AI](https://saleshubai.se/funktioner) beskriver ”Kundkort med kontakter, filer, mail, samtal och nästa aktivitet”. [Lime Activities](https://platform.docs.lime-crm.com/en/v2.936.11/configuration/webclient/activities/) beskriver postkopplad aktivitetstidslinje. Övriga fyra sidor lästes direkt. Installerade Radix-versioner kontrollerades separat. Kvitto `/workspace/scratch/crm48/audit/official-sources.json`, SHA256 `69574e507fd3dddfe9914594e9a6fccb4995b31c6697683a7be1a9d497cdd35b`.
+
+Principerna stöder rätt kundsammanhang och logisk fokusåtergång. Identitets-/vyskydd, reservrubrik och stängningsspärrar är vår egen implementation med prov i VALIDATION. Arbetsytebytets fokuslucka kvarstår. Källorna verifierar inga verkliga anslutningar, personalresultat eller full WCAG-efterlevnad.
+
 ## Responsivt kundregister – källkontroll för v47, 2026-10-07
 
 Fem officiella källor lästes 08:18:07–08:18:08 UTC genom den ärvda proxyn med bevarad TLS-/CA-kontroll; samtliga gav HTTP 200. Tio korta utdrag har verifierade HTML-/texthashar och exakta tecken-, UTF-8-byte- och radpositioner. Dokumentationsagenten jämförde sparade original och samtliga utdrag. Kvitto `/workspace/scratch/crm47/research/receipt.json`, SHA256 `b7bf2a08d9a15607742d8ec62fbb96f5664b7f2f7499cd1bf7b06ea02ea54a0f`; sammanställning `/workspace/scratch/crm47/research/findings.md`, SHA256 `c0cc8a60de6058b5ee5937c3159f36c4a165fd17e3084811a6984d05c77df84e`.

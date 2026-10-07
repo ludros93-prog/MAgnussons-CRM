@@ -1,4 +1,38 @@
-# Responsivt kundregister med faktisk nästa aktivitet – v47
+# Kundkortets fokusåtergång – v48
+
+## Beteende och avgränsning
+
+När du själv stänger kundkortet med Escape eller stängknappen återgår tangentbordsfokus till den kontroll som öppnade samma kund. Kund-ID, konto/roll, arbetsyta och vy måste fortfarande stämma och kontrollen måste vara tillgänglig. Om den kontrollen saknas används den aktuella vyns namngivna huvudrubrik. Fokus rullar bara vid behov för att synas; reservrubriken får 8 px marginal för hela sin fokusram. Bakgrundsuppdateringar, programmatisk navigation, identitetsbyte och en annan öppen dialog utlöser ingen kundkortsåtergång. Befintliga spärrar under sparning och kundansvarsöverlämning består.
+
+## Faktiska prov
+
+Sex nya v47-baslinjefall tappade fokus till BODY. Rapport `/workspace/scratch/crm48/browser/baseline-final/report.json`, SHA256 `0acfc57631d3cd74335c1c026a9190d3d9ed34522e3c72f75d232357d0c16071`. Isolerade data bevarades; inget personalprov.
+
+Bd65:s microtask-rensning tappade klicköppnaren före bubbelfasen; skyddad timeout 0 rättar det. Det stoppade provets source ändrades under avvecklingen: diagnostik, inte slutQA. Kandidat 655 klippte rubrikramen; slut535 ger 8 px marginal. Äldre 34+1/CI/arkiv är ersatta.
+
+Samtliga fem obligatoriska slutkontroller passerade på ren oförändrad kandidat `5357d1ff0b2d2b994b35d4aa2d687c7b825df3e8`, träd `24d9b55d30ba0ebe940c1aca5c813d4f261e7513`, 2026-10-07 09:52:04–09:53:37 UTC: CRM/Outlook-regression, icke-inkrementell TypeScript, bygge, runtime-smoke och diffkontroll. `/workspace/scratch/crm48/app-all5-verified/checks.json`, SHA256 `6c1959603654b60e97c9049888912b455e8f32fd861244e298cd3024ad99bc21`. Byggd workerd med isolerad beständig D1/R2 återställde 13 500 000 filbyte i tre filer via 18 011 655 arkivbyte, med alla 18 råtabeller, verifierade hashar och korrektur-/fotolänkar. Detta är lokal återställning, ingen hostingåterställning.
+
+41 slutbrowserfall passerade 2026-10-07 09:58:11–10:01:06 UTC, avveckling 10:01:54 UTC på samma frysta kod/dist och byggd lokal Worker/D1/R2. 40 funktionsfall plus separat kund-ID-rebindfall provar 320/390/1280, admin/seller/reader, native öppning/stängning/nästa Tab, borttagen/dold/inaktiv/ändrad öppnare, Sök kund, Min dag/kundvård/prospekt, redigering/återgång, överlämningsspärr, privat anteckningsutkast, roll-/arbetsyte-/bakgrundsbyte och snabb native återöppning. Produktions-/tryck-/lagerroller provas via faktisk serverprojektion. Nio separata geometriprov verifierar hela fokusramen vid öppnare och H1, även med exakt 2× beräknad font. Alla 18 råtabeller inklusive mutationshistorik/privata arbetsyte-/Outlookunderlag och två R2-objekts byte/hash/metadata bevarades; 0 browser-API-skrivningar, sidfel och externa anrop. `/workspace/scratch/crm48/browser/final-receipt.json`, SHA256 `fc19101bba9fa80a459eb99458bd320568dcbe5f427262879c26569e2018c748`. Åtta slut-PNG granskade; `/workspace/scratch/crm48/root-visual-review.json`, SHA256 `39ac90082ff3589f5ffd764d6a2bfa41e255041db077ebeadd23b2531f0582b5`. H1-ramen 3 px + offset 4 px syns helt i åtta mobilfall, även med avgränsat förstorat textläge. Native pointer/tangentbord används i normala fall; DOM-/mousedownperturbation, syntetisk fönsterfokus och styrt GET-rollsvar är separata prov. 2× font gäller main/rubrik, inte helsidig zoom eller Safari/touch. Påtvingad DOM-återöppning under stängning kan ge initialt BODY-fokus även i v47; vanlig native återöppning passerade. Extrem 664 px sökträff på 320×360 stoppade före kortöppning: separat layoutdiagnostik `final-095645/report.json`, SHA256 `6cf38b715a8458e450a6366e2eaaf4a0c73eafc7644f514aae585f15b0186b3b`. Nya picker-rubriksprov väljer befintlig kort syntetisk kund; 390-långfallen består.
+
+Proven ger ingen full WCAG-bedömning eller verklig konto-/personalverifiering. Inga riktiga kundorder skrivtestades.
+
+## Källa, main och live
+
+[App-PR #70](https://github.com/ludros93-prog/MAgnussons-CRM/pull/70): head `5f3b43ae37a58714147ebc189621f8776c289dee` mot bas `e97c5a03f12dcbf1ffcf347df34e870630f3d91c`, sammanslagen till app-main `245512582ebffb328ae2b6664eeb334629784392` med provkandidatens träd. Actions [37603664954](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37603664954)/[37604758523](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37604758523) completed/success för respektive exakt SHA, alla 13 steg inklusive cleanup/Complete job. `/workspace/scratch/crm48/github-app-delivery.json`, SHA256 `a4e70f326884692984b0b5d652834e992e880e9931bb5355cac190702cd200a9`.
+
+Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2`: v48, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_050881d194948191a98cefcd2a0de86d`, exakt pushad source `ca1681891da9a26f30c5639360c3081c72e0dd7a`; deploy `appgdep_6ac61978cd7c81919369a53f1885de31` succeeded 2026-10-07 10:06:08 UTC. Native arkiv matchar råtar: 97 filer/4 618 240 byte, SHA256 `f74e1932e3202c8faea0d484c9f6a076a0845436ad696203a6fe3a66345e471a`. CUSTOM-policyrevision 2, miljörevision 1, DB/R2 och 0 scheman exakt bevarade. `/workspace/scratch/crm48/site-delivery.json`, SHA256 `d13a7080213351a0fd6f6f72d3d9b3f93984bdf1d4e772c8bf1196f81d2a6635`. Anonyma GET 401/401 är endast spärrprov. Efterföljande Markdownleverans har eget kvitto utan app-redeploy.
+
+## Kompatibilitet och nästa arbete
+
+Tio presentationsfiler ändras; övriga 266 av 276 spårade basfiler är byteidentiska. Åtta komponenters handlers/innehåll består utom kund-ID-metadata. Page hanterar kundkortsåtergång, CSS rubrikfokus. Modeller, provider, API, roller, privata utkast, CAS/idempotens, DB/R2, beroenden och driftkonfiguration består. `/workspace/scratch/crm48/audit/review-verified.json`, SHA256 `faca2865fc9fe4b87547c6c020839f88538c5fc14b1f53256b677e6d511b000d`. Ingen migration/ny lagring; v47 är datakompatibel UI-återgång som återför problemet. Äldre modellbundna gränser, särskilt möteshistorik/profil-ID, består. Ingen live-rollback/hostingåterställning utfördes.
+
+Fokus efter arbetsytebyte och verklig personalpilot återstår. Övrigt prioriterat arbete och den olästa Codex-referensen anges i [STATUS](STATUS-2026-10-05.md).
+
+---
+
+Tidigare v47-verifiering behålls som historik.
+
+# Historik: Responsivt kundregister med faktisk nästa aktivitet – v47
 
 ## Beteende och avgränsning
 

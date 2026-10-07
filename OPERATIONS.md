@@ -1,6 +1,16 @@
 # Magnussons CRM – order, tryck och lager
 
-## Hitta kunden och öppna kundkortet – v47
+## Stäng kundkortet och fortsätt – v48
+
+1. Öppna kundkortet från befintlig kundhandling.
+2. Stäng med Escape eller kundkortets stängknapp. När samma öppningskontroll finns kvar i samma konto/roll, arbetsyta och vy ligger fokus där igen. Fortsätt med Tab.
+3. Saknas kontrollen fokuseras vyns namngivna huvudrubrik. Funktionen återför inte fokus från en annan öppen dialog.
+
+Sparning och kundansvarsöverlämning behåller sina stängningsspärrar. Bakgrundsladdning, programmatisk navigation och identitetsbyte ger ingen kundkortsåtergång. Stängning registrerar ingen kontakt eller CRM-inlämning.
+
+[VALIDATION](VALIDATION.md) anger publicering/prov/återgångsgränser. Ingen migration; v47 återför fokusluckan. Ingen live-rollback/hostingåterställning. Arbetsytefokus återstår.
+
+## Historik: Hitta kunden och öppna kundkortet – v47
 
 1. Öppna **Kunder**. Sök som tidigare eller välj ansvarig för att begränsa urvalet.
 2. Läs kundnamn, kontaktperson och kundansvarig. Ett besked om äldre/felaktig ansvarskoppling är ett granskningsbehov; visningen tilldelar ingen person automatiskt.
