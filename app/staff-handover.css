@@ -1,0 +1,65 @@
+.staff-handover{min-width:0;overflow-wrap:anywhere}
+.staff-handover p,.staff-handover h2,.staff-handover h3,.staff-handover dt,.staff-handover dd{white-space:normal;overflow-wrap:anywhere}
+.staff-handover-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.staff-handover-head>div{flex:1 1 20rem;min-width:0}
+.staff-handover-head h2{display:flex;align-items:flex-start;gap:.6rem;line-height:1.4;scroll-margin:1rem}
+.staff-handover-head h2>span{min-width:0}
+.staff-handover-head svg,.staff-handover-search svg,.staff-handover-profile>svg,.staff-handover-notice>svg,.staff-handover-unavailable>svg{flex-shrink:0}
+.staff-handover-head h2>svg{margin-top:.2rem}
+.staff-handover-intro{margin-block:.85rem 1.1rem;max-width:78rem}
+.staff-handover-toolbar{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr);align-items:end;gap:.85rem;margin-block:1rem}
+.staff-handover .biz-field,.staff-handover-toolbar>*{min-width:0}
+.staff-handover button,.staff-handover [data-slot=select-trigger]{height:auto;min-height:44px;min-width:0;max-width:100%;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+.staff-handover [data-slot=select-trigger]{width:100%}
+.staff-handover button>span{min-width:0}
+.staff-handover [data-slot=select-value]{flex:1;min-width:0;white-space:normal;overflow:visible;text-overflow:clip;-webkit-line-clamp:unset;line-height:1.5}
+.staff-handover [data-slot=select-value]>.staff-handover-choice{display:-webkit-box;width:100%;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.staff-handover-options{max-width:calc(100vw - 2rem)}
+.staff-handover-options [data-slot=select-item]{height:auto;min-height:44px;min-width:0;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+.staff-handover-options [data-slot=select-item]>span{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.staff-handover input{min-width:0;max-width:100%;min-height:44px;font-size:1rem}
+.staff-handover-search{display:flex;align-items:center;min-width:0;gap:.5rem}
+.staff-handover-profile,.staff-handover-notice{display:flex;align-items:flex-start;gap:.7rem;padding:.9rem 1rem;border:1px solid #dce5ef;border-radius:12px;background:#f7fafc;margin-block:1rem}
+.staff-handover-profile>div,.staff-handover-notice>div{min-width:0}
+.staff-handover-profile p,.staff-handover-notice p{margin:.35rem 0}
+.staff-handover-warning{background:#fff8eb;border-color:#e9ca8c}
+.staff-handover-summary{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-block:1.1rem .5rem}
+.staff-handover-summary>div{flex:1 1 16rem;min-width:0}
+.staff-handover-count{font-weight:650;margin-bottom:.3rem}
+.staff-handover-count>span{display:block;margin-top:.25rem}
+.staff-handover-counts{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:.5rem 0 1rem}
+.staff-handover-counts li{display:flex;align-items:baseline;gap:.55rem;min-width:0;padding:.4rem .6rem;border-radius:8px;background:#edf4f8;border:1px solid #dce5ef;font-size:.9rem}
+.staff-handover-counts li>span{min-width:0}
+.staff-handover-counts b{flex-shrink:0;font-variant-numeric:tabular-nums}
+.staff-handover-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem;list-style:none;margin:1rem 0;padding:0}
+.staff-handover-row{min-width:0;display:flex}
+.staff-handover-row article{display:flex;flex:1;flex-direction:column;min-width:0;padding:1rem;border:1px solid #dce5ef;border-radius:12px;background:white}
+.staff-handover-row h3{font-size:1rem;line-height:1.5;margin:.65rem 0 .45rem}
+.staff-handover-row-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.45rem}
+.staff-handover-type{font-size:.85rem;font-weight:650;color:var(--primary)}
+.staff-handover-identity{display:block;min-width:0;max-width:100%;padding:.2rem .45rem;border-radius:6px;background:#edf4f8;color:#304658;font-size:.8rem;line-height:1.5}
+.staff-handover-identity-legacy,.staff-handover-identity-unresolved{background:#fff3dc;color:#795417}
+.staff-handover-identity-alias{background:#f2eefb;color:#584473}
+.staff-handover-customer{margin-bottom:.8rem}
+.staff-handover-row dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem .9rem;margin:0}
+.staff-handover-row dl>div{min-width:0}
+.staff-handover-row dt{font-size:.8rem;color:#586d7e}
+.staff-handover-row dd{margin:.15rem 0 0;font-size:.9rem;line-height:1.5}
+.staff-handover-row-hint{font-size:.9rem;line-height:1.6;margin:.9rem 0 1rem;color:#536b7d}
+.staff-handover-row button{align-self:flex-start;margin-top:auto;width:auto}
+.staff-handover-unavailable{display:flex;gap:.45rem;align-items:flex-start;margin-top:auto;color:#795417;font-size:.9rem}
+.staff-handover-unavailable>span{min-width:0}
+.staff-handover-empty{padding:1rem;border:1px dashed #cad7e3;border-radius:10px;background:#f7fafc;margin-block:1rem}
+.staff-handover-empty p{margin:.4rem 0 0}
+.staff-handover-more{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin:1rem 0}
+.staff-handover-more p{margin:0}
+.staff-handover-refresh{margin-block:1rem;line-height:1.6}
+.staff-handover-boundaries{padding:.9rem 1rem;border:1px solid #dce5ef;border-radius:12px;background:#f7fafc;margin-top:1.2rem}
+.staff-handover-boundaries h3{margin-bottom:.65rem;font-size:1rem;line-height:1.5}
+.staff-handover-boundaries p{font-size:.9rem;line-height:1.6;margin:.65rem 0}
+.staff-handover button:focus-visible,.staff-handover input:focus-visible,.staff-handover [tabindex="-1"]:focus,.staff-handover [data-slot=select-trigger]:focus-visible{outline:3px solid var(--ring);outline-offset:3px;scroll-margin:12px}
+@media(max-width:767px){.staff-handover-toolbar,.staff-handover-list{grid-template-columns:minmax(0,1fr)}.staff-handover-head>button,.staff-handover-summary>button,.staff-handover-row button,.staff-handover-more>button{width:100%}.staff-handover-row dl{grid-template-columns:minmax(0,1fr)}}
+/* The existing reviewed dialogs can now open from this inventory on short
+   screens. Long reasons stay scrollable inside a bounded input. */
+.task-responsibility-dialog textarea,.meeting-responsibility-dialog textarea,.commercial-responsibility-dialog textarea{min-width:0;max-width:100%;font-size:1rem;field-sizing:fixed;max-height:min(14rem,calc(100dvh - 5rem));overflow-y:auto}
+.commercial-responsibility-selected{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;line-height:1.4;max-height:2.8em;min-width:0;flex:1;text-align:left}

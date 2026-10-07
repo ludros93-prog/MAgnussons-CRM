@@ -1,5 +1,6 @@
 'use client';
 
+import {restoreHandoverFocus} from './handover-focus';
 import {useEffect,useId,useRef,useState,type FocusEvent} from 'react';
 import {AlertTriangle,ArrowRightLeft} from 'lucide-react';
 import {Button} from '@/components/ui/button';
@@ -15,13 +16,13 @@ import {BusinessField as F,displayDate} from './business-ui';
 type Snapshot=ReturnType<typeof onboardingResponsibilityCandidates>;
 type Draft={identity:string;expectedContext:string;snapshot:Snapshot;targetProfileId:string;selectedTaskIds:string[];reason:string;reviewed:boolean};
 export type OnboardingResponsibilitySave=(type:string,data:unknown,close?:boolean,onFailure?:(status:number,message?:string)=>void)=>Promise<boolean>;
-type Props={st:State;customerId:string;space:string;save:OnboardingResponsibilitySave;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void};
+type Props={st:State;customerId:string;space:string;save:OnboardingResponsibilitySave;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void;returnFocus?:()=>HTMLElement|null};
 const identityFor=(st:State,space:string,customerId:string)=>JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',st.viewer?.role||'',customerId]);
 const profileLabel=(profile:Snapshot['targetProfiles'][number])=>profile.displayName+(profile.displayName===profile.legacyOwnerName?'':' · '+profile.legacyOwnerName);
 const takeSnapshot=(st:State,customerId:string):Snapshot=>structuredClone(onboardingResponsibilityCandidates(st,customerId));
 const taskMeta=(task:Task)=>displayDate(task.due)+' · ansvarig '+task.owner;
 
-export function OnboardingResponsibilityDialog({st,customerId,space,save,busy,refresh,onClose}:Props){
+export function OnboardingResponsibilityDialog({st,customerId,space,save,busy,refresh,onClose,returnFocus}:Props){
  const selectedProfileDescriptionId=useId(),titleRef=useRef<HTMLHeadingElement>(null);
  const identity=identityFor(st,space,customerId),currentIdentity=useRef(identity);currentIdentity.current=identity;
  const currentBasis=onboardingResponsibilityBasis(st,customerId),admin=st.viewer?.role==='admin',initialized=st.settings.sellerProfilesInitialized;
@@ -108,7 +109,7 @@ export function OnboardingResponsibilityDialog({st,customerId,space,save,busy,re
 
  return <>
   <Dialog open={visible} onOpenChange={value=>{if(!value)close();}}>
-   <DialogContent className="business-ui onboarding-responsibility-dialog" showCloseButton={false} onFocusCapture={revealFocusedControl} onOpenAutoFocus={event=>{if(titleRef.current){event.preventDefault();titleRef.current.focus({preventScroll:true});}}} onEscapeKeyDown={event=>{if(locked||submitLock.current||discard)event.preventDefault();}} onInteractOutside={event=>{if(locked||submitLock.current||discard)event.preventDefault();}} onCloseAutoFocus={event=>{if(currentIdentity.current!==identity){event.preventDefault();return;}if(opener.current?.isConnected&&!opener.current.matches(':disabled,[aria-disabled=true]')){event.preventDefault();opener.current.focus({preventScroll:true});}}}>
+   <DialogContent className="business-ui onboarding-responsibility-dialog" showCloseButton={false} onFocusCapture={revealFocusedControl} onOpenAutoFocus={event=>{if(titleRef.current){event.preventDefault();titleRef.current.focus({preventScroll:true});}}} onEscapeKeyDown={event=>{if(locked||submitLock.current||discard)event.preventDefault();}} onInteractOutside={event=>{if(locked||submitLock.current||discard)event.preventDefault();}} onCloseAutoFocus={event=>{if(returnFocus){restoreHandoverFocus(event,opener.current,returnFocus);return;}if(currentIdentity.current!==identity){event.preventDefault();return;}if(opener.current?.isConnected&&!opener.current.matches(':disabled,[aria-disabled=true]')){event.preventDefault();opener.current.focus({preventScroll:true});}}}>
     <DialogHeader>
      <div className="onboarding-responsibility-head"><DialogTitle ref={titleRef} tabIndex={-1}><ArrowRightLeft aria-hidden="true" size={19}/><span>{title}</span></DialogTitle><Button type="button" variant="outline" disabled={locked||discard} onClick={close}>Stäng</Button></div>
      <DialogDescription>{snapshot.customer?.name||'Kundkopplingen saknas'} · första kundupplevelsen. Granska vem som tar ansvaret och vilka öppna onboardinguppgifter som följer med.</DialogDescription>
