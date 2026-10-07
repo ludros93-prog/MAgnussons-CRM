@@ -393,6 +393,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ring); outline-
 .crm-sidebar[data-mobile=true] [data-slot=sidebar-menu-button] { height: auto; min-height: 44px; white-space: normal; align-items: center; padding-block: 10px; font-size: .95rem; }
 .crm-sidebar[data-mobile=true] [data-slot=sidebar-menu-button]>span { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
 .crm-sidebar[data-mobile=true] .brand { flex-wrap: wrap; }
+.crm-sidebar[data-mobile=true] .brand>div { min-width: 0; overflow-wrap: anywhere; }
+.crm-sidebar[data-mobile=true] .brand-mark { width: max-content; height: auto; min-width: 45px; min-height: 45px; line-height: 1; flex: none; }
 .crm-sidebar[data-mobile=true] .profile>div { min-width: 0; overflow-wrap: anywhere; }
 
 /* Wide phones use the inline sidebar; its middle must not become a tiny strip. */
@@ -400,4 +402,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ring); outline-
   .crm-sidebar [data-slot=sidebar-inner] { overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scroll-padding-block: 8px; }
   .crm-sidebar [data-slot=sidebar-header], .crm-sidebar [data-slot=sidebar-footer] { flex: none; }
   .crm-sidebar [data-slot=sidebar-content] { flex: none; overflow: visible; padding-block: 8px; }
+  .crm-sidebar [data-slot=sidebar-menu-button] { height: auto; min-height: 44px; white-space: normal; padding-block: 10px; }
+  .crm-sidebar [data-slot=sidebar-menu-button]>span { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+  .crm-sidebar .brand { flex-wrap: wrap; }
+  .crm-sidebar .brand>div { min-width: 0; overflow-wrap: anywhere; }
+  .crm-sidebar .brand-mark { width: max-content; height: auto; min-width: 45px; min-height: 45px; line-height: 1; flex: none; }
+  .crm-sidebar .profile>div { min-width: 0; overflow-wrap: anywhere; }
 }
