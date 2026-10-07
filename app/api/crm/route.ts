@@ -6,6 +6,7 @@ import {followupBasis} from '@/lib/follow-up';
 import {assignmentBasis,productionBasis} from '@/lib/production-quantities';
 import {editableRecord,recordBasis,fieldLabels,customerWorkflowTypes,customerWorkflowBasis,companyEventBasis,leadContactBasis,sellerProfilesBasis} from '@/lib/record-conflicts';
 import {SellerProfilesInitSchema,SellerProfileInputSchema} from '@/lib/seller-profiles';
+import {SellerProfileRetireSchema,sellerProfileRetirementBasis} from '@/lib/seller-profile-retirement';
 import {isCustomerWorkflowDraft,validateCustomerWorkflowDraftConsumption} from '@/lib/customer-workflow-drafts';
 import {validateReceiptDraftConsumption} from '@/lib/receipt-drafts';
 import {validateArticleDraftConsumption} from '@/lib/article-drafts';
@@ -30,7 +31,7 @@ const db=database;
 const reply=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
 function authorizeAction(role:Role,type:string){
  if(roleActions[role]&&!roleActions[role]!.has(type))throw new AccessError('Din roll får inte utföra denna åtgärd.');
- if(['yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','commercial_responsibility_transfer','customer_responsibility_transfer','settings','seller_profiles_init','seller_profile','import_customers','restore','article','article_import','lead_import'].includes(type)&&role!=='admin')throw new AccessError('Denna åtgärd kräver administratör.');
+ if(['yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','commercial_responsibility_transfer','customer_responsibility_transfer','settings','seller_profiles_init','seller_profile','seller_profile_retire','import_customers','restore','article','article_import','lead_import'].includes(type)&&role!=='admin')throw new AccessError('Denna åtgärd kräver administratör.');
 }
 async function profileAuthorization(req:Request,current:State,type:string,data:unknown):Promise<NonNullable<MutationMeta['sellerProfileAuthorization']>>{
  const initialIssue=type==='plan',initialYearwheel=type==='year_need',initialAssignment=initialIssue||initialYearwheel,actor=await member(req,true,!initialAssignment);
@@ -45,6 +46,10 @@ async function profileAuthorization(req:Request,current:State,type:string,data:u
  }else if(initialYearwheel){
   const input=z.object({need:NeedSchema}).parse(data),target=current.settings.sellerProfiles.find(profile=>profile.id===input.need.ownerProfileId);
   if(target?.memberId)links.push({id:target.memberId,owner:target.legacyOwnerName});
+ }else if(type==='seller_profile_retire'){
+  // Closing a result profile preserves its existing account link, including
+  // an inactive linked account. No access or new member assignment is made.
+  SellerProfileRetireSchema.parse(data);
  }else if(type==='seller_profiles_init'){
   for(const profile of SellerProfilesInitSchema.parse(data).profiles)if(profile.memberId)links.push({id:profile.memberId,owner:profile.legacyOwnerName});
  }else{
@@ -63,14 +68,14 @@ export async function POST(req:Request){try{
  if(!req.headers.get('content-type')?.includes('application/json'))return reply({error:'JSON krävs.'},415);
  const body=await req.text();if(body.length>10000000)return reply({error:'För stor begäran.'},413);
  let user=await member(req,true);
- const p=z.object({space:z.enum(['demo','live']),version:z.number().int().nonnegative(),requestId:z.string().uuid(),expectedRecord:z.string().max(3000000).optional(),type:z.enum(['yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','commercial_responsibility_transfer','customer_responsibility_transfer','production_claim','production_release','prepare_order','receipt_confirm','receipt_issue','customer','deal','order','task','meeting','note','customer_note','follow_up','settings','seller_profiles_init','seller_profile','prospecting','qualify','onboarding','plan','year_need','complete_need','need_deal','products','repeat_order','import_customers','restore','article','article_import','catalog_order','production_submit','production_accept','production_received','production_printed','production_dispatched','production_issue','production_issue_resolve','direct_dispatch','production_cancel','production_scrap_unprinted','production_scrap_printed','order_shortfall','order_amend','order_amend_accept','order_amend_discard','notice_read','lead_import','lead_convert','lead_contact','company_event']),data:z.unknown()}).parse(JSON.parse(body));
+ const p=z.object({space:z.enum(['demo','live']),version:z.number().int().nonnegative(),requestId:z.string().uuid(),expectedRecord:z.string().max(3000000).optional(),type:z.enum(['yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','commercial_responsibility_transfer','customer_responsibility_transfer','production_claim','production_release','prepare_order','receipt_confirm','receipt_issue','customer','deal','order','task','meeting','note','customer_note','follow_up','settings','seller_profiles_init','seller_profile','seller_profile_retire','prospecting','qualify','onboarding','plan','year_need','complete_need','need_deal','products','repeat_order','import_customers','restore','article','article_import','catalog_order','production_submit','production_accept','production_received','production_printed','production_dispatched','production_issue','production_issue_resolve','direct_dispatch','production_cancel','production_scrap_unprinted','production_scrap_printed','order_shortfall','order_amend','order_amend_accept','order_amend_discard','notice_read','lead_import','lead_convert','lead_contact','company_event']),data:z.unknown()}).parse(JSON.parse(body));
  authorizeAction(user.role,p.type);
  await initialize(p.space);const hash=await requestHash(p.type,p.data);
- const profileMutation=p.type==='seller_profiles_init'||p.type==='seller_profile',responsibilityMutation=['yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','customer_responsibility_transfer','commercial_responsibility_transfer'].includes(p.type);
+ const retirementMutation=p.type==='seller_profile_retire',profileMutation=p.type==='seller_profiles_init'||p.type==='seller_profile',responsibilityMutation=['yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','customer_responsibility_transfer','commercial_responsibility_transfer'].includes(p.type);
  // Private article and company-event publication carry frozen, server-checked
  // original data and exact draft revisions. Every private CAS retry rechecks
  // that envelope; direct article/import requests retain their workspace CAS.
- const safe=p.type==='year_need'&&typeof(p.data as any)?.need?.id==='string'&&(p.data as any).need.id.trim()!==''&&typeof(p.data as any)?.expectedContext==='string'||p.type==='article'&&!!(p.data as any)?.draft||responsibilityMutation||profileMutation||p.type==='lead_contact'||p.type==='company_event'||customerWorkflowTypes.has(p.type)||['receipt_issue','receipt_confirm','production_claim','production_release','customer','deal','order','task','meeting','customer_note','follow_up','production_received','production_printed','production_dispatched','production_scrap_unprinted','production_scrap_printed','order_shortfall','direct_dispatch','production_issue','production_issue_resolve','order_amend','order_amend_accept','order_amend_discard','prepare_order','notice_read'].includes(p.type);
+ const safe=p.type==='year_need'&&typeof(p.data as any)?.need?.id==='string'&&(p.data as any).need.id.trim()!==''&&typeof(p.data as any)?.expectedContext==='string'||p.type==='article'&&!!(p.data as any)?.draft||responsibilityMutation||profileMutation||retirementMutation||p.type==='lead_contact'||p.type==='company_event'||customerWorkflowTypes.has(p.type)||['receipt_issue','receipt_confirm','production_claim','production_release','customer','deal','order','task','meeting','customer_note','follow_up','production_received','production_printed','production_dispatched','production_scrap_unprinted','production_scrap_printed','order_shortfall','direct_dispatch','production_issue','production_issue_resolve','order_amend','order_amend_accept','order_amend_discard','prepare_order','notice_read'].includes(p.type);
  for(let attempt=0;attempt<4;attempt++){
  user=await member(req,true);authorizeAction(user.role,p.type);
  const persisted=await load(p.space),current=projectState(persisted,p.space);
@@ -114,6 +119,11 @@ export async function POST(req:Request){try{
  if(p.type==='customer_responsibility_transfer'){
   const input=CustomerResponsibilityTransferSchema.parse(p.data);
   if(input.expectedContext!==customerResponsibilityBasis(current,input.customerId))return reply({error:'Kundansvaret eller överlämningsunderlaget har ändrats. Dina val och din orsak finns kvar. Läs in och granska aktuellt underlag innan du sparar.',state:visibleState(current,viewer(user)),code:'customer_responsibility_conflict'},409);
+  sellerProfileAuthorization=await profileAuthorization(req,current,p.type,p.data);
+ }
+ if(retirementMutation){
+  const input=SellerProfileRetireSchema.parse(p.data);
+  if(input.expectedContext!==sellerProfileRetirementBasis(current,input.profileId))return reply({error:'Profilen eller kvarvarande arbete har ändrats. Din orsak finns kvar. Läs in och granska aktuellt underlag innan du sparar.',state:visibleState(current,viewer(user)),code:'seller_profile_retirement_conflict'},409);
   sellerProfileAuthorization=await profileAuthorization(req,current,p.type,p.data);
  }
  if(profileMutation){

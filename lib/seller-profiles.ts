@@ -3,9 +3,14 @@ import {RuleError} from './crm-errors';
 import type {State,Settings,Actor} from './crm';
 
 const name=z.string().trim().min(1).max(150),text=z.string().trim().max(4000),memberId=z.string().trim().max(150);
+export const SellerProfileRetirementHistorySchema=z.object({
+ id:z.string().uuid(),profileId:z.string().uuid(),owner:name,displayName:name,reason:text.min(1),at:z.string().datetime(),
+ byId:text.min(1),byMemberId:text.min(1),byName:text.min(1)
+}).strict();
 export const SellerProfileSchema=z.object({
  id:z.string().uuid(),displayName:name,legacyOwnerName:name,active:z.boolean(),memberId:memberId.default(''),
- linkHistory:z.array(z.object({previousMemberId:memberId,nextMemberId:memberId,reason:text.min(1),at:z.string().min(1),byId:z.string().min(1),byName:z.string().min(1)})).max(1000).default([])
+ linkHistory:z.array(z.object({previousMemberId:memberId,nextMemberId:memberId,reason:text.min(1),at:z.string().min(1),byId:z.string().min(1),byName:z.string().min(1)})).max(1000).default([]),
+ retirementHistory:z.array(SellerProfileRetirementHistorySchema).max(1000).default([])
 });
 export type SellerProfile=z.infer<typeof SellerProfileSchema>;
 export const SellerProfilesInitSchema=z.object({
@@ -59,6 +64,7 @@ export function saveSellerProfile(st:State,input:z.infer<typeof SellerProfileInp
  need(!input.id||old,'Säljarprofilen finns inte.');
  if(old){
   need(!input.legacyOwnerName||input.legacyOwnerName===old.legacyOwnerName,'Profilens ursprungliga ansvarskoppling får inte ändras.');
+  need(input.active!==false||!old.active,'Avveckla en aktuell profil i den granskade profilavvecklingen. Visning och kontolänk flyttar inte öppet arbete.');
   const nextMember=input.memberId??old.memberId;
   if(nextMember!==old.memberId){
    need(!old.memberId||input.confirmRelink&&input.reason,'Bekräfta den ändrade kontokopplingen och ange en orsak.');
@@ -84,6 +90,17 @@ export function validateSellerProfileReferences(st:State){
  need(ids.size===profiles.length&&aliases.size===profiles.length&&new Set(members).size===members.length,'Säljarprofiler har dubbla ID:n, ansvarskopplingar eller personliga konton.');
  need(st.settings.sellerProfilesInitialized||!profiles.length,'Säljarregistret saknar bekräftad initialisering.');
  need(!st.settings.sellerProfilesInitialized||profiles.length,'Det initialiserade säljarregistret får inte vara tomt.');
+ const retirementIds=new Set<string>();
+ for(const profile of profiles){
+  const history=profile.retirementHistory||[];
+  need(history.length<=1,'En profil får bara avvecklas en gång. Återaktivering har inget godkänt arbetsflöde.');
+  for(const raw of history){
+   const row=SellerProfileRetirementHistorySchema.parse(raw);
+   need(!retirementIds.has(row.id),'Profilavvecklingen innehåller dubbla historik-ID:n.');retirementIds.add(row.id);
+   need(row.profileId===profile.id&&row.owner===profile.legacyOwnerName,'Profilavvecklingens historik motsäger den stabila profilidentiteten.');
+   need(!profile.active&&!st.settings.owners.includes(profile.legacyOwnerName),'En avvecklad profil får inte användas som operativ ansvarig.');
+  }
+ }
  for(const o of st.orders){
   need(!o.invoiceOwnerId||ids.has(o.invoiceOwnerId),'En faktura hänvisar till en saknad säljarprofil.');
   need(!o.invoiceOwnerId||o.invoiceOwnerSource!=='legacy_fallback'&&sellerProfileById(st.settings,o.invoiceOwnerId)?.legacyOwnerName===o.invoiceOwner,'Fakturans säljarkoppling motsäger det historiska underlaget.');

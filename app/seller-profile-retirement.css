@@ -1,0 +1,38 @@
+.seller-profile-retirement{min-width:0;padding:1rem;border:1px solid #dce5ef;border-radius:12px;background:#f7fafc;margin-block:1.25rem;overflow-wrap:anywhere}
+.seller-profile-retirement-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;min-width:0}
+.seller-profile-retirement-head>div{flex:1 1 18rem;min-width:0}
+.seller-profile-retirement-head h3,.seller-profile-retirement-head [data-slot=dialog-title]{display:flex;align-items:flex-start;gap:.5rem;min-width:0;line-height:1.4}
+.seller-profile-retirement-head [data-slot=dialog-title]{flex:1 1 16rem}
+.seller-profile-retirement-head svg,.seller-profile-retirement-warning svg,.seller-profile-retirement-history summary svg{flex-shrink:0;margin-top:.15rem}
+.seller-profile-retirement-head span{min-width:0}
+.seller-profile-retirement p,.seller-profile-retirement-dialog p{margin:.5rem 0;white-space:normal;overflow-wrap:anywhere}
+.seller-profile-retirement-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;margin-block:1rem}
+.seller-profile-retirement-facts>div{min-width:0;padding:.7rem;border:1px solid #dce5ef;border-radius:8px;background:white}
+.seller-profile-retirement-facts dt{font-weight:650;line-height:1.5}
+.seller-profile-retirement-facts dd{margin:.3rem 0 0;line-height:1.6;white-space:normal;overflow-wrap:anywhere}
+.seller-profile-retirement-summary{padding:.75rem;border-left:3px solid #b38b3d;background:#fff7e8;border-radius:0 8px 8px 0}
+.seller-profile-retirement-history summary{display:flex;align-items:flex-start;gap:.5rem;min-width:0}
+.seller-profile-retirement-history summary span{min-width:0}
+.seller-profile-retirement-history article{min-width:0;border-top:1px solid #dce5ef;margin-top:.7rem;padding-top:.7rem}
+.seller-profile-retirement .seller-profile-retirement-reason,.seller-profile-retirement-dialog .seller-profile-retirement-reason{white-space:pre-wrap}
+.seller-profile-retirement-success{padding:.75rem;border:1px solid #b7d7cc;border-radius:8px;background:#eff8f4;color:#12685f}
+.seller-profile-retirement button:not([role=checkbox]),.seller-profile-retirement-dialog button:not([role=checkbox]){height:auto;min-height:44px;min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.seller-profile-retirement-dialog{width:calc(100vw - 2rem);max-width:680px!important;max-height:calc(100dvh - 2rem);overflow-y:auto;min-width:0;overflow-wrap:anywhere;scroll-padding:12px}
+.seller-profile-retirement-dialog [data-slot=dialog-header]{min-width:0;text-align:left}
+.seller-profile-retirement-dialog form,.seller-profile-retirement-dialog fieldset{margin:0;padding:0;border:0;min-width:0}
+.seller-profile-retirement-current,.seller-profile-retirement-blockers{min-width:0;padding:.8rem 1rem;border:1px solid #dce5ef;border-radius:10px;background:#f7fafc;margin-bottom:1rem}
+.seller-profile-retirement-current h3,.seller-profile-retirement-blockers h3{font-size:1rem;line-height:1.5}
+.seller-profile-retirement-blockers ol{list-style:decimal;padding-left:1.3rem;margin-top:.7rem}
+.seller-profile-retirement-blockers li{min-width:0;padding-block:.75rem;border-top:1px solid #dce5ef}
+.seller-profile-retirement-blockers li>b{display:block;line-height:1.5}
+.seller-profile-retirement-warning{display:flex;align-items:flex-start;gap:.5rem;padding:.75rem;border-radius:8px;background:#fff3dc;color:#795417}
+.seller-profile-retirement-warning>span{min-width:0}
+.seller-profile-retirement-dialog .biz-field{min-width:0}
+.seller-profile-retirement-dialog textarea{min-width:0;max-width:100%;min-height:44px;font-size:1rem;field-sizing:fixed;max-height:min(14rem,calc(100dvh - 5rem));overflow-y:auto}
+.seller-profile-retirement-dialog .check-field{align-items:flex-start;min-height:44px}
+.seller-profile-retirement-dialog .check-field>span{min-width:0;line-height:1.6}
+.seller-profile-retirement-dialog .biz-buttons{align-items:stretch}
+.seller-profile-retirement-dialog .biz-buttons>button{flex:1 1 13rem}
+.seller-profile-retirement summary,.seller-profile-retirement-dialog summary{min-height:44px;min-width:0;line-height:1.6;padding-block:.5rem}
+.seller-profile-retirement button:focus-visible,.seller-profile-retirement summary:focus-visible,.seller-profile-retirement [tabindex="-1"]:focus,.seller-profile-retirement-dialog button:focus-visible,.seller-profile-retirement-dialog textarea:focus-visible,.seller-profile-retirement-dialog summary:focus-visible{outline:3px solid var(--ring);outline-offset:3px;scroll-margin:12px}
+@media(max-width:767px){.seller-profile-retirement-facts{grid-template-columns:minmax(0,1fr)}.seller-profile-retirement-head>button{width:100%}.seller-profile-retirement-dialog .seller-profile-retirement-head>button{width:auto}}
