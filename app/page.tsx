@@ -45,7 +45,7 @@ import {CustomerWorkspace} from '@/components/customer-workspace';
 import {CustomerResponsibility} from '@/components/customer-responsibility';
 import {CustomerRegister} from '@/components/customer-register';
 import {CommercialResponsibility} from '@/components/commercial-responsibility';
-import { useEffect,useRef,useState,type ReactNode,type FocusEvent,type MouseEvent } from 'react';
+import { useEffect,useRef,useState,type ReactNode,type FocusEvent,type MouseEvent,type RefObject } from 'react';
 import { LayoutDashboard,Kanban,Users,HeartHandshake,Package,CalendarDays,BookOpen,Plug,Plus,ArrowUpRight,ArrowRight,Search,Check,Clock,Settings2,RefreshCw,Mail,Target,ClipboardCheck,TrendingUp,Zap,Printer,Truck,Bell } from 'lucide-react';
 import { SidebarProvider,Sidebar,SidebarHeader,SidebarContent,SidebarFooter,SidebarMenu,SidebarMenuItem,SidebarMenuButton,SidebarInset,SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';import { Input } from '@/components/ui/input';import { Textarea } from '@/components/ui/textarea';import { Select,SelectTrigger,SelectValue,SelectContent,SelectItem } from '@/components/ui/select';import { Sheet,SheetContent,SheetHeader,SheetTitle,SheetDescription } from '@/components/ui/sheet';import { Tabs,TabsList,TabsTrigger } from '@/components/ui/tabs';import { Checkbox } from '@/components/ui/checkbox';import { Progress } from '@/components/ui/progress';import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from '@/components/ui/table';import { Toaster,toast } from 'sonner';
@@ -59,6 +59,20 @@ const short=(s:string)=>s.replace(' · exempel','');const dateLabel=(d:string)=>
 type Form={draftId:string;type:string;data:Record<string,any>;base?:Record<string,any>;expectedRecord?:string;initialData?:string};
 const makeForm=(type:string,data:Record<string,any>,original=data):Form=>({draftId:crypto.randomUUID(),type,data:structuredClone(data),initialData:recordBasis(data),base:structuredClone(original),expectedRecord:recordBasis(original)});
 function Choice({value,onChange,options,label:aria}:{value:string;onChange:(v:string)=>void;options:{id:string;label:string}[];label:string}){return <Select value={value||'_empty'} onValueChange={v=>onChange(v==='_empty'?'':v)}><SelectTrigger aria-label={aria}><SelectValue/></SelectTrigger><SelectContent>{options.map(o=><SelectItem value={o.id||'_empty'} key={o.id}>{o.label}</SelectItem>)}</SelectContent></Select>}
+function WorkspaceChoice({value,onChange,trigger}:{value:string;onChange:(v:string)=>void;trigger:RefObject<HTMLButtonElement|null>}){
+ const ownTrigger=useRef<HTMLButtonElement>(null);
+ return <Select value={value} onValueChange={onChange}>
+  <SelectTrigger className="workspace-choice" aria-label="Arbetsyta" ref={node=>{ownTrigger.current=node;trigger.current=node}}><SelectValue/></SelectTrigger>
+  <SelectContent onCloseAutoFocus={event=>{
+   // A workspace/account remount replaces this trigger. Radix's delayed close
+   // must not try to restore focus to an obsolete control.
+   if(!ownTrigger.current?.isConnected||trigger.current!==ownTrigger.current)event.preventDefault();
+  }}>
+   <SelectItem value="demo">Demoyta</SelectItem>
+   <SelectItem value="live">Teamets arbetsyta</SelectItem>
+  </SelectContent>
+ </Select>;
+}
 function Field({label:caption,children}:{label:string;children:ReactNode}){return <label className="field"><span>{caption}</span>{children}</label>}
 function Empty({children}:{children:ReactNode}){return <div className="empty"><div className="empty-icon"><Check size={22}/></div>{children}</div>}
 // Keep the active form control clear of the actual, possibly wrapped action bar.
@@ -78,19 +92,77 @@ function keepFormControlVisible(sheet:HTMLDivElement,field:EventTarget|null){
 function revealFormControl(event:FocusEvent<HTMLDivElement>){keepFormControlVisible(event.currentTarget,event.target);}
 export default function CRM(){
  const [st,setSt]=useState<State|null>(null),[space,setSpace]=useState('live'),[view,setView]=useState('today'),[search,setSearch]=useState(''),[owner,setOwner]=useState('_unassigned'),[filter,setFilter]=useState('open'),[month,setMonth]=useState(day().slice(0,7)),[form,setForm]=useState<Form|null>(null),[detail,setDetail]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState(''),[loadingError,setLoadingError]=useState('');
- const activeSpace=useRef(space);activeSpace.current=space;
+ const activeSpace=useRef(space),workspaceEpoch=useRef(0),refreshAttempt=useRef(0);
+ if(activeSpace.current!==space)workspaceEpoch.current++;
+ activeSpace.current=space;
  const formDraft=useRef<FormDraftControl|null>(null);
  const [formSaveFailure,setFormSaveFailure]=useState<FormSaveFailure|null>(null),[formCloseFailure,setFormCloseFailure]=useState<FormCloseFailure|null>(null);
  const [genericSheetNode,setGenericSheetNode]=useState<HTMLDivElement|null>(null),[genericFooterNode,setGenericFooterNode]=useState<HTMLDivElement|null>(null);
  const formDraftDetails=useRef<HTMLDivElement>(null),formRecordDetails=useRef<HTMLDivElement>(null),formSaveDetails=useRef<HTMLDivElement>(null),formCloseDetails=useRef<HTMLDivElement>(null);
  const [workflowResume,setWorkflowResume]=useState<WorkflowDraftRequest|null>(null);
  const activeIdentity=useRef('');activeIdentity.current=JSON.stringify([space,st?.viewer?.id||'',st?.viewer?.memberId||'',st?.viewer?.role||'']);
+ const workspaceTrigger=useRef<HTMLButtonElement>(null);
+ const customerHeading=useRef<HTMLHeadingElement>(null);
+ const workspaceViewer=useRef(''),workspaceFocusing=useRef(false);
+ if(st?.viewer)workspaceViewer.current=JSON.stringify([st.viewer.id,st.viewer.memberId||'',st.viewer.role]);
+ const workspaceReturn=useRef<{space:string;identity:string;view:string;loadingFocused:boolean}|null>(null);
+ function chooseWorkspace(next:string){
+  if(next===space)return;
+  const identity=workspaceViewer.current;
+  workspaceReturn.current=identity?{space:next,identity,view,loadingFocused:false}:null;
+  setLoadingError('');setSt(null);setSpace(next);
+ }
+ useEffect(()=>{
+  const cancel=()=>{workspaceReturn.current=null};
+  const otherFocus=(event:globalThis.FocusEvent)=>{if(!workspaceFocusing.current&&event.target!==workspaceTrigger.current)cancel()};
+  // Further input takes ownership of focus while the workspace GET is pending.
+  document.addEventListener('keydown',cancel,true);
+  document.addEventListener('pointerdown',cancel,true);
+  document.addEventListener('wheel',cancel,true);
+  document.addEventListener('focusin',otherFocus,true);
+  window.addEventListener('blur',cancel);
+  return()=>{
+   document.removeEventListener('keydown',cancel,true);
+   document.removeEventListener('pointerdown',cancel,true);
+   document.removeEventListener('wheel',cancel,true);
+   document.removeEventListener('focusin',otherFocus,true);
+   window.removeEventListener('blur',cancel);
+  };
+ },[]);
+ useEffect(()=>{
+  const intent=workspaceReturn.current;
+  if(!intent)return;
+  // Wait for the old Select's delayed FocusScope teardown. Focusing during
+  // the selection dispatch can give its still-closing popup focus again.
+  const timer=setTimeout(()=>{
+  if(workspaceReturn.current!==intent)return;
+  if(intent.space!==activeSpace.current||intent.view!==customerFocusContext.current.view||loadingError||document.querySelector('[role=dialog],[role=alertdialog],[role=listbox]')||
+   (st&&JSON.stringify([st.viewer?.id,st.viewer?.memberId||'',st.viewer?.role])!==intent.identity)){
+   workspaceReturn.current=null;return;
+  }
+  if(!st&&intent.loadingFocused)return;
+  const usable=(target:HTMLElement|null)=>{
+   if(!target?.isConnected||target.matches(':disabled,[aria-disabled=true]')||target.closest('[hidden],[inert],[aria-hidden=true]'))return false;
+   const rect=target.getBoundingClientRect(),style=getComputedStyle(target);
+   return !!rect.width&&!!rect.height&&style.visibility==='visible'&&style.display!=='none';
+  };
+  const target=usable(workspaceTrigger.current)?workspaceTrigger.current:usable(customerHeading.current)?customerHeading.current:null;
+  if(!target){workspaceReturn.current=null;return}
+  if(st)workspaceReturn.current=null;else intent.loadingFocused=true;
+  workspaceFocusing.current=true;
+  try{
+   target.scrollIntoView({block:'nearest',inline:'nearest'});
+   target.focus({preventScroll:true});
+   if(document.activeElement!==target)workspaceReturn.current=null;
+  }finally{workspaceFocusing.current=false}
+  },0);
+  return()=>clearTimeout(timer);
+ },[space,st?.viewer?.id,st?.viewer?.memberId,st?.viewer?.role,view,loadingError]);
  const [productionId,setProductionId]=useState('');
  const [allowAssistant,setAllowAssistant]=useState(false);
  const [discard,setDiscard]=useState(false);const [picker,setPicker]=useState(''),[followTask,setFollowTask]=useState('');const returnCustomer=useRef(''),afterCustomer=useRef('');
  const [resumeDraft,setResumeDraft]=useState(''),[resumeArticleDraft,setResumeArticleDraft]=useState(''),[resumeCompanyEventDraft,setResumeCompanyEventDraft]=useState(''),[receiptId,setReceiptId]=useState(''),[receiptDraftId,setReceiptDraftId]=useState(''),[repeatCustomer,setRepeatCustomer]=useState('');
  const [customerTransferOpen,setCustomerTransferOpen]=useState(false);
- const customerHeading=useRef<HTMLHeadingElement>(null);
  const customerClickOpener=useRef<{opener:HTMLElement|null}|null>(null);
  const customerReturn=useRef<{id:string;identity:string;view:string;opener:HTMLElement|null}|null>(null);
  const customerCloseIntent=useRef<typeof customerReturn.current>(null);
@@ -102,7 +174,7 @@ export default function CRM(){
  useEffect(()=>{setMeetingTransferId('')},[space,st?.viewer?.id,st?.viewer?.memberId,st?.viewer?.role]);
  const [commercialTransfer,setCommercialTransfer]=useState<{targetType:'deal'|'order';targetId:string}|null>(null);
  useEffect(()=>{if(st)setOwner(personalOwner(st)||'_unassigned')},[st?.viewer?.id,st?.viewer?.owner,space]);
- function navigate(next:string){if(next==='catalog'){setResumeDraft('');setResumeArticleDraft('')}if(groupOf(next)!==groupOf(view))setSearch('');if(next==='overview'||next==='today'||next==='notices')setOwner(st?personalOwner(st)||'_unassigned':'_unassigned');if(next==='team')setOwner('all');setView(next)}
+ function navigate(next:string){workspaceReturn.current=null;if(next==='catalog'){setResumeDraft('');setResumeArticleDraft('')}if(groupOf(next)!==groupOf(view))setSearch('');if(next==='overview'||next==='today'||next==='notices')setOwner(st?personalOwner(st)||'_unassigned':'_unassigned');if(next==='team')setOwner('all');setView(next)}
  const [customerTab,setCustomerTab]=useState('overview');const saving=useRef(false),pending=useRef<{key:string;id:string;expectedRecord?:string}|null>(null);
  // Private form values live above DraftProvider. Close their surrounding UI
  // when the account or its role changes, as well as on a workspace switch.
@@ -174,7 +246,17 @@ export default function CRM(){
  useEffect(()=>{let stopped=false;const controller=new AbortController();async function poll(){if(saving.current||document.hidden||['catalog','settings'].includes(view)||(!['orders','print','warehouse','production'].includes(view)&&document.querySelector('details[open]'))||document.querySelector('[role=dialog]')||document.activeElement?.matches('input,textarea,[contenteditable=true]'))return;const version=st?.version;try{const r=await fetch('/api/crm?space='+space,{signal:controller.signal});if(!r.ok)return;const data=await r.json() as State;if(!stopped&&!saving.current&&!document.querySelector('[role=dialog]'))setSt(current=>current&&current.version===version&&data.version>current.version?data:current)}catch{}}const timer=setInterval(poll,30000);window.addEventListener('focus',poll);return()=>{stopped=true;controller.abort();clearInterval(timer);window.removeEventListener('focus',poll)}},[space,st?.version,view]);
  useEffect(()=>{const u=new URL(window.location.href);const message=u.searchParams.get('outlook');if(message){setSpace('live');setView('connections');if(message==='connected')toast.success('Outlook-kontot är anslutet.');else toast.error(message);u.searchParams.delete('outlook');history.replaceState(null,'',u.pathname+u.search+u.hash)}},[]);
  async function refreshResponsibility():Promise<State>{const identity=activeIdentity.current,requestedSpace=space,r=await fetch('/api/crm?space='+requestedSpace),result=await r.json() as State&{error?:string};if(!r.ok)throw Error(result.error||'Aktuellt underlag kunde inte hämtas.');if(activeIdentity.current!==identity||activeSpace.current!==requestedSpace)throw Error('Kontot eller arbetsytan har ändrats. Öppna kundkortet igen.');setSt(result);return result;}
- async function refresh(){setLoadingError('');try{const r=await fetch('/api/crm?space='+space);const data:any=await r.json();if(!r.ok)throw Error(data.error);if(activeSpace.current===space)setSt(data)}catch(e){setLoadingError((e as Error).message)}}
+ async function refresh(){
+  if(activeSpace.current!==space)return;
+  const epoch=workspaceEpoch.current,identity=activeIdentity.current,attempt=++refreshAttempt.current;
+  const current=()=>activeSpace.current===space&&workspaceEpoch.current===epoch&&activeIdentity.current===identity&&refreshAttempt.current===attempt;
+  setLoadingError('');
+  try{
+   const r=await fetch('/api/crm?space='+space),data:any=await r.json();
+   if(!r.ok)throw Error(data.error);
+   if(current())setSt(data);
+  }catch(e){if(current())setLoadingError((e as Error).message)}
+ }
  useEffect(()=>{setSt(null);setForm(null);setDetail('');setSearch('');setOwner('_unassigned');setReceiptId('');setReceiptDraftId('');setProductionId('');setRepeatCustomer('');setResumeDraft('');setResumeArticleDraft('');setResumeCompanyEventDraft('');setPicker('');setFollowTask('');returnCustomer.current='';let cancelled=false;fetch('/api/crm?space='+space).then(async r=>{const data:any=await r.json();if(!r.ok)throw Error(data.error);if(!cancelled){setSt(data);setLoadingError('')}}).catch(e=>{if(!cancelled)setLoadingError(e.message)});return()=>{cancelled=true}},[space]);
  async function save(type:string,data:unknown,close=true,workflowControl?:WorkflowSaveControl,onSaveFailure?:(status:number,message?:string)=>void,recordControl?:{expectedRecord:string}){if(recordControl&&type!=='article')return false;if(!st||saving.current||activeSpace.current!==space)return false;if(st.viewer?.role==='reader'){workflowControl?.onFailure?.(403,'Ditt konto har läsbehörighet.');if(!workflowControl?.onFailure)toast.error('Ditt konto har läsbehörighet.');return false;}if(workflowControl&&!isCustomerWorkflowDraft(type)){workflowControl.onFailure?.(400,'Utkastet hör inte till detta kundarbete.');if(!workflowControl.onFailure)toast.error('Utkastet hör inte till detta kundarbete.');return false;}const identity=activeIdentity.current,genericDraftId=!workflowControl&&form?.type===type&&form.type!=='workorder'?form.draftId:'';let failureReported=false,crmAttempted=false;if(genericDraftId)setFormSaveFailure(null);saving.current=true;const key=JSON.stringify({space,type,data,...(workflowControl?{draft:workflowControl.workflowDraft}:{}),...(recordControl?{expectedRecord:recordControl.expectedRecord}:{})});if(pending.current?.key!==key){const row=editableRecord(st,type,(data as any)?.id||'');const expectedRecord=recordControl?recordControl.expectedRecord:!workflowControl&&form?.type===type&&form.data.id===(data as any)?.id?form.expectedRecord:row?recordBasis(row):undefined;pending.current={key,id:crypto.randomUUID(),expectedRecord};}setBusy(true);setError('');try{const control=!workflowControl&&form?.type===type?formDraft.current:null;const draft=workflowControl?.workflowDraft??await control?.flush();if(activeIdentity.current!==identity)return false;if(draft===null)throw Error('Ditt privata utkast kunde inte sparas. Försök igen.');if(genericDraftId)setFormCloseFailure(null);const payload=draft?{...(data as Record<string,unknown>),draft}:data;crmAttempted=true;const r=await fetch('/api/crm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({space,version:st.version,requestId:pending.current.id,expectedRecord:pending.current.expectedRecord,type,data:payload})});const result:any=await r.json();if(activeSpace.current!==space||activeIdentity.current!==identity)return false;if(!r.ok){workflowControl?.onFailure?.(r.status,typeof result.error==='string'?result.error:undefined);try{onSaveFailure?.(r.status,typeof result.error==='string'?result.error:undefined);}catch{/* Presentation cannot change the mutation result. */}failureReported=true;if(result.state)setSt(result.state);if(r.status<500&&r.status!==409)pending.current=null;throw Error(result.error)}pending.current=null;control?.consume();setSt(result);if(close)finishForm();if(type==='customer'&&!((data as any)?.id)){const created=result.customers.find((c:any)=>c.id===result.mutationResult?.customerId);if(created){const intent=afterCustomer.current;afterCustomer.current='';if(intent&&intent!=='search'){if(intent==='notes')showCustomer(created.id,'notes');else if(intent==='deal')setForm(makeForm('deal',DealSchema.parse({customerId:created.id,owner:created.owner,title:'Ny offert',nextDate:day()})));else if(intent==='task')setForm(makeForm('task',TaskSchema.parse({customerId:created.id,owner:created.owner,title:'Ny uppföljning',due:day()})));else if(intent==='meeting')setForm(makeForm('meeting',MeetingSchema.parse({customerId:created.id,owner:created.owner,title:'Kundmöte',date:day(),time:'10:00',duration:45})));}else showCustomer(created.id);}}if(['catalog_order','deal'].includes(type)){const created=result.orders.find((o:any)=>o.id===result.mutationResult?.orderId);if(created){setDetail('');setView('orders');setForm(makeForm('workorder',created))}else if(type==='catalog_order'){setView('deals');const createdDeal=result.deals.find((d:any)=>d.id===result.mutationResult?.dealId);if(createdDeal)setForm(makeForm('deal',createdDeal));}}if(type==='repeat_order'){const created=result.deals.find((d:any)=>d.id===result.mutationResult?.dealId);if(created){setView('deals');setDetail('');setForm(makeForm('deal',created));}}toast.success(type==='follow_up'?'Uppföljningen är sparad. Nästa steg visas i Min dag.':type==='customer_note'?'Anteckningen är sparad på kunden.':type==='customer'?'Kunduppgifterna är sparade.':type==='prepare_order'?'Ordern är lämnad till tryck och lager.':'Ändringarna är sparade.');return true;}catch(e){if(!failureReported)workflowControl?.onFailure?.(0,(e as Error).message);if(activeIdentity.current===identity){if(activeSpace.current===space&&!failureReported){try{onSaveFailure?.(0,(e as Error).message);}catch{/* Presentation cannot change the mutation result. */}}setError((e as Error).message);if(genericDraftId)setFormSaveFailure({draftId:genericDraftId,source:crmAttempted?'crm':'draft',message:(e as Error).message});if(!workflowControl?.onFailure&&!onSaveFailure&&!genericDraftId)toast.error((e as Error).message);}return false;}finally{saving.current=false;setBusy(false)}}
  function openReceipt(id:string,draftId=''){setReceiptDraftId(draftId);setReceiptId(id)}
@@ -199,7 +281,7 @@ export default function CRM(){
  const choice=(key:string,title:string,options:{id:string;label:string}[])=><Field label={title}><Choice value={form?.data[key]||''} onChange={v=>update(key,v)} options={options} label={title}/></Field>;
  const check=(key:string,title:string)=><label className="check-field"><Checkbox checked={!!form?.data[key]} onCheckedChange={v=>update(key,v===true)}/>{title}</label>;
  function taskList(limit=100){return due.length?<div className="task-list">{due.slice(0,limit).map(t=><div className="task-row" data-overdue={t.due<day()} key={t.id}><Checkbox aria-label={'Markera klar: '+t.title} disabled={busy} checked={false} onCheckedChange={()=>openActivity(t)}/><button className="task-title" onClick={()=>openActivity(t)}><strong>{t.title}</strong><small>{cname(t.customerId)} · {t.owner.split(' ')[0]}</small></button><span className={'due '+(t.due<day()?'late':t.due===day()?'today':'')}>{t.due===day()?'Idag':dateLabel(t.due)}</span></div>)}</div>:<Empty>Inga öppna uppgifter. Planera nästa kundkontakt.</Empty>}
- return <DraftProvider key={space+':'+(st?.viewer?.id||'')} space={space} userId={st?.viewer?.id||''} enabled={!!st?.viewer&&['admin','seller'].includes(st.viewer.role)} canEditArticles={st?.viewer?.role==='admin'}><SidebarProvider className="crm-app"><Sidebar className="crm-sidebar"><SidebarHeader><div className="brand"><span className="brand-mark">m.</span><div>MAGNUSSONS<small>RELATIONER SOM VÄXER</small></div></div><div className="workspace-label">{department?'TRYCK & LEVERANS':'FÖRSÄLJNING & KUNDVÅRD'}</div></SidebarHeader><SidebarContent><SidebarMenu>{nav.filter(([id])=>department?[st?.viewer?.role,'notices'].includes(id):['today','customers','deals','calendar','overview'].includes(id)).map(([id,title,Icon])=><SidebarMenuItem key={id} data-nav={id}><SidebarMenuButton dismissOnSelect isActive={(department?view:groupOf(view))===id} onClick={()=>navigate(id)}><Icon/><span>{title}</span></SidebarMenuButton></SidebarMenuItem>)}</SidebarMenu></SidebarContent><SidebarFooter>{!department&&<SidebarMenu><SidebarMenuItem><SidebarMenuButton dismissOnSelect isActive={groupOf(view)==='settings'} onClick={()=>navigate('settings')}><Settings2/><span>Inställningar</span></SidebarMenuButton></SidebarMenuItem></SidebarMenu>}<div className="pilot"><span className="status-dot"/> Delad arbetsversion<small>{department?'Ett jobb och nästa moment i taget.':'Byggd för nästa kundkontakt.'}</small></div><div className="profile"><span>{st?.viewer?.name.split(' ').map(s=>s[0]).join('')||'M'}</span><div>{st?.viewer?.name||'Säljteamets arbetsyta'}<small>{st?.viewer?.role==='admin'?'Administratör':st?.viewer?.role==='seller'?'Säljare':st?.viewer?.role==='production'?'Tryck & leverans':st?.viewer?.role==='print'?'Tryck':st?.viewer?.role==='warehouse'?'Lager':'Läsare'}</small></div></div></SidebarFooter></Sidebar><SidebarInset><header className="topbar"><div className="crumb"><SidebarTrigger/><span>Magnussons</span><span>/</span><b>{nav.find(n=>n[0]===view)?.[1]}</b></div><div className="top-actions"><MobileApp/><Button variant="ghost" size="sm" aria-label="Öppna notiser" onClick={()=>navigate('notices')}><Bell size={18}/><span className="notification-count">{st?.notices.filter(n=>noticeInScope(st,n,st?personalOwner(st):'')&&!n.readBy.includes(st.viewer?.id||'')).length||0}</span></Button><span className="saved"><span className="status-dot"/>{busy?'Sparar…':st?'Sparat i databas':'Ansluter…'}</span><Choice value={space} onChange={v=>{setSt(null);setSpace(v)}} label="Arbetsyta" options={[{id:'demo',label:'Demoyta'},{id:'live',label:'Teamets arbetsyta'}]}/></div></header>
+ return <DraftProvider key={space+':'+(st?.viewer?.id||'')} space={space} userId={st?.viewer?.id||''} enabled={!!st?.viewer&&['admin','seller'].includes(st.viewer.role)} canEditArticles={st?.viewer?.role==='admin'}><SidebarProvider className="crm-app"><Sidebar className="crm-sidebar"><SidebarHeader><div className="brand"><span className="brand-mark">m.</span><div>MAGNUSSONS<small>RELATIONER SOM VÄXER</small></div></div><div className="workspace-label">{department?'TRYCK & LEVERANS':'FÖRSÄLJNING & KUNDVÅRD'}</div></SidebarHeader><SidebarContent><SidebarMenu>{nav.filter(([id])=>department?[st?.viewer?.role,'notices'].includes(id):['today','customers','deals','calendar','overview'].includes(id)).map(([id,title,Icon])=><SidebarMenuItem key={id} data-nav={id}><SidebarMenuButton dismissOnSelect isActive={(department?view:groupOf(view))===id} onClick={()=>navigate(id)}><Icon/><span>{title}</span></SidebarMenuButton></SidebarMenuItem>)}</SidebarMenu></SidebarContent><SidebarFooter>{!department&&<SidebarMenu><SidebarMenuItem><SidebarMenuButton dismissOnSelect isActive={groupOf(view)==='settings'} onClick={()=>navigate('settings')}><Settings2/><span>Inställningar</span></SidebarMenuButton></SidebarMenuItem></SidebarMenu>}<div className="pilot"><span className="status-dot"/> Delad arbetsversion<small>{department?'Ett jobb och nästa moment i taget.':'Byggd för nästa kundkontakt.'}</small></div><div className="profile"><span>{st?.viewer?.name.split(' ').map(s=>s[0]).join('')||'M'}</span><div>{st?.viewer?.name||'Säljteamets arbetsyta'}<small>{st?.viewer?.role==='admin'?'Administratör':st?.viewer?.role==='seller'?'Säljare':st?.viewer?.role==='production'?'Tryck & leverans':st?.viewer?.role==='print'?'Tryck':st?.viewer?.role==='warehouse'?'Lager':'Läsare'}</small></div></div></SidebarFooter></Sidebar><SidebarInset><header className="topbar"><div className="crumb"><SidebarTrigger/><span>Magnussons</span><span>/</span><b>{nav.find(n=>n[0]===view)?.[1]}</b></div><div className="top-actions"><MobileApp/><Button variant="ghost" size="sm" aria-label="Öppna notiser" onClick={()=>navigate('notices')}><Bell size={18}/><span className="notification-count">{st?.notices.filter(n=>noticeInScope(st,n,st?personalOwner(st):'')&&!n.readBy.includes(st.viewer?.id||'')).length||0}</span></Button><span className="saved"><span className="status-dot"/>{busy?'Sparar…':st?'Sparat i databas':'Ansluter…'}</span><WorkspaceChoice value={space} onChange={chooseWorkspace} trigger={workspaceTrigger}/></div></header>
  <div className={'workspace-banner '+(space==='demo'?'':'live')+(view==='today'?' workspace-day-banner':'')}><span>{space==='demo'?<><b>DEMO</b> Fiktiva kunder, affärer och resultat. Ändringar sparas separat här.</>:<><b>ARBETSVERSION</b> {department?'Gemensam arbetskö för tryck och leverans. Registrera de antal som faktiskt hanterats.':view==='today'?'Gemensamt kundregister för teamet.':'Gemensamt kundregister för teamet. Din Outlook-anslutning är personlig. Ekonomisystemet är inte anslutet.'}</>}</span>{!department&&<button onClick={()=>setView('connections')}>Visa anslutningar <ArrowUpRight size={14}/></button>}</div>
  <main className="main" data-view={view} onClickCapture={captureCustomerOpener}><div className="page-heading"><div><div className="eyebrow">{view==='overview'?'FÖRSÄLJNING · RELATIONER · NÄSTA STEG':view==='care'?'BEHÅLL. FÖRSTÅ. UTVECKLA.':'MAGNUSSONS CRM'}</div><h1 ref={customerHeading} tabIndex={-1} className="customer-return-heading">{view==='overview'?'Resultat':view==='today'&&owner==='all'?'Teamets dag':nav.find(n=>n[0]===view)?.[1]}</h1><p>{({today:'Din arbetsdag, kundlöften och nästa steg samlade på ett ställe.',overview:'Dina mål, ditt resultat och dina nästa steg.',team:'Gemensamma resultat, säljarmål och kunduppföljning.',accounts:'Ett personligt konto kopplat till rätt roll och kundportfölj.',prospects:'Från relevant företag till bekräftat behov och en konkret affär.',onboarding:'Säkra första kundupplevelsen och planera nästa kontakt.',deals:'Varje affär har en ansvarig, ett tydligt steg och en nästa aktivitet.',customers:'Kundens behov och historik följer med, oavsett vem som tar nästa samtal.',care:'Kundplaner, återkommande behov och åtgärder som håller relationen levande.',orders:'Från accepterad order till leverans, uppföljning och återköp.',calendar:'Planerade kundmöten i CRM. Alla tider avser svensk lokal tid.',process:'Ett förslag att pröva med Sebbe och förankra med hela teamet.',catalog:'Artiklar med källa, variant och pris – vidare till kundorder.',search:'Avgränsa företag och hitta rätt kontakt i ert underlag.',production:'Dina jobb, tydliga deadlines och nästa moment.',print:'Tryckorder med skiss, antal och deadline.',warehouse:'Planera varumottagning och bekräfta utleverans.',notices:'Orderhändelser, återköpssignaler och kunduppföljning.',connections:'Anslut ditt arbetskonto och samla kunddialogen på rätt plats.',correspondence:'Dina kundmejl och teamets delade korrespondens.',year:'Planera kommande inköp, kontakttillfällen och återbeställningar.',settings:'Anpassa mål, ansvariga och uppföljningsintervall.'} as Record<string,string>)[view]}</p></div>{!department&&st?.viewer?.role!=='reader'&&!['overview','team','accounts','today','catalog','search','print','warehouse','production','notices','process','connections','settings','onboarding','correspondence','year'].includes(view)&&<Button onClick={()=>create(view==='customers'||view==='care'||view==='prospects'?'customer':view==='calendar'?'meeting':'deal')}><Plus size={16}/>{view==='customers'||view==='care'||view==='prospects'?(view==='prospects'?'Nytt prospekt':'Ny kund'):view==='calendar'?'Planera möte':'Ny offert/order'}</Button>}</div>
  {st?.viewer?.role==='seller'&&!st.viewer.owner&&<div className="panel error">Ditt konto saknar koppling till kundansvarig. Be administratören välja din ansvariga säljare under Personliga konton, så att du får dina ordernotiser.</div>}{loadingError&&st&&<div className="panel error" role="alert">Kunde inte uppdatera: {loadingError} Din öppna arbetsyta och text finns kvar.<Button variant="outline" onClick={refresh}>Försök igen</Button></div>}{loadingError&&!st?<div className="panel error">{loadingError}<Button variant="outline" onClick={refresh}><RefreshCw size={16}/>Försök igen</Button></div>:!st?<div className="loading"><span className="spinner"/>Hämtar arbetsytan…</div>:<>
