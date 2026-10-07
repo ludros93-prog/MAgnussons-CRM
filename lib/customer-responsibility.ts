@@ -53,7 +53,7 @@ export function customerResponsibilityBasis(st:State,customerId:string){
   tasks:st.tasks.filter(t=>t.customerId===customerId).sort((a,b)=>a.id.localeCompare(b.id)),
   deals:st.deals.filter(d=>d.customerId===customerId).map(d=>({id:d.id,owner:d.owner,stage:d.stage,title:d.title,nextDate:d.nextDate})).sort((a,b)=>a.id.localeCompare(b.id)),
   orders:st.orders.filter(o=>o.customerId===customerId).map(o=>({id:o.id,owner:o.owner,stage:o.stage,deliveryDate:o.deliveryDate,invoiceValue:o.invoiceValue,productionStatus:o.production.status})).sort((a,b)=>a.id.localeCompare(b.id)),
-  meetings:st.meetings.filter(m=>m.customerId===customerId).map(m=>({id:m.id,owner:m.owner,status:m.status,title:m.title,date:m.date})).sort((a,b)=>a.id.localeCompare(b.id))
+  meetings:st.meetings.filter(m=>m.customerId===customerId).map(m=>({id:m.id,owner:m.owner,ownerProfileId:m.ownerProfileId,responsibilityTransfers:m.responsibilityTransfers,status:m.status,title:m.title,date:m.date})).sort((a,b)=>a.id.localeCompare(b.id))
  });
 }
 export function transferCustomerResponsibility(st:State,input:CustomerResponsibilityTransfer,actor:Actor){

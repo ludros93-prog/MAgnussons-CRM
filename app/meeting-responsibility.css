@@ -1,0 +1,30 @@
+/* Reviewed meeting responsibility. Existing draft and workday status stay intact. */
+.visual-day .meeting-day-actions { display: flex; flex-direction: column; align-items: stretch; gap: .5rem; min-width: 0; max-width: 100%; flex-shrink: 0; }
+.visual-day .meeting-day-actions > button { min-height: 44px; height: auto; max-width: 100%; white-space: normal; overflow-wrap: anywhere; font-size: .875rem; line-height: 1.5; }
+.visual-day .meeting-day-actions > button:first-child { border-color: #c2d9d4; background: #eff8f4; color: #12685f; }
+.visual-day .meeting-day-actions > button:first-child:hover { background: #def1e9; }
+.visual-day .meeting-day-actions > .meeting-day-responsibility { color: #536780; text-align: left; justify-content: flex-start; }
+.meeting-responsibility-dialog { min-width: 0; overflow-wrap: anywhere; }
+.meeting-responsibility-dialog fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.meeting-responsibility-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
+.meeting-responsibility-head [data-slot=dialog-title] { min-width: 0; flex: 1; line-height: 1.4; }
+.meeting-responsibility-current { padding: .8rem 1rem; margin-bottom: 1rem; border: 1px solid #dce5ef; border-radius: 10px; background: #f7fafc; }
+.meeting-responsibility-current p { margin: .3rem 0; }
+.meeting-responsibility-selected { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 1.4; max-height: 2.8em; min-width: 0; flex: 1; text-align: left; }
+.meeting-responsibility-dialog .check-field { align-items: flex-start; }
+.meeting-responsibility-dialog .check-field > span { min-width: 0; }
+.meeting-responsibility-options [data-slot=select-item] { min-width: 0; overflow-wrap: anywhere; }
+.visual-day .day-meetings .daily-row > div:first-child { min-width: 0; }
+.visual-day .day-meetings .daily-row small { overflow-wrap: anywhere; }
+.meeting-calendar-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: start; gap: .8rem; min-width: 0; padding: 1rem 1.4rem; border-top: 1px solid #edf0f3; }
+.meeting-calendar-main { display: flex; align-items: flex-start; gap: 1rem; width: 100%; min-width: 0; max-width: 100%; min-height: 44px; height: auto; padding: 0; border-top: 0; text-align: left; white-space: normal; }
+.meeting-calendar-main .date-tile { flex-shrink: 0; }
+.meeting-calendar-detail { min-width: 0; overflow-wrap: anywhere; }
+.meeting-calendar-detail > b,.meeting-calendar-detail > small { display: block; overflow-wrap: anywhere; line-height: 1.65; }
+.meeting-calendar-responsibility { min-width: 0; max-width: 100%; min-height: 44px; height: auto; padding: .5rem .65rem; white-space: normal; overflow-wrap: anywhere; line-height: 1.5; font-size: .875rem; color: #536780; text-align: left; justify-content: flex-start; }
+.meeting-calendar-main:focus-visible,.meeting-calendar-responsibility:focus-visible { outline: 3px solid #0c8270; outline-offset: 3px; }
+@media(max-width:767px) {
+ .visual-day .meeting-day-actions { align-items: flex-start; width: 100%; }
+ .meeting-calendar-row { grid-template-columns: minmax(0,1fr); gap: .65rem; padding: 1rem 1.1rem; }
+ .meeting-calendar-responsibility { justify-self: start; }
+}
