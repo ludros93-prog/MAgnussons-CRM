@@ -4,7 +4,7 @@
 @media(max-width:767px){.year-months{grid-template-columns:repeat(2,minmax(0,1fr))}.biz-grid{grid-template-columns:1fr}.quote-numbers{grid-template-columns:1fr 1fr}.biz-head{align-items:flex-start;flex-wrap:wrap}.biz-facts{grid-template-columns:1fr;gap:4px}.biz-facts dd{margin-bottom:12px}.biz-repeat{align-items:flex-start;flex-wrap:wrap}.biz-repeat>div{flex-basis:100%}.biz-group,.quote-line{padding:14px}.business-ui .biz-head>button{flex-shrink:1}.customer-tabs [data-slot=tabs-trigger]{flex:auto}.need-card .biz-grid{gap:12px}.biz-callout{padding:13px}}
 /* Keep reviewed task controls above the shared business button minimum. */
 .task-responsibility-dialog button:not([role=checkbox]){min-height:44px}
-.task-responsibility-dialog summary{min-height:44px;padding-block:.5rem}
+.task-responsibility-dialog .biz-details>summary{min-height:44px;padding-block:.5rem}
 .task-responsibility-dialog .check-field{min-height:44px}
 @media(max-width:767px){
  .task-responsibility-dialog .task-responsibility-head{flex-wrap:wrap}
