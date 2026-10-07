@@ -1,5 +1,23 @@
 # Magnussons CRM – order, tryck och lager
 
+## Återöppna en avslutad kundrelation – v56
+
+1. Logga in som administratör och öppna det befintliga avslutade kundkortet. Välj **Återöppna kundrelation**. Kontrollera samma kund och fullständiga kundnamn, tidigare kundrelationsansvarig, profil-ID och arbetsyta; skapa inget nytt kundkort för återöppningen. Servern behåller kundens befintliga ID.
+2. Välj **Ny kundrelationsansvarig** bland tillgängliga aktiva granskade profiler. Samma redan aktiva profil kan behålla ansvaret. Ett historiskt eller oklart tidigare ansvar ska inte gissas; dialogens servergranskning visar om ansvarskopplingen först behöver hanteras.
+3. Välj **Relation efter återöppningen**: Prospekt, Aktiv kund eller Vilande utifrån faktiskt underlag. Profilens aktiva status är inget kundbehov. Startad ofullständig onboarding måste vara klar för valet Aktiv kund; återöppningen ändrar inte checklistan.
+4. Skriv **Varför återöppnas kundrelationen?**, beskriv vad den nya uppföljningen ska göra och välj ett giltigt datum idag eller senare. Läs **Befintligt öppet arbete behåller sitt ansvar**. Uppföljningen blir en ny uppgift; tidigare aktiviteter flyttas eller avslutas inte.
+5. Granska sammanfattningen: status, ansvarig, orsak, ny aktivitet och det arbete/resultat som bevaras. Markera granskningen och välj **Spara återöppnad kundrelation**. Servern sparar delarna atomiskt och registrerar den faktiska återöppningen.
+6. Vid konflikt: behåll öppen text, välj **Hämta aktuellt underlag**, sedan **Läs in nytt granskningsunderlag**. Granska igen; ingen ny ansvarig väljs automatiskt om den tidigare inte längre är tillgänglig. Ändrade fält tömmer granskningen. Vid tappat svar kan en tidigare sparning redan vara registrerad; stängning återställer inte servern.
+
+Den befintliga tvåstegsvägen finns kvar: granska kundansvarsbyte, därefter ändra kundrelationens status i dess vanliga formulär. V56 lägger till den samlade adminvägen; vanliga roller får ingen ny generell återöppningsregel. V55:s skydd för avslutade resultatprofiler består.
+
+Tidigare försäljning, kvalificeringar, mål, affärer/order och gamla aktiviteter behåller sina ansvariga. Konto, sidåtkomst, privata utkast/Outlook och andra arbetsytor ändras inte. Formuläret har inget privat serverutkast; kopiera nödvändig text före omladdning eller stängning utan sparning. Generell historisk affärs-/orderredigering och full personalavveckling är fortfarande separata arbeten.
+
+**Återgång:** v56 inför inget nytt lagringsfält eller SQL. V55-kompatibel app är fortsatt minsta säkra skrivare efter profilavslutshistorik; äldre oförändrad v54 är fortsatt osäker. [RUNBOOK](agent/RUNBOOK.md) och [VALIDATION](VALIDATION.md) anger faktiskt prövad kompatibilitet/återställning och dess miljö.
+
+## Historik före v56
+
+
 ## Granska och avsluta en resultatprofil – v55
 
 1. Logga in som administratör. Öppna **Konton & roller → Överlämna arbete** och välj den stabila säljarprofilen. Kontrollera namn, profil-ID, äldre ansvarskoppling och arbetsyta.

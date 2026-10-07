@@ -1,5 +1,20 @@
 # CRM-källor för Magnussons byggagent
 
+## Granskad kundåteröppning – officiella källor för v56
+
+Fem officiella källor lästes genom offentlig sökning, direkt URL-öppning och fokuserad textläsning. Samlat lästidskvitto: **2026-10-07T22:20:41Z**; ingen separat tidsstämpel för varje artikel påstås. Kvitto `/workspace/scratch/crm56/research/official-sources.json`, SHA256 `1db376fd9c3472e5f23129507a53b8b81ea2112d25e05e08d27d05471d9844a2`.
+
+[Salesforce följder av ägarbyte](https://help.salesforce.com/s/articleView?id=sf.account_owner_transfer.htm&language=en_US&type=5) skiljer kontoägaren från olika följder för relaterade öppna och avslutade poster. Första xcloud-läsningen gav endast CSS Error; den länkade sf-URL:en gav artikeltext. [Salesforce Account History](https://help.salesforce.com/s/articleView?id=sf.account_history.htm&language=en_US&type=5) beskriver tid, ändring och aktör för fält med aktiverad spårning, med särskilda editions-/Classic-/behörighetsgränser. Vår atomiska kundåteröppning använder egna serverregler; automatiska Salesforce-överföringar av relaterade poster kopieras inte.
+
+[Lime Variants](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/variants/) varnar för kortlayouter som ändras under redigering. [Lime Boolean Labels](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/readonly-boolean/) stödjer tydliga, kontextbundna textetiketter för det tillstånd som visas. Vår dialog behåller strukturen och skiljer kundrelation, resultatprofil och åtkomst; en aktiv profil bevisar ingen aktiv kundrelation eller kontoåtkomst.
+
+[Saleshub AI Funktioner](https://saleshubai.se/funktioner) beskriver samlat kundkort, relaterat arbete och nästa aktivitet. Vi återanvänder därför samma kund-ID/kort och visar en tydligt användarplanerad ny uppföljning. Det är offentlig produktbeskrivning, ingen teknisk återöppningsspecifikation eller bekräftad Magnussonsanslutning.
+
+Källorna fastställer inte Magnussons målstatus, kundacceptans, verkliga kontakt eller överföringspolicy. Inga interaktiva/autentiserade leverantörsgränssnitt, fysisk telefon, skärmläsare eller personalprov ingår i researchen. Svenska etiketter, 44 px, scroll, fokus och atomisk skrivning är lokala val. [VALIDATION](../VALIDATION.md) anger vår faktiska verifiering; `/workspace/scratch/crm56/research/design-notes.md` är separat läst designunderlag. Inga helsidehashar eller leverantörsprestanda påstås.
+
+## Historik före v56
+
+
 ## Profilavslut – officiella källor för v55
 
 Sju officiella källor lästes direkt och med fokuserade textöppningar. Klockobservationerna låg mellan **2026-10-07 21:23:00 och 21:23:56 UTC**; första sökningen/läsningen skedde före första observationen och individuella anropsstarter registrerades inte. Kvitto `/workspace/scratch/crm55/research/official-sources.json`, SHA256 `d114b2a5365308ee6094f71cc185bd6e1b7d9d96ccc9e5f23877e3bbef75afd0`.

@@ -1,5 +1,20 @@
 # Magnussons CRM – designriktning
 
+## Samma kundkort, tydlig ny relation och uppföljning – v56
+
+**Kundrelationen är avslutad** leder administratören till **Återöppna kundrelation** på samma kundkort. Kundrelation, resultatprofil och inloggningsåtkomst uttrycks separat. Dialogen visar fullständigt kundnamn, tidigare profilstatus, målprofil med full identitet och ett uttryckligt relationsval. Långa namn kan kortas i väljaren men finns i närliggande beskrivning med profil-ID.
+
+Orsak, uppföljningstext, datum och granskningsruta börjar tomma. **Det här ändras** och **Tidigare arbete och resultat finns kvar** förklarar följden innan **Spara återöppnad kundrelation**. Befintligt arbete ligger i en egen läsande lista med registrerat ansvar. Dialogen erbjuder inga val för att flytta tidigare aktiviteter.
+
+Hämtning, explicit adoption, konflikt och sparning har egna besked. Ett otillgängligt mål väljs inte om automatiskt. Text bevaras i den öppna dialogen men är inget privat serverutkast. Formulärstrukturen är stabil medan användaren granskar; lång text radbryts, dialog/textfält har avgränsad scroll och vanliga kontroller har minst 44 px avsedd höjd. Fokus återgår till användbar öppnare eller kundkortets beständiga rubrik i samma identitet/vy.
+
+Browsergranskningen hittade ett faktiskt klippt årtal i det inbyggda datumfältet vid 320 × 360 med exakt dubblerad text. Mobilformuläret ger fältet mer utrymme och visar **Valt datum:** med hela årtalet i en separat tidsangivelse. Fältet är kopplat till datumtexten via `aria-describedby`; tomt och ogiltigt datum beskrivs uttryckligt. Detta är en lokal rättelse av begriplig datumvisning, ingen garanti för andra webbläsares kalenderkontroller eller full tillgänglighet.
+
+Slutbrowserprov: 18/18 PASS; Root öppnade och granskade åtta faktiska slut-PNG från mobil/desktop, inklusive 320×360 och 390×844 med exakt dubblerad CSS-text, inbyggt datumfält, fokuserad sparknapp, explicit profil/relationsval, relaterad konfliktadoption, tappat svar och återöppnat kundkort. Årtalet ryms före kalenderikonen vid 320×360; den fullständiga svenska datumtexten visas separat. Långa texter radbryts och dialogen scrollar. Enradiga redigerbara fält scrollar inom fältet; godtyckligt långa inmatningar visas inte samtidigt. Ett engelskt nätverksfelprefix kvarstår före begriplig svensk åtgärdstext. Detta är inte full sidzoom, fysisk telefon eller en fullständig lokaliserings-/tillgänglighetsgranskning. [VALIDATION](VALIDATION.md) anger faktiska kvitton och gränsen mot fysisk telefon, hjälpmedel och personalacceptans. Fem officiella källor finns i [RESEARCH](agent/RESEARCH.md); svenska val, atomisk sparning och vår återöppningsregel är lokala produktbeslut, inte kopierad Salesforce-/Lime-policy.
+
+## Historik före v56
+
+
 ## Tre begripliga tillstånd och granskat profilavslut – v55
 
 **Resultatprofil**, **CRM-konto** och **Sidåtkomst** får separata textbesked. Aktuell/historisk profil innebär inte aktivt/avstängt konto eller verifierad sidåtkomst. Fullständigt namn, profil-ID, äldre ansvarskoppling och arbetsyta finns nära **Granska profilavslut**. Handlingens kvittens gäller resultatprofilen i vald arbetsyta.

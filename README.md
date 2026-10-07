@@ -1,5 +1,18 @@
 # Magnussons CRM
 
+## Återöppna samma kundrelation med granskning – v56
+
+Administratören kan öppna ett **Avslutat** kundkort och välja **Återöppna kundrelation**. Välj aktiv granskad kundrelationsansvarig, relation, orsak och en ny uppföljning med egen beskrivning och datum. En enda sparning återöppnar samma kund, förankrar kundrelationsansvaret och skapar den planerade uppgiften med en spårbar historikhändelse. Tidigare affärer, order, resultat och aktiviteter behåller sina ansvariga.
+
+Den tidigare tvåstegsvägen – granskat kundansvarsbyte följt av vanlig statusredigering – finns kvar. Den nya adminhandlingen samlar återöppning och planerad uppföljning atomiskt. Den antar ingen kundkontakt, ny affär, kundacceptans eller generell återöppningspolicy. [OPERATIONS](OPERATIONS.md) beskriver valen och kvarvarande gränser.
+
+Kod `58e82f68990074fca0f80ad7a961cb64f1506ea4`, app-main `a212b63dbd12c2bed5908623de53aed71c104deb`, [app-PR #86](https://github.com/ludros93-prog/MAgnussons-CRM/pull/86). Slutkontroller: 5/5 exit 0 på ren, oförändrad head: CRM/Outlook-regressioner, icke-inkrementell TypeScript, produktionsbygge, isolerad runtime och git diff --check; isolerade browserprov: 18/18 PASS. Samma Site: version `56`, source `f1191a9b7bbd89259a1eab366a3416a5e0f5e02c`, deploy `appgdep_6ac6cf51eecc8191bd16698b296c834a`, succeeded `2026-10-07T23:02:01.928120+00:00`. [VALIDATION](VALIDATION.md) anger faktiska kvitton och provgränser.
+
+Inga nya lagringsfält/tabeller eller SQL-migrationer införs. Minsta kompatibla skrivare är fortsatt **v55** efter dess profilavslutshistorik; v56 höjer inte den gränsen. Konto/Sitesåtkomst, privata utkast och generell historisk affärs-/orderredigering ingår inte i återöppningen.
+
+## Historik före v56
+
+
 ## Granskat avslut av resultatprofil – v55
 
 Efter att öppet arbete hanterats kan administratören öppna **Konton & roller → Överlämna arbete → Granska profilavslut** och göra resultatprofilen historisk i vald arbetsyta. Servern kontrollerar hela profilens operativa underlag, oavsett sökning, kategori eller antal visade kort. Orsak och ny uttrycklig granskning krävs. Profil-ID, tidigare resultat, mål, avslutade poster och sparad kontolänk bevaras.
