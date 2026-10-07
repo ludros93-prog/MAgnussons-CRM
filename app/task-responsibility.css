@@ -1,0 +1,17 @@
+/* Only the reviewed task action and its dialog; the ordinary workday stays intact. */
+.visual-day .task-day-actions { display: flex; flex-direction: column; align-items: stretch; gap: .5rem; min-width: 0; max-width: 100%; flex-shrink: 0; }
+.visual-day .task-day-actions > button { min-height: 44px; height: auto; max-width: 100%; white-space: normal; overflow-wrap: anywhere; font-size: .875rem; line-height: 1.5; }
+.visual-day .task-day-actions > button:first-child { border-color: #c2d9d4; background: #eff8f4; color: #12685f; }
+.visual-day .task-day-actions > button:first-child:hover { background: #def1e9; }
+.visual-day .task-day-actions > .task-day-responsibility { color: #536780; text-align: left; justify-content: flex-start; }
+.task-responsibility-dialog { min-width: 0; overflow-wrap: anywhere; }
+.task-responsibility-dialog fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.task-responsibility-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
+.task-responsibility-head [data-slot=dialog-title] { min-width: 0; flex: 1; line-height: 1.4; }
+.task-responsibility-current { padding: .8rem 1rem; margin-bottom: 1rem; border: 1px solid #dce5ef; border-radius: 10px; background: #f7fafc; }
+.task-responsibility-current p { margin: .3rem 0; }
+.task-responsibility-selected { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 1.4; max-height: 2.8em; min-width: 0; flex: 1; text-align: left; }
+.task-responsibility-dialog .check-field { align-items: flex-start; }
+.task-responsibility-dialog .check-field > span { min-width: 0; }
+.task-responsibility-options [data-slot=select-item] { min-width: 0; overflow-wrap: anywhere; }
+@media(max-width:767px) { .visual-day .task-day-actions { align-items: flex-start; width: 100%; } }

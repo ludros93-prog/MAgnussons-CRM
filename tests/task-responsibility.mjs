@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
+import {assertParentTaskTransfer} from './task-responsibility-transfer.mjs';
 
 // Real API, all migrated SQLite tables and the shared R2 byte store. Every
 // account, company, document and Outlook row in this test is synthetic.
 export async function verifyTaskResponsibility({core,sqlite,objects,get,post,headers,api,conflicts}) {
- const orderWork=await import('../work/order-work.mjs'),store=await import('../work/crm-store.mjs'),sellers=await import('../work/seller-profiles.mjs'),followups=await import('../work/follow-up.mjs'),responsibility=await import('../work/customer-responsibility.mjs'),commercial=await import('../work/commercial-responsibility.mjs'),backup=await import('../work/crm-backup.mjs'),stream=await import('../work/crm-backup-stream.mjs'),backupApi=await import('../work/backup-api.mjs');
+ const orderWork=await import('../work/order-work.mjs'),store=await import('../work/crm-store.mjs'),sellers=await import('../work/seller-profiles.mjs'),followups=await import('../work/follow-up.mjs'),taskResponsibility=await import('../work/task-responsibility.mjs'),responsibility=await import('../work/customer-responsibility.mjs'),commercial=await import('../work/commercial-responsibility.mjs'),backup=await import('../work/crm-backup.mjs'),stream=await import('../work/crm-backup-stream.mjs'),backupApi=await import('../work/backup-api.mjs');
  const today=core.day(),at=today+'T08:00:00Z',customerId='task-id-customer',otherId='task-id-other',owners={a:'Aktivitetsprov A',b:'Aktivitetsprov B',retired:'Aktivitetsprov tidigare ansvarig',unknown:'Aktivitetsprov omappad ansvarig'};
  const accounts=Object.fromEntries(['a','b','production','reader','otheradmin'].map(key=>[key,{id:'task-id-member-'+key,user:'task-id-user-'+key,email:'task-id-'+key+'@example.test',role:key==='otheradmin'?'admin':['a','b'].includes(key)?'seller':key,owner:owners[key]||''}]));
  const tableNames=sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map(row=>row.name);
@@ -52,7 +53,8 @@ export async function verifyTaskResponsibility({core,sqlite,objects,get,post,hea
  const replayBefore=raw(),otherReplay=await writeAs(accounts.otheradmin,createBase,'task',{customerId,owner:owners.a,title:createdTask.title,due:today},created.id);assert.equal(otherReplay.status,409);assert.deepEqual(raw(),replayBefore);
  for(const forged of ['',ids.b,crypto.randomUUID()])await reject('task',{...createdTask,ownerProfileId:forged});
  await save('task',{...withoutId(task(createdTask.id)),title:'Omnämnd men samma identitet'});assert.equal(task(createdTask.id).ownerProfileId,ids.a);
- await save('task',{...task('task-id-legacy'),owner:owners.b});assert.equal(task('task-id-legacy').ownerProfileId,ids.b);
+ await reject('task',{...task('task-id-legacy'),owner:owners.b});
+ await save('task_responsibility_transfer',{taskId:'task-id-legacy',targetProfileId:ids.b,reason:'Uttryckligt granskat ansvar i den nya överlämningen',reviewed:true,expectedContext:taskResponsibility.taskResponsibilityBasis(state,'task-id-legacy')});assert.equal(task('task-id-legacy').ownerProfileId,ids.b);assert.equal(task('task-id-legacy').responsibilityTransfers[0].fromRecordedProfileId,'');
  await reject('task',{...task('task-id-care'),owner:trulyUnknown});
  for(const account of [accounts.production,accounts.reader]){const before=raw(),r=await writeAs(account,state,'task',{customerId,owner:owners.a,title:'Rollspärrat försök',due:today});assert.equal(r.status,403);assert.deepEqual(raw(),before);}
  const sellerCreate=await writeAs(accounts.a,state,'task',{customerId,owner:owners.b,title:'Tillåten säljaraktivitet',due:today});assert.equal(sellerCreate.status,200,JSON.stringify(sellerCreate.data));state=await get('demo');assert.equal(state.tasks.find(row=>row.title==='Tillåten säljaraktivitet').ownerProfileId,ids.b);
@@ -78,9 +80,9 @@ export async function verifyTaskResponsibility({core,sqlite,objects,get,post,hea
  // Reviewed handovers stamp exactly the selected task rows. A completed row
  // and an unselected row keep their own assignment and historical identity.
  const customerPayload={customerId,targetProfileId:ids.b,selectedTaskIds:['task-id-care'],reviewed:true,reason:'Granskad aktivitetsöverlämning',expectedContext:responsibility.customerResponsibilityBasis(state,customerId)},transferBefore=await store.load('demo');await save('customer_responsibility_transfer',customerPayload);
- for(const old of transferBefore.tasks)assert.deepEqual(task(old.id),old.id==='task-id-care'?{...old,owner:owners.b,ownerProfileId:ids.b}:old);
+ for(const old of transferBefore.tasks)if(old.id==='task-id-care')assertParentTaskTransfer(old,task(old.id),customer().responsibilityTransfers.at(-1),state.settings.sellerProfiles,'customer');else assert.deepEqual(task(old.id),old);
  const commercialPayload={targetType:'deal',targetId:'task-id-deal',targetProfileId:ids.b,selectedTaskIds:['task-id-discovery'],reviewed:true,reason:'Granskad affärsöverlämning',expectedContext:commercial.commercialResponsibilityBasis(state,'deal','task-id-deal')},commercialBefore=await store.load('demo');await save('commercial_responsibility_transfer',commercialPayload);
- for(const old of commercialBefore.tasks)assert.deepEqual(task(old.id),old.id==='task-id-discovery'?{...old,owner:owners.b,ownerProfileId:ids.b}:old);
+ for(const old of commercialBefore.tasks)if(old.id==='task-id-discovery')assertParentTaskTransfer(old,task(old.id),state.deals.find(d=>d.id==='task-id-deal').responsibilityTransfers.at(-1),state.settings.sellerProfiles,'deal');else assert.deepEqual(task(old.id),old);
  const follow=(id,nextAction)=>({taskId:id,expectedContext:followups.followupBasis(state,id),outcome:'internal',occurredOn:today,note:'Syntetisk uppföljning med bevarat historiskt ansvar',completed:true,nextAction,nextDate:today});
  const legacyFollow=structuredClone(task('task-id-follow-legacy'));await save('follow_up',follow(legacyFollow.id,'Nästa arbete för ursprunglig ansvarig'));assert.equal(task(legacyFollow.id).ownerProfileId,'');assert.equal(task(legacyFollow.id).owner,owners.a);assert.equal(state.tasks.find(row=>row.title==='Nästa arbete för ursprunglig ansvarig').ownerProfileId,ids.a);
  // Seed an old anchored inactive row and an unreviewed old row without changing

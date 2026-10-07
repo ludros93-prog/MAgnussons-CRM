@@ -1,5 +1,5 @@
 'use client';
-import {useId,useState} from 'react';
+import {useCallback,useId,useState} from 'react';
 import {Search,Plus,FilePenLine,Phone,AlertTriangle,CalendarDays,Clock3,Package,Users,UserRound,CheckCircle2,TrendingUp} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Progress} from '@/components/ui/progress';
@@ -17,14 +17,16 @@ import {ArticleDraftPreview} from './article-draft-preview';
 import {isArticleDraft} from '@/lib/article-drafts';
 import {isCompanyEventDraft} from '@/lib/company-event-drafts';
 import {CompanyEventDraftPreview} from './company-event-draft-preview';
-import {money,displayDate} from './business-ui';
+import {TaskResponsibility} from './task-responsibility';
+import {money,displayDate,type SaveAction} from './business-ui';
 
 const taskLabel=(t:Task)=>t.kind==='quote'?'Följ upp offerten':t.kind==='invoice_ready'?'Registrera faktura':['handover','proof_deadline','order_deadline'].includes(t.kind)?'Färdigställ underlag':canFollowUp(t)?'Följ upp':'Hantera aktivitet';
 function openSection(id:string){const section=document.getElementById(id);if(section){section.focus({preventScroll:true});section.scrollIntoView({block:'start',behavior:'smooth'})}}
 
-export function MyDay({st,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder,onMeeting,onReceipt,onView,onDraft}:{st:State;owner:string;onOwnerChange:(owner:string)=>void;onCustomer:(id:string)=>void;onTask:(t:Task)=>void;onCreate:(type:string)=>void;onOrder:(o:Order)=>void;onMeeting:(m:Meeting)=>void;onReceipt:(id:string)=>void;onView:(view:string)=>void;onDraft:(draft:DraftRecord)=>void}){
+export function MyDay({st,space,save,busy,refreshResponsibility,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder,onMeeting,onReceipt,onView,onDraft}:{st:State;space:string;save:SaveAction;busy:boolean;refreshResponsibility:()=>Promise<State>;owner:string;onOwnerChange:(owner:string)=>void;onCustomer:(id:string)=>void;onTask:(t:Task)=>void;onCreate:(type:string)=>void;onOrder:(o:Order)=>void;onMeeting:(m:Meeting)=>void;onReceipt:(id:string)=>void;onView:(view:string)=>void;onDraft:(draft:DraftRecord)=>void}){
  const draftListId=useId();
  const [showAllDrafts,setShowAllDrafts]=useState(false),[discardDraft,setDiscardDraft]=useState('');
+ const [responsibilityTaskId,setResponsibilityTaskId]=useState(''),closeResponsibility=useCallback(()=>setResponsibilityTaskId(''),[]);
  const drafts=useDrafts(),personal=personalOwner(st),canTeam=st.viewer?.role==='admin',team=owner==='all',hasScope=team||!!personal&&owner===personal,today=day(),readonly=st.viewer?.role==='reader';
  const match=(v:{owner:string})=>hasScope&&(team||v.owner===owner);
  const resultScope=hasScope?(team?'all':personalResultScope(st)):'',hasResultScope=team||!!resultScope;
@@ -32,7 +34,7 @@ export function MyDay({st,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder
  const taskResponsibility=(t:Task)=>taskOwnerLabel(st,t)+(st.settings.sellerProfilesInitialized&&!t.ownerProfileId?' · ansvar behöver förankras':'');
  const tasksById=new Map(st.tasks.map(t=>[t.id,t]));
  const stats=salesMetrics(st,today.slice(0,7),resultScope);
- const tasks=st.tasks.filter(t=>matchTask(t)&&!t.done&&t.kind!=='receipt').sort((a,b)=>a.due.localeCompare(b.due)),now=tasks.filter(t=>t.due<=today),late=now.filter(t=>t.due<today),todayTasks=now.filter(t=>t.due===today),later=tasks.filter(t=>t.due>today&&t.due<=plusDays(today,7));
+ const tasks=st.tasks.filter(t=>matchTask(t)&&!t.done&&t.kind!=='receipt').sort((a,b)=>a.due.localeCompare(b.due)),now=tasks.filter(t=>t.due<=today),late=now.filter(t=>t.due<today),todayTasks=now.filter(t=>t.due===today),later=tasks.filter(t=>t.due>today&&t.due<=plusDays(today,7)),future=tasks.filter(t=>t.due>plusDays(today,7));
  const meetings=st.meetings.filter(m=>match(m)&&m.status==='planned'&&m.date>=today&&m.date<=plusDays(today,7)).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
  const issues=st.orders.filter(o=>match(o)&&['submitted','printed'].includes(o.production.status)&&o.production.issue),customers=st.customers.filter(c=>match(c)&&concerns(c,today,st).length);
  const receipts=st.orders.filter(o=>match(o)&&awaitingReceipt(o)).sort((a,b)=>(a.deliveryNextCheck||a.deliveryDate).localeCompare(b.deliveryNextCheck||b.deliveryDate));
@@ -52,7 +54,7 @@ export function MyDay({st,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder
 
  function taskRows(list:Task[]){return list.map(t=><div className="daily-row" key={t.id} data-late={t.due<today}>
   <div><span className="day-row-kind">{t.kind==='quote'?'Offertuppföljning':t.kind==='invoice_ready'?'Fakturering':'Kundaktivitet'}</span><b>{t.title}</b><button className="daily-customer" onClick={()=>onCustomer(t.customerId)}>{cname(t.customerId)}</button><small>{t.due<today?'Försenad · ':t.due===today?'Idag · ':''}{displayDate(t.due)}{team?' · '+taskResponsibility(t):''}</small></div>
-  <Button variant="outline" onClick={()=>onTask(t)}>{readonly?'Visa aktivitet':taskLabel(t)}</Button>
+  {canTeam&&st.settings.sellerProfilesInitialized&&!t.dealId&&['manual','care','meeting_followup'].includes(t.kind)?<div className="task-day-actions"><Button variant="outline" onClick={()=>onTask(t)}>{taskLabel(t)}</Button><Button className="task-day-responsibility" variant="ghost" disabled={busy} onClick={()=>setResponsibilityTaskId(t.id)}>{t.ownerProfileId?'Byt uppgiftsansvar':'Förankra ansvar'}</Button></div>:<Button variant="outline" onClick={()=>onTask(t)}>{readonly?'Visa aktivitet':taskLabel(t)}</Button>}
  </div>)}
 
  return <div className="business-ui my-day visual-day" data-has-scope={hasScope}>
@@ -73,7 +75,7 @@ export function MyDay({st,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder
   </div>}
   <div className="daily-columns">
    <div className="day-primary">
-    {hasScope&&<section className="panel day-task-panel" id="daily-tasks" tabIndex={-1}><div className="panel-head"><div><span className="day-section-label">KUNDKONTAKT & UPPFÖLJNING</span><h2>{team?'Teamets uppgifter idag':'Att göra idag'} <span className="count">{now.length}</span></h2></div>{!readonly&&<Button variant="ghost" size="sm" onClick={()=>onCreate('task')}><Plus size={16}/>Planera aktivitet</Button>}</div>{taskRows(now)}{!now.length&&<div className="day-empty"><CheckCircle2 size={21}/><div><b>Inget planerat till idag</b><p>{later.length?later.length+' aktiviteter finns under kommande sju dagar.':'Nya aktiviteter visas här när de planeras.'}</p></div></div>}{later.length>0&&<details className="day-upcoming"><summary>Kommande sju dagar <span>{later.length}</span></summary>{taskRows(later)}</details>}</section>}
+    {hasScope&&<section className="panel day-task-panel" id="daily-tasks" tabIndex={-1}><div className="panel-head"><div><span className="day-section-label">KUNDKONTAKT & UPPFÖLJNING</span><h2>{team?'Teamets uppgifter idag':'Att göra idag'} <span className="count">{now.length}</span></h2></div>{!readonly&&<Button variant="ghost" size="sm" onClick={()=>onCreate('task')}><Plus size={16}/>Planera aktivitet</Button>}</div>{taskRows(now)}{!now.length&&<div className="day-empty"><CheckCircle2 size={21}/><div><b>Inget planerat till idag</b><p>{later.length?later.length+' aktiviteter finns under kommande sju dagar.':future.length?future.length+' aktiviteter finns under senare planerade uppgifter.':'Nya aktiviteter visas här när de planeras.'}</p></div></div>}{later.length>0&&<details className="day-upcoming"><summary>Kommande sju dagar <span>{later.length}</span></summary>{taskRows(later)}</details>}{future.length>0&&<details className="day-upcoming"><summary>Senare planerade uppgifter <span>{future.length}</span></summary>{taskRows(future)}</details>}</section>}
     {signals.length>0&&<section className="panel day-blocked"><div className="panel-head"><h2><AlertTriangle size={19}/>Prioritera nu <span className="count">{signals.length}</span></h2></div>{signals.slice(0,6).map(s=><div className="daily-row" key={s.id}><div><b>{s.title}{team&&s.escalated?' · behöver chefsuppföljning':''}</b><p>{s.reason}</p><small>{cname(s.customerId)}{team?' · '+signalResponsibility(s):''}</small></div><Button variant="outline" onClick={()=>handleSignal(s.id)}>{readonly?'Visa underlag':'Hantera'}</Button></div>)}</section>}
     {issues.length>0&&<section className="panel day-blocked" id="daily-blocked" tabIndex={-1}><div className="panel-head"><h2><AlertTriangle size={20}/>Order som behöver hjälp <span className="count">{issues.length}</span></h2></div>{issues.map(o=><div className="daily-row" key={o.id}><div><b>{st.deals.find(d=>d.id===o.dealId)?.title}</b><p>{o.production.issue}</p><small>{cname(o.customerId)} · hos kund {displayDate(o.deliveryDate)}</small></div><Button variant="outline" onClick={()=>{onView('orders');onOrder(o)}}>Öppna ordern</Button></div>)}</section>}
     <section className="panel daily-drafts"><div className="panel-head"><div><span className="day-section-label">BARA SYNLIGT FÖR DIG</span><h2><FilePenLine size={19}/>Fortsätt där du slutade{drafts.ready&&drafts.records.length>0&&<span className="count">{drafts.records.length}</span>}</h2></div></div>{!drafts.ready&&<DraftStatus id=""/>}{drafts.records.slice(0,showAllDrafts?undefined:6).map((d,index)=>{const receipt=d.kind==='receipt',article=isArticleDraft(d.kind,d.context),companyEvent=isCompanyEventDraft(d.kind,d.context),prefix=draftListId+'-'+index;return <div className={'daily-row'+(receipt?' daily-receipt-draft':article?' article-draft-day-row':companyEvent?' event-draft-day-row':'')} key={d.id}><div><b id={receipt||article||companyEvent?prefix+'-title':undefined}>{d.title}</b><small>{article?'Artikelutkast':companyEvent?'Företagsaktivitet':{catalog:'Offert-/orderutkast',production:'Tryckunderlag',note:'Anteckning',followup:'Kunduppföljning',form:'Påbörjade uppgifter',plan:'Kundplan',prospecting:'Nykundsbearbetning',onboarding:'Onboarding',receipt:'Leveransbesked'}[d.kind]} · privat utkast</small>{article&&<ArticleDraftPreview draft={d} st={st}/>}{companyEvent&&<CompanyEventDraftPreview draft={d}/>}{receipt&&<ReceiptDraftPreview draft={d} titleId={prefix+'-title'} summaryId={prefix+'-summary'} identityId={prefix+'-identity'}/>}<DraftStatus id={d.id} allowActions={!article&&!companyEvent}/></div><div className="biz-buttons"><Button variant="outline" aria-labelledby={receipt||article||companyEvent?prefix+'-continue '+prefix+'-title':undefined} aria-describedby={receipt?prefix+'-summary '+prefix+'-identity':undefined} onClick={()=>onDraft(d)}>{receipt||article||companyEvent?<span id={prefix+'-continue'}>Fortsätt</span>:'Fortsätt'}</Button>{article||companyEvent?<Button variant="ghost" onClick={()=>onDraft(d)}>Granska eller ta bort</Button>:discardDraft===d.id?<><Button variant="outline" onClick={async()=>{if(await drafts.archive(d.id))setDiscardDraft('')}}>Ja, ta bort utkast</Button><Button variant="ghost" onClick={()=>setDiscardDraft('')}>Behåll</Button></>:<Button variant="ghost" onClick={()=>setDiscardDraft(d.id)}>Ta bort</Button>}</div></div>})}{drafts.records.length>6&&<Button variant="ghost" onClick={()=>setShowAllDrafts(!showAllDrafts)}>{showAllDrafts?'Visa färre':'Visa alla '+drafts.records.length+' utkast'}</Button>}{drafts.ready&&!drafts.records.length&&<p className="day-quiet-empty">Inga privata utkast just nu.</p>}</section>
@@ -85,5 +87,6 @@ export function MyDay({st,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder
    </div>}
   </div>
   {hasScope&&<div id="daily-receipts" tabIndex={-1}><ReceiptQueue st={st} owner={owner} onReceipt={onReceipt} compact/></div>}
+  {responsibilityTaskId&&<TaskResponsibility key={responsibilityTaskId} st={st} taskId={responsibilityTaskId} space={space} save={save} busy={busy} refresh={refreshResponsibility} onClose={closeResponsibility}/>}
  </div>;
 }
