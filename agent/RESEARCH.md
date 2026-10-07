@@ -1,5 +1,17 @@
 # CRM-källor för Magnussons byggagent
 
+## Admininventering – officiell källkontroll för v54, 2026-10-07
+
+Efter sista webbuppföljningen lästes klockan **20:23:11 UTC**. [Saleshub AI Funktioner](https://saleshubai.se/funktioner) lästes direkt: gemensamt kundsammanhang och nästa aktivitet. [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) gav först 429 men därefter direkt fulltext och aktuella handlingsavsnitt: relevanta handlingar i rätt sammanhang, konkreta verb. Vår tillämpning är separat admininventering med tydliga **Granska**-handlingar till befintligt kund-/arbetsunderlag.
+
+[Salesforce Changing a Record’s Owner](https://help.salesforce.com/s/articleView?id=sf.account_owner_transfer.htm&language=en_US&type=5) lästes direkt och skiljer överföring av öppet och avslutat arbete. [Salesforce List Views](https://trailhead.salesforce.com/content/learn/modules/lightning-experience-for-salesforce-classic-users/work-with-list-views) lästes direkt med aktuella filter-/radbrytningsavsnitt. V54 visar ansvarsdelar och tydligt urval; Magnussons egna serverroller, uttryckliga uppgiftsval, CAS, atomiska skrivningar och idempotens består. Salesforces automatiska överföringsregler kopieras inte.
+
+[W3C Modal APG](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) lästes direkt och stödjer logisk fokusåtergång när öppnaren försvinner. Vårt val är inventeringsrubriken i samma identitet/vy. [Lime Notifications](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) stöds endast av färskt officiellt indexutdrag efter direktöppning med 429; ingen lyckad ny fulltextläsning påstås. Individuellt ansvar är där en egen relation, vilket inspirerar vår tydliga skillnad mellan säljprofil, eventets namnansvar och produktionens användar-ID.
+
+Sex källor, varav fem direktlästa och en enbart officiellt indexutdrag. Kvitto `/workspace/scratch/crm54/research/official-sources.json`, SHA256 `6673e7c12dfac9582b7c408034866d83d851ca463dcdc20b05c701f662d1b209`. Korta exakta utdrag har egna hashar; det är inga helsidehashar. Lyckade läsningar rapporterade ingen HTTP-status, och individuella anropsstarter registrerades inte. Minst 44 px, kortlayout, två rader i väljaren och vår fokusalgoritm är lokala designval. Källorna verifierar inga Magnussonsanslutningar, lagringsgarantier, personalresultat, certifiering eller världsranking. [VALIDATION](../VALIDATION.md) anger våra faktiska prov.
+
+## Historik före v54
+
 ## Årshjulsansvar – källkontroll för v53, 2026-10-07
 
 Efter sista officiella webböppningen lästes klockan **18:26:03 UTC**. [Saleshub AI Funktioner](https://saleshubai.se/funktioner) lästes direkt och beskriver gemensamt kund-/modulsammanhang och projektuppgifter med ansvar; det är offentlig produktbeskrivning utan överförings-/behörighetskontrakt. [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) lästes direkt initialt och stödjer relevanta handlingar, konkreta verb och fullständiga namn; efterföljande öppningar gav 429. [Lime Notifications](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) stöder skillnaden mellan information och ansvar endast genom färskt officiellt indexutdrag i denna körning; första direktöppningen gav metadata och senare 429. Ingen lyckad ny fulltextläsning eller extern notisleverans påstås för den sidan.

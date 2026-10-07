@@ -1,4 +1,51 @@
-# Granskat årshjulsansvar – v53
+# Verifierad personalöverlämning – v54
+
+## Samlad admininventering och befintliga överlämningar – v54
+
+### Beteende och slutkandidat
+
+V54 härleder en läsande inventering ur det redan behörighetsfiltrerade CRM-underlaget. Endast administratören får denna vy; ingen ny medlems-, utkast- eller Outlook-läsning införs. Stabilt profil-ID och registrerad namnkoppling ska stämma. Äldre blankt ID visas som behov av förankring; okänd eller motsägande koppling hamnar i **Ansvar som behöver granskas**. Namnbyte ändrar inte urvalets person, och en känd inaktiv profil kan ha öppet arbete. Läsning förankrar inget ansvar.
+
+De rena defensiva domänfixturerna innehåller avsiktligt okända eller motsägande explicita profilreferenser. Vanlig servernormalisering (`normalizeState`) avvisar sådana referenser; felaktigt UUID-format avvisas också av befintligt schema. Detta är inget bevis för att felaktiga referenser godtas i serverunderlaget. Det faktiska browserfallet för omappat ansvar använder blankt profil-ID och ett okänt ansvarsalias.
+
+Inventeringen räknar ansvarsdelar, inte unika kunder eller avvecklade personer. Pausade affärer, framtida behov, samtliga öppna uppgifter och öppna förberedelser efter genomfört/avbokat event finns kvar. Uppföljd order med saknat fakturavärde visas som kvarvarande arbete men erbjuds inte som en tillåten orderöverföring. Kund-/behovs- och event-/checklistnycklar är separat avgränsade. Uppgifter med annan, avslutad eller saknad förälder döljs inte. Handlingar återanvänder befintliga kandidatregler och granskningsdialoger; en blockerad överföring leder till rätt befintligt underlag när det finns, med förklaring. Ingen massöverföring införs.
+
+Slutkandidat `ab0d64dd7209cb2dc458742ac8a5903fd08a1378`, träd `4271f8d23c820ac742456f94a3f3fc19fbeb4b82`. Lokala slutkontroller: 5/5 godkända på oförändrad ren slutkandidat. Kvitto `/workspace/scratch/crm54/checks-app-final-3/checks.json`. De obligatoriska kontrollerna är CRM/Outlook-regression (`node tests/outlook.mjs`), icke-inkrementell TypeScript, produktionsbygge, isolerad Worker/D1/R2-runtime och `git diff --check`. Nya syntetiska domänprov omfattar adminroll, inaktiva/äldre/oklara identiteter, lika visningsnamn, namnbyte, pausat/fakturaåterstående arbete, alla öppna barn, rätt överlämningsförälder, kundavgränsade behov/checklistor och oförändrad historik/produktion. Tidigare order-, mängd-, CAS-, idempotens-, privatutkast- och Outlookregressioner ingår. Inga riktiga kundorder skrevs.
+
+### Browser, fokus och bevarade misslyckanden
+
+Slutliga browserprov: 31/31 godkända; kvitto `/workspace/scratch/crm54/browser/final-205705/report.json`. Den byggda Workern provades med egen migrerad syntetisk D1/R2 och autentiserade lokala roller. Tio överlämningsvägar, tre skärmstorlekar, avgränsad 2× text, native tangentbord, filter/pagination, misslyckad hämtning/återförsök, exakt återläsning och bevarade privata data ingår. Dubbelklick gav en mutation; kvarlämnad uppgift var fortsatt synlig.
+
+Tidigare browserkörningar fann två verkliga produktfel vid 320×360 och 2× text. Orsakstextens textarea blev cirka 312 px hög i en 324 px hög dialog. Uppgifts-, mötes- och affärs-/orderdialogernas textyta fick därför begränsad, rullbar höjd med `field-sizing: fixed` i `153113f`. Därefter blev den valda mottagarens långa namn cirka 498 px högt i affärs-/orderväljaren. Slutkandidaten `ab0d64d` begränsar denna valtext till två rader och visar fullständigt visningsnamn, ansvarskoppling och profil-ID i en separat beskrivning kopplad med `aria-describedby`. Tidigare misslyckanden bevaras som diagnostik; slutbevisen gäller den slutliga kandidaten.
+
+Efter användarens stängning återgår fokus till användbar öppnare. Om en överlämnad rad försvinner går det till den synliga inventeringsrubriken, bara i samma arbetsyta/användaridentitet och adminvy. Hämtningsstatus, fel och sparande är skilda; vald profil/filter bevaras vid uppdatering. Inventeringsvyn har inget formulär som skapar privat serverutkast. Befintliga specialdialogers begränsningar består.
+
+Textförstoring avser den avgränsade lokala matrisen, inte en full browser-/OS-zoom- eller WCAG-certifiering. Lokala roller och syntetisk data ger inga autentiserade live-UI-, verkliga konton/integrationer-, fysisk telefon-, skärmläsar-, personalacceptans- eller hostingåterställningsbevis.
+
+### Faktiska lokala kvitton
+
+- Fem slutkontroller: `/workspace/scratch/crm54/checks-app-final-3/checks.json`, SHA256 `0735bc65de00a609794be388b18008f8dbd5ebcb56e93a72dd862e65a8d4b8f6`; alla fem avslutade med exit 0 och oförändrad ren kandidat.
+- Browser: `/workspace/scratch/crm54/browser/final-205705/report.json`, SHA256 `f1bdc9b4ded80f9daee75942955ae00f898d9debaa9d19654b1eb6cdac27f6a5`; 31/31 fall i Chromium `151.0.7922.173`.
+- Oberoende bildgranskning: `/workspace/scratch/crm54/visual-review.json`, SHA256 `fdbc70de9583b46f73ded59224912ce249fa353ec8f43140193fdddf07f9e1a2`; root granskade 11 slutbilder, inklusive mobil, 2× text, felstatus, identitet, mottagarval och återvänt fokus. Det är ingen separat personalacceptans.
+- Städning: `/workspace/scratch/crm54/browser/final-205705/cleanup.json`, SHA256 `4f577f977535dde9e038df45e8e166a710791fdb3381129503140039088f3bf6`; egen test-Worker avslutad med exit 0, egen temporär testlagring borttagen och egna portar fria. Alla 292 spårade källfiler och 96 byggfiler var oförändrade före/efter browserproven.
+
+Browserproven använde den byggda Workern, migrerad syntetisk D1/R2 och autentiserade lokala roller utan ersatta lyckade API-svar. Råjämförelsen av 18 tabeller tillät endast de två avsedda kundändringarna, en granskad uppgiftsöverföring och administratörens eget nya företagseventutkast. Övriga delade/privata data, Outlook, demo och båda R2-objektens bytes, hashar och metadata var oförändrade. Dubbelt native-klick gav en servermutation och en ansvarshistorikpost; den överförda raden försvann med synlig fokusåtergång. Överlämning av ett 2028-behov utan uppgiftsval lämnade den gamla uppgiften synlig hos ursprungsansvarig. Detta gäller den isolerade testlagringen.
+
+### GitHub-main och samma Site
+
+[App-PR #82](https://github.com/ludros93-prog/MAgnussons-CRM/pull/82) sammanslogs med exakt kandidat efter 13/13 completed/success inklusive Complete job i [run 37684761878](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37684761878). App-main `b4b75010a0cc3a59a232d3a983eaccff70a4da56` återlästes med samma träd och 13/13 completed/success i [run 37686602288](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37686602288).
+
+Verifierad source `73fc3dd07d93077234a1acc07b56075f00beaf6d` har samma appträd. Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2` publicerade version `54`, deploy `appgdep_6ac6b48932988191a6426b431da3c62f`, succeeded `2026-10-07T21:07:45.104197+00:00`, på [befintlig liveadress](https://magnussons-crm.rosen123.chatgpt.site). Källgrenen pushades utan force och återlästes på exakt revision. Den lokalt packade artefakten återlästes av Sites med 97 filer och tar-SHA256 `62745c16762ac1fab114b48156575c62b5da2bd1e605954f03f64473baca55bf`. Hela åtkomstpolicyn var oförändrad (custom, revision 2), hela miljöuppsättningen oförändrad (revision 1, en post), samma D1/R2-bindningar och noll automationer. Anonym startsida och CRM-API svarade båda 401. Ingen autentiserad live-kunddata lästes eller ändrades. Den officiella source-helpern saknades i denna executor; dokumenterad isolerad stdin-/miljöfallback användes utan sparad eller exponerad token. Samlat säkert releasekvitto: `/workspace/scratch/crm54/release.json`. En senare Markdown-main är separat och återpublicerar inte appen.
+
+### Datakompatibilitet och kvarstående avveckling
+
+Ingen API-/server-/modell-/lagringsändring och ingen SQL-migration ingår. V53 är formatkompatibel återgång för v54:s inventerings-/fokusdel. V53:s lagring av behovsprofil/historik och dess osäkra oförändrade v52-skrivare består; v54 gör inte äldre versioner säkra. Faktisk live-rollback eller full hostingåterställning har inte gjorts.
+
+Ett tomt urval visar aldrig att konto, profil eller person är avvecklad. Nuvarande settingsregel hindrar borttagning av ansvarsalias när kund-/affär-/order-/uppgifts-/mötes-/onboarding-/ärende-/eventansvar finns, även historiskt. Profilinaktivering och kontoåtkomst är separata kontroller. Öppna `csm`, `csm_need`, `prospecting`, `delivery` och okända specialuppgifter visas men saknar en egen granskad överföring. Event/checklistans namnansvar och produktionens användar-ID flyttas inte via säljarprofilöverföring. Privat kommunikation/utkast och historiskt resultat ligger kvar.
+
+B01b2:s fulla avveckling, B07:s första laddning, privata årshjulsserverutkast, B02 chefsroll, B04 privata backuper/faktisk hostingåterställning, faktiska integrationer och personalpilot förblir öppna. Den refererade Codex-tasken är oläst eftersom relevant `read_thread` saknas; explicit brief/repo används. Inga kund-/personalmeddelanden, andra CRM-projekt eller schema-/prompt-/aktiveringsändringar ingår.
+
+## Historik före v54
 
 ## Beteende och lokala slutkontroller
 
