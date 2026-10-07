@@ -1,6 +1,15 @@
 # Magnussons CRM – order, tryck och lager
 
-## Byt arbetsyta och fortsätt – v49
+## Kundval på korta skärmar – v50
+
+1. Sök på företag, kontaktperson, e-post eller organisationsnummer.
+2. Läs kund och ansvar; rulla dialogen vid lång text.
+3. Välj **Öppna kundkort** vid sökning eller **Välj kund** för att fortsätta med anteckning, affär, aktivitet eller möte. Valet sparar inget nytt gemensamt CRM-underlag.
+4. Avbryt med X eller Escape.
+
+[VALIDATION](VALIDATION.md) redovisar slutprov och kompatibilitet. Kundval är navigation/val av sammanhang, inte registrerad kundkontakt eller CRM-inlämning.
+
+## Historik: Byt arbetsyta och fortsätt – v49
 
 1. Öppna **Arbetsyta** med pointer eller tangentbord och välj **Demoyta** eller **Teamets arbetsyta**. Valet syns i väljaren/bannern.
 2. Utan fortsatt inmatning återgår fokus till den nya tillgängliga väljaren, annars aktuell tillgänglig huvudrubrik. Fortsätt med Tab.

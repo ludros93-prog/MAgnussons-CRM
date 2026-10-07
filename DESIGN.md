@@ -13,7 +13,13 @@ Utgå från CRM:ets befintliga logotyp, mörka navigation, ljusa arbetsytor och 
 - Använd läsbar löptext, synligt tangentbordsfokus och mobila handlingar på minst 44 px. Långa namn, mejladresser och instruktioner ska brytas inom sin yta.
 - Visa tomt läge och saknat underlag med en begriplig nästa handling. Inga dekorativa prognoser, påhittade resultat eller falska integrationsstatusar.
 
-## Hitta tillbaka efter arbetsytebyte – v49
+## Kundval på korta skärmar – v50
+
+Statisk full kundtext och nästa handling har egna ytor. Mobilens knapp ligger under texten, datorns bredvid. Kundval/nykund har minst 44 px höjd och fokusram. En gemensam vertikal rullningsyta håller sökning, val och stängning åtkomliga; långtext förkortas inte.
+
+[VALIDATION](VALIDATION.md) skiljer browserprov från personalacceptans; [RESEARCH](agent/RESEARCH.md) skiljer officiella principer från vår tillämpning.
+
+## Historik: Hitta tillbaka efter arbetsytebyte – v49
 
 Aktuell väljare eller namngiven rubrik ger en tydlig start efter användarens byte. Gamla popupens sena stängning får inte fokusera en ersatt kontroll. Väljaren har 3 px fokusram, 4 px offset och 8 px scrollmarginal; rubriken använder v48:s ram. På dator växer/radbryts headern naturligt, med avsiktlig padding och mellanrum, och hela väljartexten får plats utan radklippning. Fortsatt inmatning/navigation/fel/annan identitet avslutar återgången; detta är ingen generell fokus-/retrygaranti.
 
@@ -75,7 +81,7 @@ Mobilkundregistrets och kundkortets lokala prov finns i historiken; v49 ovan rä
 
 | Arbetsmoment | Önskat beteende och avgränsad kontroll |
 | --- | --- |
-| Hitta en kund på mobilen | På 320/390 px ska kundlistan visa kundnamn, ansvarig och nästa aktivitet eller ett ärligt besked om att den saknas. Kundkortet ska kunna öppnas med vanlig pointer och tangentbord. Långa värden ska vara läsbara inom vyn utan att kundens viktigaste handling kräver horisontell scroll; inga påhittade ansvariga eller aktiviteter fyller tomma fält. |
+| Hitta en kund på mobilen | På 320/390 px ska kundlistan visa kundnamn, ansvarig och nästa aktivitet eller ett ärligt besked om att den saknas. Kundkortet ska kunna öppnas med vanlig pointer och tangentbord. Långa värden ska vara läsbara inom vyn utan att kundens viktigaste handling kräver horisontell scroll; inga påhittade ansvariga eller aktiviteter fyller tomma fält. V50:s kundväljare har full text, egen handling och nåbar stängning; lokala slutprov finns i VALIDATION. Personalobservation återstår. |
 | Stänga kundkortet | V48 återför efter användarens stängning fokus till samma öppningskontroll i samma kund-/identitets-/vysammanhang, annars vyns namngivna rubrik. Bakgrund/navigation/annan dialog flyttar inte fokus genom denna funktion. Bevara kund-ID, scrolläge, roller och privata utkast. Slutprov och gränser finns i VALIDATION; personalacceptans återstår. |
 | Byta arbetsyta | V49 återför efter ett uttryckligt byte till den aktuella tillgängliga arbetsyteväljaren, annars aktuell tillgänglig namngiven huvudrubrik, för samma konto/medlemskoppling/roll och vy. Fortsatt användarinmatning, navigation, fel eller annan identitet avslutar återgången; retry/bakgrundsladdning återupplivar den inte. Slutprov och gränser finns i VALIDATION; personalacceptans återstår. |
 

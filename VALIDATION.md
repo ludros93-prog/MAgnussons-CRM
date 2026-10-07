@@ -1,4 +1,34 @@
-# Fokus efter arbetsytebyte – v49
+# Kundval på korta skärmar – v50
+
+## Beteende och faktiska prov
+
+Fullt kundnamn, kontakt och befintligt ansvar visas bredvid en egen handling, på mobilen ovanför den. Samma kund-ID väljs; sökning, ägarprioritering/svensk namnordning, högst 30 träffar och läsarroll består. Dialogen rullas som en yta. Kundvals-/nykundsknappar radbryts och är minst 44 px höga; detta mått gäller inte X eller alla CRM-kontroller.
+
+Färsk v49 vid 320×360/admin hade X ovanför skärmen: osynligt Shift+Tab-fokus och misslyckat vanligt klick; Enter stängde. Separat native/pointerkundval fungerade 5/5. Äldre cirka 664 px-rad var ett strängt helknappsmått, ingen misslyckad kundaktivering. Kvitto `/workspace/scratch/crm50/browser/baseline-close-132745/report.json`, SHA256 `1d56845debd069489bb09798019a7ef8f556b222806f36eab2b05fdee6d4a8b8`. 553ff stoppades efter 24 delprov när 2× text vid 320 px gav verklig överbredd från nykundsknappens nowrap/min-content. Scoped krympbar grid och radbrytning rättade detta i 8886c46; endast den färska 51-fallsmatrisen är slutQA.
+
+Fem obligatoriska slutkontroller passerade på ren, oförändrad kandidat `8886c46d3ebe67e9d737a17ab52deaabbe2d4738`, träd `6db454813c72254d71b1f9be758eb67f5b538a03`, 2026-10-07T13:43:51.673099+00:00–2026-10-07T13:45:25.971203+00:00: CRM/Outlook-regression, icke-inkrementell TypeScript, bygge, runtime-smoke och diffkontroll. `/workspace/scratch/crm50/app-all5-release/checks.json`, SHA256 `461ee1d3d9cebcb2d77945487f1c492c6650495f4ee3bd78d5f0e6dec9a49bf0`. Isolerad workerd/D1/R2 återställde tre filer/13 500 000 filbyte via 18 011 655 arkivbyte, med bevarade hash-/korrektur-/fotolänkar och ansvarshistoria. Ingen hostingåterställning.
+
+51 lokala slutbrowserfall passerade 2026-10-07T13:49:02.416241+00:00 på samma frysta kod/dist och byggd isolerad Worker/D1/R2. 320×360/390×844/1280×900: native Tab/Enter/vanligt klick för admin/seller/reader, nåbar X, exakt 2× kundväljartext, hel kundvals-/nykundsknapp med fokusram, obrutna namn, fyra sökfält, 30-gräns/tomt läge, anteckning/affär och kund-ID med mellanslag; separata produktions-/tryck-/lagerkontroller. 276 käll-/96 distfiler, 18 råtabeller inklusive sex privata utkast/Outlook och två R2-objekts byte/hash/metadata är oförändrade genom avveckling. 29 gamla testkunder bevarades; tolv schema-validerade tillkom före Worker-start. 0 skrivförsök/server-skrivningar, sidfel eller externa anrop. `/workspace/scratch/crm50/browser-release.json`, SHA256 `8a2a65f4449c227325c2e936de46bde9a7ce1cf6274b0df6d40d600935e935b7`. Root granskade en baslinje- och fyra slutbilder. /workspace/scratch/crm50/visual-review.json, SHA256 2b6519a3b243e8dd72e152d4bc7848180af578286c303e440c33706d525555de. 2× avser kundväljartext, inte sidzoom. Statisk långtext kan kräva vertikal scroll; hel artikelbox är inget krav. Global laddningstext och påtvingad DOM-återöppning provas inte här.
+
+Browser/CI är inga autentiserade live-UI-, riktiga konto-/integrations-/personal-, fysisk telefon-, skärmläsar- eller hostingåterställningsprov. Ingen full WCAG-certifiering eller världsranking påstås. Inga riktiga kundorder skrivtestades.
+
+## Kod, main och publicerad version
+
+[App-PR #74](https://github.com/ludros93-prog/MAgnussons-CRM/pull/74): head `023b94e8071947c301f6e437f84b7db8dc2748f6` mot bas `4327db5cbff719d3819e5f775f2a35d346c0dd74`, merge till app-main `5d67eacd6555090482f3c155fb916359a4d67f8a` med kandidatens träd. Actions [37630971619](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37630971619)/[37631822088](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37631822088) är completed/success för respektive exakt SHA, alla 13 steg inklusive Complete job. `/workspace/scratch/crm50/app-github-release.json`, SHA256 `c573e01e323efcfd1ba5af3772bbbb55e8ba4a08df6b4a5b07b73af5ccc61a27`.
+
+Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2`: v50, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_eb0f2a40d19c8191ae0f5fdd3b76d9ac`, verifierad pushad source `4a62752ee5a1b2cde42e928221e64e1835ad7070`, deploy `appgdep_6ac64f4fe18c8191aa70b0489749b225` succeeded 2026-10-07T13:55:50.690411+00:00. Arkivet matchar råtar: 97 filer/4628480 byte, SHA256 `c3bc885dfa5a80f8ad12f5847440b2aac820ed7c453c346a479c10215de1e480`. Policy och miljö är återlästa och bevarade. `/workspace/scratch/crm50/site-release.json`, SHA256 `04993c1bd3be596ab6ec52569e5d05ae84dc35d0245ba7f21885453014e17a0b`. Anonyma status-only GET av / och /api/crm?space=demo gav 401/401; svarskroppar lästes inte. CUSTOM 2/miljö 1/DB/R2/0 scheman bevarades. Detta är inget autentiserat livekontoprov. Den senare Markdownleveransen har egen verifiering och återpublicerar inte appen.
+
+## Kompatibilitet och kvarvarande arbete
+
+Endast customer-picker.tsx/task-work.css ändras; övriga 274 av 276 filer är byteidentiska. Modell/SQL, serverroller, privat kommunikation/utkast, API/CAS/atomik/idempotens, mängder/acceptans och drift består. Ingen migration. V49 är datakompatibel men återför äldre pickergeometri. `/workspace/scratch/crm50/audit/compatibility-release.json`, SHA256 `67211a5a0c773602b9a4901d623991e797e955968d62b5e90bcee1efd633d0d8`. Ingen faktisk live-rollback eller hostingåterställning har genomförts. Tidigare modellbundna återgångsgränser består.
+
+Personalpilot, B01b2:s specialansvar/full personalavveckling, chefsroll, privat backup/hostingåterställning och faktiska integrationer kvarstår. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas; explicit brief/repo används.
+
+Nästa konkreta prioritet anges i [BACKLOG](agent/BACKLOG.md).
+
+---
+
+# Historik: Fokus efter arbetsytebyte – v49
 
 ## Beteende och avgränsning
 
