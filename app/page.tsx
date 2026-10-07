@@ -45,7 +45,7 @@ import {CustomerWorkspace} from '@/components/customer-workspace';
 import {CustomerResponsibility} from '@/components/customer-responsibility';
 import {CustomerRegister} from '@/components/customer-register';
 import {CommercialResponsibility} from '@/components/commercial-responsibility';
-import { useEffect,useRef,useState,type ReactNode,type FocusEvent,type MouseEvent } from 'react';
+import { useEffect,useRef,useState,type ReactNode,type FocusEvent,type MouseEvent,type RefObject } from 'react';
 import { LayoutDashboard,Kanban,Users,HeartHandshake,Package,CalendarDays,BookOpen,Plug,Plus,ArrowUpRight,ArrowRight,Search,Check,Clock,Settings2,RefreshCw,Mail,Target,ClipboardCheck,TrendingUp,Zap,Printer,Truck,Bell } from 'lucide-react';
 import { SidebarProvider,Sidebar,SidebarHeader,SidebarContent,SidebarFooter,SidebarMenu,SidebarMenuItem,SidebarMenuButton,SidebarInset,SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';import { Input } from '@/components/ui/input';import { Textarea } from '@/components/ui/textarea';import { Select,SelectTrigger,SelectValue,SelectContent,SelectItem } from '@/components/ui/select';import { Sheet,SheetContent,SheetHeader,SheetTitle,SheetDescription } from '@/components/ui/sheet';import { Tabs,TabsList,TabsTrigger } from '@/components/ui/tabs';import { Checkbox } from '@/components/ui/checkbox';import { Progress } from '@/components/ui/progress';import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from '@/components/ui/table';import { Toaster,toast } from 'sonner';
@@ -59,6 +59,20 @@ const short=(s:string)=>s.replace(' · exempel','');const dateLabel=(d:string)=>
 type Form={draftId:string;type:string;data:Record<string,any>;base?:Record<string,any>;expectedRecord?:string;initialData?:string};
 const makeForm=(type:string,data:Record<string,any>,original=data):Form=>({draftId:crypto.randomUUID(),type,data:structuredClone(data),initialData:recordBasis(data),base:structuredClone(original),expectedRecord:recordBasis(original)});
 function Choice({value,onChange,options,label:aria}:{value:string;onChange:(v:string)=>void;options:{id:string;label:string}[];label:string}){return <Select value={value||'_empty'} onValueChange={v=>onChange(v==='_empty'?'':v)}><SelectTrigger aria-label={aria}><SelectValue/></SelectTrigger><SelectContent>{options.map(o=><SelectItem value={o.id||'_empty'} key={o.id}>{o.label}</SelectItem>)}</SelectContent></Select>}
+function WorkspaceChoice({value,onChange,trigger}:{value:string;onChange:(v:string)=>void;trigger:RefObject<HTMLButtonElement|null>}){
+ const ownTrigger=useRef<HTMLButtonElement>(null);
+ return <Select value={value} onValueChange={onChange}>
+  <SelectTrigger className="workspace-choice" aria-label="Arbetsyta" ref={node=>{ownTrigger.current=node;trigger.current=node}}><SelectValue/></SelectTrigger>
+  <SelectContent onCloseAutoFocus={event=>{
+   // A workspace/account remount replaces this trigger. Radix's delayed close
+   // must not try to restore focus to an obsolete control.
+   if(!ownTrigger.current?.isConnected||trigger.current!==ownTrigger.current)event.preventDefault();
+  }}>
+   <SelectItem value="demo">Demoyta</SelectItem>
+   <SelectItem value="live">Teamets arbetsyta</SelectItem>
+  </SelectContent>
+ </Select>;
+}
 function Field({label:caption,children}:{label:string;children:ReactNode}){return <label className="field"><span>{caption}</span>{children}</label>}
 function Empty({children}:{children:ReactNode}){return <div className="empty"><div className="empty-icon"><Check size={22}/></div>{children}</div>}
 // Keep the active form control clear of the actual, possibly wrapped action bar.
@@ -85,12 +99,62 @@ export default function CRM(){
  const formDraftDetails=useRef<HTMLDivElement>(null),formRecordDetails=useRef<HTMLDivElement>(null),formSaveDetails=useRef<HTMLDivElement>(null),formCloseDetails=useRef<HTMLDivElement>(null);
  const [workflowResume,setWorkflowResume]=useState<WorkflowDraftRequest|null>(null);
  const activeIdentity=useRef('');activeIdentity.current=JSON.stringify([space,st?.viewer?.id||'',st?.viewer?.memberId||'',st?.viewer?.role||'']);
+ const workspaceTrigger=useRef<HTMLButtonElement>(null);
+ const customerHeading=useRef<HTMLHeadingElement>(null);
+ const workspaceViewer=useRef(''),workspaceFocusing=useRef(false);
+ if(st?.viewer)workspaceViewer.current=JSON.stringify([st.viewer.id,st.viewer.memberId||'',st.viewer.role]);
+ const workspaceReturn=useRef<{space:string;identity:string;view:string;loadingFocused:boolean}|null>(null);
+ function chooseWorkspace(next:string){
+  if(next===space)return;
+  const identity=workspaceViewer.current;
+  workspaceReturn.current=identity?{space:next,identity,view,loadingFocused:false}:null;
+  setLoadingError('');setSt(null);setSpace(next);
+ }
+ useEffect(()=>{
+  const cancel=()=>{workspaceReturn.current=null};
+  const otherFocus=(event:globalThis.FocusEvent)=>{if(!workspaceFocusing.current&&event.target!==workspaceTrigger.current)cancel()};
+  // Further input takes ownership of focus while the workspace GET is pending.
+  document.addEventListener('keydown',cancel,true);
+  document.addEventListener('pointerdown',cancel,true);
+  document.addEventListener('wheel',cancel,true);
+  document.addEventListener('focusin',otherFocus,true);
+  window.addEventListener('blur',cancel);
+  return()=>{
+   document.removeEventListener('keydown',cancel,true);
+   document.removeEventListener('pointerdown',cancel,true);
+   document.removeEventListener('wheel',cancel,true);
+   document.removeEventListener('focusin',otherFocus,true);
+   window.removeEventListener('blur',cancel);
+  };
+ },[]);
+ useEffect(()=>{
+  const intent=workspaceReturn.current;
+  if(!intent)return;
+  if(intent.space!==space||intent.view!==view||loadingError||document.querySelector('[role=dialog],[role=alertdialog],[role=listbox]')||
+   (st&&JSON.stringify([st.viewer?.id,st.viewer?.memberId||'',st.viewer?.role])!==intent.identity)){
+   workspaceReturn.current=null;return;
+  }
+  if(!st&&intent.loadingFocused)return;
+  const usable=(target:HTMLElement|null)=>{
+   if(!target?.isConnected||target.matches(':disabled,[aria-disabled=true]')||target.closest('[hidden],[inert],[aria-hidden=true]'))return false;
+   const rect=target.getBoundingClientRect(),style=getComputedStyle(target);
+   return !!rect.width&&!!rect.height&&style.visibility==='visible'&&style.display!=='none';
+  };
+  const target=usable(workspaceTrigger.current)?workspaceTrigger.current:usable(customerHeading.current)?customerHeading.current:null;
+  if(!target){workspaceReturn.current=null;return}
+  if(st)workspaceReturn.current=null;else intent.loadingFocused=true;
+  workspaceFocusing.current=true;
+  try{
+   target.scrollIntoView({block:'nearest',inline:'nearest'});
+   target.focus({preventScroll:true});
+   if(document.activeElement!==target)workspaceReturn.current=null;
+  }finally{workspaceFocusing.current=false}
+ },[space,st?.viewer?.id,st?.viewer?.memberId,st?.viewer?.role,view,loadingError]);
  const [productionId,setProductionId]=useState('');
  const [allowAssistant,setAllowAssistant]=useState(false);
  const [discard,setDiscard]=useState(false);const [picker,setPicker]=useState(''),[followTask,setFollowTask]=useState('');const returnCustomer=useRef(''),afterCustomer=useRef('');
  const [resumeDraft,setResumeDraft]=useState(''),[resumeArticleDraft,setResumeArticleDraft]=useState(''),[resumeCompanyEventDraft,setResumeCompanyEventDraft]=useState(''),[receiptId,setReceiptId]=useState(''),[receiptDraftId,setReceiptDraftId]=useState(''),[repeatCustomer,setRepeatCustomer]=useState('');
  const [customerTransferOpen,setCustomerTransferOpen]=useState(false);
- const customerHeading=useRef<HTMLHeadingElement>(null);
  const customerClickOpener=useRef<{opener:HTMLElement|null}|null>(null);
  const customerReturn=useRef<{id:string;identity:string;view:string;opener:HTMLElement|null}|null>(null);
  const customerCloseIntent=useRef<typeof customerReturn.current>(null);
@@ -102,7 +166,7 @@ export default function CRM(){
  useEffect(()=>{setMeetingTransferId('')},[space,st?.viewer?.id,st?.viewer?.memberId,st?.viewer?.role]);
  const [commercialTransfer,setCommercialTransfer]=useState<{targetType:'deal'|'order';targetId:string}|null>(null);
  useEffect(()=>{if(st)setOwner(personalOwner(st)||'_unassigned')},[st?.viewer?.id,st?.viewer?.owner,space]);
- function navigate(next:string){if(next==='catalog'){setResumeDraft('');setResumeArticleDraft('')}if(groupOf(next)!==groupOf(view))setSearch('');if(next==='overview'||next==='today'||next==='notices')setOwner(st?personalOwner(st)||'_unassigned':'_unassigned');if(next==='team')setOwner('all');setView(next)}
+ function navigate(next:string){workspaceReturn.current=null;if(next==='catalog'){setResumeDraft('');setResumeArticleDraft('')}if(groupOf(next)!==groupOf(view))setSearch('');if(next==='overview'||next==='today'||next==='notices')setOwner(st?personalOwner(st)||'_unassigned':'_unassigned');if(next==='team')setOwner('all');setView(next)}
  const [customerTab,setCustomerTab]=useState('overview');const saving=useRef(false),pending=useRef<{key:string;id:string;expectedRecord?:string}|null>(null);
  // Private form values live above DraftProvider. Close their surrounding UI
  // when the account or its role changes, as well as on a workspace switch.
@@ -199,7 +263,7 @@ export default function CRM(){
  const choice=(key:string,title:string,options:{id:string;label:string}[])=><Field label={title}><Choice value={form?.data[key]||''} onChange={v=>update(key,v)} options={options} label={title}/></Field>;
  const check=(key:string,title:string)=><label className="check-field"><Checkbox checked={!!form?.data[key]} onCheckedChange={v=>update(key,v===true)}/>{title}</label>;
  function taskList(limit=100){return due.length?<div className="task-list">{due.slice(0,limit).map(t=><div className="task-row" data-overdue={t.due<day()} key={t.id}><Checkbox aria-label={'Markera klar: '+t.title} disabled={busy} checked={false} onCheckedChange={()=>openActivity(t)}/><button className="task-title" onClick={()=>openActivity(t)}><strong>{t.title}</strong><small>{cname(t.customerId)} · {t.owner.split(' ')[0]}</small></button><span className={'due '+(t.due<day()?'late':t.due===day()?'today':'')}>{t.due===day()?'Idag':dateLabel(t.due)}</span></div>)}</div>:<Empty>Inga öppna uppgifter. Planera nästa kundkontakt.</Empty>}
- return <DraftProvider key={space+':'+(st?.viewer?.id||'')} space={space} userId={st?.viewer?.id||''} enabled={!!st?.viewer&&['admin','seller'].includes(st.viewer.role)} canEditArticles={st?.viewer?.role==='admin'}><SidebarProvider className="crm-app"><Sidebar className="crm-sidebar"><SidebarHeader><div className="brand"><span className="brand-mark">m.</span><div>MAGNUSSONS<small>RELATIONER SOM VÄXER</small></div></div><div className="workspace-label">{department?'TRYCK & LEVERANS':'FÖRSÄLJNING & KUNDVÅRD'}</div></SidebarHeader><SidebarContent><SidebarMenu>{nav.filter(([id])=>department?[st?.viewer?.role,'notices'].includes(id):['today','customers','deals','calendar','overview'].includes(id)).map(([id,title,Icon])=><SidebarMenuItem key={id} data-nav={id}><SidebarMenuButton dismissOnSelect isActive={(department?view:groupOf(view))===id} onClick={()=>navigate(id)}><Icon/><span>{title}</span></SidebarMenuButton></SidebarMenuItem>)}</SidebarMenu></SidebarContent><SidebarFooter>{!department&&<SidebarMenu><SidebarMenuItem><SidebarMenuButton dismissOnSelect isActive={groupOf(view)==='settings'} onClick={()=>navigate('settings')}><Settings2/><span>Inställningar</span></SidebarMenuButton></SidebarMenuItem></SidebarMenu>}<div className="pilot"><span className="status-dot"/> Delad arbetsversion<small>{department?'Ett jobb och nästa moment i taget.':'Byggd för nästa kundkontakt.'}</small></div><div className="profile"><span>{st?.viewer?.name.split(' ').map(s=>s[0]).join('')||'M'}</span><div>{st?.viewer?.name||'Säljteamets arbetsyta'}<small>{st?.viewer?.role==='admin'?'Administratör':st?.viewer?.role==='seller'?'Säljare':st?.viewer?.role==='production'?'Tryck & leverans':st?.viewer?.role==='print'?'Tryck':st?.viewer?.role==='warehouse'?'Lager':'Läsare'}</small></div></div></SidebarFooter></Sidebar><SidebarInset><header className="topbar"><div className="crumb"><SidebarTrigger/><span>Magnussons</span><span>/</span><b>{nav.find(n=>n[0]===view)?.[1]}</b></div><div className="top-actions"><MobileApp/><Button variant="ghost" size="sm" aria-label="Öppna notiser" onClick={()=>navigate('notices')}><Bell size={18}/><span className="notification-count">{st?.notices.filter(n=>noticeInScope(st,n,st?personalOwner(st):'')&&!n.readBy.includes(st.viewer?.id||'')).length||0}</span></Button><span className="saved"><span className="status-dot"/>{busy?'Sparar…':st?'Sparat i databas':'Ansluter…'}</span><Choice value={space} onChange={v=>{setSt(null);setSpace(v)}} label="Arbetsyta" options={[{id:'demo',label:'Demoyta'},{id:'live',label:'Teamets arbetsyta'}]}/></div></header>
+ return <DraftProvider key={space+':'+(st?.viewer?.id||'')} space={space} userId={st?.viewer?.id||''} enabled={!!st?.viewer&&['admin','seller'].includes(st.viewer.role)} canEditArticles={st?.viewer?.role==='admin'}><SidebarProvider className="crm-app"><Sidebar className="crm-sidebar"><SidebarHeader><div className="brand"><span className="brand-mark">m.</span><div>MAGNUSSONS<small>RELATIONER SOM VÄXER</small></div></div><div className="workspace-label">{department?'TRYCK & LEVERANS':'FÖRSÄLJNING & KUNDVÅRD'}</div></SidebarHeader><SidebarContent><SidebarMenu>{nav.filter(([id])=>department?[st?.viewer?.role,'notices'].includes(id):['today','customers','deals','calendar','overview'].includes(id)).map(([id,title,Icon])=><SidebarMenuItem key={id} data-nav={id}><SidebarMenuButton dismissOnSelect isActive={(department?view:groupOf(view))===id} onClick={()=>navigate(id)}><Icon/><span>{title}</span></SidebarMenuButton></SidebarMenuItem>)}</SidebarMenu></SidebarContent><SidebarFooter>{!department&&<SidebarMenu><SidebarMenuItem><SidebarMenuButton dismissOnSelect isActive={groupOf(view)==='settings'} onClick={()=>navigate('settings')}><Settings2/><span>Inställningar</span></SidebarMenuButton></SidebarMenuItem></SidebarMenu>}<div className="pilot"><span className="status-dot"/> Delad arbetsversion<small>{department?'Ett jobb och nästa moment i taget.':'Byggd för nästa kundkontakt.'}</small></div><div className="profile"><span>{st?.viewer?.name.split(' ').map(s=>s[0]).join('')||'M'}</span><div>{st?.viewer?.name||'Säljteamets arbetsyta'}<small>{st?.viewer?.role==='admin'?'Administratör':st?.viewer?.role==='seller'?'Säljare':st?.viewer?.role==='production'?'Tryck & leverans':st?.viewer?.role==='print'?'Tryck':st?.viewer?.role==='warehouse'?'Lager':'Läsare'}</small></div></div></SidebarFooter></Sidebar><SidebarInset><header className="topbar"><div className="crumb"><SidebarTrigger/><span>Magnussons</span><span>/</span><b>{nav.find(n=>n[0]===view)?.[1]}</b></div><div className="top-actions"><MobileApp/><Button variant="ghost" size="sm" aria-label="Öppna notiser" onClick={()=>navigate('notices')}><Bell size={18}/><span className="notification-count">{st?.notices.filter(n=>noticeInScope(st,n,st?personalOwner(st):'')&&!n.readBy.includes(st.viewer?.id||'')).length||0}</span></Button><span className="saved"><span className="status-dot"/>{busy?'Sparar…':st?'Sparat i databas':'Ansluter…'}</span><WorkspaceChoice value={space} onChange={chooseWorkspace} trigger={workspaceTrigger}/></div></header>
  <div className={'workspace-banner '+(space==='demo'?'':'live')+(view==='today'?' workspace-day-banner':'')}><span>{space==='demo'?<><b>DEMO</b> Fiktiva kunder, affärer och resultat. Ändringar sparas separat här.</>:<><b>ARBETSVERSION</b> {department?'Gemensam arbetskö för tryck och leverans. Registrera de antal som faktiskt hanterats.':view==='today'?'Gemensamt kundregister för teamet.':'Gemensamt kundregister för teamet. Din Outlook-anslutning är personlig. Ekonomisystemet är inte anslutet.'}</>}</span>{!department&&<button onClick={()=>setView('connections')}>Visa anslutningar <ArrowUpRight size={14}/></button>}</div>
  <main className="main" data-view={view} onClickCapture={captureCustomerOpener}><div className="page-heading"><div><div className="eyebrow">{view==='overview'?'FÖRSÄLJNING · RELATIONER · NÄSTA STEG':view==='care'?'BEHÅLL. FÖRSTÅ. UTVECKLA.':'MAGNUSSONS CRM'}</div><h1 ref={customerHeading} tabIndex={-1} className="customer-return-heading">{view==='overview'?'Resultat':view==='today'&&owner==='all'?'Teamets dag':nav.find(n=>n[0]===view)?.[1]}</h1><p>{({today:'Din arbetsdag, kundlöften och nästa steg samlade på ett ställe.',overview:'Dina mål, ditt resultat och dina nästa steg.',team:'Gemensamma resultat, säljarmål och kunduppföljning.',accounts:'Ett personligt konto kopplat till rätt roll och kundportfölj.',prospects:'Från relevant företag till bekräftat behov och en konkret affär.',onboarding:'Säkra första kundupplevelsen och planera nästa kontakt.',deals:'Varje affär har en ansvarig, ett tydligt steg och en nästa aktivitet.',customers:'Kundens behov och historik följer med, oavsett vem som tar nästa samtal.',care:'Kundplaner, återkommande behov och åtgärder som håller relationen levande.',orders:'Från accepterad order till leverans, uppföljning och återköp.',calendar:'Planerade kundmöten i CRM. Alla tider avser svensk lokal tid.',process:'Ett förslag att pröva med Sebbe och förankra med hela teamet.',catalog:'Artiklar med källa, variant och pris – vidare till kundorder.',search:'Avgränsa företag och hitta rätt kontakt i ert underlag.',production:'Dina jobb, tydliga deadlines och nästa moment.',print:'Tryckorder med skiss, antal och deadline.',warehouse:'Planera varumottagning och bekräfta utleverans.',notices:'Orderhändelser, återköpssignaler och kunduppföljning.',connections:'Anslut ditt arbetskonto och samla kunddialogen på rätt plats.',correspondence:'Dina kundmejl och teamets delade korrespondens.',year:'Planera kommande inköp, kontakttillfällen och återbeställningar.',settings:'Anpassa mål, ansvariga och uppföljningsintervall.'} as Record<string,string>)[view]}</p></div>{!department&&st?.viewer?.role!=='reader'&&!['overview','team','accounts','today','catalog','search','print','warehouse','production','notices','process','connections','settings','onboarding','correspondence','year'].includes(view)&&<Button onClick={()=>create(view==='customers'||view==='care'||view==='prospects'?'customer':view==='calendar'?'meeting':'deal')}><Plus size={16}/>{view==='customers'||view==='care'||view==='prospects'?(view==='prospects'?'Nytt prospekt':'Ny kund'):view==='calendar'?'Planera möte':'Ny offert/order'}</Button>}</div>
  {st?.viewer?.role==='seller'&&!st.viewer.owner&&<div className="panel error">Ditt konto saknar koppling till kundansvarig. Be administratören välja din ansvariga säljare under Personliga konton, så att du får dina ordernotiser.</div>}{loadingError&&st&&<div className="panel error" role="alert">Kunde inte uppdatera: {loadingError} Din öppna arbetsyta och text finns kvar.<Button variant="outline" onClick={refresh}>Försök igen</Button></div>}{loadingError&&!st?<div className="panel error">{loadingError}<Button variant="outline" onClick={refresh}><RefreshCw size={16}/>Försök igen</Button></div>:!st?<div className="loading"><span className="spinner"/>Hämtar arbetsytan…</div>:<>

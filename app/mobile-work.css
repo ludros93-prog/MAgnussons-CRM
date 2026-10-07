@@ -2,6 +2,8 @@
 @media(max-width:767px){.topbar{flex-wrap:wrap;gap:8px;padding:12px 16px}.top-actions{flex-wrap:wrap;gap:8px}.mobile-app-trigger span{display:none}.saved{display:none!important}.main{padding-bottom:calc(24px + env(safe-area-inset-bottom))!important}.work-cards{grid-template-columns:minmax(0,1fr)}.work-card{padding:18px}.work-summary{gap:12px;font-size:12px}.work-summary button{margin-left:0}.work-tabs{width:100%}.work-tabs button{flex:1;padding-inline:9px;font-size:12px}.work-dates{gap:8px}.work-dates b{font-size:13px}.crm-app input,.crm-app textarea,.crm-sheet input,.crm-sheet textarea{font-size:16px!important}.crm-sheet button,.crm-sheet summary,.production-workspace button,.topbar button{min-height:44px}.work-sheet{padding-bottom:env(safe-area-inset-bottom)}.work-next button{white-space:normal;height:auto;min-height:48px}.work-card-actions>*{flex:1}.work-card-top b{font-size:14px}.work-photos .work-upload{width:100%;justify-content:center}.work-photo-grid img{height:115px}}
 
 /* Keep wrapped navigation inside the header, above the workspace banner. */
+.crm-app .workspace-choice { scroll-margin: 8px; }
+.crm-app .workspace-choice:focus-visible { outline: 3px solid var(--ring); outline-offset: 4px; }
 @media(max-width:767px) {
  .crm-app .topbar { height: auto; min-height: 62px; }
  .crm-app .crumb { min-width: 0; max-width: 100%; flex: 1 1 12rem; }
