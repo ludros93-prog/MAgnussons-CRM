@@ -418,6 +418,7 @@ await (await import('./seller-profiles.mjs')).verifySellerProfiles({core,sqlite,
 await (await import('./customer-responsibility.mjs')).verifyCustomerResponsibility({core,ops,sqlite,objects,get,post,headers,api,conflicts,dashboards});
 await (await import('./commercial-responsibility.mjs')).verifyCommercialResponsibility({core,ops,sqlite,objects,get,post,headers,api,conflicts,dashboards});
 await (await import('./task-responsibility.mjs')).verifyTaskResponsibility({core,sqlite,objects,get,post,headers,api,conflicts});
+await (await import('./task-responsibility-transfer.mjs')).verifyTaskResponsibilityTransfer({core,sqlite,objects,get,post,headers,api,conflicts});
 await (await import('./customer-workflow-drafts.mjs')).verifyCustomerWorkflowDrafts({core,sqlite,get,headers,api,conflicts});
 
 await (await import('./receipt-concurrency.mjs')).verifyReceiptConcurrency({core,get,post,api,headers,sqlite});

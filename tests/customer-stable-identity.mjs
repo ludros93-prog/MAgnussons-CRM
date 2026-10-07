@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {assertParentTaskTransfer} from './task-responsibility-transfer.mjs';
 
 // Uses the real API and SQLite-backed D1 adapter from tests/crm.mjs. Every
 // record, account, Outlook row and file below is synthetic; no Site is used.
@@ -66,7 +67,7 @@ export async function verifyCustomerStableIdentity({core,ops,sqlite,objects,get,
  async function transfer(payload=input(),id){const before=await store.load('demo'),beforeRaw=raw(),r=await save(action,payload,id),after=await store.load('demo'),audit=c().responsibilityTransfers.at(-1),allowed=new Set(['crm_spaces','crm_customers','crm_tasks','crm_events','crm_mutations']);
   assert.equal(tableNames.filter(name=>!allowed.has(name)).length,13);for(const name of tableNames.filter(name=>!allowed.has(name)))assert.deepEqual(raw().tables[name],beforeRaw.tables[name],name+' remains byte-for-byte unchanged by transfer');assert.deepEqual(raw().objects,beforeRaw.objects);
   assert.deepEqual(c(),{...before.customers.find(row=>row.id===customerId),owner:state.settings.sellerProfiles.find(row=>row.id===payload.targetProfileId).legacyOwnerName,ownerProfileId:payload.targetProfileId,responsibilityTransfers:[...before.customers.find(row=>row.id===customerId).responsibilityTransfers,audit]});
-  for(const row of before.customers.filter(row=>row.id!==customerId))assert.deepEqual(after.customers.find(candidate=>candidate.id===row.id),row);for(const row of before.tasks)assert.deepEqual(after.tasks.find(candidate=>candidate.id===row.id),payload.selectedTaskIds.includes(row.id)?{...row,owner:c().owner,ownerProfileId:payload.targetProfileId}:row);
+  for(const row of before.customers.filter(row=>row.id!==customerId))assert.deepEqual(after.customers.find(candidate=>candidate.id===row.id),row);for(const row of before.tasks)if(payload.selectedTaskIds.includes(row.id))assertParentTaskTransfer(row,after.tasks.find(candidate=>candidate.id===row.id),audit,state.settings.sellerProfiles,'customer');else assert.deepEqual(after.tasks.find(candidate=>candidate.id===row.id),row);
   for(const name of ['deals','orders','meetings','companyEvents','notices','settings'])assert.deepEqual(after[name],before[name],name+' remains independently owned');assert.deepEqual(metrics(state),historical);assert.deepEqual(privateRaw(),privateBefore);assert.deepEqual(raw().objects,r2Before);return r;
  }
  for(const account of Object.values(accounts).filter(account=>account.role!=='admin')){const before=raw(),denied=await writeAs(account,state,action,input());assert.equal(denied.status,403,JSON.stringify(denied.data));unchanged(before,'Non-admin cannot anchor or transfer customer identity');}
