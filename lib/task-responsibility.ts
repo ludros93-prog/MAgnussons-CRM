@@ -3,6 +3,7 @@ import {RuleError} from './crm-errors';
 import type {Actor,Settings,State,Task} from './crm';
 import {sellerProfileById,sellerProfileForOwner} from './seller-profiles';
 import {recordBasis} from './record-conflicts';
+import {canFollowUp,protectedFollowUp} from './follow-up';
 
 const profileId=z.string().uuid();
 const required=z.string().trim().min(1).max(4000),recordId=required.max(100),ownerName=required.max(150);
@@ -22,7 +23,43 @@ export type TaskResponsibilityHistory=z.infer<typeof TaskResponsibilityHistorySc
 const need=(value:unknown,message:string)=>{if(!value)throw new RuleError(message)};
 type Responsibility=Pick<Task,'owner'|'ownerProfileId'>;
 const independentKinds=new Set(['manual','care','meeting_followup']);
+const customerActivityLabels:Record<string,string>={csm:'Kundavstämning',csm_need:'Kommande kundbehov',prospecting:'Prospektkontakt'};
 const commercialKinds={deal:new Set(['discovery','quote','proof_deadline','order_deadline',...independentKinds]),order:new Set(['handover','proof_deadline','order_deadline','receipt','invoice_ready',...independentKinds])};
+
+// Delegating an activity changes only its task responsibility. Its customer's
+// relationship, qualification and plan remain independently owned facts.
+export function taskResponsibilityKind(task:Pick<Task,'kind'|'dealId'>):'independent'|'customer_activity'|null{
+ if(task.dealId)return null;
+ if(independentKinds.has(task.kind))return 'independent';
+ return Object.prototype.hasOwnProperty.call(customerActivityLabels,task.kind)?'customer_activity':null;
+}
+
+export function taskResponsibilityContext(st:State,task:Task){
+ if(taskResponsibilityKind(task)!=='customer_activity')return null;
+ const customer=st.customers.find(row=>row.id===task.customerId);
+ if(!customer)return null;
+ return {
+  typeLabel:customerActivityLabels[task.kind],
+  customer:{id:customer.id,name:customer.name,owner:customer.owner,ownerProfileId:customer.ownerProfileId,status:customer.status,
+   contact:customer.contact,email:customer.email,phone:customer.phone,decisionMaker:customer.decisionMaker,lastContact:customer.lastContact,
+   nextReview:customer.nextReview,expectedOrder:customer.expectedOrder,reviewDays:customer.reviewDays,need:customer.need,riskReason:customer.riskReason},
+  plan:task.kind==='prospecting'?null:customer.plan,
+  prospecting:task.kind==='prospecting'?customer.prospecting:null
+ };
+}
+
+function customerActivityBlocker(st:State,task:Task){
+ const context=taskResponsibilityContext(st,task);
+ if(!context)return '';
+ if(task.kind==='prospecting'){
+  if(context.customer.status!=='prospect'||context.prospecting!.convertedDealId)return 'Prospektkontakten har övergått till ett annat kund- eller affärsflöde. Granska kundkortet och den kvarvarande uppgiften.';
+  if(context.prospecting!.stage==='not_relevant')return 'Prospekteringen är avslutad. Granska den kvarvarande uppgiften på kundkortet.';
+ }else{
+  if(['closed','prospect'].includes(context.customer.status))return 'Kundavstämningen hör inte till en öppen kundplan. Granska kundkortet och den kvarvarande uppgiften.';
+  if(task.kind==='csm_need'&&(!context.plan!.nextNeed||!context.plan!.nextNeedDate))return 'Det kommande kundbehovet saknas i kundplanen. Granska den kvarvarande uppgiften där.';
+ }
+ return '';
+}
 
 function matchingProfileId(settings:Settings,owner:string,id:string|undefined){
  if(!settings.sellerProfilesInitialized||!id||!profileId.safeParse(id).success)return '';
@@ -75,25 +112,29 @@ export function taskResponsibilityCandidates(st:State,taskId:string){
  const task=st.tasks.find(row=>row.id===taskId),customer=task?st.customers.find(row=>row.id===task.customerId):undefined;
  const sourceProfile=task?taskResponsibleProfile(st,task):undefined;
  const targetProfiles=st.settings.sellerProfiles.filter(profile=>profile.active&&st.settings.owners.includes(profile.legacyOwnerName)&&(!task?.ownerProfileId||profile.id!==sourceProfile?.id));
+ const activityBlocker=task?customerActivityBlocker(st,task):'';
  let blockedReason='';
  if(!task)blockedReason='Uppgiften finns inte.';
  else if(task.done)blockedReason='Avslutad uppgift behåller sitt historiska ansvar.';
  else if(task.dealId)blockedReason='Uppgiften hör till en affär eller order. Granska ansvaret i dess överlämning.';
- else if(!independentKinds.has(task.kind))blockedReason='Uppgiftens ansvar styrs av ett särskilt kund-, affärs- eller orderflöde.';
+ else if(!taskResponsibilityKind(task))blockedReason='Uppgiftens ansvar styrs av ett särskilt kund-, affärs- eller orderflöde.';
  else if(!customer)blockedReason='Kundkopplingen saknas. Granska uppgiften innan ansvaret ändras.';
+ else if(activityBlocker)blockedReason=activityBlocker;
  else if(!st.settings.sellerProfilesInitialized)blockedReason='Skapa och granska de stabila säljarprofilerna innan uppgiftsansvaret ändras.';
  else if(!sourceProfile||sourceProfile.legacyOwnerName!==task.owner)blockedReason='Nuvarande ansvar saknar en giltig granskad säljarprofil. Koppla underlaget uttryckligen först.';
  else if(task.responsibilityTransfers.length>=1000)blockedReason='Uppgiften har nått gränsen för ansvarshistorik.';
  else if(!targetProfiles.length)blockedReason='Det finns ingen aktiv säljarprofil för uppgiftsansvaret.';
- return {task,customer,sourceProfile,targetProfiles,blockedReason};
+ return {task,customer,sourceProfile,targetProfiles,blockedReason,context:task?taskResponsibilityContext(st,task):null};
 }
 
 // Freeze the displayed task, customer identity and every reviewed profile
 // choice. An unrelated note may rebase, but a changed preview needs review.
 export function taskResponsibilityBasis(st:State,taskId:string){
  const task=st.tasks.find(row=>row.id===taskId),customer=task?st.customers.find(row=>row.id===task.customerId):undefined;
+ const context=task?taskResponsibilityContext(st,task):null;
  return recordBasis({
   task:task||null,customer:customer?{id:customer.id,name:customer.name,owner:customer.owner,ownerProfileId:customer.ownerProfileId,status:customer.status}:null,
+  ...(context?{activityContext:context}:{}),
   initialized:st.settings.sellerProfilesInitialized,owners:st.settings.owners,
   profiles:st.settings.sellerProfiles.map(profile=>({id:profile.id,displayName:profile.displayName,legacyOwnerName:profile.legacyOwnerName,active:profile.active,memberId:profile.memberId}))
  });
@@ -176,7 +217,8 @@ function derivedTaskProfileId(st:State,task:Task){
  return st.settings.sellerProfilesInitialized?sellerProfileForOwner(st.settings,task.owner)?.id||'':'';
 }
 
-export function assignTaskResponsibilities(previousState:State,nextState:State,exactNewMeetingOwners?:ReadonlyMap<string,string>,exactNewOnboardingOwners?:ReadonlyMap<string,string>,exactNewNeedDealOwners?:ReadonlyMap<string,string>){
+export type ExactFollowUpOwner={sourceTaskId:string;ownerProfileId:string};
+export function assignTaskResponsibilities(previousState:State,nextState:State,exactNewMeetingOwners?:ReadonlyMap<string,string>,exactNewOnboardingOwners?:ReadonlyMap<string,string>,exactNewNeedDealOwners?:ReadonlyMap<string,string>,exactNewFollowUpOwners?:ReadonlyMap<string,ExactFollowUpOwner>){
  const previous=new Map(previousState.tasks.map(task=>[task.id,task]));
  // Only these server-created tasks copy an exact recorded source ID,
  // including a blank. Other generators retain their derivation rules.
@@ -192,6 +234,13 @@ export function assignTaskResponsibilities(previousState:State,nextState:State,e
   const task=nextState.tasks.find(row=>row.id===taskId),deal=task?nextState.deals.find(row=>row.id===task.dealId&&row.customerId===task.customerId):undefined,yearNeed=deal?nextState.customers.find(row=>row.id===deal.customerId)?.yearNeeds.find(row=>row.dealId===deal.id):undefined;
   need(!previous.has(taskId)&&task&&task.kind==='discovery'&&deal&&yearNeed&&task.owner===yearNeed.owner&&ownerId===yearNeed.ownerProfileId&&deal.ownerProfileId===ownerId&&(ownerId===''||matchingProfileId(nextState.settings,task.owner,ownerId)),'Årshjulets exakta ansvar får bara kopieras till den nya behovsaffärens uppgift.');
  }
+ // Follow-up successors copy the original task's exact recorded identity,
+ // including a legacy blank. They start a new task, never a copied audit.
+ for(const [taskId,entry] of exactNewFollowUpOwners||[]){
+  const source=previous.get(entry.sourceTaskId),task=nextState.tasks.find(row=>row.id===taskId);
+  const kind=source&&protectedFollowUp(source)&&source.kind!=='csm_issue'?'manual':source?.kind;
+  need(!previous.has(taskId)&&source&&canFollowUp(source)&&task&&!task.done&&!task.doneAt&&!task.responsibilityTransfers.length&&task.kind===kind&&task.customerId===source.customerId&&task.dealId===source.dealId&&task.owner===source.owner&&entry.ownerProfileId===(source.ownerProfileId||'')&&(entry.ownerProfileId===''||matchingProfileId(nextState.settings,task.owner,entry.ownerProfileId)),'Uppföljningens exakta uppgiftsansvar får bara kopieras från den ursprungliga aktiviteten till ett nytt nästa steg.');
+ }
  for(const task of nextState.tasks){
   const old=previous.get(task.id);
   const oldHistory=old?.responsibilityTransfers||[],audited=!!old&&task.responsibilityTransfers.length>oldHistory.length;
@@ -199,7 +248,7 @@ export function assignTaskResponsibilities(previousState:State,nextState:State,e
   else need(!task.responsibilityTransfers.length,'En ny uppgift får inte ärva en annan uppgifts ansvarshistorik.');
   if(!audited){
    need(!old||!oldHistory.length||old.owner===task.owner,'Uppgiftens granskade ansvar måste överföras i dess överlämning.');
-   task.ownerProfileId=exactNewNeedDealOwners?.has(task.id)?exactNewNeedDealOwners.get(task.id)!:exactNewMeetingOwners?.has(task.id)?exactNewMeetingOwners.get(task.id)!:exactNewOnboardingOwners?.has(task.id)?exactNewOnboardingOwners.get(task.id)!:old&&old.owner===task.owner?old.ownerProfileId||'':derivedTaskProfileId(nextState,task);
+   task.ownerProfileId=exactNewFollowUpOwners?.has(task.id)?exactNewFollowUpOwners.get(task.id)!.ownerProfileId:exactNewNeedDealOwners?.has(task.id)?exactNewNeedDealOwners.get(task.id)!:exactNewMeetingOwners?.has(task.id)?exactNewMeetingOwners.get(task.id)!:exactNewOnboardingOwners?.has(task.id)?exactNewOnboardingOwners.get(task.id)!:old&&old.owner===task.owner?old.ownerProfileId||'':derivedTaskProfileId(nextState,task);
   }
  }
  validateTaskResponsibilityReferences(nextState);
@@ -223,7 +272,9 @@ export function validateTaskResponsibilityReferences(st:State){
    need(row.action==='anchor'?(row.source==='task'&&!row.fromRecordedProfileId||row.source==='onboarding'||row.source==='customer_issue'||row.source==='yearwheel')&&row.fromProfileId===row.toProfileId:row.fromProfileId!==row.toProfileId,'Uppgiftshistoriken har en ogiltig förankring eller överföring.');
    need(!previous||previous.toProfileId===row.fromProfileId&&previous.toProfileId===row.fromRecordedProfileId&&previous.toOwner===row.fromOwner,'Uppgiftens överföringar bildar inte en sammanhängande ansvarskedja.');
    if(row.source==='task'){
-    need(!row.sourceTransferId&&!row.dealId&&independentKinds.has(task.kind),'En fristående uppgiftsöverföring har en felaktig arbetsflödeskoppling.');
+    // Current plan/status may legitimately change after delegation. Validate
+    // the immutable task chain, never reinterpret its historic eligibility.
+    need(!row.sourceTransferId&&!row.dealId&&taskResponsibilityKind(task),'En uppgiftsöverföring har en felaktig arbetsflödeskoppling.');
    }else{
     const parent=row.source==='yearwheel'?st.customers.find(customer=>customer.id===row.customerId)?.yearNeeds.flatMap(yearNeed=>yearNeed.responsibilityTransfers).find(history=>history.id===row.sourceTransferId):row.source==='customer_issue'?st.customers.find(customer=>customer.id===row.customerId)?.plan.issueResponsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='onboarding'?st.customers.find(customer=>customer.id===row.customerId)?.onboarding.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='customer'?st.customers.find(customer=>customer.id===row.customerId)?.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):(row.source==='deal'?st.deals:st.orders).flatMap(target=>target.responsibilityTransfers).find(history=>history.id===row.sourceTransferId);
     need(parent&&parent.customerId===row.customerId&&parent.selectedTaskIds.includes(row.taskId)&&parent.fromProfileId===row.fromProfileId&&parent.toProfileId===row.toProfileId&&parent.fromOwner===row.fromOwner&&parent.toOwner===row.toOwner&&parent.reason===row.reason&&parent.at===row.at&&parent.byId===row.byId&&parent.byMemberId===row.byMemberId&&parent.byName===row.byName,'Uppgiftshistoriken motsäger den granskade kund-, affärs- eller orderöverlämningen.');

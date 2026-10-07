@@ -10,17 +10,51 @@ import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from '@/compo
 import {Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {AlertDialog,AlertDialogContent,AlertDialogHeader,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogCancel,AlertDialogAction} from '@/components/ui/alert-dialog';
 import {taskResponsibilityBasis,taskResponsibilityCandidates} from '@/lib/task-responsibility';
-import type {State} from '@/lib/crm';
+import {PROSPECT_STAGES,RELATIONS,label,type State} from '@/lib/crm';
 import {BusinessField as F,displayDate,type SaveAction} from './business-ui';
 
-type Snapshot=ReturnType<typeof taskResponsibilityCandidates>;
+type Snapshot=ReturnType<typeof taskResponsibilityCandidates>&{relationshipProfile:State['settings']['sellerProfiles'][number]|null};
 type Draft={identity:string;expectedContext:string;snapshot:Snapshot;targetProfileId:string;reason:string;reviewed:boolean};
 type Props={st:State;taskId:string;space:string;save:SaveAction;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void;returnFocus?:()=>HTMLElement|null};
 const buttonClass='h-auto min-h-11 max-w-full min-w-0 whitespace-normal';
 const identityFor=(st:State,space:string,taskId:string)=>JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',st.viewer?.role||'',taskId]);
 const profileLabel=(profile:Snapshot['targetProfiles'][number])=>profile.displayName+(profile.displayName===profile.legacyOwnerName?'':' · '+profile.legacyOwnerName);
 const sourceLabel={task:'Uppgiftens ansvar',customer:'Kundöverlämning',deal:'Affärsöverlämning',order:'Orderöverlämning',onboarding:'Onboardingöverlämning',customer_issue:'Kundärende',yearwheel:'Årshjul'};
-const takeSnapshot=(st:State,taskId:string):Snapshot=>structuredClone(taskResponsibilityCandidates(st,taskId));
+const takeSnapshot=(st:State,taskId:string):Snapshot=>{
+ const candidates=taskResponsibilityCandidates(st,taskId),customer=candidates.customer;
+ // A displayed customer profile is resolved only from the customer's stored
+ // identity. Delegating a task does not anchor a legacy customer relationship.
+ const relationshipProfile=customer?.ownerProfileId?st.settings.sellerProfiles.find(profile=>profile.id===customer.ownerProfileId&&profile.legacyOwnerName===customer.owner)||null:null;
+ return structuredClone({...candidates,relationshipProfile});
+};
+const shown=(value:string|undefined)=>value||'Ej angivet';
+
+function ActivityContext({context}: {context:NonNullable<Snapshot['context']>}){
+ const {customer,plan,prospecting}=context;
+ return <details className="biz-details" aria-label={prospecting?'Prospekteringens frysta underlag':'Kundplanens frysta underlag'}><summary>{prospecting?'Prospekteringens underlag':'Kundplanens underlag'} · oförändrat vid ansvarsbytet</summary><p className="biz-hint">Sparade uppgifter vid granskningen. Den här dialogen ändrar endast aktivitetens ansvar.</p>
+  <dl className="min-w-0">
+   <div className="mb-3"><dt className="font-medium">Kundrelation</dt><dd>{label(RELATIONS,customer.status)}</dd></div>
+   <div className="mb-3"><dt className="font-medium">Kontaktperson</dt><dd className="whitespace-pre-wrap break-words">{shown(customer.contact)}</dd></div>
+   <div className="mb-3"><dt className="font-medium">Kontaktvägar</dt><dd className="whitespace-pre-wrap break-words">{[customer.email,customer.phone].filter(Boolean).join(' · ')||'Ej angivna'}</dd></div>
+   <div className="mb-3"><dt className="font-medium">Beslutsfattare</dt><dd className="whitespace-pre-wrap break-words">{shown(customer.decisionMaker)}</dd></div>
+   <div className="mb-3"><dt className="font-medium">Senaste registrerade kundkontakt</dt><dd>{displayDate(customer.lastContact)}</dd></div>
+   {plan&&<>
+    <div className="mb-3"><dt className="font-medium">Planerad kundavstämning</dt><dd>{displayDate(customer.nextReview)}</dd></div>
+    <div className="mb-3"><dt className="font-medium">Nästa aktivitet i kundplanen</dt><dd className="whitespace-pre-wrap break-words">{shown(plan.nextAction)} · {displayDate(plan.nextDate)}</dd></div>
+    <div className="mb-3"><dt className="font-medium">Kommande behov</dt><dd className="whitespace-pre-wrap break-words">{shown(plan.nextNeed)} · {displayDate(plan.nextNeedDate)}</dd></div>
+    <div className="mb-3"><dt className="font-medium">Förväntat återköp att undersöka</dt><dd>{displayDate(customer.expectedOrder)}</dd></div>
+   </>}
+   {prospecting&&<>
+    <div className="mb-3"><dt className="font-medium">Steg i bearbetningen</dt><dd>{label(PROSPECT_STAGES,prospecting.stage)}</dd></div>
+    <div className="mb-3"><dt className="font-medium">Kontaktanledning</dt><dd className="whitespace-pre-wrap break-words">{shown(prospecting.reason)}</dd></div>
+    <div className="mb-3"><dt className="font-medium">Dokumenterat behov</dt><dd className="whitespace-pre-wrap break-words">{shown(prospecting.need)}</dd></div>
+    <div className="mb-3"><dt className="font-medium">Omfattning och tidpunkt</dt><dd className="whitespace-pre-wrap break-words">{shown(prospecting.scope)} · {displayDate(prospecting.timing)}</dd></div>
+    <div className="mb-3"><dt className="font-medium">Nästa aktivitet i prospekteringen</dt><dd className="whitespace-pre-wrap break-words">{shown(prospecting.nextAction)} · {displayDate(prospecting.nextDate)}</dd></div>
+    <div className="mb-3"><dt className="font-medium">Tidigare kvalificeringsresultat</dt><dd className="whitespace-pre-wrap break-words">{prospecting.qualifiedAt?displayDate(prospecting.qualifiedAt)+' · '+shown(prospecting.qualifiedOwner):'Ingen registrerad kvalificering'}{prospecting.qualifiedOwnerId&&<span className="block">Registrerad resultatprofil: {prospecting.qualifiedOwnerId}</span>}</dd></div>
+   </>}
+  </dl>
+ </details>;
+}
 
 export function TaskResponsibility({st,taskId,space,save,busy,refresh,onClose,returnFocus}:Props){
  const selectedProfileDescriptionId=useId(),identity=identityFor(st,space,taskId),currentIdentity=useRef(identity);currentIdentity.current=identity;
@@ -29,9 +63,10 @@ export function TaskResponsibility({st,taskId,space,save,busy,refresh,onClose,re
  const [error,setError]=useState(''),[notice,setNotice]=useState(''),[submitting,setSubmitting]=useState(false),[refreshing,setRefreshing]=useState(false),[discard,setDiscard]=useState(false),[fetchedState,setFetchedState]=useState<State|null>(null);
  const submitLock=useRef(false),operation=useRef(0),alive=useRef(true),opener=useRef<HTMLElement|null>(typeof document==='undefined'?null:document.activeElement instanceof HTMLElement?document.activeElement:null);
  const visible=draft.identity===identity&&admin&&initialized,conflict=draft.expectedContext!==currentBasis,locked=busy||submitting||refreshing;
- const snapshot=draft.snapshot,target=snapshot.targetProfiles.find(profile=>profile.id===draft.targetProfileId),task=snapshot.task;
+ const snapshot=draft.snapshot,target=snapshot.targetProfiles.find(profile=>profile.id===draft.targetProfileId),task=snapshot.task,context=snapshot.context;
  const anchor=!!target&&!task?.ownerProfileId&&target.id===snapshot.sourceProfile?.id;
  const currentOwner=snapshot.sourceProfile?profileLabel(snapshot.sourceProfile):task?.owner||'Ansvar saknas i underlaget';
+ const relationshipOwner=snapshot.relationshipProfile?profileLabel(snapshot.relationshipProfile):snapshot.customer?.owner||'Ansvar saknas i underlaget';
  const title=task?.ownerProfileId?'Byt uppgiftsansvar':'Förankra ansvar';
  const canReview=visible&&!!target&&!!draft.reason.trim()&&!conflict&&!snapshot.blockedReason;
  const dirty=!!draft.targetProfileId||draft.reason!=='';
@@ -110,12 +145,14 @@ export function TaskResponsibility({st,taskId,space,save,busy,refresh,onClose,re
      <DialogDescription>{snapshot.customer?.name||'Kundkopplingen saknas'} · {task?.title||'Uppgiften finns inte längre'}. Granska ansvar för den här uppgiften.</DialogDescription>
     </DialogHeader>
     <form className="min-w-0" onSubmit={event=>{event.preventDefault();event.stopPropagation();void submit();}}><fieldset disabled={locked||!visible}>
-     <section className="task-responsibility-current" aria-label="Nuvarande uppgiftsansvar"><p><b>Nuvarande ansvar:</b> {currentOwner}</p><p>Sista datum: {displayDate(task?.due||'')}</p><p className="biz-hint">{task?.ownerProfileId?'Uppgiften är kopplad till en granskad säljarprofil.':'Äldre ansvar behöver förankras. Välj den nuvarande profilen för att behålla samma person, eller en annan aktiv profil för att byta ansvar.'} Ursprunglig ansvarskoppling visas när namnen skiljer sig åt.</p></section>
+     <section className="task-responsibility-current" aria-label="Nuvarande uppgiftsansvar">{context&&<p><b>Aktivitetstyp:</b> {context.typeLabel}</p>}<p><b>Uppgiftens nuvarande ansvar:</b> {currentOwner}</p><p>Sista datum: {displayDate(task?.due||'')}</p><p className="biz-hint">{task?.ownerProfileId?'Uppgiften är kopplad till en granskad säljarprofil.':'Äldre uppgiftsansvar behöver förankras. Välj den nuvarande profilen för att behålla samma person, eller en annan aktiv profil för att byta ansvar.'} Ursprunglig ansvarskoppling visas när namnen skiljer sig åt.</p>{context&&<><p><b>Kundrelationsansvar · ligger kvar:</b> {relationshipOwner}</p><p className="biz-hint">{snapshot.relationshipProfile?'Kundrelationen är kopplad till en stabil säljarprofil.':snapshot.customer?.ownerProfileId?'Kundens registrerade profilkoppling kunde inte verifieras i detta underlag.':'Kundrelationen har en äldre ansvarskoppling som inte förankras genom detta byte.'}</p></>}</section>
+     {context&&<ActivityContext context={context}/>}
      {snapshot.blockedReason&&<p className="biz-callout" role="alert">{snapshot.blockedReason}</p>}
      <F label="Ansvarig efter ändringen *"><Select value={draft.targetProfileId||'_none'} onValueChange={value=>update({targetProfileId:value==='_none'?'':value})}><SelectTrigger className="task-responsibility-select *:data-[slot=select-value]:min-w-0 *:data-[slot=select-value]:flex-1 *:data-[slot=select-value]:overflow-hidden" aria-label="Ansvarig efter ändringen" aria-describedby={target?selectedProfileDescriptionId:undefined} style={{height:'auto',minHeight:44,width:'100%',minWidth:0,whiteSpace:'normal'}}><SelectValue><span className="task-responsibility-selected">{target?profileLabel(target):'Välj ansvarig'}</span></SelectValue></SelectTrigger><SelectContent className="task-responsibility-options max-w-[calc(100vw-2rem)]"><SelectItem value="_none" className="min-h-11 whitespace-normal">Välj ansvarig</SelectItem>{snapshot.targetProfiles.map(profile=><SelectItem key={profile.id} value={profile.id} className="min-h-11 whitespace-normal break-words"><span className="min-w-0">{profileLabel(profile)}</span></SelectItem>)}</SelectContent></Select></F>
-     {target&&<p id={selectedProfileDescriptionId} className="biz-hint break-words"><b>Vald ansvarig:</b> {target.displayName}. <b>Ansvarskoppling:</b> {target.legacyOwnerName}.</p>}
+     {target&&<p id={selectedProfileDescriptionId} className="biz-hint break-words"><b>Vald uppgiftsansvarig:</b> {target.displayName}. <b>Ansvarskoppling:</b> {target.legacyOwnerName}. <span className="block">Profil-ID: {target.id}</span></p>}
      <F label="Varför ändras ansvarskopplingen? *"><Textarea required rows={3} maxLength={4000} placeholder="Beskriv varför ansvaret förankras eller byts." value={draft.reason} onChange={event=>update({reason:event.target.value})}/></F>
-     <section className="biz-callout" aria-label="Granska uppgiftsansvaret"><h3>Granska ändringen</h3><p><b>{task?.title||'Uppgiften saknas'}</b>: {currentOwner} → {target?profileLabel(target):'välj ansvarig'}.</p><p>{anchor?'Samma person behåller uppgiften; den äldre ansvarskopplingen förankras i personens profil.':'Endast den här uppgiftens ansvar ändras.'}</p><p>Orsak: {draft.reason.trim()||'ange en orsak'}</p><p>Kundens ansvar ligger kvar hos {snapshot.customer?.owner||'kundens registrerade ansvariga'}. Övriga uppgifter, affärer, order, möten och historiska försäljningsresultat behåller sitt ansvar.</p><label className="check-field"><Checkbox aria-label="Jag har granskat uppgiftsansvaret" disabled={!canReview} checked={draft.reviewed&&!conflict} onCheckedChange={value=>{if(!locked&&!submitLock.current&&!discard)setDraft(previous=>previous.identity===identity?{...previous,reviewed:value===true}:previous);}}/><span>Jag har granskat ansvarig, orsak och att endast den här uppgiftens ansvar ändras.</span></label></section>
+     <section className="biz-callout" aria-label="Granska uppgiftsansvaret"><h3>Granska ändringen</h3><p><b>{task?.title||'Uppgiften saknas'}</b>: {currentOwner} → {target?profileLabel(target):'välj ansvarig'}.</p><p>{anchor?'Samma person behåller uppgiften; den äldre ansvarskopplingen förankras i personens profil.':'Endast den här uppgiftens ansvar ändras.'}</p><p className="whitespace-pre-wrap break-words">Orsak: {draft.reason.trim()||'ange en orsak'}</p><p>Kundrelationsansvaret ligger kvar hos {relationshipOwner}. Övriga uppgifter, affärer, order, möten och historiska försäljningsresultat behåller sitt ansvar.</p>{context&&<><p>Kundplan, prospekteringssteg, kontaktuppgifter och registrerade kundkontakter ändras inte. Ansvarsbytet kvalificerar inget prospekt och skapar ingen affär.</p>{context.prospecting&&<p>Ansvar och resultat vid senare kvalificering eller ny affär styrs av kundens ansvar i respektive flöde.</p>}</>}<label className="check-field"><Checkbox aria-label="Jag har granskat uppgiftsansvaret" disabled={!canReview} checked={draft.reviewed&&!conflict} onCheckedChange={value=>{if(!locked&&!submitLock.current&&!discard)setDraft(previous=>previous.identity===identity?{...previous,reviewed:value===true}:previous);}}/><span>Jag har granskat uppgiftsansvarig, orsak och att kundrelationsansvaret ligger kvar.</span></label></section>
+     <details className="biz-details"><summary>Visa registrerade ansvarskopplingar</summary><p><b>Uppgiftsansvar:</b> {currentOwner}</p><p className="break-words">{task?.ownerProfileId?'Registrerat profil-ID: '+task.ownerProfileId:'Uppgiften saknar registrerat profil-ID; äldre ansvarskoppling.'}</p><p><b>Kundrelationsansvar:</b> {relationshipOwner}</p><p className="break-words">{snapshot.customer?.ownerProfileId?'Registrerat profil-ID: '+snapshot.customer.ownerProfileId:'Kundrelationen saknar registrerat profil-ID; äldre ansvarskoppling.'}</p>{target&&<p className="break-words"><b>Valt uppgiftsansvar:</b> {profileLabel(target)} · {target.id}</p>}</details>
      {conflict&&<div className="record-conflict" role="alert"><b><AlertTriangle size={16}/>Granskningsunderlaget har ändrats</b><p>Din text och dina val finns kvar med det tidigare underlaget. Läs in och granska aktuellt underlag innan du sparar.</p></div>}
      <details className="biz-details"><summary>Hämta och granska aktuellt underlag</summary><p>Hämtning bevarar formulärets tidigare underlag. Läs in nytt granskningsunderlag använder de aktuella uppgifterna och behåller din orsak och möjliga val. Granskningen måste göras igen.</p><div className="biz-buttons"><Button type="button" className={buttonClass} variant="outline" onClick={()=>void fetchCurrent()}>Hämta aktuellt underlag</Button><Button type="button" className={buttonClass} variant="outline" onClick={readCurrent}>Läs in nytt granskningsunderlag</Button></div></details>
      {!!task?.responsibilityTransfers.length&&<details className="biz-details"><summary>Tidigare ansvarsändringar ({task.responsibilityTransfers.length})</summary>{[...task.responsibilityTransfers].reverse().map(row=><article className="revision-card" key={row.id}><b>{row.action==='anchor'?'Förankrat ansvar':'Bytt ansvar'} · {row.fromDisplayName} · {row.fromOwner} → {row.toDisplayName} · {row.toOwner}</b><p>{new Date(row.at).toLocaleString('sv-SE')} · registrerat av {row.byName}.</p><p className="whitespace-pre-wrap">{row.reason}</p><small>{sourceLabel[row.source]} · {snapshot.customer?.name||'Kund'} · {task.title}. Referens: {row.id}.</small></article>)}</details>}

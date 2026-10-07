@@ -104,7 +104,7 @@ function protectCommercialResponsibility(old:Deal|Order|undefined,next:Deal|Orde
  }
  if(old){next.ownerProfileId=old.ownerProfileId;next.responsibilityTransfers=structuredClone(old.responsibilityTransfers);}
 }
-function assignNewResponsibleProfiles(previous:State,next:State,exactNewMeetingOwners?:ReadonlyMap<string,string>,exactNewOnboardingOwners?:ReadonlyMap<string,string>,exactNewNeedDealOwners?:ReadonlyMap<string,string>,exactNewNeedDealTaskOwners?:ReadonlyMap<string,string>){
+function assignNewResponsibleProfiles(previous:State,next:State,exactNewMeetingOwners?:ReadonlyMap<string,string>,exactNewOnboardingOwners?:ReadonlyMap<string,string>,exactNewNeedDealOwners?:ReadonlyMap<string,string>,exactNewNeedDealTaskOwners?:ReadonlyMap<string,string>,exactNewFollowUpOwners?:ReadonlyMap<string,{sourceTaskId:string;ownerProfileId:string}>){
  for(const name of ['customers','deals','orders'] as const){
   const existing=new Set(previous[name].map(row=>row.id));
   for(const row of next[name])if(!existing.has(row.id)){
@@ -116,17 +116,20 @@ function assignNewResponsibleProfiles(previous:State,next:State,exactNewMeetingO
    }else row.ownerProfileId=profile?.id||'';row.responsibilityTransfers=[];
   }
  }
- validateCustomerResponsibilityReferences(next);validateCommercialResponsibilityReferences(next);validateMeetingResponsibilityReferences(next);validateOnboardingResponsibilityReferences(next);validateIssueResponsibilityReferences(next);validateYearwheelResponsibilityReferences(next);return assignTaskResponsibilities(previous,next,exactNewMeetingOwners,exactNewOnboardingOwners,exactNewNeedDealTaskOwners);
+ validateCustomerResponsibilityReferences(next);validateCommercialResponsibilityReferences(next);validateMeetingResponsibilityReferences(next);validateOnboardingResponsibilityReferences(next);validateIssueResponsibilityReferences(next);validateYearwheelResponsibilityReferences(next);return assignTaskResponsibilities(previous,next,exactNewMeetingOwners,exactNewOnboardingOwners,exactNewNeedDealTaskOwners,exactNewFollowUpOwners);
 }
 export function applyAction(current:State,action:Action,actor?:Actor):State{
- const st=normalizeState(structuredClone(current)),now=new Date().toISOString(),today=day(),uid=()=>crypto.randomUUID(),exactNewMeetingOwners=new Map<string,string>(),exactNewOnboardingOwners=new Map<string,string>(),exactNewNeedDealOwners=new Map<string,string>(),exactNewNeedDealTaskOwners=new Map<string,string>();
+ const st=normalizeState(structuredClone(current)),now=new Date().toISOString(),today=day(),uid=()=>crypto.randomUUID(),exactNewMeetingOwners=new Map<string,string>(),exactNewOnboardingOwners=new Map<string,string>(),exactNewNeedDealOwners=new Map<string,string>(),exactNewNeedDealTaskOwners=new Map<string,string>(),exactNewFollowUpOwners=new Map<string,{sourceTaskId:string;ownerProfileId:string}>();
  // Capture only audited identities and operational keys from the normalized
  // original; raw legacy fields need defaults without a second full data clone.
  const previousResponsibilities=snapshotRetiredSellerResponsibilities(st),finish=(next:State)=>previousResponsibilities.profiles.length||next.settings.sellerProfiles.some(profile=>profile.retirementHistory.length)?protectRetiredSellerResponsibilities(previousResponsibilities,next):next;
  const customer=(i:string)=>{const c=st.customers.find(x=>x.id===i);need(c,'Kunden finns inte i denna arbetsyta.');return c!};
  const owner=(o:string)=>need(st.settings.owners.includes(o),'Välj en ansvarig från teamet.');
  const event=(customerId:string,text:string,dealId='',kind='change')=>st.events.unshift({id:uid(),customerId,dealId,text,at:now,kind});
- const customerTask=(c:Customer,title:string,due:string,kind:string,assigned=c.owner)=>{const t=st.tasks.find(t=>t.customerId===c.id&&t.kind===kind&&!t.done);if(t){Object.assign(t,{title,due,owner:t.responsibilityTransfers.length?t.owner:assigned});return t;}const next=TaskSchema.parse({id:uid(),customerId:c.id,dealId:'',owner:assigned,title,due,done:false,kind,doneAt:''});st.tasks.push(next);return next;};
+ // Editing a shared plan must never take back a delegated existing activity,
+ // including a new follow-up with its own empty audit and exact copied UUID.
+ // A genuinely new canonical activity still starts with the customer owner.
+ const customerTask=(c:Customer,title:string,due:string,kind:string,assigned=c.owner)=>{const t=st.tasks.find(t=>t.customerId===c.id&&t.kind===kind&&!t.done);if(t){const preserveOwner=t.responsibilityTransfers.length||st.settings.sellerProfilesInitialized&&['csm','csm_need','prospecting'].includes(kind);Object.assign(t,{title,due,owner:preserveOwner?t.owner:assigned});return t;}const next=TaskSchema.parse({id:uid(),customerId:c.id,dealId:'',owner:assigned,title,due,done:false,kind,doneAt:''});st.tasks.push(next);return next;};
  // Checklist work never moves an existing task after profile initialization,
  // including an unaudited task deliberately left out of a handover. Only a
  // server-created replacement copies the onboarding's exact recorded ID.
@@ -227,8 +230,9 @@ export function applyAction(current:State,action:Action,actor?:Actor):State{
   need(!protectedWork||!p.completed,'Kontakten kan sparas här. Avsluta ärendet, inköpsbehovet eller onboarding i dess arbetsflöde.');
   if(canonical||ongoing||protectedWork||p.outcome==='no_reply'||!p.completed)need(p.nextAction,'Ange nästa aktivitet.');
   if(p.nextAction){TaskSchema.parse({...task,title:p.nextAction,due:p.nextDate});need(p.nextDate>=today,'Nästa aktivitet ska vara idag eller senare.');}
-  if(protectedWork&&task.kind!=='csm_issue'){st.tasks.push(TaskSchema.parse({...task,id:uid(),kind:'manual',responsibilityTransfers:[],title:p.nextAction,due:p.nextDate,done:false,doneAt:''}));}
-  else if(p.completed){task.done=true;task.doneAt=now;if(p.nextAction)st.tasks.push({...task,id:uid(),responsibilityTransfers:[],title:p.nextAction,due:p.nextDate,done:false,doneAt:''});}else Object.assign(task,{title:p.nextAction,due:p.nextDate});
+  const addFollowUp=(kind=task.kind)=>{const next=TaskSchema.parse({...task,id:uid(),kind,responsibilityTransfers:[],title:p.nextAction,due:p.nextDate,done:false,doneAt:''});st.tasks.push(next);exactNewFollowUpOwners.set(next.id,{sourceTaskId:task.id,ownerProfileId:task.ownerProfileId});};
+  if(protectedWork&&task.kind!=='csm_issue')addFollowUp('manual');
+  else if(p.completed){task.done=true;task.doneAt=now;if(p.nextAction)addFollowUp();}else Object.assign(task,{title:p.nextAction,due:p.nextDate});
   if(d){d.nextAction=p.nextAction;d.nextDate=p.nextDate;}
   if(task.kind==='prospecting'){need(c.status==='prospect'&&!c.prospecting.convertedDealId,'Fortsätt uppföljningen i kundens affär.');c.prospecting.nextAction=p.nextAction;c.prospecting.nextDate=p.nextDate;}
   if(task.kind==='csm_issue'){need(c.plan.issueStatus==='open','Kundärendet är redan avslutat.');c.plan.issueAction=p.nextAction;c.plan.issueDue=p.nextDate;}
@@ -289,5 +293,5 @@ export function applyAction(current:State,action:Action,actor?:Actor):State{
   const p=z.object({customers:z.array(CustomerSchema).min(1).max(200)}).parse(action.data);for(const raw of p.customers){need(!raw.id,'Importen får bara skapa nya kunder.');need(!raw.responsibilityTransfers.length,'Kundimport får inte skapa ansvarshistorik.');need(!raw.ownerProfileId,'Kundimport får inte ange en egen ansvarsprofil. Välj en granskad ansvarig.');need(!raw.plan.issueOwnerProfileId&&!raw.plan.issueResponsibilityTransfers.length,'Kundimport får inte skapa ärendeprofil eller ansvarshistorik.');owner(raw.owner);const org=raw.organizationNumber.replace(/\D/g,'');need(!st.customers.some(c=>(raw.fortnoxNumber&&c.fortnoxNumber===raw.fortnoxNumber)||(org&&c.organizationNumber.replace(/\D/g,'')===org)||c.name.toLocaleLowerCase('sv')===raw.name.toLocaleLowerCase('sv')),'Dubblett i importen: '+raw.name);const c=CustomerSchema.parse({...raw,id:uid(),createdAt:now,prospecting:{},onboarding:{},plan:{},yearNeeds:[],products:[]});if(['active','growth','risk'].includes(c.status)){c.nextReview=raw.nextReview||plusDays(today,7);c.plan.nextAction='Stäm av kundens behov och planera nästa kontakt';c.plan.nextDate=c.nextReview;customerTask(c,c.plan.nextAction,c.nextReview,'csm');}st.customers.push(c);event(c.id,'Kund importerad');}
  }else if(action.type==='settings'){
   const settings=SettingsSchema.parse(action.data);protectSellerSettings(st.settings,settings,action.data);need(new Set(settings.catalogSources.map(s=>s.id)).size===settings.catalogSources.length,'Artikelkällorna måste ha unika id:n.');for(const source of st.settings.catalogSources){if(!settings.catalogSources.some(s=>s.id===source.id))need(!st.articles.some(a=>a.sourceId===source.id)&&!st.deals.some(d=>d.lines.some(l=>l.sourceId===source.id)),'Inaktivera en använd artikelkälla i stället för att ta bort den.');}need(new Set(settings.owners).size===settings.owners.length,'Säljarnamn måste vara unika.');for(const o of st.settings.owners){if(!settings.owners.includes(o))need(!([...st.customers,...st.deals,...st.tasks,...st.orders,...st.meetings].some(x=>x.owner===o)||st.companyEvents.some(e=>e.owner===o||e.checklist.some(t=>t.owner===o))||st.customers.some(c=>c.onboarding.owner===o||c.plan.issueOwner===o||c.yearNeeds.some(n=>n.owner===o&&n.status==='planned'))),'Omfördela poster innan du tar bort en ansvarig.');}st.settings=settings;validateSellerProfileReferences(st);
- }else if(operations.has(action.type)){need(actor,'Logga in för att utföra åtgärden.');return finish(assignNewResponsibleProfiles(current,applyOperations(st,action,actor!)));}else throw new RuleError('Okänd åtgärd.');return finish(assignNewResponsibleProfiles(current,st,exactNewMeetingOwners,exactNewOnboardingOwners,exactNewNeedDealOwners,exactNewNeedDealTaskOwners));
+ }else if(operations.has(action.type)){need(actor,'Logga in för att utföra åtgärden.');return finish(assignNewResponsibleProfiles(current,applyOperations(st,action,actor!)));}else throw new RuleError('Okänd åtgärd.');return finish(assignNewResponsibleProfiles(current,st,exactNewMeetingOwners,exactNewOnboardingOwners,exactNewNeedDealOwners,exactNewNeedDealTaskOwners,exactNewFollowUpOwners));
 }

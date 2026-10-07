@@ -2,7 +2,7 @@ import type {State,Task} from './crm';
 import {sellerProfileById,sellerProfileForOwner} from './seller-profiles';
 import {customerResponsibilityCandidates} from './customer-responsibility';
 import {commercialResponsibilityCandidates} from './commercial-responsibility';
-import {taskResponsibilityCandidates,taskResponsibleProfile} from './task-responsibility';
+import {taskResponsibilityCandidates,taskResponsibilityContext,taskResponsibilityKind,taskResponsibleProfile} from './task-responsibility';
 import {meetingResponsibilityCandidates} from './meeting-responsibility';
 import {onboardingResponsibilityCandidates} from './onboarding-responsibility';
 import {issueResponsibilityCandidates} from './issue-responsibility';
@@ -23,7 +23,6 @@ type TaskBundle={
  sourceProfile?:{id:string};blockedReason:string;eligible:Task[];
  excluded:{task:Task;reason:string}[];
 };
-const independentKinds=new Set(['manual','care','meeting_followup']);
 const relationStatus:Record<string,string>={prospect:'Prospekt',onboarding:'Ny kund',active:'Aktiv kund',growth:'Utveckling',risk:'Behöver omsorg',dormant:'Vilande'};
 const dealStatus:Record<string,string>={identified:'Identifierad',contact:'Dialog pågår',needs:'Behov kartlagt',solution:'Lösning & prov',costing:'Offert förbereds',quoted:'Offert skickad',decision:'Beslut pågår',paused:'Pausad'};
 const orderStatus:Record<string,string>={handover:'Orderunderlag',approval:'Korrektur',supplier:'Leverantör',production:'Produktion',shipping:'Leverans pågår',delivered:'Levererad',followed:'Uppföljd – faktura saknas'};
@@ -89,9 +88,10 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
    const kind=order?'order':'deal',id=order?.id||deal.id,bundle=commercial(kind,id);
    return bundleDestination(task,bundle,{kind,id,customerId:task.customerId},kind==='order'?'Granska orderns överlämning':'Granska affärens överlämning');
   }
-  if(independentKinds.has(task.kind)){
+  if(taskResponsibilityKind(task)){
    const candidates=taskResponsibilityCandidates(st,task.id);
-   return destination({kind:'task',id:task.id,customerId:task.customerId},'Granska uppgiftsansvar',candidates.blockedReason,'Fristående uppgiftsansvar granskas separat. Kundrelationens ansvar ändras inte.');
+   const hint=candidates.context?candidates.context.typeLabel+' har eget uppgiftsansvar. Endast denna uppgift överlämnas; kundrelationens ansvar, kundplan och tidigare resultat ligger kvar.':'Fristående uppgiftsansvar granskas separat. Kundrelationens ansvar ändras inte.';
+   return destination({kind:'task',id:task.id,customerId:task.customerId},'Granska uppgiftsansvar',candidates.blockedReason,hint);
   }
   if(task.kind==='onboarding')return bundleDestination(task,onboarding(task.customerId),{kind:'onboarding',id:task.customerId,customerId:task.customerId},'Granska onboardingansvar');
   if(task.kind==='csm_issue')return bundleDestination(task,issue(task.customerId),{kind:'issue',id:task.customerId,customerId:task.customerId},'Granska ärendeansvar');
@@ -144,7 +144,7 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
  }
  // Tasks are inventoried independently of parent state/ownership. A handover
  // that left a task with its old owner must not make that task disappear.
- for(const task of st.tasks.filter(value=>!value.done))add({kind:'task',typeLabel:'Uppgift',title:task.title,customerId:task.customerId,owner:task.owner,ownerProfileId:task.ownerProfileId,due:task.due,dueLabel:'Förfallodatum',status:'Öppen',...taskDestination(task)},['task',task.id]);
+ for(const task of st.tasks.filter(value=>!value.done))add({kind:'task',typeLabel:taskResponsibilityContext(st,task)?.typeLabel||'Uppgift',title:task.title,customerId:task.customerId,owner:task.owner,ownerProfileId:task.ownerProfileId,due:task.due,dueLabel:'Förfallodatum',status:'Öppen',...taskDestination(task)},['task',task.id]);
  for(const meeting of st.meetings.filter(value=>value.status==='planned')){
   const candidates=meetingResponsibilityCandidates(st,meeting.id);
   add({kind:'meeting',typeLabel:'Kundmöte',title:meeting.title,customerId:meeting.customerId,owner:meeting.owner,ownerProfileId:meeting.ownerProfileId,due:meeting.date,dueLabel:'Mötesdatum',status:'Planerat',
