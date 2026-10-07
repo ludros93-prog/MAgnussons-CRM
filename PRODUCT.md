@@ -1,6 +1,16 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-## Onboarding med eget ansvar – v51
+## Kundärenden med eget ansvar – v52
+
+**Kundvård → Kundrelationer** följer kundansvaret. **Mina kundärenden** följer ärendets stabila ansvar, även för en kund vars relation tillhör någon annan. **Alla ansvariga** visar teamets ärenden. Äldre tomma profil-ID:n använder registrerat ärendeansvar för urval; läsning förankrar ingen person automatiskt. **Öppna kundärendet** leder till ärendets fält i samma privata kundplan.
+
+Administratören förankrar eller byter ett öppet ärendes ansvar med aktiv målprofil, orsak och granskning. Välj uttryckligen vilka tillåtna öppna ärendeuppgifter som ska följa med; ingen är förvald. Övriga uppgifter, kund-, affärs-, order-, onboarding-, mötes- och årshjulsansvar samt historiska resultat bevaras. Ett tidigare ägarlöst ärende får sitt första ansvar genom ett uttryckligt aktivt profilval när det sparas som öppet.
+
+Kundplanens privata uppgifter ligger kvar vid ansvarsändringen. Ett gammalt utkast kräver uttrycklig jämförelse och adoption av aktuellt underlag; endast ärendets ansvar, profil-ID och ansvarshistoria uppdateras. Ärendets text/status och alla övriga privata fält bevaras. Löst och återöppnat ärende delar samma föränderliga plats i kundplanen; separata oföränderliga tickets ingår inte.
+
+Försäljning mot månads-/årsmål, marginal och nya prospects består. [VALIDATION](VALIDATION.md) anger faktisk kod, main, publicering och provgränser; [OPERATIONS](OPERATIONS.md) beskriver överlämning och återgång.
+
+### Historik: v51 – Onboarding med eget ansvar
 
 Onboarding får en egen stabil ansvarig säljarprofil. Administratören förankrar äldre ansvar eller byter ansvar med orsak, granskning och uttryckligt valda öppna onboardinguppgifter. Ingen uppgift är förvald. Kund-, affärs-, order- och resultatansvar behålls. Den personliga vyn **Nya kunder** följer onboardingansvaret; äldre tomma ID:n använder befintligt ansvar för visning.
 

@@ -1,6 +1,19 @@
 # Magnussons CRM – order, tryck och lager
 
-## Granskat onboardingansvar – v51
+## Granskat kundärendeansvar – v52
+
+1. Öppna **Kundvård → Mina kundärenden**; välj vid behov **Alla ansvariga** för teamet. Ärendet följer sitt eget ansvar, kundrelationen sitt kundansvar.
+2. Som administratör: välj **Förankra ärendeansvar** eller **Byt ärendeansvar** för ett sparat öppet ärende. Välj en aktiv granskad profil och läs full identitet intill väljaren. Samma person kan förankra ett äldre tomt ID; okänd/motsägande källa gissas inte. En granskad inaktiv källperson kan lämna över.
+3. Välj bara de tillåtna öppna ärendeuppgifter som ska följa med. Ingen är förvald. Ange orsak, granska ansvar och uppgiftsval och spara. Övriga uppgifter och ansvar ligger kvar; ingen kundkontakt registreras.
+4. Vid ändrat underlag: **Hämta aktuellt underlag** behåller den tidigare granskningen. **Läs in nytt granskningsunderlag** väljer den aktuella versionen uttryckligen, behåller orsak och möjliga val och kräver ny granskning.
+5. Ett oklart sparbesked kan följa efter en lyckad skrivning. Hämta och granska utfallet eller återförsök med samma oförändrade val. Öppen dialog bevarar text vid fel; den är inget varaktigt privat utkast. Kopiera orsaken före omladdning. Stängning återställer inte en möjlig CRM-skrivning.
+6. Fortsätt den privata kundplanen separat. Ett gammalt utkast kan behöva jämföras med aktuell kundversion. **Använd aktuellt underlag och behåll mina uppgifter** kopierar endast `issueOwner`, `issueOwnerProfileId` och `issueResponsibilityTransfers`; all annan privat text och fält av samma version bevaras.
+
+Vid ärendets första registrerade ansvar måste ett komplett öppet ärende få ett uttryckligt aktivt profilval efter profilinitiering. Ett äldre ärende som saknar ansvar, profil-ID och historia får samma möjlighet när det öppnas, även om text finns kvar. Efter registrerat ansvar används granskad överlämning för byte; lösning/återöppning behåller ansvar och historia. Kundplanen har en gemensam föränderlig ärendeplats, inget nytt ticketregister.
+
+**Återgång:** v52 utökar JSON och Task-historik utan SQL-migration. När de nya fälten/historiken registrerats är oförändrad v51 ingen säker skrivande återgång: gammal kod kan avvisa uppgiftshistoria eller skriva bort ärendefält. Använd en v52-kompatibel korrigering eller verifierad data-/filåterställning från före förändringen med en plan för senare arbete. Faktisk hostingåterställning återstår. CRM-backup omfattar inte konton, privata utkast eller Outlook-anslutningar; säljarprofiler behöver uttrycklig återanslutning. [VALIDATION](VALIDATION.md) skiljer syntetiska parser-/runtimeprov från verklig drift.
+
+### Historik: v51 – Granskat onboardingansvar
 
 Onboarding får en egen stabil ansvarig säljarprofil. Administratören förankrar äldre ansvar eller byter ansvar med orsak, granskning och uttryckligt valda öppna onboardinguppgifter. Ingen uppgift är förvald. Kund-, affärs-, order- och resultatansvar behålls. Den personliga vyn **Nya kunder** följer onboardingansvaret; äldre tomma ID:n använder befintligt ansvar för visning.
 

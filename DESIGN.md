@@ -1,6 +1,14 @@
 # Magnussons CRM – designriktning
 
-## Granskat onboardingansvar – v51
+## Separata kundrelationer och kundärenden – v52
+
+Kundvård visar två tydliga vägar: **Kundrelationer** och **Mina kundärenden**. Ärenderaden visar kund, beskrivning, nästa åtgärd, tidsgräns, ärendeansvar och separat kundansvar. **Öppna kundärendet** ger en fokuserad start vid ärendets rubrik i den privata planen när underlaget har lästs in; fortsatt inmatning avbryter en väntande fokusflytt. Vanlig öppning av kundplanen behåller sitt tidigare beteende.
+
+Överlämningen har en egen granskningsdialog med tomt målval och inga förvalda uppgifter. Faktiskt sparat profil-ID skiljs från granskad äldre källprofil; full mottagaridentitet står intill den högst tvåradiga väljaren och finns i dess beskrivning. Längre orsak har intern rullning. Nya vanliga handlingar och uppgifts-/granskningsrader har lokalt mål minst 44 px, med radbrytning och synligt fokus. Hämtning, adoption och sparning har olika svenska handlingar.
+
+Slutliga browserprov: 22/22 godkända på byggd isolerad Worker/D1/R2 med faktiska roller, 320/390/1280 px, 2× dialogtext, verklig 409, dubbelklick och privat utkaståterläsning/adoption/publicering; 282 källfiler/96 distfiler oförändrade, positiva 18 råtabeller och R2-/Outlook-/utkastgränser verifierade. [VALIDATION](VALIDATION.md) anger den faktiska mobil-/textmatrisen och dess gränser. Dialog-/layoutprov ersätter inte fysisk telefon, skärmläsare eller observerad personalacceptans. Officiella principer och våra egna lösningar skiljs i [RESEARCH](agent/RESEARCH.md).
+
+### Historik: v51 – Granskat onboardingansvar
 
 Behåll kundsammanhanget och skilj checklistans privata redigering från gemensam överlämning. Nuvarande ansvar, aktiv mottagarprofil, valda/återstående uppgifter, orsak och granskningsruta leder till en konkret svensk sparhandling. Endast administratören får ändringskontrollen.
 

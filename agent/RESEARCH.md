@@ -1,6 +1,16 @@
 # CRM-källor för Magnussons byggagent
 
-## Onboardingansvar – källkontroll för v51, 2026-10-07
+## Kundärendeansvar – källkontroll för v52, 2026-10-07
+
+Officiella sidor lästes 16:29:55 UTC. [Saleshub AI Funktioner](https://saleshubai.se/funktioner) beskriver gemensamma moduldata och ”Projektboard med uppgifter, flera ansvariga och statusrader”; detta är offentlig produktbeskrivning utan dokumenterat överförings-/behörighetskontrakt. [Lime Notifications](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) beskriver individuella ansvarsfält för To-do, Deal och Ticket; följande/omnämnande tilldelar inte ansvar. [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) stödjer synliga kontextuella handlingsverb och fullständiga tillgängliga namn.
+
+[Salesforce Changing a Record’s Owner](https://help.salesforce.com/s/articleView?id=sf.account_owner_transfer.htm&language=en_US&type=5) dokumenterar att den utgående ägarens öppna aktiviteter överförs automatiskt, medan avslutade aktiviteter ligger kvar; andra användares möjligheter har separata val. [Assigning Tasks and Events](https://help.salesforce.com/s/articleView?id=000385157&language=en_US&type=1) beskriver aktivitetens eget Assigned To-ansvar. Magnussons väljer uttryckligt valda tillåtna ärendeuppgifter och egna serverrättigheter; Salesforce-reglerna kopieras inte.
+
+[W3C Modal Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) stödjer logisk fokusstart, begränsat Tab-fokus, synlig stängning och återgång till öppnare eller logisk fortsättningsplats. [WCAG H102](https://www.w3.org/WAI/WCAG22/Techniques/html/H102) är en tillräcklig teknik för native modal dialog, inget krav på just den implementationen. Våra 44 px, två rader med full identitet intill och rullbara textfält är lokala designval, ingen WCAG-certifiering.
+
+Kvitto `/workspace/scratch/crm52/research/official-sources.json`, SHA256 `7579e8b0493eff7a063024b6b91c78cdd40b6be6bf8a7b2065b6da2674afec2f`. Kvittot skiljer två rapporterade ordagranna utdrag från sammanfattade principer; webverktygets HTTP-status och fulltext-hashar är inte tillgängliga. Salesforce `sf`-varianten gav den lästa tabellen; `xcloud`-varianten gav endast laddningsskal. Källorna verifierar inga Magnussonsanslutningar, privata lagringsgarantier eller personalresultat. [VALIDATION](../VALIDATION.md) anger våra faktiska prov.
+
+### Historik: v51 – Onboardingansvar – källkontroll för v51, 2026-10-07
 
 Officiella sidtexter lästes 14:41:48 UTC; webverktyget rapporterade inte HTTP-status. [Saleshub AI](https://saleshubai.se/funktioner) beskriver gemensamt kundsammanhang och nästa aktivitet. [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) stödjer relevanta posthandlingar med imperativa verb. [Salesforce Transfer Records](https://help.salesforce.com/s/articleView?id=sf.data_about_transfer.htm&language=en_US&type=5) beskriver uttrycklig objektspecifik ägaröverföring och dess behörighetskrav. Magnussons egna serverregler, valda uppgifter och frysta granskningsbasis är vår implementation; leverantörernas rättigheter kopieras inte.
 
