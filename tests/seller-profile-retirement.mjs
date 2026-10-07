@@ -99,7 +99,19 @@ export async function verifySellerProfileRetirement({core,business,ops}) {
  const guarded=structuredClone(closed);guarded.tasks.push(core.TaskSchema.parse({...guarded.tasks[0],id:'retirement-other-open-task',owner:names.b,ownerProfileId:ids.b,done:false}));
  for(const [label,modify] of reopenedCases){const next=structuredClone(guarded);modify(next);assert.throws(()=>retirement.protectRetiredSellerResponsibilities(guarded,next),/Öppet arbete/,label);}
  const historicalEdit=structuredClone(closed);historicalEdit.tasks[0].title='Syntetisk rättning av historisk instruktion';historicalEdit.meetings[0].notes='Syntetisk historisk precisering';historicalEdit.customers[0].yearNeeds[0].notes='Syntetisk historisk precisering';historicalEdit.settings.sellerProfiles[0].displayName='Syntetiskt nytt visningsnamn';assert.equal(retirement.protectRetiredSellerResponsibilities(closed,historicalEdit),historicalEdit,'Historical corrections remain possible without opening work.');
+ const smallSnapshot=retirement.snapshotRetiredSellerResponsibilities(closed);
+ assert.equal(smallSnapshot.profiles.length,1,'Only explicitly audited profiles enter the internal guard snapshot.');
+ assert.deepEqual(Object.keys(smallSnapshot.profiles[0]).sort(),['id','legacyOwnerName','operationalKeys','retirementHistory']);
+ assert.equal(smallSnapshot.profiles[0].id,ids.a);assert.equal(smallSnapshot.profiles[0].legacyOwnerName,names.a);assert.deepEqual(smallSnapshot.profiles[0].operationalKeys,[]);
+ assert.equal(typeof smallSnapshot.profiles[0].retirementHistory,'string','Audit is copied as immutable canonical text, not a reference to settings.');
+ assert.equal(retirement.protectRetiredSellerResponsibilities(smallSnapshot,historicalEdit),historicalEdit,'A bounded normalized snapshot allows historical corrections.');
+ const emptySnapshotInput=base();delete emptySnapshotInput.customers;delete emptySnapshotInput.companyEvents;
+ assert.deepEqual(retirement.snapshotRetiredSellerResponsibilities(emptySnapshotInput).profiles,[],'No audited profile means no operational inventory or historical-row traversal.');
  const preexisting=structuredClone(closed);preexisting.tasks[0].done=false;const unchangedOpen=structuredClone(preexisting);unchangedOpen.tasks[0].title='Syntetiskt redan befintligt arbete granskas';assert.equal(retirement.protectRetiredSellerResponsibilities(preexisting,unchangedOpen),unchangedOpen,'Already-existing work can be resolved rather than locking recovery.');unchangedOpen.tasks[0].done=true;assert.equal(retirement.protectRetiredSellerResponsibilities(preexisting,unchangedOpen),unchangedOpen,'Completion decreases existing responsibility.');
+ const boundedPrevious=structuredClone(preexisting),boundedSnapshot=retirement.snapshotRetiredSellerResponsibilities(boundedPrevious),boundedNext=structuredClone(preexisting);
+ boundedPrevious.tasks[0].done=true;boundedPrevious.settings.sellerProfiles[0].retirementHistory[0].reason='Syntetisk senare ändring av källobjekt';
+ assert.equal(retirement.protectRetiredSellerResponsibilities(boundedSnapshot,boundedNext),boundedNext,'Captured audit and old keys cannot drift when source records are later mutated.');
+ for(const [label,modify] of reopenedCases){const next=structuredClone(guarded);modify(next);assert.throws(()=>retirement.protectRetiredSellerResponsibilities(retirement.snapshotRetiredSellerResponsibilities(guarded),next),/Öppet arbete/,'Bounded snapshot protects '+label);}
  const inactiveLegacyWork=structuredClone(closed);inactiveLegacyWork.tasks.push(core.TaskSchema.parse({...inactiveLegacyWork.tasks[0],id:'retirement-legacy-open-task',owner:names.legacy,ownerProfileId:ids.legacy,done:false}));assert.equal(retirement.protectRetiredSellerResponsibilities(closed,inactiveLegacyWork),inactiveLegacyWork,'Old inactive profiles without explicit audit retain backward-compatible work rules.');
  for(const modify of [st=>{st.settings.sellerProfiles[0].retirementHistory=[];},st=>{st.settings.sellerProfiles[0].retirementHistory[0].reason='Forged rewrite';},st=>{st.settings.sellerProfiles=st.settings.sellerProfiles.filter(profile=>profile.id!==ids.a);},st=>{st.settings.sellerProfiles[0].active=true;},st=>{st.settings.owners.push(names.a);}]){const next=structuredClone(closed);modify(next);assert.throws(()=>retirement.protectRetiredSellerResponsibilities(closed,next));}
  for(const modify of [st=>{st.settings.sellerProfiles[0].retirementHistory[0].profileId=ids.b;},st=>{st.settings.sellerProfiles[0].retirementHistory[0].owner=names.b;},st=>{st.settings.sellerProfiles[0].retirementHistory.push({...st.settings.sellerProfiles[0].retirementHistory[0],id:crypto.randomUUID()});},st=>{st.settings.sellerProfiles[0].active=true;},st=>{st.settings.owners.push(names.a);}]){const next=structuredClone(closed);modify(next);assert.throws(()=>core.normalizeState(next),'Malformed retirement identity/history is not accepted on load.');}
@@ -115,6 +127,29 @@ export async function verifySellerProfileRetirement({core,business,ops}) {
   {type:'plan',data:{customerId:closed.customers[0].id,plan:{...closed.customers[0].plan,issueStatus:'open',issueAction:'Syntetisk återöppning',issueDue:future,nextAction:'Syntetisk kundkontakt'},nextReview:future,expectedOrder:'',reviewDays:90}}
  ])assert.throws(()=>core.applyAction(closed,action,actor),/Öppet arbete/,'Dispatcher protects '+action.type+' from retired unchanged-owner reuse.');
  const correctedTask=core.applyAction(closed,{type:'task',data:{...closed.tasks[0],title:'Syntetisk rättning av avslutad uppgift'}},actor);assert.equal(correctedTask.tasks[0].done,true);assert.deepEqual(correctedTask.settings.sellerProfiles[0].retirementHistory,[audit]);
+ // applyAction accepts older JSON by normalizing a single copy first. Its
+ // immutable guard snapshot must use those defaults, never the raw source.
+ for(const [label,strip] of [
+  ['old profile audit defaults',st=>{for(const profile of st.settings.sellerProfiles)delete profile.retirementHistory;}],
+  ['customer onboarding default',st=>{delete st.customers[1].onboarding;}],
+  ['customer plan default',st=>{delete st.customers[1].plan;}],
+  ['customer yearNeeds default',st=>{delete st.customers[1].yearNeeds;}],
+  ['old companyEvents default',st=>{delete st.companyEvents;}]
+ ]){
+  const raw=base();strip(raw);const rawBefore=structuredClone(raw),normalized=core.normalizeState(structuredClone(raw));
+  const retired=core.applyAction(raw,{type:'seller_profile_retire',data:input(normalized)},actor);
+  assert.equal(retired.settings.sellerProfiles[0].retirementHistory.length,1,'Raw '+label+' closes from normalized reviewed input.');assert.deepEqual(raw,rawBefore,'Raw '+label+' remains immutable.');
+  const historicalRaw=structuredClone(retired);if(label!=='old profile audit defaults')strip(historicalRaw);
+  const corrected=core.applyAction(historicalRaw,{type:'task',data:{...retired.tasks[0],title:'Syntetisk rättning med äldre fältformat'}},actor);
+  assert.equal(corrected.tasks[0].title,'Syntetisk rättning med äldre fältformat');assert.deepEqual(corrected.settings.sellerProfiles[0].retirementHistory,retired.settings.sellerProfiles[0].retirementHistory,'Raw historical default projection preserves recorded audit.');
+ }
+ const impliedRaw=structuredClone(closed);impliedRaw.customers[0].status='onboarding';delete impliedRaw.customers[0].onboarding;
+ const impliedBefore=structuredClone(impliedRaw),impliedNormalized=core.normalizeState(structuredClone(impliedRaw));
+ assert.ok(impliedNormalized.customers[0].onboarding.startedAt,'An older existing first-order record implies onboarding in normalization.');
+ const impliedSnapshot=retirement.snapshotRetiredSellerResponsibilities(impliedNormalized);
+ assert.ok(impliedSnapshot.profiles[0].operationalKeys.includes(JSON.stringify(['onboarding',impliedNormalized.customers[0].id])),'Previous keys include normalized, pre-existing implied onboarding.');
+ const impliedHistorical=core.applyAction(impliedRaw,{type:'task',data:{...closed.tasks[0],title:'Syntetisk historisk rättning under befintlig onboarding'}},actor);
+ assert.equal(impliedHistorical.tasks[0].done,true);assert.equal(impliedHistorical.customers[0].onboarding.startedAt,impliedNormalized.customers[0].onboarding.startedAt);assert.deepEqual(impliedRaw,impliedBefore,'Normalized guard does not mutate old source JSON.');
  const legacyCompleted=base();legacyCompleted.tasks[0].owner=names.legacy;legacyCompleted.tasks[0].ownerProfileId=ids.legacy;const legacyReopened=core.applyAction(legacyCompleted,{type:'task',data:{...legacyCompleted.tasks[0],done:false}},actor);assert.equal(legacyReopened.tasks[0].done,false,'Existing inactive-source behavior remains backward compatible without fabricated audit.');
  console.log('PASS seller profile retirement domain: '+blockerCases.length+' conservative operational blockers, explicit admin/reason/basis gates, stable result/account/history preservation, inactive legacy compatibility, audited closed-profile reopen/copy guards and identity validation.');
 }

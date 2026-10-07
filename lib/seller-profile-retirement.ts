@@ -64,18 +64,39 @@ export function retireSellerProfile(st:State,input:SellerProfileRetire,actor:Act
  return st;
 }
 
-export function protectRetiredSellerResponsibilities(previous:State,next:State){
- const previousRetired=previous.settings.sellerProfiles.filter(profile=>profile.retirementHistory?.length);
- for(const profile of previousRetired){
+// Only an internal snapshot can carry this symbol. Client JSON never supplies
+// a snapshot, and nothing here is persisted alongside the CRM records.
+const retirementSnapshot=Symbol('retired-seller-responsibility-snapshot');
+export type RetiredSellerResponsibilitySnapshot={
+ readonly [retirementSnapshot]:true;
+ readonly profiles:ReadonlyArray<{
+  readonly id:string;readonly legacyOwnerName:string;readonly retirementHistory:string;readonly operationalKeys:readonly string[];
+ }>;
+};
+export function snapshotRetiredSellerResponsibilities(st:State):RetiredSellerResponsibilitySnapshot{
+ const retired=st.settings.sellerProfiles.filter(profile=>profile.retirementHistory?.length);
+ // Most workspaces have no audited retirement. Do not inventory their whole
+ // workload, or copy large historical records, for an unrelated action.
+ const rows=retired.length?operationalRows(st):[];
+ return {
+  [retirementSnapshot]:true,
+  profiles:retired.map(profile=>({id:profile.id,legacyOwnerName:profile.legacyOwnerName,retirementHistory:recordBasis(profile.retirementHistory),operationalKeys:rowsForProfile(rows,profile).map(row=>row.key)}))
+ };
+}
+export function protectRetiredSellerResponsibilities(previous:State|RetiredSellerResponsibilitySnapshot,next:State){
+ const snapshot=retirementSnapshot in previous?previous:snapshotRetiredSellerResponsibilities(previous);
+ for(const profile of snapshot.profiles){
   const current=sellerProfileById(next.settings,profile.id);
-  need(current&&current.legacyOwnerName===profile.legacyOwnerName&&recordBasis(current.retirementHistory)===recordBasis(profile.retirementHistory),'Profilavvecklingens tidigare identitet och historik får inte ändras eller tas bort.');
+  need(current&&current.legacyOwnerName===profile.legacyOwnerName&&recordBasis(current.retirementHistory)===profile.retirementHistory,'Profilavvecklingens tidigare identitet och historik får inte ändras eller tas bort.');
  }
  const retired=next.settings.sellerProfiles.filter(profile=>profile.retirementHistory?.length);
  if(!retired.length)return next;
- const before=operationalRows(previous),after=operationalRows(next);
+ const after=operationalRows(next);
  for(const profile of retired){
   need(!profile.active&&!next.settings.owners.includes(profile.legacyOwnerName),'En avvecklad profil får inte återaktiveras som operativ ansvarig.');
-  const prior=sellerProfileById(previous.settings,profile.id),oldKeys=new Set(prior?rowsForProfile(before,prior).map(row=>row.key):[]);
+  // A newly audited retirement has no prior keys: its reviewed transition
+  // already required the entire normalized operational inventory to be empty.
+  const prior=snapshot.profiles.find(candidate=>candidate.id===profile.id),oldKeys=new Set(prior?.operationalKeys||[]);
   need(rowsForProfile(after,profile).every(row=>oldKeys.has(row.key)),'Öppet arbete får inte skapas, återöppnas eller tilldelas en avvecklad profil. Granska ansvaret och välj en aktiv profil.');
  }
  // Legacy inactive profiles without a recorded retirement deliberately retain

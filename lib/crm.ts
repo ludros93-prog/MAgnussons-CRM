@@ -7,7 +7,7 @@ import {ensureReceiptTasks} from './order-work';
 import {applyOperations} from './crm-operations';
 import {SellerProfileSchema,SellerProfilesInitSchema,SellerProfileInputSchema,initializeSellerProfiles,saveSellerProfile,sellerProfileForOwner,validateSellerProfileReferences,protectSellerSettings} from './seller-profiles';
 import {sellerProfilesBasis} from './record-conflicts';
-import {SellerProfileRetireSchema,retireSellerProfile,protectRetiredSellerResponsibilities} from './seller-profile-retirement';
+import {SellerProfileRetireSchema,retireSellerProfile,protectRetiredSellerResponsibilities,snapshotRetiredSellerResponsibilities} from './seller-profile-retirement';
 import {RuleError} from './crm-errors';
 import {CommercialResponsibilityHistorySchema,CommercialResponsibilityTransferSchema,transferCommercialResponsibility,validateCommercialResponsibilityReferences} from './commercial-responsibility';
 import {CustomerResponsibilityHistorySchema,CustomerResponsibilityTransferSchema,transferCustomerResponsibility,validateCustomerResponsibilityReferences} from './customer-responsibility';
@@ -119,9 +119,9 @@ function assignNewResponsibleProfiles(previous:State,next:State,exactNewMeetingO
 }
 export function applyAction(current:State,action:Action,actor?:Actor):State{
  const st=normalizeState(structuredClone(current)),now=new Date().toISOString(),today=day(),uid=()=>crypto.randomUUID(),exactNewMeetingOwners=new Map<string,string>(),exactNewOnboardingOwners=new Map<string,string>(),exactNewNeedDealOwners=new Map<string,string>(),exactNewNeedDealTaskOwners=new Map<string,string>();
- // The input remains immutable: normalizeState operates on the clone above.
- // Reuse that original for the retirement guard instead of cloning all data again.
- const finish=(next:State)=>current.settings.sellerProfiles?.some(profile=>profile.retirementHistory?.length)||next.settings.sellerProfiles.some(profile=>profile.retirementHistory.length)?protectRetiredSellerResponsibilities(current,next):next;
+ // Capture only audited identities and operational keys from the normalized
+ // original; raw legacy fields need defaults without a second full data clone.
+ const previousResponsibilities=snapshotRetiredSellerResponsibilities(st),finish=(next:State)=>previousResponsibilities.profiles.length||next.settings.sellerProfiles.some(profile=>profile.retirementHistory.length)?protectRetiredSellerResponsibilities(previousResponsibilities,next):next;
  const customer=(i:string)=>{const c=st.customers.find(x=>x.id===i);need(c,'Kunden finns inte i denna arbetsyta.');return c!};
  const owner=(o:string)=>need(st.settings.owners.includes(o),'Välj en ansvarig från teamet.');
  const event=(customerId:string,text:string,dealId='',kind='change')=>st.events.unshift({id:uid(),customerId,dealId,text,at:now,kind});
