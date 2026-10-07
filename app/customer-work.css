@@ -48,6 +48,8 @@
 .onboarding-responsibility-dialog button:not([role=checkbox]),.onboarding-responsibility-options [data-slot=select-item] { min-width:0; max-width:100%; height:auto; min-height:44px; white-space:normal; overflow-wrap:anywhere; line-height:1.5; }
 .onboarding-responsibility-dialog .onboarding-responsibility-select { width:100%; }
 .onboarding-responsibility-dialog [data-slot=select-value],.onboarding-responsibility-dialog [data-slot=select-value] > span { min-width:0; white-space:normal; overflow:visible; overflow-wrap:anywhere; -webkit-line-clamp:unset; line-height:1.5; }
+.onboarding-responsibility-dialog .onboarding-responsibility-select [data-slot=select-value] { flex:1; }
+.onboarding-responsibility-dialog .onboarding-responsibility-select [data-slot=select-value] > .onboarding-responsibility-choice-label { display:-webkit-box; width:100%; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
 .onboarding-responsibility-options { max-width:calc(100vw - 2rem); }
 .onboarding-responsibility-options [data-slot=select-item] > span { min-width:0; overflow-wrap:anywhere; }
 .onboarding-responsibility-dialog textarea { min-width:0; max-width:100%; font-size:1rem; }
