@@ -9,7 +9,9 @@
 .day-scope-switch button[aria-pressed=true] { color: #17334f; background: #fff; box-shadow: 0 2px 4px #1a335410; }
 .day-focus { padding: 1.5rem 1.7rem; border-radius: 18px; background: linear-gradient(115deg,#152c46,#21536b); border: 1px solid #193850; color: #fff; box-shadow: 0 7px 24px #193a4d0a; }
 .day-focus-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; color: #bedde5; font-size: .8125rem; font-weight: 600; letter-spacing: .045em; }
-.day-focus-tag { display: inline-flex; align-items: center; gap: .45rem; border-radius: 6px; padding: .35rem .65rem; background: #ffffff12; font-size: .75rem; letter-spacing: .025em; }
+.day-focus-tag { display: inline-flex; align-items: center; gap: .45rem; min-width: 0; max-width: 100%; border-radius: 6px; padding: .35rem .65rem; background: #ffffff12; font-size: .75rem; letter-spacing: .025em; }
+.day-focus-tag > span { min-width: 0; overflow-wrap: anywhere; }
+.day-focus-tag > svg { flex-shrink: 0; }
 .day-focus[data-urgent=true] .day-focus-tag { background: #e6b4591f; color: #ffda93; }
 .visual-day .day-focus h2 { max-width: 42ch; font-size: clamp(1.35rem,2.3vw,1.8rem); line-height: 1.4; font-weight: 650; color: #fff; margin: .85rem 0 .55rem; letter-spacing: -.025em; overflow-wrap: anywhere; }
 .day-focus > p { color: #d2e3ed; font-size: 1rem; max-width: 70ch; margin: .5rem 0; line-height: 1.6; overflow-wrap: anywhere; }
@@ -60,7 +62,7 @@
 .visual-day .day-upcoming summary { cursor: pointer; padding: 1rem 1.4rem; font-size: .875rem; color: #486c7c; min-height: 48px; }
 .visual-day .day-upcoming summary span { margin-left: .4rem; font-weight: 600; }
 .visual-day .daily-drafts { background: #fff; }
-.day-quiet-empty { padding: 0 1.4rem 1.3rem; font-size: .875rem; color: #63788a; margin: 0; line-height: 1.65; }
+.day-quiet-empty { padding: 0 1.4rem 1.3rem; font-size: .875rem; color: #63788a; margin: 0; line-height: 1.65; overflow-wrap: anywhere; }
 .visual-day .day-blocked { border-color: #e7d4ad; }
 .visual-day .day-blocked .panel-head { background: #fff9ee; }
 .visual-day .day-blocked .panel-head svg { color: #a56b23; }
@@ -119,3 +121,9 @@
 
 /* Saved draft status must stay visible when the mobile topbar status is hidden. */
 .draft-status.saved { display: flex !important; }
+
+/* Min dag keeps the whole private status readable; the topbar stays compact. */
+.visual-day .daily-drafts .draft-status,
+.visual-day .daily-drafts .draft-status > span { min-width: 0; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.visual-day .daily-drafts .draft-status > .biz-buttons { min-width: 0; max-width: 100%; }
+.visual-day .daily-drafts .draft-status button { min-width: 0; max-width: 100%; min-height: 44px; margin: 0; overflow-wrap: anywhere; }
