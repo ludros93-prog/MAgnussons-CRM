@@ -1,5 +1,19 @@
 # CRM-källor för Magnussons byggagent
 
+## Responsivt kundregister – källkontroll för v47, 2026-10-07
+
+Fem officiella källor lästes 08:18:07–08:18:08 UTC genom den ärvda proxyn med bevarad TLS-/CA-kontroll; samtliga gav HTTP 200. Tio korta utdrag har verifierade HTML-/texthashar och exakta tecken-, UTF-8-byte- och radpositioner. Dokumentationsagenten jämförde sparade original och samtliga utdrag. Kvitto `/workspace/scratch/crm47/research/receipt.json`, SHA256 `b7bf2a08d9a15607742d8ec62fbb96f5664b7f2f7499cd1bf7b06ea02ea54a0f`; sammanställning `/workspace/scratch/crm47/research/findings.md`, SHA256 `c0cc8a60de6058b5ee5937c3159f36c4a165fd17e3084811a6984d05c77df84e`.
+
+| Källa | Verifierad princip | Magnussons tillämpning och gräns |
+| --- | --- | --- |
+| [Salesforce – Work with List Views](https://trailhead.salesforce.com/content/learn/modules/lightning-experience-for-salesforce-classic-users/work-with-list-views) | Listfält kan radbrytas; aktivitetsvarningar har faktiskt underlag. | Full kundtext och verklig öppet-arbete-information med bevarat urval. Salesforces exempel med 30 dagar är ingen beslutad Magnussonsregel. |
+| [Lime – Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | Handlingsverb, tydligt sammanhang samt etikett/ikon förklarar vad som händer. | Synlig **Öppna kundkort** för samma kund-ID. Serverbehörighet och skrivkontrakt kräver våra egna prov. |
+| [Saleshub AI – Funktioner](https://saleshubai.se/funktioner) | Kundkortets kontakter, filer, kommunikation och nästa aktivitet hänger ihop. | Kundregistret leder till befintligt kundkort; inga parallella kunddata eller automatiskt delade privata mejl. Produktbeskrivningen verifierar inga Magnussonsanslutningar. |
+| [W3C – Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) | Information och funktion ska bevaras vid smal vy; normalt 320 CSS px för vertikalt innehåll, med tvådimensionella undantag. | Staplade självständiga kundrader med full text. Begränsade browsermått är ingen full WCAG-, zoom-, telefon- eller hjälpmedelsbedömning. |
+| [W3C – Target Size Minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) | AA anger 24×24 CSS px med fem undantag och avståndsregler. | Minst 44 px höjd är vårt starkare användbarhetsmål för kundregistrets handlingar, inte en påstådd generell AA-gräns. |
+
+Nästa öppna uppgift/planerade CRM-möte, uppgift före tidsatt möte samma dag, separat avstämning och strikt uttrycklig ansvarskoppling är våra egna läspresentationsval. Leverantörsdokumentationen validerar inte deras implementation, verklig datakvalitet, privat lagring, personalacceptans eller en garanti om världens bästa CRM. Källkod, lokala kontroller, main och live kvitteras i [VALIDATION](../VALIDATION.md).
+
 Grundkällorna kontrollerades 2026-10-05; senare granskningar dateras i sina avsnitt. Källorna är officiella produktbeskrivningar eller dokumentation. De bevisar inte att Magnussons har dessa anslutningar, att leverantörernas drift har testats eller att ett visst arbetssätt ger en uppmätt tidsvinst. Kraven nedan är vår tillämpning för Magnussons.
 
 Projektets OPERATIONS hänvisar sedan tidigare till svenska Saleshub AI. Vi använder den produkten som dokumenterad inspirationskälla. Den refererade Codex-tråden kunde inte läsas i denna session eftersom `read_thread` saknas; trådens innehåll har inte antagits.

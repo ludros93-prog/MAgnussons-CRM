@@ -41,6 +41,12 @@ B01b1 i [PR #8](https://github.com/ludros93-prog/MAgnussons-CRM/pull/8) bygger g
 
 ## Nästa praktiska val
 
+### Nästa praktiska val efter v47
+
+V47 levererar avgränsad mobilkundregisterpresentation: full kundtext, strikt befintlig ansvarskoppling, verklig tidigaste öppna uppgift/planerat CRM-möte, separat avstämning och egen **Öppna kundkort**. Fem slutkontroller och 17 lokala browserfall passerar på slutkandidat `418531aa80e359ece524352a22a26a6cbc571e8d`; app-PR #68 är sammanslagen till app-main `6102c4eb2b47913a303ba03da6ffdd1e9f807f6b` med gröna exakt-head/main-checks. Sites v47 är publicerad 2026-10-07 08:52:19 UTC från verifierad source `b3118e0671a1967e90c14f3e2d9fd46893b05452`. Riktiga konto-/personalprov återstår. Detta stänger den lokalt verifierade listfriktionen enligt [VALIDATION](../VALIDATION.md), inte hela B07 eller personalacceptans. Nästa självständiga designavgränsning omfattar **fokusåtergång när kundkortet stängs** och **fokus efter arbetsytebyte** enligt [DESIGN](../DESIGN.md#begriplighet-i-det-befintliga-användarprovet). Konkreta data-/åtkomst-/orderfel går fortsatt före normal kö. B01b2:s specialflödesansvar/full personalavveckling, separat privat backup/hostingåterställning, faktiska integrationer och observerad personalpilot kvarstår.
+
+### Historik: nästa praktiska val efter v46
+
 V46 levererar den avgränsade B07-rättningen av två textklippningar, i privat utkaststatus och tom kontaktpanel, samt dagens fokusetiketts överbredd. Fokusetiketten blev för bred; något klippande dolt föräldraelement påvisades inte för den. Fem slutkontroller och 29 lokala browserfall passerar på slutkandidat `04dfa5cd`; app-PR #66 är sammanslagen till main `acc744d1` med gröna exakt-head/main-checks. Sites v46 är publicerad 2026-10-07 07:45:58 UTC från verifierad source `c8c922b3`. Riktiga konto-/personalprov återstår. Det är ingen markering av hela B07 som klar: personalmomenten behöver faktisk observation. Nästa självständiga designavgränsning är **mobilkundlistan**, därefter **fokus efter arbetsytebyte**, enligt [DESIGN](../DESIGN.md#begriplighet-i-det-befintliga-användarprovet). Kontrollera först färsk källa och reproducera aktuell friktion; ett konkret data-/åtkomst-/orderfel går fortsatt före normal kö. B01b2:s specialflödesansvar/full personalavveckling, separata privata backup-/driftbehov, verkliga integrationer och personalpilot kvarstår. [VALIDATION](../VALIDATION.md) anger faktiska prov och gränser.
 
 ### Historik: nästa praktiska val efter v45

@@ -1,8 +1,20 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Publicerad v46 förbättrar Min dags läsbarhet med större text. Tidigare granskade kund-, uppgifts-, affärs-, order- och mötesöverlämningar består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och kompatibilitet.
+Publicerad v47 gör Kundregister responsivt med verklig nästa aktivitet och en separat avstämning. V46:s Min dag-förbättringar består. Tidigare granskade kund-, uppgifts-, affärs-, order- och mötesöverlämningar består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och kompatibilitet.
 
-## Läsbar Min dag med större text – v46
+## Hitta kund och nästa arbete – v47
+
+Kundregistret visar fullständigt kundnamn och kontaktperson, kundansvarig, nästa verkliga öppna uppgift eller planerade CRM-möte och en separat nästa avstämning. Raderna staplas på mobil och använder flera kolumner när utrymmet finns. **Öppna kundkort** är en egen svensk knapp med minst 44 px höjd; det långa namnet ligger utanför knappen så även en kort skärm kan visa hela den fokuserade kontrollen. Samma kund-ID, befintliga sök-/ansvarsfilter, ordning och kundkort används.
+
+Nästa aktivitet beräknas endast från redan registrerade öppna uppgifter och CRM-möten med status planerat för samma kund. Tidigast datum/tid visas; en uppgift med endast förfallodatum kommer före ett tidsatt möte samma dag. Avslutade uppgifter samt genomförda/avbokade möten räknas inte. **Ingen öppen uppgift eller planerat CRM-möte** beskriver det som faktiskt saknas i CRM, inte kollegornas Outlook. **Nästa avstämning** är kundens separata plan; passerat datum och idag visas i text och skapar ingen uppgift eller kundkontakt.
+
+Ett uttryckligt profil-ID med matchande ursprunglig ansvarskoppling ger profilens aktuella namn. Sammanfallande namn särskiljs med den ursprungliga kopplingen. Ett äldre tomt ID, en felaktig koppling eller en inaktiv profil får ett synligt besked; namn/alias används inte för att hitta på en ID-koppling. Läsningen ändrar inget ansvar. Ett tomt sökurval skiljs från ett tomt kundregister. Läsaren får ingen knapp för att skapa kund. Knappen öppnar befintligt kundkort; den avslutar ingen aktivitet och öppnar inget nytt mötesflöde.
+
+Fem slutkontroller och 17 lokala browserfall passerar på slutkandidat `418531aa80e359ece524352a22a26a6cbc571e8d`; app-PR #68 är sammanslagen till app-main `6102c4eb2b47913a303ba03da6ffdd1e9f807f6b` med gröna exakt-head/main-checks. Sites v47 är publicerad 2026-10-07 08:52:19 UTC från verifierad source `b3118e0671a1967e90c14f3e2d9fd46893b05452`. Riktiga konto-/personalprov återstår.
+
+Fokusåtergång när kundkortet stängs, fokus efter arbetsytebyte och faktisk personalpilot återstår. Försäljning mot månads-/årsmål, marginal och nya prospects är huvudmåtten; denna listpresentation ändrar inga affärsdefinitioner eller mått. [DESIGN](DESIGN.md) beskriver riktningen och [VALIDATION](VALIDATION.md) faktisk verifiering.
+
+## Historik: Läsbar Min dag med större text – v46
 
 Den privata sparstatusen kan brytas på flera rader, fokusetikettens text kan krympa och radbrytas bredvid sin ikon, och långa ord i tomma paneler bryts inom panelen. Det rättar klippningen av privat sparstatus och tom kontakttext samt fokusetikettens överbredd utan att förkorta statusmeddelanden eller dölja text. Min dags knappar i privat sparstatus, exempelvis återförsök, ryms och kan radbrytas inom sin yta med minst 44 px höjd. Den höjdgränsen gäller dessa knappar, inte alla CRM-kontroller. Befintliga färger, ikoner, kundsammanhang och primära handlingar används fortsatt.
 
