@@ -3,7 +3,15 @@
 V47-underlaget nedan gör Kundregister responsivt med verklig nästa aktivitet och en separat avstämning. V46:s Min dag-förbättringar består. Tidigare granskade kund-, uppgifts-, affärs-, order- och mötesöverlämningar består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och kompatibilitet.
 
 
-## Fortsätt efter stängt kundkort – v48
+
+## Fortsätt i den valda arbetsytan – v49
+
+Arbetsytebytet får en tydlig fokusstart; desktopheadern växer med texten.
+
+Månads-/årsförsäljning, marginal och nya prospects förblir huvudmåtten. Ansvar, kontakt, privata utkast och affärsdefinitioner består. [VALIDATION](VALIDATION.md) anger kod/main/live/gränser; personalprov återstår.
+
+
+## Historik: Fortsätt efter stängt kundkort – v48
 
 V48 återför fokus efter användarens stängning av kundkortet till samma öppningskontroll, eller till vyns namngivna rubrik om kontrollen saknas. Bakgrundsladdning och navigation flyttar inte fokus genom denna funktion. Arbetsytebytets separata fokuslucka och observerad personalpilot kvarstår.
 

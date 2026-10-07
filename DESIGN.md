@@ -13,7 +13,13 @@ Utgå från CRM:ets befintliga logotyp, mörka navigation, ljusa arbetsytor och 
 - Använd läsbar löptext, synligt tangentbordsfokus och mobila handlingar på minst 44 px. Långa namn, mejladresser och instruktioner ska brytas inom sin yta.
 - Visa tomt läge och saknat underlag med en begriplig nästa handling. Inga dekorativa prognoser, påhittade resultat eller falska integrationsstatusar.
 
-## Återgå till rätt kund efter stängning – v48
+## Hitta tillbaka efter arbetsytebyte – v49
+
+Aktuell väljare eller namngiven rubrik ger en tydlig start efter användarens byte. Gamla popupens sena stängning får inte fokusera en ersatt kontroll. Väljaren har 3 px fokusram, 4 px offset och 8 px scrollmarginal; rubriken använder v48:s ram. På dator växer/radbryts headern naturligt, med avsiktlig padding och mellanrum, och hela väljartexten får plats utan radklippning. Fortsatt inmatning/navigation/fel/annan identitet avslutar återgången; detta är ingen generell fokus-/retrygaranti.
+
+[VALIDATION](VALIDATION.md) har prov/bilder/gränser; [RESEARCH](agent/RESEARCH.md) har källor. Personalacceptans återstår.
+
+## Historik: Återgå till rätt kund efter stängning – v48
 
 Användarens stängning återför fokus till samma kundkontroll i samma identitet/vy; bakgrundsladdning/navigation flyttar inget fokus genom funktionen. En borttagen, dold, inaktiverad eller ändrad kontroll ersätts av vyns namngivna rubrik med synligt fokus. Reservrubrikens fokusram får 8 px scrollmarginal och behöver utrymme för ramens 3 px plus 4 px offset; vanliga öppningskontroller behåller sin scrollregel. Sparspärrar och annan öppen dialog skyddas.
 
@@ -65,17 +71,17 @@ I T26 och B07:s befintliga pilotmoment ska en CRM-ovan användare kunna svara p�
 
 Observera vad personen faktiskt väljer och registrera feltolkningar, backningar och behov av hjälp per moment. Ett förlorat eller nekat svar får inte tolkas som bekräftad CRM-sparning. Använd befintliga pilotuppgifter och fiktivt underlag; detta inför inget nytt testprogram eller påhittat tidsmål. Browserprov ska kontrollera att rätt information och handling går att nå. De besvarar inte frågan om personalen förstår vyn utan handledning.
 
-Mobilkundregistrets lokala prov finns i det historiska v47-avsnittet; v48 ovan rättar kundkortets avgränsade fokusåtergång. Personalens förståelse och fokus efter arbetsytebyte återstår. Följande krav hålls åtskilda från faktiska prov:
+Mobilkundregistrets och kundkortets lokala prov finns i historiken; v49 ovan rättar den avgränsade arbetsytefokusluckan. Personalens förståelse och andra observerade designproblem återstår. Följande krav hålls åtskilda från faktiska prov:
 
 | Arbetsmoment | Önskat beteende och avgränsad kontroll |
 | --- | --- |
 | Hitta en kund på mobilen | På 320/390 px ska kundlistan visa kundnamn, ansvarig och nästa aktivitet eller ett ärligt besked om att den saknas. Kundkortet ska kunna öppnas med vanlig pointer och tangentbord. Långa värden ska vara läsbara inom vyn utan att kundens viktigaste handling kräver horisontell scroll; inga påhittade ansvariga eller aktiviteter fyller tomma fält. |
 | Stänga kundkortet | V48 återför efter användarens stängning fokus till samma öppningskontroll i samma kund-/identitets-/vysammanhang, annars vyns namngivna rubrik. Bakgrund/navigation/annan dialog flyttar inte fokus genom denna funktion. Bevara kund-ID, scrolläge, roller och privata utkast. Slutprov och gränser finns i VALIDATION; personalacceptans återstår. |
-| Byta arbetsyta | Efter ett användarvalt byte ska vald arbetsyta framgå i text och tangentbordsfokus återgå till motsvarande väljare i den nya vyn, eller en namngiven start om väljaren inte finns. Fokus får inte tappas till BODY. Bakgrundsladdning och autosparning får inte stjäla fokus. Prova vanligt tangentbordsbyte och efterföljande Tab; bevara skydden för privata utkast och rätt roll/sammanhang. |
+| Byta arbetsyta | V49 återför efter ett uttryckligt byte till den aktuella tillgängliga arbetsyteväljaren, annars aktuell tillgänglig namngiven huvudrubrik, för samma konto/medlemskoppling/roll och vy. Fortsatt användarinmatning, navigation, fel eller annan identitet avslutar återgången; retry/bakgrundsladdning återupplivar den inte. Slutprov och gränser finns i VALIDATION; personalacceptans återstår. |
 
 Kundkortets normala 390/320 px-vyer visar första handlingen direkt i de tidigare proven. Extra långa värden på 320 px kräver vertikal scroll. D01 publicerades i v19 och kvarstår i v22 enligt [VALIDATION.md](VALIDATION.md). Vid v19 kunde bannern täcka den globala arbetsyteväljarens pointerklick på 320 px och tangentbord användes för initieringshinten. Detta fynd ligger till grund för den slutprovade och publicerade v20-rättningen nedan. Autentiserad live-UI och personalens användbarhet är fortfarande inte verifierade.
 
-## Global mobilheader
+## Historik: Global mobilheader
 
 På smala skärmar ska huvudraden växa när navigationen radbryts, så att arbetsyteväljare och övriga kontroller ryms ovanför arbetsytans banner. Långa vy- och arbetsytenamn får radbrytas inom sin yta. Behåll befintliga färger, texter och byten mellan arbetsytor; den fria tryckytan ska vara minst 44 px hög. Layouten ska fungera med pointer och tangentbord samt förstoring, med befintliga roller och skydden för privata utkast vid arbetsytebyte.
 
