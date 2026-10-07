@@ -1,5 +1,15 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Arbetsöverlämning med synligt personansvar – v54
+
+**Konton & roller → Överlämna arbete** är administratörens samlade inventering. Välj en stabil säljarprofil, även en inaktiv, eller **Ansvar som behöver granskas**. Arbetskategori, lokal sökning, antal och **Visa fler ansvarsposter** visar vad urvalet omfattar. Profilens fulla visningsnamn, äldre ansvarskoppling, profil-ID och kontolänkens närvaro framgår intill väljaren; kontolänken är ingen kontroll av aktuellt inloggningstillstånd.
+
+Varje kort visar kund, arbetsdel, registrerat ansvar, eget datum, status, överföringsgräns och nästa handling. Kundrelationer, affärer, order, uppgifter, möten, onboarding, kundärenden och inköpsbehov kan ha olika ansvar. **Granska** öppnar befintlig objektspecifik överlämning; mottagare, orsak och tillåtna uppgiftsval granskas där. Översikten förankrar eller flyttar inget vid läsning och erbjuder ingen massöverföring.
+
+Öppna specialuppgifter som saknar överlämningsstöd försvinner inte; rätt kundunderlag och förklaring visas. Event/förberedelser har namnansvar och produktionen användaransvar. Historisk försäljning, avslutat arbete, privata utkast och Outlook-data flyttas inte. **Inga poster** innebär aldrig färdig personalavveckling. Konto, profil och nuvarande aliasregel måste hanteras separat. Försäljning mot månads-/årsmål, marginal och nya prospects består; TB är inget huvudmått. [VALIDATION](VALIDATION.md) anger release och provgränser.
+
+## Historik före v54
+
 ## Årshjul med eget behovsansvar – v53
 
 **Kunder → Årsplanering → Mina behov** följer inköpsbehovets ansvar även när kunden tillhör någon annan. **Teamets behov**, år, lokal sökning och **Visa även hanterade** ger ett tydligt urval. **Kontakta senast** och **Kundens leveransbehov** är olika datum. Full kund-/behovstext visas med en separat **Öppna kundkort**-knapp. **Följ upp → Hantera inköpsbehovet** öppnar samma kunds kompakta planering, även för ett framtida behov som nu har en annan ansvarig.

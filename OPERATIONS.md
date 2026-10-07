@@ -1,5 +1,20 @@
 # Magnussons CRM – order, tryck och lager
 
+## Granska en persons kvarvarande arbete – v54
+
+1. Logga in som administratör och öppna **Konton & roller → Överlämna arbete**. Om säljarprofiler inte är granskade/initierade, börja i **Mål & inställningar**. Översikten kopplar inga äldre namn automatiskt till personer.
+2. Välj profil och läs full identitet samt äldre ansvarskoppling intill väljaren. Även inaktiv profil kan ha arbete kvar. Välj **Ansvar som behöver granskas** för omappade eller motsägande poster; gissa inte person från namnet eller kundansvaret.
+3. Läs kategorier och **Visar … av …**. Sökning/kategori begränsar urvalet; **Återställ filter** visar det igen och **Visa fler ansvarsposter** fortsätter listan. Antalet gäller ansvarsdelar: en kund kan ha flera.
+4. Öppna radens **Granska**-handling. Befintlig dialog bestämmer vad som får överlämnas. Välj aktiv mottagare, tillåtna uppgifter och orsak, granska och spara enligt dialogen. Kundansvar öppnas på kundkortet. Inga mål eller uppgifter väljs automatiskt av inventeringen.
+5. Om handlingen i stället öppnar kundkort eller företagsaktivitet, läs varför separat överlämning saknas/blockeras. Öppna `csm`, `csm_need`, `prospecting`, `delivery` och okända specialuppgifter ska fortsatt granskas; de har ingen egen granskad överföring i v54. Ett event kan vara avslutat medan en förberedelse är öppen.
+6. Använd **Hämta aktuellt underlag** efter arbetet. Profil/filter bevaras och fel visas. En rad kan försvinna när ansvaret överförts; vid stängning går fokus då till inventeringens synliga rubrik.
+
+**Personalavveckling återstår.** Ingen rad eller tom lista stänger kontot eller inaktiverar profilen. Nuvarande aliasregel blockerar borttagning även när historiska ansvar finns; förväntad historik får inte flyttas eller raderas för att kringgå den. Kontobehörighet, säljarprofil, produktionsjobb/-problem, event/checklistor och privata Outlook-/utkastdata kräver separata kontroller. Den här vyn skickar inga mejl eller inbjudningar.
+
+**Återgång:** V54 ändrar inte API, servermodell, lagringsfält eller SQL. V53 är formatkompatibel UI-återgång för denna del. V53:s äldre lagringsgränser består, inklusive att oförändrad v52 inte är säker skrivare efter v53-behovshistoria. Gemensam CRM-backup omfattar fortfarande inte konton, privata utkast eller Outlook. Ingen faktiskt verifierad hostingåterställning påstås. [VALIDATION](VALIDATION.md) anger slutbevis.
+
+## Historik före v54
+
 ## Granskat årshjulsansvar – v53
 
 1. Öppna **Kunder → Årsplanering → Mina behov** eller **Teamets behov**. Läs kund, kontakt senast, kundens leveransbehov och behovsansvar. Kundkortets kompakta årshjul visar samma kunds behov utan det globala ansvars-/årsfilter som används i fullvyn.

@@ -1,5 +1,15 @@
 # Arbetskö för Magnussons CRM
 
+## v54: samlad inventering inför personalöverlämning
+
+B01b2 får **Konton & roller → Överlämna arbete**: admin väljer stabil säljarprofil eller omappat ansvar, ser kvarvarande ansvarsdelar och öppnar rätt befintlig granskning. Inaktiva/äldre identiteter, alla öppna uppgifter, pausade affärer, fakturaåterstående order och eventförberedelser efter avslutad aktivitet hålls synliga. Historia, privat data och separata produktionsansvar flyttas inte. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering/release.
+
+Nästa B01b2-del är en historikbevarande avvecklingsregel och tydligt konto-/profilflöde, efter färsk kod-/prioritetskontroll. Nuvarande aliasborttagning spärras även av historiskt ansvar; inventeringens noll poster är ingen avvecklingsgaranti. Kvarvarande specialuppgifter (`csm`, `csm_need`, `prospecting`, `delivery`, okända typer), företagsevent/checklistor och produktionens användar-ID behöver egna granskade överlämningar. B01b2 är fortsatt öppet. Verifierat åtkomst-/data-/orderfel går före normal kö.
+
+B07:s första laddning/mobilmeny och Outlook-läsning före färdig produktionsroll, privata årshjulsserverutkast, B02 chefsroll, B04 privata konto-/utkast-/Outlookbackuper och faktisk hostingåterställning, verkliga integrationer och observerad personalpilot består. Lokal browserreadiness är ingen produktfix av laddningen. Scheman, prompter och aktivering ändras inte.
+
+## Historik före v54
+
 ## v53: stabilt ansvar för årshjulets arbete
 
 B01b2 får behovets stabila profilansvar, granskad förankring/överlämning med uttryckligt valda öppna fristående årshjulsuppgifter och **Mina behov**/**Teamets behov** utifrån behovsansvaret. Vanlig redigering behåller ansvar och granskar ändrat underlag. Återkomst och nya behovsaffärer kopierar registrerad identitet utan att flytta tidigare affärsansvar eller historiska resultat. Uppföljning öppnar rätt kunds kompakta behovsplanering även när ansvar/år skiljer sig. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering och release.

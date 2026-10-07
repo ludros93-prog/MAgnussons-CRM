@@ -1,5 +1,15 @@
 # Magnussons CRM – designriktning
 
+## Intuitiv adminöverlämning – v54
+
+**Överlämna arbete** placerar sällan använd personaladministration i **Konton & roller**. Profil, arbetskategori och lokal sökning har egna etiketter. Full personidentitet visas intill den kortare väljaren. Kortens tydliga verb leder till relevant befintlig granskning; status och osäker identitet uttrycks med text och färg. Antal skiljer visade poster, matchande poster och hela valt ansvar så filtrering inte ser ut som färdig överlämning.
+
+Full kund-/posttext radbryts i kort, en kolumn på mobil och två på bredare skärm. Nya vanliga kontroller har minst 44 px avsedd höjd; lång text och uppmätt 2× text ingår i den avgränsade browsermatrisen. Befintliga orsakfält för uppgift, möte och affär/order fick rullbar begränsad höjd efter faktisk kortskärmsfriktion. Affärs-/orderväljarens långa mottagartext fick högst två synliga rader; fullständigt namn, ansvarskoppling och profil-ID finns i den separata beskrivning som väljaren refererar till med `aria-describedby`. Fokus återgår till användbar öppnare eller, när raden försvinner, samma inventerings synliga rubrik. Ny arbetsyta/användare får inget gammalt profilval eller gammal dialog från inventeringen.
+
+Slutbrowserprov: 31/31 godkända och root:s oberoende granskning av 11 faktiska slutbilder; [VALIDATION](VALIDATION.md) anger faktiska kvitton, rättade fynd och provgränser. Officiella Saleshub-, Lime-, Salesforce- och W3C-principer finns i [RESEARCH](agent/RESEARCH.md). Detta är ingen fysisk telefon-/hjälpmedels-/personalacceptans eller full WCAG-bedömning. B07:s första laddning/mobilmeny är fortsatt separat och översikten är inget klart avvecklingsflöde.
+
+## Historik före v54
+
 ## Begripligt årshjul med eget ansvar – v53
 
 **Mina behov** och **Teamets behov** gör ansvarsvalet tydligt. Kort och månadsöversikt visar full kund-/behovstext utanför en separat **Öppna kundkort**-kontroll. Kontakt senast, kundens leveransbehov och behovsansvar har egna etiketter. Statusen **Planerat** hålls samman. Kundkortets kompakta vy bevarar sammanhanget från en årshjulsuppgifts uppföljning.

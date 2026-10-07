@@ -1,5 +1,15 @@
 # Magnussons CRM
 
+## Samlad arbetsöverlämning – v54
+
+Administratören öppnar **Konton & roller → Överlämna arbete**, väljer en säljarprofil och ser personens kvarvarande kundrelationer och öppna ansvarsdelar. Sökning, arbetskategori och **Visa fler ansvarsposter** gör urvalet hanterbart. **Granska** öppnar rätt befintlig överlämning; orsak, mottagare, uppgiftsval och sparning görs där. Äldre eller oklar ansvarskoppling märks tydligt, och inaktiva profiler kan fortfarande ha arbete kvar.
+
+Översikten stänger inget konto och flyttar inga historiska resultat, privata utkast eller personliga Outlook-data. Produktionspersoner och företagsevent har separata ansvar. Ett tomt urval innebär inte att en person kan avvecklas. [OPERATIONS](OPERATIONS.md) beskriver arbetssättet och kvarvarande gränser.
+
+Verifierad kod `ab0d64dd7209cb2dc458742ac8a5903fd08a1378`, app-main `b4b75010a0cc3a59a232d3a983eaccff70a4da56`, [app-PR #82](https://github.com/ludros93-prog/MAgnussons-CRM/pull/82). Lokala slutkontroller: 5/5 godkända på oförändrad ren slutkandidat; isolerade slutbrowserprov: 31/31 godkända. Samma Site: version `54`, source `73fc3dd07d93077234a1acc07b56075f00beaf6d`, deploy `appgdep_6ac6b48932988191a6426b431da3c62f`, succeeded `2026-10-07T21:07:45.104197+00:00`. [VALIDATION](VALIDATION.md) skiljer kod, main, publicering och provens begränsningar.
+
+## Historik före v54
+
 ## Årshjul med eget behovsansvar – v53
 
 Under **Kunder → Årsplanering** visar **Mina behov** och **Teamets behov** kundens planerade inköp utifrån behovets ansvar, med olika datum för kontakt och leveransbehov. Administratören förankrar eller byter behovsansvar med orsak, granskning och uttryckligt valda öppna årshjulsuppgifter. Vanlig redigering behåller ansvar och visar ändrat underlag före ny sparning. Behovsformulärets text bevaras i den öppna dialogen men är ännu inget privat serverutkast.
