@@ -725,3 +725,9 @@ V48 återför fokus efter användarens stängning av kundkortet till samma öppn
 - Arbetsytefokus och desktopheader förbättrade. Kandidat `ba0fb8cffb89846f9def7ca9c89432fe9df04a3a`, träd `a2636ff8ebdd2f17ab5135f1261322104f81f09b`: fem slutkontroller/54 browserfall passerade. [VALIDATION](../VALIDATION.md) har bas/exakta kvitton/diagnos/gränser.
 - PR #72 till app-main `beeba143f53771fe12a8700027db115b3c858d3f`, exakt-head/main-CI gröna. V49 source `df00f356d53f19aa8c08a372f569b6c3d7bb8b14`, deploy `appgdep_6ac63854a79481919e13e18cb7e471cf` succeeded 2026-10-07T12:17:48.787839+00:00. CUSTOM 2/miljö 1/DB/R2/0 scheman består; Markdown återpublicerar inte appen.
 - Ingen migration/live-rollback/hostingåterställning, kundskrivprov eller meddelanden. Äldre modellgränser består; schema/prompt/aktivering oförändrade, Codex oläst. Nästa designarbete och öppna ansvar-/konto-/drift-/personalärenden finns i BACKLOG.
+
+## 2026-10-07 – Kundval på korta skärmar, v50
+
+- Kundväljaren får full text, egen **Öppna kundkort**/**Välj kund**-knapp och en rullningsyta för korta skärmar. Kandidat `8886c46d3ebe67e9d737a17ab52deaabbe2d4738`, träd `6db454813c72254d71b1f9be758eb67f5b538a03`: fem slutkontroller/51 lokala browserfall passerade. [VALIDATION](../VALIDATION.md) har exakta kvitton och provgränser.
+- PR #74 till app-main `5d67eacd6555090482f3c155fb916359a4d67f8a`, exakt-head/main-CI gröna. Site source `4a62752ee5a1b2cde42e928221e64e1835ad7070`; deploy `appgdep_6ac64f4fe18c8191aa70b0489749b225` succeeded 2026-10-07T13:55:50.690411+00:00. Policy/miljö bevarade. Markdownleveransen återpublicerar inte appen.
+- B07:s personalpilot och övriga ansvar-/drift-/kontoärenden kvarstår enligt BACKLOG. Inga kund-/personalmeddelanden eller riktiga kundskrivprov; schema/prompt/aktivering är oförändrade. Codex-referensen är oläst.

@@ -41,7 +41,11 @@ B01b1 i [PR #8](https://github.com/ludros93-prog/MAgnussons-CRM/pull/8) bygger g
 
 ## Nästa praktiska val
 
-### Nästa praktiska val efter v49
+### Nästa praktiska val efter v50
+
+Kundväljaren får full text, egen **Öppna kundkort**/**Välj kund**-knapp och en rullningsyta för korta skärmar. Den avgränsade leveransen är verifierad/publicerad enligt [VALIDATION](../VALIDATION.md); B07:s observerade personalpilot är fortsatt öppen. Nästa designavgränsning är global laddningstext på kort 320 px-skärm med större text. B01b2:s specialansvar och B04:s privata backup är möjliga separata kod-/kontraktprojekt, inte helt blockerade av externa konton. Påtvingad DOM-återöppning kvarstår som separat gräns. Data-/åtkomst-/orderfel går före normal kö. B01b2:s specialansvar/full personalavveckling, chefsroll, privat backup/hostingåterställning och riktiga integrationer kvarstår.
+
+### Historik: Nästa praktiska val efter v49
 
 Arbetsytefokus är verifierat/publicerat enligt [VALIDATION](../VALIDATION.md); B07:s personalpilot är fortsatt öppen. Nästa designarbete är nåbar öppningshandling vid mycket långa sökträffar på korta skärmar; den separat observerade globala 320 px-laddningstexten behöver också granskas. Reproducera båda mot färsk kod; data-/åtkomst-/orderfel går före kön. B01b2:s specialansvar/full personalavveckling, chefsroll, privat backup/hostingåterställning och riktiga integrationer kvarstår. Påtvingad DOM-återöppning är ett separat tidigare gränsfall; ingen generell fokusgaranti.
 

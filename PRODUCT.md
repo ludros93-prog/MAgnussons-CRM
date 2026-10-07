@@ -4,7 +4,15 @@ V47-underlaget nedan gör Kundregister responsivt med verklig nästa aktivitet o
 
 
 
-## Fortsätt i den valda arbetsytan – v49
+
+## Kundval på korta skärmar – v50
+
+Kundväljaren får full text, egen **Öppna kundkort**/**Välj kund**-knapp och en rullningsyta för korta skärmar.
+
+Månads-/årsförsäljning, marginal och nya prospects förblir huvudmåtten. [VALIDATION](VALIDATION.md) anger faktisk leverans och provgränser; observerad personalacceptans återstår.
+
+
+## Historik: Fortsätt i den valda arbetsytan – v49
 
 Arbetsytebytet får en tydlig fokusstart; desktopheadern växer med texten.
 
