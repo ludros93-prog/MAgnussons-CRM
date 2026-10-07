@@ -18,7 +18,7 @@ type Props={st:State;taskId:string;space:string;save:SaveAction;busy:boolean;ref
 const buttonClass='h-auto min-h-11 max-w-full min-w-0 whitespace-normal';
 const identityFor=(st:State,space:string,taskId:string)=>JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',st.viewer?.role||'',taskId]);
 const profileLabel=(profile:Snapshot['targetProfiles'][number])=>profile.displayName+(profile.displayName===profile.legacyOwnerName?'':' · '+profile.legacyOwnerName);
-const sourceLabel={task:'Uppgiftens ansvar',customer:'Kundöverlämning',deal:'Affärsöverlämning',order:'Orderöverlämning'};
+const sourceLabel={task:'Uppgiftens ansvar',customer:'Kundöverlämning',deal:'Affärsöverlämning',order:'Orderöverlämning',onboarding:'Onboardingöverlämning'};
 const takeSnapshot=(st:State,taskId:string):Snapshot=>structuredClone(taskResponsibilityCandidates(st,taskId));
 
 export function TaskResponsibility({st,taskId,space,save,busy,refresh,onClose}:Props){
