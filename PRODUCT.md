@@ -1,8 +1,26 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Publicerad v43 förankrar uppgiftsansvar i stabila säljarprofiler och visar aktuella ansvariga i Min dag. Äldre oförankrat ansvar bevaras för granskning. V42:s kundansvar och V41:s affärs-/orderansvar består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och återställningsgränser.
+Publicerad v44 ger administratören granskad fristående uppgiftsöverlämning/förankring från Min dag och serverägd uppgiftshistoria. Senare planerade uppgifter är nåbara och gamla oförankrade ansvar behålls för uttrycklig granskning. V42:s kundansvar och V41:s affärs-/orderansvar består med matchande uppgiftshistoria i nya överlämningar. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och återställningsgränser.
 
-## Stabilt uppgiftsansvar – v43
+## Granskad uppgiftsöverlämning – v44
+
+I Min dag kan administratören byta ansvar för en öppen fristående kunduppgift utan att samtidigt byta kundansvar. **Byt uppgiftsansvar** visas för kopplat ansvar; **Förankra ansvar** hjälper när uppgiften fortfarande har äldre tomt profil-ID. Välj en aktiv granskad person, ange orsak och granska uppgift, kund och ansvar före sparning. Val av samma person kan förankra den äldre kopplingen. Okänd äldre person gissas inte.
+
+Även uppgifter längre än sju dagar framåt går att nå under den från början stängda gruppen **Senare planerade uppgifter**. Gruppen återanvänder vanliga uppgiftsrader och samma ansvarshandlingar; dagens och kommande sju dagars grupper behålls. Urvalet följer vald egen/teamvy.
+
+Handlingen gäller manual/care/meeting_followup utan affärskoppling. Affärs-/orderåtaganden och särskilda kundflöden behåller sina avsedda överlämningar; avslutade uppgifter behåller historiskt ansvar. Vanliga **Följ upp** används fortsatt för anteckning, kontaktresultat, avslut och nästa steg. Ett ansvarsbyte är en egen avsikt och ändrar inget av detta.
+
+Uppgiftens serverägda historia visar granskad tidigare/ny person, orsak, aktör och tid. Befintliga kund-/affärs-/orderöverlämningar sparar matchande uppgiftshistoria tillsammans med sin egen historia. Tidigare parenthistorik står kvar efter en senare tillåten uppgiftsöverlämning. Nästa Följ upp-uppgift får egen tom historia med bevarat ansvar. Generella befintliga uppgiftsformulär har efter profilinitiering skrivskyddat ansvar; nya uppgifter behåller ansvarsväljaren. För avslutade uppgifter förklarar formuläret att historiskt ansvar ligger kvar.
+
+Transportfel och ändrat underlag bevarar lokala val i öppen dialog. **Hämta aktuellt underlag** ersätter inte granskningen; välj uttryckligt **Läs in nytt granskningsunderlag** och granska igen. Dialogen sparas inte som ett privat serverutkast: kopiera orsak före omladdning. Privata utkast eller kundmejl flyttas inte till den nya ansvariga.
+
+V43 är inte en säker skrivande återgång efter att ny uppgiftshistoria registrerats. Ett faktiskt isolerat prov körde v43:s TaskSchema från basrevisionen på syntetiskt underlag: ownerProfileId bevarades men responsibilityTransfers strippades. Kvitto `/workspace/scratch/crm44/contract/v43-parser-rollback-proof.json`, SHA256 `774079eb8d3b7137d3ea8802b1aebd4a6ff71c82569385b31d41733038ca8b39`. V42:s äldre ID-risk består. Behåll ny modell/serverregler genom schemabevarande framåträttning eller verifierad datamedveten återställning; ingen faktisk live-rollback eller hostingåterställning har utförts.
+
+Fem obligatoriska slutkontroller, isolerad runtime/restore och 30 browserfall plus en faktisk HTTP-sekvens passerar på fryst kandidat `1980a3d`. Sites **v44 är publicerad 2026-10-07 05:48:20 UTC** från verifierad source `e2bfc7c`; app-main `6cb366c` och både exakt-head/main-CI är gröna. Anonym startsida och CRM-API gav 401/401; autentiserad live-UI och riktiga konto-/personalprov återstår. Dokumentationsleveransen är separat och återpublicerar inte appen. [VALIDATION](VALIDATION.md) anger provgränsen. B01b2:s mötes-/specialflöden och full personalavveckling, B07:s tidigare stora-text-fynd, riktig personalpilot och driftsåterställning kvarstår.
+
+## Historik: Stabilt uppgiftsansvar – v43, 2026-10-07
+
+Detta avsnitt beskriver v43 vid publiceringen 04:46:17 UTC. V44-avsnittet ovan gäller nu: befintliga generella Task-formulär får efter profilinitiering inte byta ansvar; den granskade överlämningen används i stället. Nyregistrering behåller ansvarsväljaren.
 
 `Task.ownerProfileId` förankrar uppgiftens ansvar i en säljarprofil; `Task.id` är dess redan befintliga post-ID. Efter granskad profilinitiering väljer servern en aktiv granskad profil vid nyregistrering eller uttryckligt ansvarsbyte i befintligt generellt uppgiftsformulär. Före initieringen tillåts tomt ansvarsprofil-ID. Befintligt oförändrat ansvar med tomt profil-ID förblir tomt, även vid redigering/avslut för en inaktiv eller ej längre listad ansvarig. Läsning förankrar inga äldre uppgifts- eller källposter.
 
