@@ -101,11 +101,11 @@ export function CommercialResponsibility({st,targetType,targetId,save,busy,refre
  return <>
   <Dialog open onOpenChange={value=>{if(!value)close();}}>
    <DialogContent className="business-ui max-h-[90dvh] overflow-y-auto break-words sm:max-w-2xl" showCloseButton={false} onFocusCapture={revealFocusedControl} onEscapeKeyDown={e=>{if(locked||submitLock.current)e.preventDefault();}} onInteractOutside={e=>{if(locked||submitLock.current)e.preventDefault();}} onCloseAutoFocus={e=>{if(opener.current?.isConnected){e.preventDefault();opener.current.focus({preventScroll:true});}}}>
-    <DialogHeader>
+    <DialogHeader className="min-w-0">
      <div className="flex items-start justify-between gap-3"><DialogTitle className="flex min-w-0 flex-1 items-center gap-2"><ArrowRightLeft className="shrink-0" size={19}/><span className="min-w-0">{title}</span></DialogTitle><Button type="button" className={buttonClass} variant="outline" disabled={locked} onClick={close}>Stäng</Button></div>
      <DialogDescription>{snapshot.customer?.name||'Kundkopplingen saknas'} · {recordName}. Välj ny ansvarig och granska de öppna åtagandena.</DialogDescription>
     </DialogHeader>
-    <form onSubmit={e=>{e.preventDefault();e.stopPropagation();void submit();}}><fieldset disabled={locked||!admin}>
+    <form className="min-w-0" onSubmit={e=>{e.preventDefault();e.stopPropagation();void submit();}}><fieldset className="min-w-0" disabled={locked||!admin}>
      {!admin&&<p className="biz-callout" role="alert">Endast en administratör kan överföra affärs- och orderansvar. Formulärets uppgifter har inte sparats.</p>}
      <p>Nuvarande ansvar: <b>{currentOwner}</b>.</p>
      <p className="biz-hint">Profilens namn följs av dess ursprungliga ansvarskoppling. Det skiljer profiler med samma visningsnamn åt.</p>
