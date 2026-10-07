@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect,useRef,useState,type FocusEvent} from 'react';
+import {useEffect,useId,useRef,useState,type FocusEvent} from 'react';
 import {ArrowRightLeft,AlertTriangle} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
@@ -37,6 +37,7 @@ function takeSnapshot(st:State,customerId:string):Snapshot{
 }
 
 export function CustomerResponsibility({st,c,space,save,busy,refresh,onSettings,onDialogChange}:Props){
+ const selectedProfileDescriptionId=useId();
  const identity=identityFor(st,space,c.id),currentIdentity=useRef(identity);currentIdentity.current=identity;
  const [open,setOpen]=useState(false),[draft,setDraft]=useState<Draft|null>(null),[error,setError]=useState(''),[notice,setNotice]=useState(''),[submitting,setSubmitting]=useState(false),[refreshing,setRefreshing]=useState(false),[discard,setDiscard]=useState(false),[closeDestination,setCloseDestination]=useState<'settings'|null>(null),[fetchedState,setFetchedState]=useState<State|null>(null);
  const submitLock=useRef(false),operation=useRef(0),alive=useRef(true),opener=useRef<HTMLElement|null>(null);
@@ -145,7 +146,8 @@ export function CustomerResponsibility({st,c,space,save,busy,refresh,onSettings,
      <p>Nuvarande kundansvar: <b>{currentOwner}</b>.</p>
      <p className="biz-hint">{snapshot.customerOwnerProfileId===snapshot.sourceProfile?.id?'Ansvar kopplat till säljarprofil.':snapshot.customerOwnerProfileId?'Ansvarskopplingen behöver granskas innan kundansvaret kan bytas.':'Äldre ansvarskoppling. Den kontrolleras när du granskar överlämningen.'} Profilens ursprungliga ansvarskoppling visas efter namnet när de skiljer sig åt.</p>
      {snapshot.blockedReason&&<div className="biz-callout" role="alert">{snapshot.blockedReason}<Button type="button" className={buttonClass} variant="outline" onClick={()=>close('settings')}>Öppna resultatprofiler</Button></div>}
-     <F label="Ny kundansvarig *"><Select value={draft.targetProfileId||'_none'} onValueChange={value=>update({targetProfileId:value==='_none'?'':value})}><SelectTrigger aria-label="Ny kundansvarig" style={{height:'auto',minHeight:44,width:'100%',minWidth:0,whiteSpace:'normal'}}><SelectValue style={{display:'block',overflow:'visible',WebkitLineClamp:'unset',minWidth:0}}/></SelectTrigger><SelectContent className="max-w-[calc(100vw-2rem)]"><SelectItem value="_none" className="min-h-11 whitespace-normal">Välj ny kundansvarig</SelectItem>{snapshot.targetProfiles.map(profile=><SelectItem key={profile.id} value={profile.id} className="min-h-11 whitespace-normal break-words"><span className="min-w-0">{profileLabel(profile)}</span></SelectItem>)}</SelectContent></Select></F>
+     <F label="Ny kundansvarig *"><Select value={draft.targetProfileId||'_none'} onValueChange={value=>update({targetProfileId:value==='_none'?'':value})}><SelectTrigger aria-label="Ny kundansvarig" aria-describedby={target?selectedProfileDescriptionId:undefined} style={{height:'auto',minHeight:44,width:'100%',minWidth:0,whiteSpace:'normal'}}><SelectValue style={{display:'-webkit-box',WebkitBoxOrient:'vertical',WebkitLineClamp:2,overflow:'hidden',overflowWrap:'anywhere',lineHeight:1.4,maxHeight:'2.8em',minWidth:0,flex:1,textAlign:'left'}}/></SelectTrigger><SelectContent className="max-w-[calc(100vw-2rem)]"><SelectItem value="_none" className="min-h-11 whitespace-normal">Välj ny kundansvarig</SelectItem>{snapshot.targetProfiles.map(profile=><SelectItem key={profile.id} value={profile.id} className="min-h-11 whitespace-normal break-words"><span className="min-w-0">{profileLabel(profile)}</span></SelectItem>)}</SelectContent></Select></F>
+     {target&&<p id={selectedProfileDescriptionId} className="biz-hint break-words"><b>Vald kundansvarig:</b> {target.displayName}. <b>Ansvarskoppling:</b> {target.legacyOwnerName}.</p>}
      <F label="Varför byts kundansvaret? *"><Textarea required rows={3} maxLength={4000} placeholder="Beskriv överlämningen och varför ansvaret byts." value={draft.reason} onChange={e=>update({reason:e.target.value})}/></F>
      <section className="biz-group" aria-label="Aktiviteter som kan följa med"><h3>Aktiviteter som kan följa med ({snapshot.eligible.length})</h3><p className="biz-hint">Ingen aktivitet är vald från början. Välj endast de öppna aktiviteter som ska få samma nya ansvariga som kunden.</p>
       {snapshot.eligible.map(task=><label className="check-field" key={task.id}><Checkbox checked={draft.selectedTaskIds.includes(task.id)} aria-label={'Flytta aktiviteten '+task.title} onCheckedChange={value=>update({selectedTaskIds:value===true?[...draft.selectedTaskIds.filter(id=>id!==task.id),task.id]:draft.selectedTaskIds.filter(id=>id!==task.id)})}/><span><b>{task.title}</b><small className="block">{taskMeta(task)}</small></span></label>)}
