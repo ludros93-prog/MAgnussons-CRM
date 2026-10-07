@@ -44,13 +44,6 @@ try {
   const legacyRuntimeMeeting=state.meetings.find(m=>m.title==='Äldre syntetiskt runtime-möte');assert.ok(legacyRuntimeMeeting);assert.equal(legacyRuntimeMeeting.ownerProfileId,'');assert.deepEqual(legacyRuntimeMeeting.responsibilityTransfers,[]);
   await post('catalog_order',{customerId:customer.id,owner:customer.owner,title:'Körprov med filer',lines:[{id:'runtime-line',kind:'product',article:'TEST-1',description:'Jacka',quantity:50,unitPrice:100,unitCost:50}],deliveryDate:core.plusDays(today,30),accepted:true,nextDate:today});
   let order=state.orders[0];
-  await savePlan(customer.id,{nextAction:'Följ upp den fiktiva kundrelationen',issueStatus:'open',issue:'Äldre syntetiskt storleksärende',issueAction:'Granska de fiktiva storlekarna',issueOwner:customer.owner,issueDue:core.plusDays(today,3)});
-  const legacyIssueTask=state.tasks.find(t=>t.customerId===customer.id&&t.kind==='csm_issue'&&!t.done);assert.ok(legacyIssueTask);
-  await post('task',{customerId:customer.id,owner:customer.owner,title:'Separat äldre ärendeuppgift som lämnas kvar',kind:'csm_issue',due:core.plusDays(today,4)});
-  const unselectedIssueTask=state.tasks.find(t=>t.title==='Separat äldre ärendeuppgift som lämnas kvar');assert.ok(unselectedIssueTask);
-  const legacyIssuePlan=state.customers.find(c=>c.id===customer.id).plan;
-  assert.equal(legacyIssuePlan.issueOwnerProfileId,'');assert.deepEqual(legacyIssuePlan.issueResponsibilityTransfers,[]);
-  for(const task of [legacyIssueTask,unselectedIssueTask]){assert.equal(task.ownerProfileId,'');assert.deepEqual(task.responsibilityTransfers,[]);}
   const sources=[];
   async function upload(name,kind,photo=false){
     const bytes=new Uint8Array(4500000);for(let i=0;i<bytes.length;i++)bytes[i]=(i+sources.length*61)%251;
@@ -98,6 +91,7 @@ try {
   const publicationOptions={method:'POST',headers:{...headers,'Content-Type':'application/json',Origin:origin},body:JSON.stringify(publication)};
   const publishedResponse=await api('/api/crm',publicationOptions),published=await publishedResponse.json();assert.equal(publishedResponse.status,200,JSON.stringify(published));assert.equal(published.customers.find(c=>c.id===workflowCustomer.id).plan.goal,workflowValues.goal);assert.equal(published.customers.find(c=>c.id===workflowCustomer.id).lastContact,workflowCustomer.lastContact);assert.deepEqual(published.orders,privateBaseline.orders);assert.equal((await draftRead(headers)).data[0].archived,true);
   const persistedPublication=await get(),{mutationResult:publicationResult,...publicationState}=published;assert.deepEqual(persistedPublication,publicationState);assert.ok(publicationResult.eventId);assert.ok(publicationResult.taskId);
+  const publishedPlanTask=persistedPublication.tasks.find(t=>t.id===publicationResult.taskId);assert.ok(publishedPlanTask);assert.equal(publishedPlanTask.kind,'csm');assert.equal(publishedPlanTask.customerId,workflowCustomer.id);assert.equal(publishedPlanTask.title,workflowValues.nextAction);assert.ok(!privateBaseline.tasks.some(t=>t.id===publishedPlanTask.id),'Explicit private plan publication creates a new task in the same commit.');
   const publicationReplay=await api('/api/crm',publicationOptions);assert.equal(publicationReplay.status,200);const replayedPublication=await publicationReplay.json();assert.deepEqual(replayedPublication.mutationResult,publicationResult);assert.deepEqual(replayedPublication,{...persistedPublication,mutationResult:publicationResult});assert.deepEqual(await get(),persistedPublication);
   const lateAutosave=await draftWrite({...ready.data,requestId:crypto.randomUUID(),data:{...ready.data.data,values:{goal:'Late private autosave'}}});assert.equal(lateAutosave.status,409);assert.equal((await draftRead(headers)).data[0].archived,true);assert.deepEqual(await get(),persistedPublication);
   // Exercise the built commercial handover API with real local D1/R2, stable
@@ -106,6 +100,15 @@ try {
   const savedPrivateDraft=(await draftRead(headers)).data;
   state=await get();const sourceOwner=customer.owner,targetOwner=state.settings.owners.find(name=>name!==sourceOwner),targetMember='runtime-commercial-target';assert.ok(targetOwner);
   await db.prepare('INSERT INTO crm_members(id,email,user_id,name,role,owner,active) VALUES(?,?,?,?,?,?,1)').bind(targetMember,'runtime-commercial-target@example.test',targetMember,'Identiskt kontonamn','seller',targetOwner).run();
+  // Seed the legacy issue after the independent publication insertion above,
+  // while profiles are still uninitialized and operational IDs remain blank.
+  await savePlan(customer.id,{nextAction:'Följ upp den fiktiva kundrelationen',issueStatus:'open',issue:'Äldre syntetiskt storleksärende',issueAction:'Granska de fiktiva storlekarna',issueOwner:customer.owner,issueDue:core.plusDays(today,3)});
+  const legacyIssueTask=state.tasks.find(t=>t.customerId===customer.id&&t.kind==='csm_issue'&&!t.done);assert.ok(legacyIssueTask);
+  await post('task',{customerId:customer.id,owner:customer.owner,title:'Separat äldre ärendeuppgift som lämnas kvar',kind:'csm_issue',due:core.plusDays(today,4)});
+  const unselectedIssueTask=state.tasks.find(t=>t.title==='Separat äldre ärendeuppgift som lämnas kvar');assert.ok(unselectedIssueTask);
+  const legacyIssuePlan=state.customers.find(c=>c.id===customer.id).plan;
+  assert.equal(state.settings.sellerProfilesInitialized,false);assert.equal(legacyIssuePlan.issueOwnerProfileId,'');assert.deepEqual(legacyIssuePlan.issueResponsibilityTransfers,[]);
+  for(const task of [legacyIssueTask,unselectedIssueTask]){assert.equal(task.ownerProfileId,'');assert.deepEqual(task.responsibilityTransfers,[]);}
   await post('seller_profiles_init',{expectedContext:conflicts.sellerProfilesBasis(state),profiles:sellers.legacySellerNames(state).map(legacyOwnerName=>({legacyOwnerName,displayName:'Identiskt runtime-namn',memberId:legacyOwnerName===sourceOwner?'runtime-admin':legacyOwnerName===targetOwner?targetMember:''}))});
   const sourceProfile=state.settings.sellerProfiles.find(p=>p.legacyOwnerName===sourceOwner),targetProfile=state.settings.sellerProfiles.find(p=>p.legacyOwnerName===targetOwner);assert.ok(sourceProfile&&targetProfile);assert.notEqual(sourceProfile.id,targetProfile.id);assert.equal(sourceProfile.displayName,targetProfile.displayName);assert.equal(state.orders.find(o=>o.id===order.id).ownerProfileId,'','Profile initialization is not automatic operational migration.');
   const runtimeTables=(await db.prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name").all()).results.map(r=>r.name).filter(n=>/^(?:crm_|outlook_)[a-z_]+$/.test(n));assert.equal(runtimeTables.length,18);
