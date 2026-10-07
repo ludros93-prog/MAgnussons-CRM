@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { PanelLeftIcon } from "lucide-react"
+import { PanelLeftIcon, XIcon } from "lucide-react"
 import { Slot } from "radix-ui"
 
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -39,7 +40,10 @@ type SidebarContextProps = {
   openMobile: boolean
   setOpenMobile: (open: boolean) => void
   isMobile: boolean
-  toggleSidebar: () => void
+  toggleSidebar: (opener?: HTMLElement) => void
+  mobileMenuId: string
+  returnFocus: React.RefObject<HTMLElement | null>
+  triggerRef: React.RefObject<HTMLButtonElement | null>
 }
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
@@ -51,6 +55,21 @@ function useSidebar() {
   }
 
   return context
+}
+
+// Radix's Tab loop uses preventScroll. Reveal the same focused choice within
+// this menu only, including Shift+Tab from the fixed close button to the end.
+function revealMobileMenuItem(event: React.FocusEvent<HTMLDivElement>) {
+  const scroller = event.currentTarget
+  const item = event.target
+  if (!(item instanceof HTMLElement) || !item.matches('[data-slot="sidebar-menu-button"]')) return
+  requestAnimationFrame(() => {
+    if (!item.isConnected || document.activeElement !== item || !scroller.contains(item)) return
+    const bounds = scroller.getBoundingClientRect()
+    const box = item.getBoundingClientRect()
+    if (box.top < bounds.top + 8) scroller.scrollBy({ top: box.top - bounds.top - 8, behavior: "instant" })
+    else if (box.bottom > bounds.bottom - 8) scroller.scrollBy({ top: box.bottom - bounds.bottom + 8, behavior: "instant" })
+  })
 }
 
 function SidebarProvider({
@@ -68,6 +87,14 @@ function SidebarProvider({
 }) {
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
+  const mobileMenuId = React.useId()
+  const returnFocus = React.useRef<HTMLElement | null>(null)
+  const triggerRef = React.useRef<HTMLButtonElement | null>(null)
+
+  // Do not resurrect the modal after rotating back from the desktop layout.
+  React.useEffect(() => {
+    if (!isMobile) setOpenMobile(false)
+  }, [isMobile])
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
@@ -89,9 +116,15 @@ function SidebarProvider({
   )
 
   // Helper to toggle the sidebar.
-  const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
-  }, [isMobile, setOpen, setOpenMobile])
+  const toggleSidebar = React.useCallback((opener?: HTMLElement) => {
+    if (isMobile) {
+      if (!openMobile) {
+        const active = document.activeElement
+        returnFocus.current = opener ?? (active instanceof HTMLElement && active !== document.body ? active : triggerRef.current)
+      }
+      setOpenMobile(!openMobile)
+    } else setOpen((open) => !open)
+  }, [isMobile, openMobile, setOpen])
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -100,6 +133,11 @@ function SidebarProvider({
         event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
         (event.metaKey || event.ctrlKey)
       ) {
+        // A private editor is its own modal; leave its focus and values alone.
+        const dialog = event.target instanceof Element ? event.target.closest('[role="dialog"],[role="alertdialog"]') : null
+        const otherModal = document.querySelector('[role="dialog"][data-state="open"]:not([data-sidebar="sidebar"]),[role="alertdialog"][data-state="open"]')
+        // Select options may be portalled outside their editor's DOM subtree.
+        if (isMobile && (otherModal || (dialog && !dialog.matches('[data-sidebar="sidebar"]')))) return
         event.preventDefault()
         toggleSidebar()
       }
@@ -107,7 +145,7 @@ function SidebarProvider({
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [toggleSidebar])
+  }, [toggleSidebar, isMobile])
 
   // We add a state so that we can do data-state="expanded" or "collapsed".
   // This makes it easier to style the sidebar with Tailwind classes.
@@ -122,8 +160,11 @@ function SidebarProvider({
       openMobile,
       setOpenMobile,
       toggleSidebar,
+      mobileMenuId,
+      returnFocus,
+      triggerRef,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar, mobileMenuId]
   )
 
   return (
@@ -163,7 +204,7 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { isMobile, state, openMobile, setOpenMobile, mobileMenuId, returnFocus, triggerRef } = useSidebar()
 
   if (collapsible === "none") {
     return (
@@ -187,7 +228,14 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
-          className={cn("w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden", className)}
+          id={mobileMenuId}
+          showCloseButton={false}
+          className={cn("sidebar-mobile-panel w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground", className)}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault()
+            const opener = returnFocus.current?.isConnected ? returnFocus.current : triggerRef.current
+            if (opener?.isConnected) opener.focus({ preventScroll: true })
+          }}
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
@@ -195,11 +243,14 @@ function Sidebar({
           }
           side={side}
         >
-          <SheetHeader className="sr-only">
-            <SheetTitle>Sidebar</SheetTitle>
-            <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+          <SheetHeader className="sidebar-mobile-heading">
+            <SheetTitle>Meny</SheetTitle>
+            <SheetDescription className="sr-only">Välj arbetsområde i Magnussons CRM.</SheetDescription>
+            <SheetClose asChild>
+              <Button variant="ghost" className="sidebar-mobile-close" aria-label="Stäng meny"><XIcon aria-hidden="true"/><span>Stäng</span></Button>
+            </SheetClose>
           </SheetHeader>
-          <div className="flex h-full w-full flex-col">{children}</div>
+          <div className="sidebar-mobile-scroll" onFocusCapture={revealMobileMenuItem}>{children}</div>
         </SheetContent>
       </Sheet>
     )
@@ -256,25 +307,34 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
+  ref,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, isMobile, openMobile, open, mobileMenuId, triggerRef } = useSidebar()
 
   return (
     <Button
+      ref={(node) => {
+        triggerRef.current = node
+        if (typeof ref === "function") ref(node)
+        else if (ref) ref.current = node
+      }}
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
+      aria-label={isMobile ? (openMobile ? "Stäng meny" : "Öppna meny") : (open ? "Dölj sidmeny" : "Visa sidmeny")}
+      aria-expanded={isMobile ? openMobile : open}
+      aria-controls={isMobile && openMobile ? mobileMenuId : undefined}
+      aria-haspopup={isMobile ? "dialog" : undefined}
       className={cn("size-7", className)}
       onClick={(event) => {
         onClick?.(event)
-        toggleSidebar()
+        toggleSidebar(event.currentTarget)
       }}
       {...props}
     >
       <PanelLeftIcon />
-      <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
 }
@@ -288,7 +348,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       data-slot="sidebar-rail"
       aria-label="Toggle Sidebar"
       tabIndex={-1}
-      onClick={toggleSidebar}
+      onClick={(event) => toggleSidebar(event.currentTarget)}
       title="Toggle Sidebar"
       className={cn(
         "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border sm:flex",
@@ -502,14 +562,17 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  dismissOnSelect = false,
+  onClick,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean
   isActive?: boolean
   tooltip?: string | React.ComponentProps<typeof TooltipContent>
+  dismissOnSelect?: boolean
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot.Root : "button"
-  const { isMobile, state } = useSidebar()
+  const { isMobile, state, setOpenMobile } = useSidebar()
 
   const button = (
     <Comp
@@ -517,7 +580,12 @@ function SidebarMenuButton({
       data-sidebar="menu-button"
       data-size={size}
       data-active={isActive}
+      aria-current={isActive ? "true" : undefined}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+      onClick={(event) => {
+        onClick?.(event)
+        if (dismissOnSelect && isMobile && !event.defaultPrevented) setOpenMobile(false)
+      }}
       {...props}
     />
   )

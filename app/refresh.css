@@ -379,3 +379,18 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ring); outline-
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .wf-home-links button:hover, .deal-card:hover { transform: none; }
 }
+
+/* A single mobile scroll area keeps every section reachable on short screens. */
+.crm-sidebar.sidebar-mobile-panel { height: 100dvh; max-width: calc(100vw - 24px); min-height: 0; gap: 0; overflow: hidden; }
+.crm-sidebar .sidebar-mobile-heading { flex: none; display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; padding: max(8px, env(safe-area-inset-top)) 14px 8px; border-bottom: 1px solid var(--sidebar-border); }
+.crm-sidebar .sidebar-mobile-heading [data-slot=sheet-title] { color: #fff; font-size: 1rem; overflow-wrap: anywhere; }
+.crm-sidebar .sidebar-mobile-close { flex: none; min-height: 44px; min-width: 44px; padding: 8px 10px; color: #fff; font-size: .875rem; }
+.crm-sidebar .sidebar-mobile-close:hover { background: var(--sidebar-accent); color: #fff; }
+.crm-sidebar .sidebar-mobile-close:focus-visible { outline-color: var(--sidebar-ring); }
+.crm-sidebar .sidebar-mobile-scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scroll-padding-block: 8px; padding-bottom: env(safe-area-inset-bottom); }
+.crm-sidebar[data-mobile=true] [data-slot=sidebar-header], .crm-sidebar[data-mobile=true] [data-slot=sidebar-footer] { flex: none; }
+.crm-sidebar[data-mobile=true] [data-slot=sidebar-content] { flex: none; overflow: visible; padding-block: 8px; }
+.crm-sidebar[data-mobile=true] [data-slot=sidebar-menu-button] { height: auto; min-height: 44px; white-space: normal; align-items: center; padding-block: 10px; font-size: .95rem; }
+.crm-sidebar[data-mobile=true] [data-slot=sidebar-menu-button]>span { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+.crm-sidebar[data-mobile=true] .brand { flex-wrap: wrap; }
+.crm-sidebar[data-mobile=true] .profile>div { min-width: 0; overflow-wrap: anywhere; }
