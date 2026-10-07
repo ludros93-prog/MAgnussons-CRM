@@ -1,5 +1,13 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Onboarding med eget ansvar – v51
+
+Onboarding får en egen stabil ansvarig säljarprofil. Administratören förankrar äldre ansvar eller byter ansvar med orsak, granskning och uttryckligt valda öppna onboardinguppgifter. Ingen uppgift är förvald. Kund-, affärs-, order- och resultatansvar behålls. Den personliga vyn **Nya kunder** följer onboardingansvaret; äldre tomma ID:n använder befintligt ansvar för visning.
+
+Checklistan och överlämningen har olika handlingar. Säljaren fortsätter sin privata checklista; administratören granskar ansvarsändring och valda uppgifter separat. Förlorat svar eller samtidiga ändringar ger besked med bevarad orsak och möjliga val. Avslutad onboarding behåller historik; löpande kundvård följer separat kundansvar.
+
+Månads-/årsförsäljning mot mål, marginal och nya prospects består. Inga affärsdefinitioner, kostnader, konton eller kundgodkännanden har antagits. [VALIDATION](VALIDATION.md) anger kod/main/live, prov och begränsningar.
+
 V47-underlaget nedan gör Kundregister responsivt med verklig nästa aktivitet och en separat avstämning. V46:s Min dag-förbättringar består. Tidigare granskade kund-, uppgifts-, affärs-, order- och mötesöverlämningar består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och kompatibilitet.
 
 

@@ -1,5 +1,13 @@
 # CRM-källor för Magnussons byggagent
 
+## Onboardingansvar – källkontroll för v51, 2026-10-07
+
+Officiella sidtexter lästes 14:41:48 UTC; webverktyget rapporterade inte HTTP-status. [Saleshub AI](https://saleshubai.se/funktioner) beskriver gemensamt kundsammanhang och nästa aktivitet. [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) stödjer relevanta posthandlingar med imperativa verb. [Salesforce Transfer Records](https://help.salesforce.com/s/articleView?id=sf.data_about_transfer.htm&language=en_US&type=5) beskriver uttrycklig objektspecifik ägaröverföring och dess behörighetskrav. Magnussons egna serverregler, valda uppgifter och frysta granskningsbasis är vår implementation; leverantörernas rättigheter kopieras inte.
+
+[W3C Modal Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/), [Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html), [Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html) och [Target Size](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) stödjer logisk fokusstart, användbar smal vy och förstorad text. 44 px är vårt starkare lokala mål; AA anger 24 px med undantag. Tvåraders vald profil med full identitet intill och begränsat rullbart textfält är egna lösningar på faktiskt uppmätta mobilproblem.
+
+Kvitto `/workspace/scratch/crm51/design/onboarding-official-sources.json`, SHA256 `b0347ee0c9578f5338f74776075edd331b45faa312a1400b42c586705a0a1422`. Källorna verifierar inga Magnussonsanslutningar, personalresultat, full WCAG eller världsranking. [VALIDATION](../VALIDATION.md) anger faktisk kod, releasebevis och provgränser.
+
 ## Kundval på korta skärmar – källkontroll för v50
 
 Åtta officiella sidor lästes 2026-10-07 13:27:48 UTC utan rapporterad HTTP-status. [Saleshub](https://saleshubai.se/funktioner) stöder kundsammanhang, [Lime](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) synliga handlingsverb och [Salesforce](https://trailhead.salesforce.com/content/learn/modules/lightning-experience-for-salesforce-classic-users/work-with-list-views) radbrytning/listfilter. W3C:s reflow/fokus/målstorlek, APG och Radix Dialog finns med officiella URL:er i kvittot. 44 px och hel knappbox är våra starkare lokala mål. Dependencyversioner lästes från låsfil, inte installerad runtime. Kvitto `/workspace/scratch/crm50/audit/official-sources.json`, SHA256 `d695590ae14d0bb266859c775a9d8a42622be72847a9863775f025cecc4ad740`. Källorna verifierar inga Magnussonsanslutningar eller personalresultat; vår implementation och provgräns finns i [VALIDATION](../VALIDATION.md).
