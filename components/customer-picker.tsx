@@ -27,7 +27,7 @@ export function CustomerPicker({st,purpose,onSelect,onClose,onNew}:{st:State;pur
     {!matches.length&&<p>Ingen kund matchar sökningen.</p>}
     {matches.length>30&&<p>Fortsätt skriva för att begränsa {matches.length} träffar.</p>}
    </div>
-   {st.viewer?.role!=='reader'&&<Button variant="outline" onClick={onNew}><Plus size={16}/>Lägg till en ny kund</Button>}
+   {st.viewer?.role!=='reader'&&<Button variant="outline" className="picker-new" onClick={onNew}><Plus size={16}/>Lägg till en ny kund</Button>}
   </DialogContent>
  </Dialog>;
 }
