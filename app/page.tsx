@@ -91,7 +91,7 @@ export default function CRM(){
  const [resumeDraft,setResumeDraft]=useState(''),[resumeArticleDraft,setResumeArticleDraft]=useState(''),[resumeCompanyEventDraft,setResumeCompanyEventDraft]=useState(''),[receiptId,setReceiptId]=useState(''),[receiptDraftId,setReceiptDraftId]=useState(''),[repeatCustomer,setRepeatCustomer]=useState('');
  const [customerTransferOpen,setCustomerTransferOpen]=useState(false);
  const customerHeading=useRef<HTMLHeadingElement>(null);
- const customerClickOpener=useRef<HTMLElement|null>(null);
+ const customerClickOpener=useRef<{opener:HTMLElement|null}|null>(null);
  const customerReturn=useRef<{id:string;identity:string;view:string;opener:HTMLElement|null}|null>(null);
  const customerCloseIntent=useRef<typeof customerReturn.current>(null);
  // Radix's delayed close callback must use the current account and navigation,
@@ -114,13 +114,15 @@ export default function CRM(){
  },[space,st?.viewer?.id,st?.viewer?.role]);
  function captureCustomerOpener(event:MouseEvent<HTMLElement>){
   const opener=event.target instanceof Element?event.target.closest<HTMLElement>('button[data-customer-id],a[data-customer-id][href]'):null;
-  customerClickOpener.current=opener;
-  queueMicrotask(()=>{if(customerClickOpener.current===opener)customerClickOpener.current=null});
+  const click={opener};customerClickOpener.current=click;
+  // Native capture/bubble listeners can have microtask checkpoints between them.
+  // Keep this event's opener through dispatch, but never into a later input task.
+  setTimeout(()=>{if(customerClickOpener.current===click)customerClickOpener.current=null},0);
  }
  function showCustomer(id:string,tab='overview'){
   customerCloseIntent.current=null;
   if(!detail){
-   const candidate=customerClickOpener.current||document.activeElement;
+   const candidate=customerClickOpener.current?.opener||document.activeElement;
    const opener=candidate instanceof HTMLElement&&candidate.dataset.customerId===id&&candidate.closest('main.main')&&!candidate.closest('[role=dialog],[role=alertdialog]')?candidate:null;
    customerReturn.current={id,identity:activeIdentity.current,view,opener};
   }
