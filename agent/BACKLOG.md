@@ -1,6 +1,14 @@
 # Arbetskö för Magnussons CRM
 
-## v52: stabilt ansvar för kundärendets arbete
+## v53: stabilt ansvar för årshjulets arbete
+
+B01b2 får behovets stabila profilansvar, granskad förankring/överlämning med uttryckligt valda öppna fristående årshjulsuppgifter och **Mina behov**/**Teamets behov** utifrån behovsansvaret. Vanlig redigering behåller ansvar och granskar ändrat underlag. Återkomst och nya behovsaffärer kopierar registrerad identitet utan att flytta tidigare affärsansvar eller historiska resultat. Uppföljning öppnar rätt kunds kompakta behovsplanering även när ansvar/år skiljer sig. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering och release.
+
+Nästa högsta genomförbara B01b2-del är inventering och samlad granskad personalöverlämning av kvarvarande öppet arbete/specialansvar efter färsk prioritets-, kod- och driftkontroll. B01b2 är inte klart i sin helhet. Ett verifierat data-/åtkomst-/orderfel går fortsatt före normal kö.
+
+Årshjulsformuläret bevarar text i öppet formulär vid fel men är inget privat serverutkast och återupptas inte efter omladdning; denna B05-del kvarstår. B02 chefsroll, B04 privata konto-/utkast-/Outlookbackuper och faktisk hostingåterställning, verkliga integrationer och personalpilot är fortsatt öppna. B07:s kända mobilmeny under första laddningen och Outlook-läsning före laddad produktionsroll består; browserprovets readiness-väntan är ingen produktfix. Inga scheman, prompter eller aktiveringar ändras.
+
+### Historik: v52 – stabilt ansvar för kundärendets arbete
 
 B01b2 får kundärendets eget profilansvar, granskad administratörsöverlämning med uttryckligt valda öppna uppgifter och egen ärendevy skild från kundrelationernas urval. Första ansvar för ett tidigare ägarlöst ärende väljs uttryckligen; gamla privata kundplaner behåller sin text vid adoption av de tre ansvarsfälten. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering och release.
 

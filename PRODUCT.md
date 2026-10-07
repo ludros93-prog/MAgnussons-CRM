@@ -1,6 +1,16 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-## Kundärenden med eget ansvar – v52
+## Årshjul med eget behovsansvar – v53
+
+**Kunder → Årsplanering → Mina behov** följer inköpsbehovets ansvar även när kunden tillhör någon annan. **Teamets behov**, år, lokal sökning och **Visa även hanterade** ger ett tydligt urval. **Kontakta senast** och **Kundens leveransbehov** är olika datum. Full kund-/behovstext visas med en separat **Öppna kundkort**-knapp. **Följ upp → Hantera inköpsbehovet** öppnar samma kunds kompakta planering, även för ett framtida behov som nu har en annan ansvarig.
+
+Efter profilinitiering väljs en aktiv profil uttryckligen för ett nytt behov. Befintligt ansvar, även ett äldre tomt profil-ID eller en känd inaktiv profil, bevaras vid vanlig innehållsredigering. Läsning förankrar ingen person automatiskt. Administratören använder **Förankra behovsansvar** eller **Byt behovsansvar** för ett planerat behov, väljer aktiv mottagare och endast de tillåtna öppna årshjulsuppgifter som ska följa med. Inget mål eller uppgiftsval är förvalt. Orsak och granskning krävs. Kundrelation, tidigare affär, andra arbetsflöden och historiska resultat behåller sina ansvar.
+
+Vid ändrat redigeringsunderlag finns innehållsförslaget kvar. **Hämta aktuellt underlag** läser utan att byta formulärets version. **Läs in nytt underlag** läser om sparat ansvar, historik och affärskoppling men behåller innehållsförslaget för jämförelse/granskning före sparning. Behovsformuläret och överlämningen är ännu inte privata serverutkast; kopiera text före omladdning.
+
+Återkomst behåller samma föränderliga behovs-ID, ansvar och historia. Nya påminnelser kopierar behovets exakt registrerade profil-ID, även tomt/inaktivt. Ny affär kräver aktivt granskat behovsansvar efter profilinitiering; tidigare affärer flyttas inte av en senare behovsöverlämning. Ett behov innebär ingen kundacceptans. Försäljning mot månads-/årsmål, marginal och nya prospects består. [VALIDATION](VALIDATION.md) anger faktisk release och provgränser.
+
+### Historik: v52 – Kundärenden med eget ansvar
 
 **Kundvård → Kundrelationer** följer kundansvaret. **Mina kundärenden** följer ärendets stabila ansvar, även för en kund vars relation tillhör någon annan. **Alla ansvariga** visar teamets ärenden. Äldre tomma profil-ID:n använder registrerat ärendeansvar för urval; läsning förankrar ingen person automatiskt. **Öppna kundärendet** leder till ärendets fält i samma privata kundplan.
 
