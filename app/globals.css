@@ -213,6 +213,7 @@ body {
 .event-draft-status strong,.event-draft-status span{display:block;line-height:1.5;font-size:.875rem}
 .event-draft-status span{margin-top:4px}
 .event-draft-status .event-draft-actions:empty{display:none}
+.event-draft-editor .draft-status,.event-draft-editor .draft-status>span,.event-draft-list .draft-status,.event-draft-list .draft-status>span,.visual-day .daily-row.event-draft-day-row .draft-status,.visual-day .daily-row.event-draft-day-row .draft-status>span{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 .event-draft-card{min-width:0;padding:16px;margin:18px 0;border:1px solid #dce4ee;border-radius:10px;background:#f8fafc}
 .event-draft-card h3,.event-draft-card h4{margin:0 0 10px;line-height:1.5}
 .event-draft-card p,.event-draft-preview p,.event-draft-list>p{font-size:.875rem;line-height:1.6;margin:8px 0}
