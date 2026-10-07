@@ -1,6 +1,16 @@
 # CRM-källor för Magnussons byggagent
 
-## Kundärendeansvar – källkontroll för v52, 2026-10-07
+## Årshjulsansvar – källkontroll för v53, 2026-10-07
+
+Efter sista officiella webböppningen lästes klockan **18:26:03 UTC**. [Saleshub AI Funktioner](https://saleshubai.se/funktioner) lästes direkt och beskriver gemensamt kund-/modulsammanhang och projektuppgifter med ansvar; det är offentlig produktbeskrivning utan överförings-/behörighetskontrakt. [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) lästes direkt initialt och stödjer relevanta handlingar, konkreta verb och fullständiga namn; efterföljande öppningar gav 429. [Lime Notifications](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) stöder skillnaden mellan information och ansvar endast genom färskt officiellt indexutdrag i denna körning; första direktöppningen gav metadata och senare 429. Ingen lyckad ny fulltextläsning eller extern notisleverans påstås för den sidan.
+
+[Salesforce Changing a Record’s Owner](https://help.salesforce.com/s/articleView?id=sf.account_owner_transfer.htm&language=en_US&type=5) gav direkt läst objekttabell om olika överföring för öppet/avslutat arbete. [updateRecord](https://developer.salesforce.com/docs/platform/lwc/guide/reference-update-record.html) lästes direkt och beskriver konfliktkontroll med `ifUnmodifiedSince`. Magnussons uttryckliga uppgiftsval, tvåvägshistorik, frysta underlag, SQL-CAS och replay är egna kontrakt; leverantörens automatregler eller rättigheter kopieras inte.
+
+[W3C Modal APG](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) lästes direkt och stödjer aktiv fokusgräns, stängning och logisk återgång. [W3C Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) lästes direkt och stödjer status utan onödigt fokusbyte, relevant för separat B07-laddningsarbete. [SLDS Builder](https://www.lightningdesignsystem.com/2e1ef8501/v/61481/p/204931-builder/b/168ca5) gav officiellt indexerat avsnitt om pågående handling/status, medan direktöppningen gav noll textrader. Ingen lyckad Builder-fulltextläsning eller global laddningsfix påstås.
+
+Kvitto `/workspace/scratch/crm53/research/official-sources.json`, SHA256 `24b49e5dfca7a7225f30830f0e299e13ee454dcfb62671892556b7dea738d8a6`. Hashar avser korta exakta utdrag, inte hela sidor. Lyckade öppningar rapporterade ingen HTTP-status; individuella exakta anropsstarter registrerades inte. Minst 44 px, full profilidentitet intill tvåradig kontroll och vår fokusalgoritm är lokala designval. Källorna verifierar inga Magnussonsanslutningar, privata lagringsgarantier, personalresultat eller världsranking. [VALIDATION](../VALIDATION.md) anger våra faktiska prov.
+
+### Historik: v52 – Kundärendeansvar – källkontroll för v52, 2026-10-07
 
 Officiella sidor lästes 16:29:55 UTC. [Saleshub AI Funktioner](https://saleshubai.se/funktioner) beskriver gemensamma moduldata och ”Projektboard med uppgifter, flera ansvariga och statusrader”; detta är offentlig produktbeskrivning utan dokumenterat överförings-/behörighetskontrakt. [Lime Notifications](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) beskriver individuella ansvarsfält för To-do, Deal och Ticket; följande/omnämnande tilldelar inte ansvar. [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) stödjer synliga kontextuella handlingsverb och fullständiga tillgängliga namn.
 

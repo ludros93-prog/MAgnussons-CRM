@@ -1,6 +1,17 @@
 # Magnussons CRM – order, tryck och lager
 
-## Granskat kundärendeansvar – v52
+## Granskat årshjulsansvar – v53
+
+1. Öppna **Kunder → Årsplanering → Mina behov** eller **Teamets behov**. Läs kund, kontakt senast, kundens leveransbehov och behovsansvar. Kundkortets kompakta årshjul visar samma kunds behov utan det globala ansvars-/årsfilter som används i fullvyn.
+2. Som administratör: välj **Förankra behovsansvar** eller **Byt behovsansvar** på ett planerat behov. Läs nuvarande ansvar och full mottagaridentitet intill väljaren. En äldre tom koppling kan förankras till samma person; okänd/motsägande källa gissas inte. Känd inaktiv källa kan lämna över till aktiv mottagare.
+3. Välj uttryckligen de tillåtna öppna fristående årshjulsuppgifter som ska följa med. Ingen är förvald. Ange orsak, granska sammanställningen och spara. Avslutade uppgifter, affär-/orderkopplat arbete, andra behov och arbetsflöden behåller ansvar.
+4. Vid ändrat underlag: **Hämta aktuellt underlag** behåller formulärets tidigare version. **Läs in nytt granskningsunderlag** antar den aktuella versionen uttryckligen, behåller orsak och möjliga val och kräver ny granskning.
+5. Ett oklart sparbesked kan följa efter en lyckad skrivning. Hämta/granska utfallet eller återförsök med samma oförändrade val. Dialogen bevarar text vid fel men är inget privat serverutkast; kopiera orsaken före omladdning. Stängning återställer inte möjlig CRM-skrivning.
+6. Använd **Ändra behov** för text/datum. Sparat ansvar bevaras. Vid konflikt: hämta och **Läs in nytt underlag**, jämför sparat/föreslaget innehåll och granska före ersättning. De fem serverägda fälten `owner`, `ownerProfileId`, `responsibilityTransfers`, `completedAt` och `dealId` läses om; innehållsförslaget ligger kvar. Även detta formulär saknar privat serverutkast och återupptagning efter omladdning.
+
+**Återgång:** v53 utökar behovs-JSON och uppgiftshistorik utan SQL-migration. Oförändrad v52 kan skriva bort nya behovsfält och avvisa uppgiftens `source:'yearwheel'`; den är inte en säker skrivande återgång efter nya v53-data. Bevara en kompatibel v53-korrigering eller verifiera full databas-/fil-/versions-/länkåterställning från före förändringen med plan för senare arbete. Lokal syntetisk återställning är inget faktiskt hostingprov. Gemensam CRM-backup omfattar inte konton, privata utkast eller Outlook; återställda profilmedlemskopplingar töms och återansluts uttryckligen. [VALIDATION](VALIDATION.md) anger exakta belägg.
+
+### Historik: v52 – Granskat kundärendeansvar
 
 1. Öppna **Kundvård → Mina kundärenden**; välj vid behov **Alla ansvariga** för teamet. Ärendet följer sitt eget ansvar, kundrelationen sitt kundansvar.
 2. Som administratör: välj **Förankra ärendeansvar** eller **Byt ärendeansvar** för ett sparat öppet ärende. Välj en aktiv granskad profil och läs full identitet intill väljaren. Samma person kan förankra ett äldre tomt ID; okänd/motsägande källa gissas inte. En granskad inaktiv källperson kan lämna över.

@@ -1,6 +1,16 @@
 # Magnussons CRM – designriktning
 
-## Separata kundrelationer och kundärenden – v52
+## Begripligt årshjul med eget ansvar – v53
+
+**Mina behov** och **Teamets behov** gör ansvarsvalet tydligt. Kort och månadsöversikt visar full kund-/behovstext utanför en separat **Öppna kundkort**-kontroll. Kontakt senast, kundens leveransbehov och behovsansvar har egna etiketter. Statusen **Planerat** hålls samman. Kundkortets kompakta vy bevarar sammanhanget från en årshjulsuppgifts uppföljning.
+
+Överlämningen har tomt målval, inga förvalda uppgifter, orsak och en uttrycklig granskningshandling. Vald profil visas högst på två rader i kontrollen; full identitet och ansvarskoppling syns intill och beskrivs via `aria-describedby`. Formulärets hämtning, inläsning och sparning är olika handlingar. Innehållsredigeringen visar sparad/föreslagen version och läser om serverägt ansvar vid uttrycklig adoption. Öppen text bevaras vid fel; synlig text förklarar att privat serverutkast ännu saknas.
+
+Slutmatrisens 22 syntetiska browserfall omfattar 320/390/1280 px, avgränsad 2× text, lång kund-/profiltext, minst 44 px för nya vanliga handlingar samt native fokusåtergång. Efter överlämning när kortet försvinner ur **Mina behov** återgår fokus till den synliga listans rubrik. Formulärets footer använder faktisk höjd och vanlig flödesplacering när den skulle ta för stor del av en kort skärm. Elva faktiska PNG-bilder granskades separat; [VALIDATION](VALIDATION.md) anger slutkod, kvitton och gränser.
+
+Detta är inget fysisk telefon-, OS-tangentbords-, skärmläsar-, personal- eller fullständigt WCAG-godkännande. Global första laddning/mobilmeny återstår som separat B07-arbete. [RESEARCH](agent/RESEARCH.md) skiljer officiella leverantörsprinciper från våra lokala val.
+
+### Historik: v52 – Separata kundrelationer och kundärenden
 
 Kundvård visar två tydliga vägar: **Kundrelationer** och **Mina kundärenden**. Ärenderaden visar kund, beskrivning, nästa åtgärd, tidsgräns, ärendeansvar och separat kundansvar. **Öppna kundärendet** ger en fokuserad start vid ärendets rubrik i den privata planen när underlaget har lästs in; fortsatt inmatning avbryter en väntande fokusflytt. Vanlig öppning av kundplanen behåller sitt tidigare beteende.
 

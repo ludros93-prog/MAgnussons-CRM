@@ -1,6 +1,12 @@
 # Magnussons CRM
 
-## Kundärenden med eget ansvar – v52
+## Årshjul med eget behovsansvar – v53
+
+Under **Kunder → Årsplanering** visar **Mina behov** och **Teamets behov** kundens planerade inköp utifrån behovets ansvar, med olika datum för kontakt och leveransbehov. Administratören förankrar eller byter behovsansvar med orsak, granskning och uttryckligt valda öppna årshjulsuppgifter. Vanlig redigering behåller ansvar och visar ändrat underlag före ny sparning. Behovsformulärets text bevaras i den öppna dialogen men är ännu inget privat serverutkast.
+
+Samtliga fem obligatoriska slutkontroller och 22/22 isolerade browserfall passerade på ren kandidat `355482080525a3ee8bd4e34cdf8921d5dd70eedf`. [App-PR #80](https://github.com/ludros93-prog/MAgnussons-CRM/pull/80) är sammanslagen till app-main `95b7af782b49aaa05f733da21cb1781fff0bb4f1`; exakt PR-head och app-main har 13/13 completed/success CI-steg. Samma Site publicerade version `53` från verifierad source `560a0c49fb7536ca6ff1ac1c25ffcd097c21ea75`, succeeded 2026-10-07T19:24:07.221448+00:00. [VALIDATION](VALIDATION.md) skiljer kod, main, publicering och kvarvarande konto-/personal-/återställningsprov.
+
+### Historik: v52 – Kundärenden med eget ansvar
 
 Kundvård visar **Kundrelationer** och **Mina kundärenden** separat. Kundärendets ansvar följer en stabil profil; administratören förankrar eller byter det med orsak, granskning och uttryckligt valda öppna ärendeuppgifter. Kundplanens privata text och kundrelationens ansvar ligger kvar.
 
