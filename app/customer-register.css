@@ -13,7 +13,7 @@
 .cr-open-customer { min-width: 0; max-width: 100%; min-height: 44px; height: auto; white-space: normal; overflow-wrap: anywhere; text-align: left; border-radius: 8px; color: #245ed5; }
 .cr-open-customer:hover { text-decoration: underline; }
 .cr-open-customer:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
-.cr-customer-heading .company-icon { flex-shrink: 0; }
+.cr-customer-heading .company-icon { flex-shrink: 0; width: max(40px,2.5em); height: max(40px,2.5em); white-space: nowrap; overflow-wrap: normal; }
 .cr-customer-copy { display: grid; gap: .3rem; min-width: 0; }
 .cr-contact { margin: 0; font-size: .8125rem; line-height: 1.5; color: #64778e; font-weight: 400; overflow-wrap: anywhere; }
 .cr-customer-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin-top: .6rem; }
