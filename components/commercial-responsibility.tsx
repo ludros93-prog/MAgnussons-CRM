@@ -16,7 +16,7 @@ type Snapshot=ReturnType<typeof commercialResponsibilityCandidates>;
 type Draft={expectedContext:string;snapshot:Snapshot;targetProfileId:string;selectedTaskIds:string[];reason:string;reviewed:boolean};
 type Props={st:State;targetType:'deal'|'order';targetId:string;save:SaveAction;busy:boolean;refresh:()=>Promise<void>;onClose:()=>void};
 const profileLabel=(profile:Snapshot['targetProfiles'][number])=>profile.displayName+' · '+profile.legacyOwnerName;
-const buttonClass='h-auto min-h-11 whitespace-normal';
+const buttonClass='h-auto min-h-11 max-w-full min-w-0 whitespace-normal';
 const taskMeta=(task:Task)=>displayDate(task.due)+' · ansvarig '+task.owner;
 
 function takeSnapshot(st:State,targetType:Props['targetType'],targetId:string):Snapshot{
