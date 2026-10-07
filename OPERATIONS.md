@@ -1,5 +1,26 @@
 # Magnussons CRM – order, tryck och lager
 
+## Stabilt kundansvar – v42, 2026-10-07
+
+1. Som administratör: öppna kundkortet och välj **Byt kundansvar**.
+2. Välj en annan aktiv, granskad säljarprofil. Visningsnamn och ursprunglig ansvarskoppling skiljer profiler med samma namn åt. Ange varför ansvaret byts.
+3. Välj endast de öppna fristående aktiviteter som också ska överföras. Ingenting är valt från början; andra personers, avslutade och särskilda affärs-/orderuppgifter behåller sitt ansvar.
+4. Läs gammalt/nytt kundansvar, valda aktiviteter och arbete som blir kvar. Bekräfta granskningen och använd den uttryckliga överföringen.
+5. Vid konflikt: hämta aktuella uppgifter. Detta ändrar inte ditt valda granskningsunderlag; välj nytt underlag uttryckligen och granska igen med orsak och tillåtna val kvar.
+6. Under pågående skrivning är ändring och stängning spärrade. Vid osparade val måste du välja att fortsätta eller kasta lokala ändringar. Ett obekräftat svar kan betyda att ändringen redan sparats; återförsök med samma oförändrade val eller hämta och granska utfallet.
+
+Kundansvar får en stabil profilkoppling. Efter granskad profilinitiering sätter servern `ownerProfileId` för nya kunder, kundimport och omvandling av företagsleads mot en aktiv granskad säljarprofil. Befintliga kunder med tomt ansvarsprofil-ID fylls inte automatiskt vid läsning eller vanlig redigering. På kundkortet kan administratören välja **Byt kundansvar**, välja en annan aktiv profil, ange orsak och uttryckligen välja vilka öppna fristående aktiviteter som ska följa med. Ny profil och uppgiftsval börjar tomma; granskningen måste bekräftas före överföring.
+
+`Customer.ownerProfileId` är ett additivt fält med tomt standardvärde för äldre poster. En godkänd administrativ kundöverlämning förankrar ansvaret i profilens oföränderliga UUID. Servern kontrollerar ansvarshistoriens profilkedja och att kundens slutliga ansvar stämmer med den senaste överföringen. Kundansvar, valda uppgifter och serverägd historia sparas tillsammans med fryst underlag, CAS och befintligt request-ID-skydd. Generella formulär/import kan inte ändra befintligt ID eller skriva egen överföringshistoria. Att hämta aktuella uppgifter ersätter inte öppningens underlag; ett ändrat underlag kräver ett uttryckligt nytt val och ny granskning. Orsak och val bevaras vid fel; en förlorad kvittens kan följa efter en lyckad skrivning. Dialogens identitet omfattar arbetsyta, användar-ID, medlems-ID och serverroll. Hämtning av aktuell state lämnar ett läs-/åtkomstfel vid fel; ett misslyckat svar behandlas inte som nytt granskningsunderlag.
+
+Detta är ytterligare en avgränsad B01b2-del, inte full personalöverlämning. Befintliga omappade kunder får inget gissat ansvarsprofil-ID från namn eller mejl. Endast uttryckligt valda öppna fristående aktiviteter med kundens tidigare ansvar kan följa med; uppgifternas ansvariga får inga nya profil-ID:n i denna leverans. Kund- och uppgiftsposternas befintliga stabila ID:n ändras inte. Affärer, order, möten, onboarding, kundvårdsärenden och årshjul behåller sitt separata ansvar. Historiska fakturor, vunna affärers ansvar, prospectattribution och mål flyttas inte. Produktionsanspråk, registrerade mängder, revisioner och kundgodkännanden bevaras. Säljar-, läsar- och produktionsroller får ingen ny administrativ eller privat åtkomst. Ingen integration, kundacceptans, faktura eller utskick skapas.
+
+Kundens ansvarsprofil-ID lagras additivt i befintlig JSON; ingen SQL-migrering krävs. Äldre exporter kan läsas med tomt standardvärde, och vanlig läsning/skrivning fyller inte implicit i gamla tomma ansvarsprofil-ID:n på befintliga kunder. **V41 är inte en säker skrivande rollback** efter registrering av det nya kundfältet: dess äldre kundschema kan strippa `ownerProfileId` vid nästa skrivning. V40 saknar dessutom senare kommersiella ID-/historikfält. Behåll den nya modellen, serverreglerna och kompatibel klient genom en schemabevarande framåträttning eller verifierad datamedveten återställningsväg. Ingen faktisk live-rollback eller hostingåterställning har genomförts. CRM-backup bevarar kundens profil-ID och ansvarshistoria men aktuella kontolänkar rensas i målmiljön och måste väljas uttryckligt igen. Privata utkast, konton och Outlook ingår fortfarande inte.
+
+Överlämningsdialogens text-/stängningsvakt är lokal, inte ett nytt varaktigt privat serverutkast. Kopiera osparad orsak före omladdning. Alla skrivprov använder syntetiska data i isolerad SQLite/workerd/D1/R2. Browser-/CI-prov är inga autentiserade live-UI-, verkliga personal-/konto-/integrations-, fysisk telefon/OS-tangentbords-, skärmläsar- eller hostingåterställningsprov. Ingen WCAG-certifiering, världsranking eller personalacceptans utlovas. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas; explicit brief/repo används. Scheman, prompter och aktivering är oförändrade. Inga kundmejl eller riktiga kundorder skrivs.
+
+[VALIDATION](VALIDATION.md) skiljer faktisk testmiljö från drift/personal.
+
 ## Byt affärs- eller orderansvar – v41, 2026-10-07
 
 1. Som administratör: öppna den relevanta affären/orderpanelen och välj **Byt affärsansvar** eller **Byt orderansvar**.
