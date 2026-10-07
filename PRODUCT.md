@@ -1,5 +1,19 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Gör en resultatprofil historisk med granskning – v55
+
+Under **Konton & roller → Överlämna arbete** kan administratören välja profil och öppna **Granska profilavslut**. Dialogen visar fullständigt namn, profil-ID, äldre ansvarskoppling, vald arbetsyta och hela profilens kvarvarande ansvar. Listans sökning/filter räcker inte som avslutsunderlag; servern granskar samtliga ansvarsdelar.
+
+När inget operativt ansvar återstår och minst en annan aktiv profil finns kan administratören ange orsak, granska och välja **Gör profilen historisk i denna arbetsyta**. Profilen blir historisk, dess operativa ansvarskoppling tas bort och avslutet sparas. Identitet, avslutat arbete, historiska resultat, mål och sparad kontolänk ligger kvar. Profilen kan inte väljas för nytt operativt arbete eller återaktiveras via vanlig profilredigering.
+
+Tre skilda besked visas: **Resultatprofil**, **CRM-konto** och **Sidåtkomst**. Profilstatus eller kontolänk innebär inget verifierat besked om all personåtkomst. CRM-konto, andra arbetsytor, produktionens användaransvar, privata utkast/Outlook och Sitesåtkomst hanteras separat. **Profilavslut** är ingen full personalavveckling.
+
+Historiska poster finns kvar för läsning och resultat. Vanliga redigeringsformulär för äldre kund-/affärs-/orderansvar kan nekas efter profilavslut. Generell historikredigering och återöppning ingår inte; ett kommande flöde behöver granska aktivt kundrelationsansvar utan att flytta tidigare försäljning.
+
+Orsak och tidigare underlag bevaras vid fel i den öppna dialogen. Hämtning och uttrycklig inläsning av nytt granskningsunderlag skiljs åt; ny orsak eller nytt underlag kräver ny granskning. Formuläret har inget privat serverutkast. Försäljning mot månads-/årsmål, marginal och nya prospects består; TB är inget huvudmått. [VALIDATION](VALIDATION.md) anger faktisk release och provgränser.
+
+## Historik före v55
+
 ## Arbetsöverlämning med synligt personansvar – v54
 
 **Konton & roller → Överlämna arbete** är administratörens samlade inventering. Välj en stabil säljarprofil, även en inaktiv, eller **Ansvar som behöver granskas**. Arbetskategori, lokal sökning, antal och **Visa fler ansvarsposter** visar vad urvalet omfattar. Profilens fulla visningsnamn, äldre ansvarskoppling, profil-ID och kontolänkens närvaro framgår intill väljaren; kontolänken är ingen kontroll av aktuellt inloggningstillstånd.

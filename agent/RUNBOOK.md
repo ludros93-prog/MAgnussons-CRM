@@ -1,5 +1,13 @@
 # Återkommande arbete för CRM-superbyggaren
 
+## Dataregel efter v55:s profilavslutshistorik
+
+Efter att `retirementHistory` sparats krävs **v55-kompatibel skrivare** för aktuell CRM-data. Äldre oförändrad v54 normaliserar bort den additiva profilhistoriken; dess gamla schema kan därför inte användas som säker skrivande återgång. Detta är en kompatibilitetsregel, inget påstående om att Sites automatiskt spärrar äldre deployer.
+
+Vid korrigering/återgång, behåll v55:s profilfält, historikvalidering och spärr mot ny tilldelning/återöppning. Kontrollera kandidatens parser, API, JSON/NDJSON-backup och isolerad faktisk återläsning med syntetiska filer innan publicering. Återpublicera ingen äldre skrivare enbart för att dess UI laddar. En äldre app kräver faktisk full databas-/fil-/versions-/länkåterställning från före ändringen och en plan för arbete som tillkommit därefter.
+
+Gemensam CRM-backup omfattar inte konton, privata utkast eller Outlook. Profilernas aktuella medlemslänkar töms vid befintlig återställning och måste återkopplas uttryckligen; historiska aktörsfält ger ingen åtkomst. Lokal syntetisk återställning är ingen utförd hostingåterställning. [VALIDATION](../VALIDATION.md) anger den senaste faktiskt prövade kompatibiliteten och provens miljö.
+
 Följ [MISSION.md](MISSION.md), aktuell [AGENTS.md](../AGENTS.md) och [BACKLOG.md](BACKLOG.md). Körboken beskriver hur en schemalagd eller direkt startad körning förbättrar den befintliga produkten. En körning kan fortsätta en tidigare leverans, men ska utgå från färsk källa och dagens kontroller.
 
 ## 1. Fastställ källa, åtkomst och pågående arbete

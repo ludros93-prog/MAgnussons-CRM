@@ -1,5 +1,24 @@
 # Magnussons CRM – order, tryck och lager
 
+## Granska och avsluta en resultatprofil – v55
+
+1. Logga in som administratör. Öppna **Konton & roller → Överlämna arbete** och välj den stabila säljarprofilen. Kontrollera namn, profil-ID, äldre ansvarskoppling och arbetsyta.
+2. Använd befintliga granskade överlämningar för kvarvarande arbete. Öppna sedan **Granska profilavslut**. Dialogen granskar hela profilens operativa underlag; kategori, sökning och antal synliga kort påverkar inte kontrollen.
+3. Läs alla blockerare och deras kund-/postunderlag. Öppna specialuppgifter och eventförberedelser som saknar granskad överföring måste fortfarande hanteras i sina egna befintliga flöden. Avsluta inget arbete utan faktiskt underlag för dess status. Minst en annan aktiv granskad profil måste finnas kvar.
+4. Läs vad som ändras och bevaras. Skriv varför resultatprofilen ska bli historisk, markera granskningen och välj **Gör profilen historisk i denna arbetsyta**. Servern sparar profilstatus, operativ ansvarskoppling och avslutshistorik tillsammans.
+5. Vid ändrat underlag behålls din orsak i dialogen. **Hämta aktuellt underlag** är läsning; **Läs in aktuellt granskningsunderlag** antar aktuell version och tömmer granskningen. Kontrollera igen innan du markerar och sparar. En ny orsak tömmer också granskningen.
+6. Läs faktiskt framgångsbesked och den sparade historiken. Historisk profil och sparad kontolänk finns kvar; äldre resultat flyttas inte till en ersättare. Ett tappat svar är inget bevis på misslyckad skrivning: hämta aktuellt underlag och använd befintlig återförsökshantering. Stängning återställer inte ett redan registrerat avslut.
+
+**Konto och sidåtkomst är separata.** Kontrollera det personliga CRM-kontot i **Registrerade CRM-konton** och Sitesåtkomsten i dess avsedda administration. Profilvyn läser inte Sitesmedlemskap. Ett profilavslut gäller vald arbetsyta; andra arbetsytor och produktionens användar-ID granskas separat. Inga privata utkast/Outlookdata flyttas eller raderas. Skriv inte att personen är helt avvecklad utifrån profilstatusen.
+
+**Historiska kundkort:** tidigare poster och resultat finns kvar, men vanlig redigering av kund-/affärs-/orderunderlag kan nekas efter borttagningen av den operativa ansvarskopplingen. V55 har inget generellt återöppningsflöde. Ändra inte historiskt försäljningsansvar för att kringgå spärren; nästa flöde behöver granska aktivt kundrelationsansvar separat.
+
+**Osparad text:** Formuläret har inget privat serverutkast. Orsaken finns kvar medan dialogen är öppen; stängning av ändrat formulär kräver ett uttryckligt val. Kopiera nödvändig text före omladdning eller stängning utan sparning.
+
+**Återgång efter ny avslutshistorik:** använd v55-kompatibel app. Äldre oförändrad v54 kan skriva bort `retirementHistory`. Ingen SQL-migration behövs, men äldre skrivare är inte säkra efter den additiva JSON-ändringen. [RUNBOOK](agent/RUNBOOK.md) och [VALIDATION](VALIDATION.md) anger backupgräns och faktiskt verifierad kompatibilitet/återställning.
+
+## Historik före v55
+
 ## Granska en persons kvarvarande arbete – v54
 
 1. Logga in som administratör och öppna **Konton & roller → Överlämna arbete**. Om säljarprofiler inte är granskade/initierade, börja i **Mål & inställningar**. Översikten kopplar inga äldre namn automatiskt till personer.
