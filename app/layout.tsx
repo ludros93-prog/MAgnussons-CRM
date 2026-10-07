@@ -11,6 +11,7 @@ import "./result-work.css";
 import "./day-work.css";
 import "./customer-overview.css";
 import "./task-responsibility.css";
+import "./meeting-responsibility.css";
 
 export const metadata: Metadata = {
   title: "Magnussons CRM",

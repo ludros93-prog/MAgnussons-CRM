@@ -157,8 +157,14 @@ function derivedTaskProfileId(st:State,task:Task){
  return st.settings.sellerProfilesInitialized?sellerProfileForOwner(st.settings,task.owner)?.id||'':'';
 }
 
-export function assignTaskResponsibilities(previousState:State,nextState:State){
+export function assignTaskResponsibilities(previousState:State,nextState:State,exactNewMeetingOwners?:ReadonlyMap<string,string>){
  const previous=new Map(previousState.tasks.map(task=>[task.id,task]));
+ // Only server-created, new meeting follow-ups may preserve an explicit blank
+ // source ID. Other generators retain their established derivation rules.
+ for(const [taskId,ownerId] of exactNewMeetingOwners||[]){
+  const task=nextState.tasks.find(row=>row.id===taskId);
+  need(!previous.has(taskId)&&task&&task.kind==='meeting_followup'&&!task.dealId&&(ownerId===''||matchingProfileId(nextState.settings,task.owner,ownerId)),'Mötets exakta uppgiftsansvar får bara kopieras till en ny mötesuppföljning.');
+ }
  for(const task of nextState.tasks){
   const old=previous.get(task.id);
   const oldHistory=old?.responsibilityTransfers||[],audited=!!old&&task.responsibilityTransfers.length>oldHistory.length;
@@ -166,7 +172,7 @@ export function assignTaskResponsibilities(previousState:State,nextState:State){
   else need(!task.responsibilityTransfers.length,'En ny uppgift får inte ärva en annan uppgifts ansvarshistorik.');
   if(!audited){
    need(!old||!oldHistory.length||old.owner===task.owner,'Uppgiftens granskade ansvar måste överföras i dess överlämning.');
-   task.ownerProfileId=old&&old.owner===task.owner?old.ownerProfileId||'':derivedTaskProfileId(nextState,task);
+   task.ownerProfileId=exactNewMeetingOwners?.has(task.id)?exactNewMeetingOwners.get(task.id)!:old&&old.owner===task.owner?old.ownerProfileId||'':derivedTaskProfileId(nextState,task);
   }
  }
  validateTaskResponsibilityReferences(nextState);
