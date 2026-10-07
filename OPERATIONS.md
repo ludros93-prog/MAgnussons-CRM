@@ -1,5 +1,22 @@
 # Magnussons CRM – order, tryck och lager
 
+## Granskat onboardingansvar – v51
+
+Onboarding får en egen stabil ansvarig säljarprofil. Administratören förankrar äldre ansvar eller byter ansvar med orsak, granskning och uttryckligt valda öppna onboardinguppgifter. Ingen uppgift är förvald. Kund-, affärs-, order- och resultatansvar behålls. Den personliga vyn **Nya kunder** följer onboardingansvaret; äldre tomma ID:n använder befintligt ansvar för visning.
+
+1. Öppna kundens onboardingchecklista. Efter profilinitiering visas ansvar som läsbar information.
+2. Som administratör: välj **Förankra onboardingansvar** eller **Byt onboardingansvar**.
+3. Välj aktiv granskad mottagarprofil och läs hela ansvarskopplingen intill väljaren.
+4. Välj endast öppna onboardinguppgifter som ska följa med. Övriga och avslutade uppgifter behåller ansvar.
+5. Ange orsak, granska sammanställningen och bekräfta granskningen.
+6. Spara. Historiken bevarar tidigare faktiskt profil-ID, profiler/namnsnapshots, orsak och registrerande person.
+
+Äldre tomt ID kan förankras till samma person. En inaktiv utgående person kan lämna över utan återaktivering. En redan förankrad profil kan inte skapa ny överföring till sig själv. Saknad/motsägande koppling behöver granskning. Administratören och eventuell kontokopplad mottagare kontrolleras även vid transaktionen. Profil-ID och historik skyddas vid vanlig checklistredigering; efter profilinitiering ändras ansvar endast genom granskad överlämning.
+
+**Hämta aktuellt underlag** hämtar information; **Läs in nytt granskningsunderlag** använder den uttryckligen och kräver ny granskning. Orsak och möjliga val bevaras. Överlämningen är inget varaktigt privat utkast: kopiera orsaken före omladdning. Ett äldre privat checklistutkast behåller sina värden men kan få konflikt efter ansvarsändringen; uttrycklig jämförelse med aktuell version uppdaterar ansvarsbasis och bevarar övriga privata uppgifter. Oklart sparbesked kräver återläsning eller samma oförändrade återförsök.
+
+**Driftgräns:** v51 utökar JSON och Task-historik utan ny SQL-tabell. När nytt onboardingprofil-ID eller historik registrerats, även utan överföring, är oförändrad v50 ingen säker återgång. Bevara v51-formatet och servervalideringen vid korrigering. Äldre återgång kräver verifierad snapshot före förändringen med filer, versioner och kopplingar samt plan för senare arbete. Ingen faktisk hostingåterställning är gjord. Återställda säljarprofiler saknar kontokopplingar tills dessa återansluts uttryckligen; historiska aktörsuppgifter ger ingen behörighet. Konton, privata utkast och Outlook-anslutningar ingår inte i CRM-backup. [VALIDATION](VALIDATION.md) anger releasebevis och provgränser.
+
 ## Kundval på korta skärmar – v50
 
 1. Sök på företag, kontaktperson, e-post eller organisationsnummer.

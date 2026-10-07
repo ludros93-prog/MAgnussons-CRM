@@ -1,5 +1,14 @@
 # Byggagentens verifieringslogg
 
+## 2026-10-07 – v51: granskat onboardingansvar
+
+- Färsk bas/main `39b5c1c`, inga öppna PR:er och 119 rena worktrees vid start; egen reservation `crm51-20261007`. Befintlig Site och begränsad delning respekterades. Ingen annan körning övertogs.
+- Stabil onboardingprofil och granskad förankring/överföring med frivilligt valda öppna uppgifter byggdes. Personlig onboarding följer eget ansvar. Profil-ID/historik och privata utkast skyddas; efter profilinitiering ändras ansvar via granskad överlämning. Serverroller, CAS, atomik/idempotens och återställningskedjor har nya regressioner/runtimeprov.
+- Lokal slutkod `d3de221`/träd `1fb1213` passerade fem slutkontroller och 19 browserfall. Mobilväljare, rullbart orsakfält och 44 px granskningsrad verifierades. Oberoende källgranskning och separat visuell granskning har kvitton i VALIDATION. Kontroller av data/filer/integritet passerade; egen Worker, lagring och portar städades.
+- Historiskt GitHub-hinder: vid kontrollen 15:28 UTC visade incident `djlmxz2zd0j7` major outage. Tidigare native skrivningar och git/blobs-POST gav serverfel/HTTP 500. Därefter sparades PR #76:s slut-head `f67b6d2`, exakt samma träd; CI `37644486156`/jobb `112871581501` completed/success med alla 13 steg. Inga äldre checks återanvändes. Vid kontroll 15:38:23 UTC var driften delvis försämrad och incidenten fortsatt under utredning (uppdaterad 15:35).
+- App-main `298c3ac219cf67f86fbf1aac5bf29beff9c4b2df`, main-CI [37645400963](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37645400963), jobb `112874718537`, completed/success med alla 13 steg. Samma Sites-projekt: source `5726905666877b95a0e7c721c82625a4cbf4a504`, version `51`, deploy `appgdep_6ac668d2798c8191b117a4d4e3f2f6d3`, succeeded `2026-10-07T15:44:29.644103+00:00`. Arkiv `905c85ef` och releasebevis redovisas separat i VALIDATION.
+- Ingen SQL-migration. Oförändrad v50 är inte säker återgång efter registrerade nya onboarding-ID:n/historik; v51-format och servervalidering måste bevaras. Hostingåterställning, specialansvar/full personalavveckling, privat backup, chefsroll, integrationer och personalpilot återstår. Inga verkliga kundskrivprov, utskick, andra CRM-projekt eller schema-/promptändringar. Codex-referensen är oläst.
+
 Loggen innehåller källrevisioner, kontroller och tekniska resultat. Kunduppgifter, bilagor, adresser, kontoutdrag, tokens och inspelningar hör inte hemma i detta publika repo.
 
 ## 2026-10-05 – etablering

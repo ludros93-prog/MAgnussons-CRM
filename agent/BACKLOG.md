@@ -1,5 +1,13 @@
 # Arbetskö för Magnussons CRM
 
+## v51: verifierat onboardingansvar
+
+B01b2 får stabilt onboardingansvar och granskad förankring/överlämning med frivilligt valda öppna uppgifter. Personlig onboarding följer sitt eget ansvar. Lokal kod `d3de221` har fem gröna slutkontroller och 19 godkända browserfall; PR #76:s slut-head `f67b6d2` har samma träd och grön CI med 13 steg. App-main `298c3ac219cf67f86fbf1aac5bf29beff9c4b2df`, Sites-version `51`; [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger releasebevis.
+
+Nästa högsta genomförbara B01b2-del är stabilt ansvar och granskad överlämning i kundvårdsärenden och årshjul, efter kontroll av färsk kod. B01b2 är inte fullständigt klart: återstående specialflödesansvar och full personalöverlämning kvarstår. Privat utkast-/konto-/Outlookbackup, hostingåterställning, chefsroll, integrationer och personalpilot är öppna. Välj nästa genomförbara avgränsning enligt tabellen efter kontroll av färsk bas, pågående arbete och publicering. Global laddningsvy är konkret separat designarbete. Inga scheman, prompter eller aktiveringar ändrades.
+
+Slutmatrisen observerade tre initiala nekade `GET /api/outlook` för produktion/tryck/lager: 403 med endast feltext. Outlook-route, komponent och useOutlook-villkor är oförändrade mot v50 i källjämförelsen; inget äldre runtimeprov görs gällande. En separat förbättring kan vänta på laddad roll före läsningen.
+
 Upprättad 2026-10-05 från Ludwigs brief och lästa repo-underlag. Detta är en prioriterad arbetskö, inte en markering av godkänd drift. Uppdatera den när faktisk kod, kontroller, publicering eller användarobservationer ändrar läget. Dagens källrevision och konkreta provresultat hör hemma i aktuell status/verifiering.
 
 ## Välj arbete

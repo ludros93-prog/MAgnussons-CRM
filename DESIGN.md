@@ -1,5 +1,13 @@
 # Magnussons CRM – designriktning
 
+## Granskat onboardingansvar – v51
+
+Behåll kundsammanhanget och skilj checklistans privata redigering från gemensam överlämning. Nuvarande ansvar, aktiv mottagarprofil, valda/återstående uppgifter, orsak och granskningsruta leder till en konkret svensk sparhandling. Endast administratören får ändringskontrollen.
+
+Dialogen har en gemensam huvudrullningsyta; orsakfältet har dessutom intern rullning för längre text. Native tangentbordsfokus och tydlig stängning är verifierade i slutmatrisen. Vald profil visar högst två rader; full identitet och ursprunglig ansvarskoppling syns intill och beskrivs via aria-describedby. Alternativlistan behåller full text. Klickbara uppgifts-/granskningsetiketter och nya vanliga handlingar har lokalt mål minst 44 px; detta är inget generellt WCAG-AA-minimum eller certifiering.
+
+19 syntetiska browserfall och separat visuell bildgranskning redovisas i [VALIDATION](VALIDATION.md), med avgränsat 2×-textprov. Verklig personalacceptans, fysisk telefon och skärmläsare återstår. Den globala laddningsvyn är fortsatt separat designarbete.
+
 Designen är ett huvudkrav och ska utvecklas med inspiration från Saleshub, Lime och Salesforce. Målet är att CRM-ovan personal snabbt förstår kunden, sitt ansvar och nästa handling. Designarbetet ingår i vidareutvecklingen av den befintliga appen.
 
 ## Gemensamt uttryck

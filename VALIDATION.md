@@ -1,3 +1,53 @@
+# Granskat onboardingansvar – v51
+
+Lokal slutkod `d3de221dcc7f65e82e254b996067f113f7c86523`, träd `1fb1213ca8446f0ccee8d0948ae40db0a01278e8`, är verifierad med fem obligatoriska slutkontroller och 19 browserfall. Native slut-head `f67b6d2cd412491c2f04e0a0cfca9371ba8f6b7d` har exakt samma träd och godkänd PR-CI. Kod, main och Sites redovisas separat nedan.
+
+## Beteende och slutkontroller
+
+Onboarding får en egen stabil ansvarig säljarprofil. Administratören förankrar äldre ansvar eller byter ansvar med orsak, granskning och uttryckligt valda öppna onboardinguppgifter. Ingen uppgift är förvald. Kund-, affärs-, order- och resultatansvar behålls. Den personliga vyn **Nya kunder** följer onboardingansvaret; äldre tomma ID:n använder befintligt ansvar för visning.
+
+Vanlig checklistredigering bevarar profil-ID och ansvarshistorik. Efter profilinitiering får ansvarig endast ändras genom granskad överlämning. Överlämningen skriver onboarding och endast valda uppgifter atomiskt med kopplad historik, händelse och idempotenspost. Relaterad ändring i fryst granskningsunderlag ger 409; hämtning och uttrycklig inläsning hålls isär. Orsak och möjliga val bevaras. Källpersonen får vara inaktiv; administratören och en kontokopplad mottagare måste fortfarande vara behöriga vid SQL-transaktionen.
+
+Fem slutkontroller passerade på ren oförändrad lokal kandidat: CRM/Outlook-regression, icke-inkrementell TypeScript, bygge, isolerad workerd/D1/R2-runtime och diffkontroll. Kvitto `/workspace/scratch/crm51/release-checks-label/checks.json`, SHA256 `04be16e1bfdf5bca514287a450713b2facb6c4524889a32b840539d11c653a94`.
+
+Nya prov omfattar äldre tomma ID:n vid GET/initiering/återställning, inaktiv källa, förankring/överföring, utelämnade eller förfalskade metadata, gamla privata checklistutkast, ändrade medlemskopplingar, CAS, återkallad mål-/aktörsbehörighet, dubbelklick/förlorat svar, vald/icke vald/avslutad uppgift och separat CSM-ansvar efter onboarding. Första katalogorder bevarar exakt registrerat kundprofil-ID, även tomt. JSON/NDJSON återläser faktiska filbytes från syntetiska testfiler; 16 korrumperade onboarding-/uppgiftshistorikfall avvisas utan partiell ändring. Runtime återställer 13,5 MB filer och bevarar positiva privata/gemensamma Outlook- och utkastdata. Befintliga mängd-/revisionsfall 40→45, godkänd 50→48, kassation och delleverans ingår fortsatt i regressionen.
+
+## Slutliga browserprov
+
+19 av 19 fall passerade på samma frysta kod och dist: 320×360, 390×844 och 1280×900, uppmätt exakt 2× text i dialogen och stängningsbekräftelsen, långa kund-/profilnamn, native Tab/fokus och återgång till öppnaren, förankring/överföring, personliga onboardingvyer, verklig samtidig 409 med bevarad text och uttrycklig ny granskning, privata checklistutkast efter omladdning och vanlig checklistpublicering. Läs-/produktionsroller nekades giltiga överföringsförsök av den lokala servern utan skrivning.
+
+Slutkvitto `/workspace/scratch/crm51/browser/final-receipt.json`, SHA256 `82f245c2efaed45b0fd65e0bbb82af42cc37b935a7f40fddede9070609053f91`; rapport `/workspace/scratch/crm51/browser/final-152947/report.json`, SHA256 `27730a82a2b9844367fb5efc573e43211f140e9d49e488f98586d1cb6f588c79`. Samtliga 279 källfiler och 96 distfiler hade identiska hashvärden före/efter. Kontroller av 18 tabeller och två R2-objekt visade endast uttryckligen tillåtna syntetiska ändringar; övriga data, positiva privata/gemensamma Outlook-data, filer och demodata bevarades. Egen Worker avslutades, testlagringen togs bort och båda egna portarna stängdes.
+
+Inga page errors, oväntade konsolfel eller externa anrop observerades. Tre initiala `GET /api/outlook` gav 403 för production/print/warehouse med endast feltext, och ett avsiktligt konfliktfall gav faktisk 409. Dessa väntade konsolmeddelanden finns kvar i rapporten; de har inte räknats som noll fel. Outlook-läsning före laddad roll är separat kvarvarande förbättring.
+
+Mobilproven identifierade en för hög profilväljare, ett innehållsväxande orsakfält och en 42 px granskningsrad. Slutmatrisen verifierade rättningarna. Vald profil begränsas till två rader; full identitet syns intill och beskrivs via aria-describedby. Alternativen behåller full etikett. Orsakfältet bevarar hela texten med intern scroll; granskningsraden har minst 44 px höjd. Tidigare misslyckade körningar är bevarade som sådana. Oberoende källgranskning: `/workspace/scratch/crm51/audit/review-review-label-receipt.json`, SHA256 `c5d6eb933d7a4b89ab791d2ff21f25fd804b8ba26fc130ea16e7a747c8837739`. Separat visuell bildgranskning: `/workspace/scratch/crm51/audit/root-visual-review.json`, SHA256 `d0f9e22a7fbf37a1b70518a715e2d9c8c77f89ae3b32b275806ea8d61f7786d1`.
+
+## Kod, main och Sites
+
+[PR #76](https://github.com/ludros93-prog/MAgnussons-CRM/pull/76) har slut-head `f67b6d2cd412491c2f04e0a0cfca9371ba8f6b7d` och samma verifierade träd. Actions-körning [37644486156](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37644486156), jobb `112871581501`, är completed/success med samtliga 13 steg. Detta gäller slutkoden inklusive mobilfixarna. App-main: `298c3ac219cf67f86fbf1aac5bf29beff9c4b2df`; main-CI: [37645400963](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37645400963), jobb `112874718537`, completed/success med alla 13 steg.
+
+Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2`: source `5726905666877b95a0e7c721c82625a4cbf4a504`, version `51`, deploy `appgdep_6ac668d2798c8191b117a4d4e3f2f6d3`, succeeded `2026-10-07T15:44:29.644103+00:00`. Lokalt arkiv `/workspace/scratch/crm51/site-v51.tar.gz` innehåller 97 poster/96 distfiler, råtar 4 689 920 byte, SHA256 `905c85ef127edd970df7b8791d6b368fa29256ca76aad9d8e0338759791a3183`. Arkivkontroll är ett separat bevis från verifierad source-push, save och lyckad deploy. Begränsad CUSTOM-delning, miljö, DB/R2 och scheman följer releasekvittot; ingen ändring av delning eller scheman ingår i appförbättringen.
+
+Efter publicering återlästes source/version/deploy. Hela CUSTOM-policyrevision 2 och hela miljörevision 1 är identiska med före publicering; DB/R2 och noll scheman består. Anonym startsida och CRM-API gav 401/401 via curl. En tidigare urllib-kontroll gav 403 med obekräftad origin och räknas inte som åtkomstprov. Kvitton: `/workspace/scratch/crm51/release-receipt.json` och `live-anonymous-readback.json`. Ingen autentiserad live-UI eller riktiga kundskrivningar provades.
+
+Historiskt hinder: vid kontrollen 15:28 UTC visade [GitHub Status](https://www.githubstatus.com/incidents/djlmxz2zd0j7) major outage för Git Operations, Pull Requests och Actions. Det ursprungliga incidentkvittot från 15:19:18 UTC är `/workspace/scratch/crm51/github-incident.json`, SHA256 `b7b89c44b4a0ff949c953c5c7c4025a0b5ecfd5878f49efbdae025c1481bf63a`. Native skrivningar och autentiserat git/blobs-POST hade då serverfel/HTTP 500. Slut-head kunde därefter sparas och ovanstående exakta PR-CI slutföras; inga äldre checks återanvändes. Vid senare kontroll 15:38:23 UTC visade GitHub delvis försämrad drift med incidenten fortsatt under utredning, uppdaterad 15:35. Detta påstår inte att hela incidenten löstes.
+
+## Dataformat och återgång
+
+Onboardingens JSON får `ownerProfileId` och `responsibilityTransfers`; Task-historik får `source: "onboarding"`. Ingen SQL-migration. Äldre data och backup utan fälten får tomma värden; läsning/GET/profilinitiering förankrar inte automatiskt. Historikkopplingarna valideras i båda riktningarna. Ny onboarding kopierar kundens faktiskt registrerade profil-ID, även tomt.
+
+Ett separat syntetiskt normaliseringsprov mot v50 visar att den avvisar onboarding som Task-källa och annars tar bort nya onboardingfält, även när inga uppgifter följde med. Ingen SQL-skrivning eller publicerad återgång genomfördes. När ett nytt onboardingprofil-ID eller en onboardinghistorik har registrerats, även vid ny onboarding utan överföringshistorik, är oförändrad v50 ingen säker återgång. Blanda inte v50 och v51 som skrivande versioner mot samma data. En kompatibel korrigering måste behålla v51-formatet och dess servervalidering. Full äldre återgång kräver verifierad snapshot före förändringen med filer, filversioner och kopplingar samt en plan för senare arbete. Faktisk hostingåterställning/live-rollback återstår.
+
+Återställning tömmer säljarprofilernas `memberId`-kopplingar i målmiljön; verkliga konton behöver återanslutas uttryckligen. Historiska aktörsuppgifter ger inte återställd behörighet. CRM-backup omfattar inte konton, privata utkast eller Outlook-anslutningar.
+
+Browserproven använde lokal workerd och Chromium 151 med syntetisk D1/R2 och serverkontrollerade testroller, utan ersatta API-svar. Textprovet förstorar uppmätta dialogtexter, inte hela sidan eller browserzoom. Detta är inga autentiserade live-UI-, riktiga konto-/integrations-/personal-, fysisk telefon-, OS-tangentbords-, skärmläsar- eller hostingåterställningsprov, och ingen full WCAG-certifiering. Inga verkliga kundorder skrivtestades. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant read_thread saknas; explicit brief/repo används.
+
+Kvarvarande specialansvar, full personalavveckling, chefsroll, separat privat backup, integrationer och personalpilot finns i [BACKLOG](agent/BACKLOG.md).
+
+---
+
+## Historik – tidigare verifierade versioner
+
 # Kundval på korta skärmar – v50
 
 ## Beteende och faktiska prov
