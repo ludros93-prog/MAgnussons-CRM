@@ -234,12 +234,13 @@ export function assignTaskResponsibilities(previousState:State,nextState:State,e
   const task=nextState.tasks.find(row=>row.id===taskId),deal=task?nextState.deals.find(row=>row.id===task.dealId&&row.customerId===task.customerId):undefined,yearNeed=deal?nextState.customers.find(row=>row.id===deal.customerId)?.yearNeeds.find(row=>row.dealId===deal.id):undefined;
   need(!previous.has(taskId)&&task&&task.kind==='discovery'&&deal&&yearNeed&&task.owner===yearNeed.owner&&ownerId===yearNeed.ownerProfileId&&deal.ownerProfileId===ownerId&&(ownerId===''||matchingProfileId(nextState.settings,task.owner,ownerId)),'Årshjulets exakta ansvar får bara kopieras till den nya behovsaffärens uppgift.');
  }
- // Follow-up successors copy the original task's exact recorded identity,
- // including a legacy blank. They start a new task, never a copied audit.
+ // Customer-activity successors copy the original task's exact recorded
+ // identity, including a legacy blank. Other follow-up kinds retain their
+ // existing derivation rules. New tasks never copy the original audit.
  for(const [taskId,entry] of exactNewFollowUpOwners||[]){
   const source=previous.get(entry.sourceTaskId),task=nextState.tasks.find(row=>row.id===taskId);
   const kind=source&&protectedFollowUp(source)&&source.kind!=='csm_issue'?'manual':source?.kind;
-  need(!previous.has(taskId)&&source&&canFollowUp(source)&&task&&!task.done&&!task.doneAt&&!task.responsibilityTransfers.length&&task.kind===kind&&task.customerId===source.customerId&&task.dealId===source.dealId&&task.owner===source.owner&&entry.ownerProfileId===(source.ownerProfileId||'')&&(entry.ownerProfileId===''||matchingProfileId(nextState.settings,task.owner,entry.ownerProfileId)),'Uppföljningens exakta uppgiftsansvar får bara kopieras från den ursprungliga aktiviteten till ett nytt nästa steg.');
+  need(!previous.has(taskId)&&source&&taskResponsibilityKind(source)==='customer_activity'&&canFollowUp(source)&&task&&!task.done&&!task.doneAt&&!task.responsibilityTransfers.length&&task.kind===kind&&task.customerId===source.customerId&&task.dealId===source.dealId&&task.owner===source.owner&&entry.ownerProfileId===(source.ownerProfileId||'')&&(entry.ownerProfileId===''||matchingProfileId(nextState.settings,task.owner,entry.ownerProfileId)),'Uppföljningens exakta uppgiftsansvar får bara kopieras från den ursprungliga aktiviteten till ett nytt nästa steg.');
  }
  for(const task of nextState.tasks){
   const old=previous.get(task.id);

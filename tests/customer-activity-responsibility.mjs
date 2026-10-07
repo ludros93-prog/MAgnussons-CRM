@@ -61,7 +61,7 @@ export async function verifyCustomerActivityResponsibility({core,business,ops}){
  const paused=base('prospecting');paused.customers[0].prospecting.stage='paused';assert.equal(responsibility.taskResponsibilityCandidates(paused,task(paused).id).blockedReason,'');
  // Exact owner copying is an internal, constrained successor operation.
  // It cannot be reused to bind generic/new or unrelated work to a source.
- for(const kind of ['manual','csm','csm_need','prospecting','delivery'])for(const recorded of [false,true]){
+ for(const kind of Object.keys(labels))for(const recorded of [false,true]){
   const before=base(kind,recorded),next=structuredClone(before),source=task(before),successor=core.TaskSchema.parse({...source,id:'synthetic-exact-successor',kind:kind==='csm_need'?'manual':kind,responsibilityTransfers:[]});next.tasks.push(successor);
   const entry={sourceTaskId:source.id,ownerProfileId:source.ownerProfileId},map=new Map([[successor.id,entry]]);responsibility.assignTaskResponsibilities(before,next,undefined,undefined,undefined,map);assert.equal(successor.ownerProfileId,source.ownerProfileId);
   for(const patch of [{customerId:before.customers[1].id},{dealId:before.deals[0].id},{owner:owners.b},{kind:kind==='csm_need'?'csm_need':'care'},{done:true},{doneAt:at}]){
@@ -69,6 +69,11 @@ export async function verifyCustomerActivityResponsibility({core,business,ops}){
   }
   for(const forged of [{...entry,sourceTaskId:'missing-task'},{...entry,ownerProfileId:ids.b}])assert.throws(()=>responsibility.assignTaskResponsibilities(before,structuredClone(next),undefined,undefined,undefined,new Map([[successor.id,forged]])),/ursprungliga/);
   const completed=structuredClone(before);task(completed).done=true;assert.throws(()=>responsibility.assignTaskResponsibilities(completed,structuredClone(next),undefined,undefined,undefined,map),/ursprungliga/);
+ }
+ for(const kind of ['manual','care','meeting_followup','delivery','linked_csm'])for(const recorded of [false,true]){
+  const before=base(kind==='linked_csm'?'csm':kind,recorded);if(kind==='linked_csm')task(before).dealId=before.deals[0].id;
+  const next=structuredClone(before),source=task(before),successor=core.TaskSchema.parse({...source,id:'synthetic-invalid-mapped-successor',responsibilityTransfers:[]});next.tasks.push(successor);
+  assert.throws(()=>responsibility.assignTaskResponsibilities(before,next,undefined,undefined,undefined,new Map([[successor.id,{sourceTaskId:source.id,ownerProfileId:source.ownerProfileId}]])),/ursprungliga/,'Exact-copy map cannot change established follow-up behavior for '+kind);
  }
  function saveWorkflow(st,kind,reviewed=false){const c=st.customers[0];return core.applyAction(st,{type:kind==='prospecting'?'prospecting':'plan',data:kind==='prospecting'?{customerId:c.id,prospecting:{...c.prospecting,nextAction:'Syntetiskt uppdaterad bearbetning'}}:{customerId:c.id,plan:{...c.plan,nextAction:'Syntetiskt uppdaterad kundplan'},nextReview:future,expectedOrder:c.expectedOrder,reviewDays:c.reviewDays,reviewed}},actor);}
  // Customer-plan/prospect edits cannot take unaudited task ownership back to

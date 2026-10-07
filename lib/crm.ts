@@ -230,7 +230,7 @@ export function applyAction(current:State,action:Action,actor?:Actor):State{
   need(!protectedWork||!p.completed,'Kontakten kan sparas här. Avsluta ärendet, inköpsbehovet eller onboarding i dess arbetsflöde.');
   if(canonical||ongoing||protectedWork||p.outcome==='no_reply'||!p.completed)need(p.nextAction,'Ange nästa aktivitet.');
   if(p.nextAction){TaskSchema.parse({...task,title:p.nextAction,due:p.nextDate});need(p.nextDate>=today,'Nästa aktivitet ska vara idag eller senare.');}
-  const addFollowUp=(kind=task.kind)=>{const next=TaskSchema.parse({...task,id:uid(),kind,responsibilityTransfers:[],title:p.nextAction,due:p.nextDate,done:false,doneAt:''});st.tasks.push(next);exactNewFollowUpOwners.set(next.id,{sourceTaskId:task.id,ownerProfileId:task.ownerProfileId});};
+  const addFollowUp=(kind=task.kind)=>{const next=TaskSchema.parse({...task,id:uid(),kind,responsibilityTransfers:[],title:p.nextAction,due:p.nextDate,done:false,doneAt:''});st.tasks.push(next);if(!task.dealId&&['csm','csm_need','prospecting'].includes(task.kind))exactNewFollowUpOwners.set(next.id,{sourceTaskId:task.id,ownerProfileId:task.ownerProfileId});};
   if(protectedWork&&task.kind!=='csm_issue')addFollowUp('manual');
   else if(p.completed){task.done=true;task.doneAt=now;if(p.nextAction)addFollowUp();}else Object.assign(task,{title:p.nextAction,due:p.nextDate});
   if(d){d.nextAction=p.nextAction;d.nextDate=p.nextDate;}
