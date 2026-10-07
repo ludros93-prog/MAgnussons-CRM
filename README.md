@@ -2,7 +2,7 @@
 
 CRM för Magnussons med egen arbetsdag, säljuppföljning, kundvård, order, tryck och lager. Version 13 är ursprunglig utgångspunkt. Aktuell agentetablering finns i [STATUS-2026-10-05.md](STATUS-2026-10-05.md), med tidigare granskning och pilotgränser i [STATUS-2026-10-04.md](STATUS-2026-10-04.md); verksamhetsbeslut och acceptansprov i [HANDOFF-2026-10-04.md](HANDOFF-2026-10-04.md). Ursprunglig källrevision och överföringsstatus finns i [SOURCE.md](SOURCE.md).
 
-Publicerad **v41**: Administratören kan granska och överföra öppet affärs-/orderansvar till en stabil säljarprofil, med nödvändiga åtaganden och uttryckligt valda kopplade uppgifter. Historiskt resultat, kundansvar och produktion bevaras. Full operativ ID-migrering/personalöverlämning återstår. [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md) skiljer källkod, main, live och testgränser; [OPERATIONS](OPERATIONS.md) anger användning och äldre skrivares rollbackrisk.
+Publicerad **v42**: Kundansvar får ett stabilt profil-ID vid ny kund, import och leadomvandling efter granskad profilinitiering samt vid administratörens granskade kundöverlämning. Tomma ansvarsprofil-ID:n på befintliga kunder fylls inte implicit. Endast uttryckligt valda öppna fristående aktiviteter följer kundansvarsbytet; historiskt resultat, separata affärer/order och produktion bevaras. Profil-ID för ansvariga på återstående uppgifter/möten/specialflöden och full personalöverlämning återstår. [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md) skiljer källkod, main, live och testgränser; [OPERATIONS](OPERATIONS.md) anger användning och äldre skrivares rollbackrisk.
 
 ## Utveckling och kontroller
 
