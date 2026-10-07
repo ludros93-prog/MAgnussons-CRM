@@ -1,4 +1,56 @@
-# Stabilt kundansvar – v42, 2026-10-07
+# Stabilt uppgiftsansvar – v43
+
+## Avgränsat beteende
+
+`Task.ownerProfileId` förankrar uppgiftens ansvar i en säljarprofil; `Task.id` är dess redan befintliga post-ID. Efter granskad profilinitiering väljer servern en aktiv granskad profil vid nyregistrering eller uttryckligt ansvarsbyte i befintligt generellt uppgiftsformulär. Före initieringen tillåts tomt ansvarsprofil-ID. Befintligt oförändrat ansvar med tomt profil-ID förblir tomt, även vid redigering/avslut för en inaktiv eller ej längre listad ansvarig. Läsning förankrar inga äldre uppgifts- eller källposter.
+
+Nya automatiska uppgifter använder ett medfört ansvarsprofil-ID eller ett relevant kund-/affärs-/order-ID med matchande ansvar; annars kan en redan granskad profils oföränderliga ansvarsetikett ge kopplingen. Inaktiva profiler får följa med från underlaget utan att stoppa orderarbete. Endast helt omappat ansvar förblir tomt. Befintliga kund-/affärs-/orderöverlämningars avsedda uppgifter får målprofilens ID atomiskt inom deras befintliga historik. Receipt-GET är striktare: den projicerar exakt orderns profil-ID eller tomma värde, utan aliasupplösning eller skrivning.
+
+Min dags ID-kopplade egna uppgifter och uppgiftssignaler filtreras på profil-UUID; äldre tomma uppgifter behåller befintligt etiketturval. Visningen använder aktuellt profilnamn, ursprunglig ansvarsetikett vid samma visningsnamn och **ansvar behöver förankras** för äldre ansvar utan profil-ID efter initiering, även om ansvarsetiketten redan matchar en granskad profil. Order-/leveransköernas övriga urval är oförändrat. Vanliga uppgiftsrader öppnar befintligt **Följ upp**; ingen ny separat uppgiftsöverlämningsdialog, publik redigeringsingång eller auditmodell införs.
+
+## Faktiska slutprov
+
+Fem obligatoriska slutkontroller passerade med exit 0 på oförändrad kandidat: CRM/Outlook-regression, icke-inkrementell TypeScript, produktionsbygge, runtime-smoke och diffkontroll. Fryst Chromium/byggd HTTP-Worker passerade **14 browserfall och 5 separata faktiska Worker-HTTP-fall**. Samma 267 spårade källfiler och 96 distfiler var oförändrade. Root läste rapporten och granskade fyra bilder från slutkörningen.
+
+Browserfallen täcker egen/teamets uppgifts-/signalvy, avgörande medlems-/profil-ID-urval, aktuella/dubbla/inaktiva namn och äldre oförankrat ansvar, 320/390/1280 px, avgränsad 200-procentstext och tangentbordets befintliga Följ upp. Generisk ny uppgift provar privat sparning/omladdning, lokalt transportfel med bevarad råtext, servervalt aktivt ID efter profilinitiering och atomisk utkastarkivering. Befintlig generisk redigering återupptas från **förberedda syntetiska privata serverutkast**; det bevisar ingen ny publik edit-/överlämningsingång. Oförändrat tomt ansvar, uttryckligt ansvarsskifte, faktisk 409 och äldre v42-basis med Ansvarskoppling/kopiering/ny granskning passerar utan automatisk rebase.
+
+De fem HTTP-fallen provar oförändrat äldre avslut, nekad förfalskning/ogranskat nytt ansvar, automatisk mötesuppgift med rätt ansvar trots annan kundägare, nästa uppgift för inaktiv ansvarig och helt omappad nästa uppgift. Rena läsfall bevarar 18 råtabeller och R2; avsedda formulärfall gör uttryckliga CRM-/privata skrivningar. Matrisen är inte helt skrivfri. Privata Outlooktabellsentineller, annan arbetsyta och filer kontrolleras mot isolerade före-/efterdata.
+
+Runtime-smoke i faktisk lokal workerd med persisterad D1/R2 passerade med **13 500 000 filbyte, 18 011 014 paketbyte och tre filer**, kontrollerade hashar/korrektur-/fotolänkar, idempotens och oförändrad källa. Uppgifts-/kundprofil-ID:n, befintlig auditöverföring och stream-restore bevarades. Detta är ingen återställning i Sites.
+
+Kvitton:
+
+- Fem slutkontroller: `/workspace/scratch/crm43/final-app-checks/checks.json`, SHA256 `a7fbf2ede5542d55455c3fd1225c7e8698228960bd6cfceff79ca38b021f2e86`.
+- Slutrapport: `/workspace/scratch/crm43/browser/run-043915/report.json`, SHA256 `ebd2d9484d4ded0e8e4796113e5c0d405ba6d7a09c1ec95badeb62abb2b749ce`.
+- Rootens fyra granskade bilder: `/workspace/scratch/crm43/browser/root-visual-review.json`, SHA256 `c42da7d2588faf77d3d398baeb4b107a01d0aa95530602e054e4b8d5e7cab01d`.
+
+B07 har observerad kvarvarande 200-procentsklippning i befintlig utkaststatus, fokustagg och tom kontaktvy. Slutproven med fördubblad text avser ändrade uppgiftsetiketter, rader/knappar, scopeknappar och dokumentbredd, inte hela Min dag eller WCAG. Kod-/hashjämförelsen mot v42 visar oförändrade berörda områden; den är inget separat byggt v42-runtimeprov.
+
+## Källa, main och live
+
+Fryst kandidat `c92535b479ba10866d948911110a49042a1477a7`, [app-PR #60](https://github.com/ludros93-prog/MAgnussons-CRM/pull/60)-head `7d23f547b17063ee9f3e7989a9422ba639a9394d`, app-main `89ac0b428406f5bb05b1dcb1d584319a39067c8f` och Sites-source `d96b2b1949ff849de998f2fbbd62915902725175` redovisas separat; gemensamt källträd `f82d00becaae449867eaf1f24210d7930828aa1a`. Exakt-head CI [37572345056](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37572345056) är grön med 13 steg. Main-CI [37572851031](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37572851031) är completed/success med samtliga 13 steg.
+
+Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2` publicerade **v43** från verifierad source: version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_4334232b09c88191a42510f222b07bb0`, deploy `appgdep_6ac5ce8ff00c8191aefb8e541c3b6831`, **succeeded 2026-10-07T04:46:17.055827+00:00**, på https://magnussons-crm.rosen123.chatgpt.site. Ägare, exakt custom-policyrevision 2, envrevision 1 med DB/BUCKET och noll automationer är bevarade. Anonyma GET `/` och `/api/crm?space=live` gav 403/403 vid `2026-10-07T04:46:34.104834+00:00`; kropparna sparades inte. Detta är inget autentiserat livekontoprov. En senare docsmerge återpublicerar inte appen.
+
+Publiceringsartefakten har 97 filer, varav 96 distfiler, och 4 505 600 råtarbyte. Råtar SHA256 `344605941bb429e4aa92b52c9dfb55dc8e1a4f1e8454332962795955d164aaad`; gzip SHA256 `06345f2e5eec8fa3d2cd1299a536330d5690a4f20de05c608a5254327fa76566`. Käll-/arkivlayout-/pushkvitto `/workspace/scratch/crm43/artifact.json`, SHA256 `e93742b1c1ba8241473a7152808b613e3635adb1b0b3bdf2df5ab1fb6b6e056b`. Återläst native arkivmetadata har exakt `sha256:344605941bb429e4aa92b52c9dfb55dc8e1a4f1e8454332962795955d164aaad`, 97 filer och 4 505 600 råtarbyte. Ingen hämtning av native arkivbytes påstås.
+
+Faktiska main-/publiceringskvitton: `/workspace/scratch/crm43/app-main-ci.json`, SHA256 `c23205ea64e2d8a1dd26a131bbaedb49ccf7386d50374a4207571b066a8805de`; `/workspace/scratch/crm43/site-publication.json`, SHA256 `66e086cbd6726f32dc5178b26c30d091b8b9638af701928db92be73a0984aa2b`; `/workspace/scratch/crm43/live-anonymous.json`, SHA256 `93d409d240cbed89dc43767e4aab7d511ed93f7cf0715f650974dc6940afd2e5`.
+
+## Kompatibilitet och kvarstående arbete
+
+Task-/receiptbasis omfattar profil-ID och upptäcker därmed även en ID-ändring med oförändrad etikett. Äldre frysta privata underlag kan därför kräva ny granskning av **Ansvarskoppling**. Öppen text/kopieringsväg bevaras; privata baser skrivs inte om automatiskt och CAS kringgås inte. JSON/NDJSON bevarar och validerar ansvarsprofil-ID:n, medan aktuella medlemslänkar fortfarande rensas vid restore. Privata utkast, konton och Outlook ingår inte i CRM-kopian. **V42 är inte en säker skrivande rollback**: dess äldre TaskSchema strippade det nya fältet i ett isolerat parserprov. Bevara modellen/serverreglerna genom schemabevarande framåträttning eller en verifierad datamedveten återställningsväg.
+
+V42-parserprovet `/workspace/scratch/crm43/contract/v42-task-parser-rollback-proof.json`, SHA256 `f9560a8a19c2fe744e90794d8bfbe646e1f8ffe9aee472abf813ee1eb2e8e726`, körde äldre schema från Git direkt på syntetiska data. Ingen faktisk live-rollback utfördes.
+
+B01b2 är fortsatt delvis levererat: uttryckligt granskad fristående uppgiftsöverlämning, återstående mötes-/specialflödesansvar och full personalavveckling återstår. Historiskt försäljningsresultat, privat kommunikation och fysisk produktionshistorik bevaras. Separat affärschefsroll, övriga privata specialdialoger, mobilkundlista/workspacefokus, separat backup, hostingbudget/återställning, riktiga integrationer och personalpilot kvarstår.
+
+Autentiserad live-UI, riktiga konton/integrationer/personal, fysisk telefon/OS-tangentbord, skärmläsare och hostingåterställning är oprövade. Codex-referensen är fortsatt oläst. Inga kundmeddelanden eller verkliga kundskrivprov ingår.
+
+---
+
+Tidigare v42-underlag behålls nedan som historik.
+
+# Historik: Stabilt kundansvar – v42, 2026-10-07
 
 ## Beteende och avgränsning
 
