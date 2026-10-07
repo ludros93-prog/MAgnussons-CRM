@@ -2,7 +2,7 @@
 
 CRM för Magnussons med egen arbetsdag, säljuppföljning, kundvård, order, tryck och lager. Version 13 är ursprunglig utgångspunkt. Aktuell agentetablering finns i [STATUS-2026-10-05.md](STATUS-2026-10-05.md), med tidigare granskning och pilotgränser i [STATUS-2026-10-04.md](STATUS-2026-10-04.md); verksamhetsbeslut och acceptansprov i [HANDOFF-2026-10-04.md](HANDOFF-2026-10-04.md). Ursprunglig källrevision och överföringsstatus finns i [SOURCE.md](SOURCE.md).
 
-Publicerad **v40**: Mobilens menyknapp (**Öppna meny**) visar panelen **Meny** med synlig **Stäng** och egen rullning även på korta skärmar. Arbetsområdesval stänger panelen; Stäng/Escape återför fokus till öppnaren med bevarat sidläge. Även sidmenyn på breda, korta skärmar får en sammanhängande rullningsyta. Vanlig hög desktoplayout och privata/serverbaserade arbetsflöden behålls. Källa/main/live och faktiska provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md).
+Publicerad **v41**: Administratören kan granska och överföra öppet affärs-/orderansvar till en stabil säljarprofil, med nödvändiga åtaganden och uttryckligt valda kopplade uppgifter. Historiskt resultat, kundansvar och produktion bevaras. Full operativ ID-migrering/personalöverlämning återstår. [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md) skiljer källkod, main, live och testgränser; [OPERATIONS](OPERATIONS.md) anger användning och äldre skrivares rollbackrisk.
 
 ## Utveckling och kontroller
 

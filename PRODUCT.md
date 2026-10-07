@@ -1,6 +1,18 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Publicerad v40 tillför en mobilmeny som går att rulla och stänga även på korta skärmar, med uttryckligt menyval och bevarat fokus/sidläge. Sidmenyn får en sammanhängande rullningsyta även på breda, korta skärmar. V39:s privata företagsaktiviteter och tidigare arbetsflöden består. Källa/main/live och provgränser finns i [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md); arbetsinstruktioner finns i [OPERATIONS](OPERATIONS.md).
+Publicerad v41 tillför granskad administrativ överföring av öppet affärs-/orderansvar med stabilt profil-ID och ansvarshistorik. Nödvändiga öppna åtaganden och uttryckligt valda kopplade uppgifter följer med; historiska resultat och produktion bevaras. V40:s mobilnavigation och tidigare privata arbetsflöden består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger källa, main, live, begränsning och rollbackrisk.
+
+## Stabilt öppet affärs- och orderansvar – v41
+
+Administratören kan välja **Byt affärsansvar** för en öppen affär som varken är vunnen/förlorad eller har en order, och **Byt orderansvar** för en order som ännu inte är uppföljd. Välj en annan aktiv, granskad säljarprofil, ange orsak och granska överlämningen. Nödvändiga öppna affärs-/orderåtaganden följer alltid med; valfria kopplade aktiviteter väljs uttryckligen och är inte valda från början. Valet av ny ansvarig börjar tomt.
+
+Överföringen förankrar affärens eller orderns ansvar i ett stabilt `ownerProfileId`. Serverägd historia bevarar gamla/nya profil-ID:n, namn-/ansvarssnapshots, berörda uppgifter, orsak, tid och autentiserad aktör. Ansvar, valda uppgifter och historik skrivs tillsammans med fryst underlag, CAS och befintligt request-ID-skydd. Föråldrat underlag kräver ny granskning; generella formulär/import får inte kringgå det kontrollerade ansvarsbytet eller skriva egen överföringshistorik. Ett fel eller obekräftat svar bevarar orsak och val; första försöket kan redan ha lyckats.
+
+Detta är en avgränsad B01b2-del. Kundansvar, historiska fakturor, vunna affärers ansvar, prospectattribution och mål flyttas inte. Produktionsanspråk, registrerade mängder, revisioner och kundgodkännanden bevaras. Befintliga tomma ansvar-ID:n migreras inte automatiskt från namn eller mejl. Stabilt ID används efter uttrycklig granskning och underlag; hela kund-/uppgifts-/mötes-/specialflödesmigreringen och personalavveckling är inte genomförda. Säljar-, läsar- och produktionsroller får ingen ny administrativ eller privat åtkomst. Ingen integration, kundacceptans, faktura eller utskick skapas.
+
+Additiva ID-/historikfält lagras i befintliga JSON-poster; ingen SQL-migrering krävs. Äldre exporter kan läsas med tomma standardvärden för de nya fälten. Det gör **inte v40 till en säker skrivande rollback**: dess äldre scheman kan strippa nya ansvar-ID:n och historik vid nästa skrivning. Behåll den nya modellen, serverreglerna och kompatibel klient genom en schemabevarande framåträttning eller verifierad datamedveten återställningsväg. Ingen faktisk live-rollback eller hostingåterställning har genomförts. CRM-backup bevarar kommersiella ID:n/historik men aktuella kontolänkar rensas i målmiljön och måste väljas uttryckligt igen. Privata utkast, konton och Outlook ingår fortfarande inte.
+
+Nästa avgränsning: **B01b2:s återstående operativa ID-migrering och granskade personalöverlämning med bevarad historisk attribution**. Full B01b2, separat affärschefsroll, övriga privata specialdialoger, mobilkundlista/fokus efter arbetsytebyte, separat utkast-/konto-/Outlookbackup, hostingbudget/återställningsrutin, faktiska integrationer och personalpilot kvarstår.
 
 ## Mobil navigation – v40
 
