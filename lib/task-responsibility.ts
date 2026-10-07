@@ -9,7 +9,7 @@ const required=z.string().trim().min(1).max(4000),recordId=required.max(100),own
 const recordedProfileId=z.union([z.literal(''),profileId]);
 export const TaskResponsibilityHistorySchema=z.object({
  id:profileId,taskId:recordId,customerId:recordId,dealId:z.string().trim().max(100),
- source:z.enum(['task','customer','deal','order','onboarding']),sourceTransferId:recordedProfileId,action:z.enum(['anchor','transfer']),
+ source:z.enum(['task','customer','deal','order','onboarding','customer_issue']),sourceTransferId:recordedProfileId,action:z.enum(['anchor','transfer']),
  fromRecordedProfileId:recordedProfileId,fromProfileId:profileId,toProfileId:profileId,
  fromOwner:ownerName,toOwner:ownerName,fromDisplayName:ownerName,toDisplayName:ownerName,
  reason:required,at:z.string().datetime(),byId:required,byMemberId:required,byName:required
@@ -122,8 +122,8 @@ export function transferTaskResponsibility(st:State,input:TaskResponsibilityTran
 
 // Selected tasks keep their own chain when an existing customer/commercial
 // bundle moves them. The actual parent audit supplies the immutable source.
-export function recordTaskBundleTransfers(previousState:State,nextState:State,source:'customer'|'deal'|'order'|'onboarding',sourceTransferId:string){
- const parent=source==='onboarding'?nextState.customers.flatMap(row=>row.onboarding.responsibilityTransfers).find(row=>row.id===sourceTransferId):source==='customer'?nextState.customers.flatMap(row=>row.responsibilityTransfers).find(row=>row.id===sourceTransferId):[...nextState.deals,...nextState.orders].flatMap(row=>row.responsibilityTransfers).find(row=>row.id===sourceTransferId);
+export function recordTaskBundleTransfers(previousState:State,nextState:State,source:'customer'|'deal'|'order'|'onboarding'|'customer_issue',sourceTransferId:string){
+ const parent=source==='customer_issue'?nextState.customers.flatMap(row=>row.plan.issueResponsibilityTransfers).find(row=>row.id===sourceTransferId):source==='onboarding'?nextState.customers.flatMap(row=>row.onboarding.responsibilityTransfers).find(row=>row.id===sourceTransferId):source==='customer'?nextState.customers.flatMap(row=>row.responsibilityTransfers).find(row=>row.id===sourceTransferId):[...nextState.deals,...nextState.orders].flatMap(row=>row.responsibilityTransfers).find(row=>row.id===sourceTransferId);
  need(parent,'Den granskade överlämningens ansvarshistorik saknas.');
  for(const taskId of parent!.selectedTaskIds){
   const old=previousState.tasks.find(row=>row.id===taskId),task=nextState.tasks.find(row=>row.id===taskId),from=old?taskResponsibleProfile(previousState,old):undefined,to=sellerProfileById(nextState.settings,parent!.toProfileId);
@@ -131,7 +131,7 @@ export function recordTaskBundleTransfers(previousState:State,nextState:State,so
   need((old!.responsibilityTransfers||[]).length<1000,'En vald uppgift har nått gränsen för ansvarshistorik. Granska överlämningen utan den uppgiften.');
   const displayParent=parent as typeof parent&{fromDisplayName?:string;toDisplayName?:string};
   const row=TaskResponsibilityHistorySchema.parse({
-   id:crypto.randomUUID(),taskId:task!.id,customerId:task!.customerId,dealId:task!.dealId,source,sourceTransferId:parent!.id,action:source==='onboarding'&&parent!.fromProfileId===parent!.toProfileId?'anchor':'transfer',
+   id:crypto.randomUUID(),taskId:task!.id,customerId:task!.customerId,dealId:task!.dealId,source,sourceTransferId:parent!.id,action:(source==='onboarding'||source==='customer_issue')&&parent!.fromProfileId===parent!.toProfileId?'anchor':'transfer',
    fromRecordedProfileId:old!.ownerProfileId||'',fromProfileId:parent!.fromProfileId,toProfileId:parent!.toProfileId,
    fromOwner:parent!.fromOwner,toOwner:parent!.toOwner,fromDisplayName:displayParent.fromDisplayName||from!.displayName,toDisplayName:displayParent.toDisplayName||to!.displayName,
    reason:parent!.reason,at:parent!.at,byId:parent!.byId,byMemberId:parent!.byMemberId,byName:parent!.byName
@@ -141,6 +141,13 @@ export function recordTaskBundleTransfers(previousState:State,nextState:State,so
 }
 
 function derivedTaskProfileId(st:State,task:Task){
+ // New issue work copies the exact recorded issue identity, including a legacy
+ // blank. The customer, order and alias must never fill that blank.
+ if(task.kind==='csm_issue'&&!task.dealId){
+  const plan=st.customers.find(row=>row.id===task.customerId)?.plan;
+  need(plan?.issueStatus==='open'&&task.owner===plan.issueOwner,'En ny ärendeuppgift måste följa det öppna kundärendets ansvar.');
+  return plan!.issueOwnerProfileId;
+ }
  // catalog_order delegates to the deal workflow and then derives new tasks
  // again in its outer action. A started onboarding remains authoritative in
  // both passes, including a deliberately unanchored legacy blank.
@@ -202,14 +209,18 @@ export function validateTaskResponsibilityReferences(st:State){
    // An onboarding anchor can review a task whose matching ID was already
    // recorded. Its unchanged recorded ID remains explicit in the audit; the
    // ordinary standalone-task anchor still requires a previously blank ID.
-   need(row.action==='anchor'?(row.source==='task'&&!row.fromRecordedProfileId||row.source==='onboarding')&&row.fromProfileId===row.toProfileId:row.fromProfileId!==row.toProfileId,'Uppgiftshistoriken har en ogiltig förankring eller överföring.');
+   need(row.action==='anchor'?(row.source==='task'&&!row.fromRecordedProfileId||row.source==='onboarding'||row.source==='customer_issue')&&row.fromProfileId===row.toProfileId:row.fromProfileId!==row.toProfileId,'Uppgiftshistoriken har en ogiltig förankring eller överföring.');
    need(!previous||previous.toProfileId===row.fromProfileId&&previous.toProfileId===row.fromRecordedProfileId&&previous.toOwner===row.fromOwner,'Uppgiftens överföringar bildar inte en sammanhängande ansvarskedja.');
    if(row.source==='task'){
     need(!row.sourceTransferId&&!row.dealId&&independentKinds.has(task.kind),'En fristående uppgiftsöverföring har en felaktig arbetsflödeskoppling.');
    }else{
-    const parent=row.source==='onboarding'?st.customers.find(customer=>customer.id===row.customerId)?.onboarding.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='customer'?st.customers.find(customer=>customer.id===row.customerId)?.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):(row.source==='deal'?st.deals:st.orders).flatMap(target=>target.responsibilityTransfers).find(history=>history.id===row.sourceTransferId);
+    const parent=row.source==='customer_issue'?st.customers.find(customer=>customer.id===row.customerId)?.plan.issueResponsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='onboarding'?st.customers.find(customer=>customer.id===row.customerId)?.onboarding.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='customer'?st.customers.find(customer=>customer.id===row.customerId)?.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):(row.source==='deal'?st.deals:st.orders).flatMap(target=>target.responsibilityTransfers).find(history=>history.id===row.sourceTransferId);
     need(parent&&parent.customerId===row.customerId&&parent.selectedTaskIds.includes(row.taskId)&&parent.fromProfileId===row.fromProfileId&&parent.toProfileId===row.toProfileId&&parent.fromOwner===row.fromOwner&&parent.toOwner===row.toOwner&&parent.reason===row.reason&&parent.at===row.at&&parent.byId===row.byId&&parent.byMemberId===row.byMemberId&&parent.byName===row.byName,'Uppgiftshistoriken motsäger den granskade kund-, affärs- eller orderöverlämningen.');
     if(row.source==='customer')need(!row.dealId&&independentKinds.has(task.kind),'Kundöverlämningen innehåller en affärskopplad eller skyddad uppgift.');
+    else if(row.source==='customer_issue'){
+     const issue=parent as NonNullable<typeof parent>&{action?:string;fromDisplayName?:string;toDisplayName?:string};
+     need(!row.dealId&&task.kind==='csm_issue'&&issue.action===row.action&&issue.fromDisplayName===row.fromDisplayName&&issue.toDisplayName===row.toDisplayName,'Uppgiftshistoriken har en bruten ärendeöverlämning.');
+    }
     else if(row.source==='onboarding'){
      const onboarding=parent as NonNullable<typeof parent>&{action?:string;dealId?:string;fromDisplayName?:string;toDisplayName?:string};
      need(!row.dealId&&task.kind==='onboarding'&&onboarding.dealId===st.customers.find(customer=>customer.id===row.customerId)?.onboarding.dealId&&onboarding.action===row.action&&onboarding.fromDisplayName===row.fromDisplayName&&onboarding.toDisplayName===row.toDisplayName,'Uppgiftshistoriken har en bruten onboardingöverlämning.');
