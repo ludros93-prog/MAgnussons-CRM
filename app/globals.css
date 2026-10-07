@@ -236,3 +236,49 @@ body {
 .visual-day .event-draft-day-row>div,.visual-day .event-draft-day-row .draft-status{min-width:0;white-space:normal;overflow-wrap:anywhere}
 @media(max-width:767px){.event-draft-editor .biz-grid{grid-template-columns:minmax(0,1fr)}.event-draft-actions>button,.event-draft-footer>button{width:100%;min-width:0}.visual-day .daily-row.event-draft-day-row{grid-template-columns:minmax(0,1fr)}.visual-day .event-draft-day-row .biz-buttons{width:100%;flex-wrap:wrap}.event-draft-list{padding:0 16px 16px}}
 @media(max-height:640px){.event-draft-status,.event-draft-footer{position:static}}
+
+
+/* Reviewed customer issue responsibility and an independent issue work list. */
+.issue-responsibility-dialog{width:calc(100vw - 2rem);max-width:640px!important;max-height:calc(100dvh - 2rem);overflow-y:auto;min-width:0;overflow-wrap:anywhere;scroll-padding:12px}
+.issue-responsibility-dialog [data-slot=dialog-header]{min-width:0;text-align:left}
+.issue-responsibility-dialog form,.issue-responsibility-dialog fieldset{min-width:0;margin:0;padding:0;border:0}
+.issue-responsibility-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.issue-responsibility-head [data-slot=dialog-title]{display:flex;align-items:flex-start;gap:.5rem;flex:1 1 14rem;min-width:0;line-height:1.4}
+.issue-responsibility-head [data-slot=dialog-title]>span{min-width:0}
+.issue-responsibility-head svg{flex-shrink:0;margin-top:.15rem}
+.issue-responsibility-current{padding:.8rem 1rem;margin-bottom:1rem;border:1px solid #dce5ef;border-radius:10px;background:#f7fafc}
+.issue-responsibility-current p{margin:.3rem 0}
+.issue-responsibility-dialog button:not([role=checkbox]),.issue-responsibility-options [data-slot=select-item]{min-width:0;max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.issue-responsibility-dialog .issue-responsibility-select{width:100%}
+.issue-responsibility-dialog [data-slot=select-value],.issue-responsibility-dialog [data-slot=select-value]>span{min-width:0;white-space:normal;overflow:visible;overflow-wrap:anywhere;-webkit-line-clamp:unset;line-height:1.5}
+.issue-responsibility-dialog .issue-responsibility-select [data-slot=select-value]{flex:1}
+.issue-responsibility-dialog .issue-responsibility-select [data-slot=select-value]>.issue-responsibility-choice-label{display:-webkit-box;width:100%;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.issue-responsibility-options{max-width:calc(100vw - 2rem)}
+.issue-responsibility-options [data-slot=select-item]>span{min-width:0;overflow-wrap:anywhere;white-space:normal}
+.issue-responsibility-dialog textarea{min-width:0;max-width:100%;font-size:1rem;field-sizing:fixed;max-height:min(14rem,calc(100dvh - 5rem));overflow-y:auto}
+.issue-responsibility-dialog .check-field{align-items:flex-start;min-height:44px}
+.issue-responsibility-dialog .check-field>span{min-width:0}
+.issue-responsibility-dialog .check-field small{display:block}
+.issue-responsibility-dialog .biz-buttons{align-items:stretch}
+.issue-responsibility-dialog .biz-buttons>button{flex:1 1 13rem}
+.issue-responsibility-dialog summary{min-width:0;min-height:44px;line-height:1.6;padding-block:.5rem}
+.issue-responsibility-dialog button:focus-visible,.issue-responsibility-dialog input:focus-visible,.issue-responsibility-dialog textarea:focus-visible,.issue-responsibility-dialog summary:focus-visible,.issue-responsibility-dialog [tabindex="-1"]:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
+.wf-sheet .wf-issue-owner{min-width:0;overflow-wrap:anywhere;margin-bottom:20px;padding:14px;border:1px solid #dce5ef;border-radius:10px;background:#f7fafc}
+.wf-sheet .wf-issue-owner>span,.wf-sheet .wf-issue-owner>b{display:block;line-height:1.5}
+.wf-sheet .wf-issue-owner p{font-size:.875rem;line-height:1.6;margin:.6rem 0}
+.wf-sheet .wf-issue-owner button:not([role=checkbox]){min-width:0;max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.wf-sheet .wf-issue-owner-select [data-slot=select-value]{min-width:0;flex:1;white-space:normal;overflow-wrap:anywhere}
+.wf-sheet .wf-issue-owner-select [data-slot=select-value]>span{display:-webkit-box;width:100%;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.wf-care-scope{display:flex;flex-wrap:wrap;gap:10px;min-width:0;margin-bottom:20px}
+.wf-care-scope button,.wf-issue-list button{min-width:0;max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.wf-care-scope button:focus-visible,.wf-issue-list button:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
+.wf-issue-list,.wf-issue-list .wf-card,.wf-issue-list .wf-card-top,.wf-issue-list .wf-inset{min-width:0;overflow-wrap:anywhere}
+.wf-issue-list>h2{font-size:1.25rem;line-height:1.5;margin:0 0 10px}
+.wf-issue-list>p{font-size:1rem;line-height:1.6;margin:10px 0}
+.wf-issue-card h3{font-size:1.25rem;line-height:1.5;margin-top:18px}
+.wf-issue-list .wf-card-top{flex-wrap:wrap;align-items:flex-start}
+.wf-issue-list .wf-card-top>span{min-width:0;max-width:100%;white-space:normal}
+@media(max-width:767px){.wf-care-scope>button{flex:1 1 12rem}.wf-issue-list .wf-grid{grid-template-columns:minmax(0,1fr)}.wf-issue-list .wf-buttons>button{flex:1 1 12rem}}
+
+.wf-sheet .wf-issue-heading{scroll-margin-block:12px;outline-offset:3px}
+.wf-sheet .wf-issue-heading:focus-visible,.wf-issue-list-heading:focus-visible{outline:3px solid var(--ring);outline-offset:3px}

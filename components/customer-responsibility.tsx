@@ -9,6 +9,7 @@ import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from '@/compo
 import {Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription,DialogTrigger} from '@/components/ui/dialog';
 import {AlertDialog,AlertDialogContent,AlertDialogHeader,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogCancel,AlertDialogAction} from '@/components/ui/alert-dialog';
 import {customerResponsibilityBasis,customerResponsibilityCandidates} from '@/lib/customer-responsibility';
+import {issueOwnerLabel} from '@/lib/issue-responsibility';
 import {type State,type Customer,type Task} from '@/lib/crm';
 import {BusinessField as F,displayDate,type SaveAction} from './business-ui';
 
@@ -27,7 +28,7 @@ function fixedCustomerWork(st:State,c:Customer):FixedWork[]{
  for(const o of st.orders.filter(o=>o.customerId===c.id&&(o.stage!=='followed'||o.invoiceValue===null)))work.push({id:'order:'+o.id,kind:o.stage==='followed'&&o.invoiceValue===null?'Order som saknar faktura':'Order',title:st.deals.find(d=>d.id===o.dealId)?.title||'Order '+o.id,due:o.deliveryDate,owner:o.owner});
  for(const m of st.meetings.filter(m=>m.customerId===c.id&&m.status==='planned'))work.push({id:'meeting:'+m.id,kind:'Möte',title:m.title,due:m.date,owner:m.owner});
  if(c.onboarding.startedAt&&!c.onboarding.completedAt)work.push({id:'onboarding',kind:'Introduktion',title:'Introduktion vid första affären',due:c.onboarding.due,owner:c.onboarding.owner});
- if(c.plan.issueStatus==='open')work.push({id:'issue',kind:'Kundärende',title:c.plan.issueAction||c.plan.issue||'Öppet kundärende',due:c.plan.issueDue,owner:c.plan.issueOwner});
+ if(c.plan.issueStatus==='open')work.push({id:'issue',kind:'Kundärende',title:c.plan.issueAction||c.plan.issue||'Öppet kundärende',due:c.plan.issueDue,owner:issueOwnerLabel(st,c.plan)});
  for(const need of c.yearNeeds.filter(n=>n.status==='planned'))work.push({id:'need:'+need.id,kind:'Årshjul',title:need.title,due:need.due,owner:need.owner});
  return work;
 }
