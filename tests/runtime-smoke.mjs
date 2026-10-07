@@ -282,9 +282,20 @@ try {
   const issueMoveAfterRaw=await assertIssueCommit(issueMoveBefore,issueMoveRaw,freshIssueTransfer,'transfer');
   assert.equal((await commercialRequest(freshIssueTransfer)).status,200);assert.deepEqual(await raw(),issueMoveAfterRaw,'Lost transfer acknowledgment cannot duplicate issue/task history.');
   const keptUnselectedIssue=structuredClone(state.tasks.find(t=>t.id===unselectedIssueTask.id)),keptSelectedIssue=structuredClone(state.tasks.find(t=>t.id===legacyIssueTask.id)),keptIssueAudit=structuredClone(state.customers.find(c=>c.id===customer.id).plan.issueResponsibilityTransfers);
-  await savePlan(customer.id,{goal:'Förtydligad fiktiv kundplan',issueAction:'Planens förtydligade ärendeåtgärd',issueDue:core.plusDays(today,5)});
-  assert.deepEqual(state.tasks.find(t=>t.id===unselectedIssueTask.id),keptUnselectedIssue,'Normal plan refresh preserves the whole unselected issue task.');
-  const refreshedIssueTask=state.tasks.find(t=>t.id===legacyIssueTask.id);assert.equal(refreshedIssueTask.ownerProfileId,targetProfile.id);assert.deepEqual(refreshedIssueTask.responsibilityTransfers,keptSelectedIssue.responsibilityTransfers);assert.deepEqual(state.customers.find(c=>c.id===customer.id).plan.issueResponsibilityTransfers,keptIssueAudit);
+  // SQL loading can order generated UUIDs differently from creation order.
+  // Plan refresh updates the first actual open standalone issue task's text
+  // and date, while every existing issue task keeps its recorded responsibility.
+  const issueRowsBeforeRefresh=structuredClone(state.tasks.filter(t=>t.kind==='csm_issue'));
+  const canonicalIssueBeforeRefresh=issueRowsBeforeRefresh.find(t=>t.customerId===customer.id&&!t.dealId&&!t.done);assert.ok(canonicalIssueBeforeRefresh);
+  const refreshedIssueAction='Planens förtydligade ärendeåtgärd',refreshedIssueDue=core.plusDays(today,5);
+  await savePlan(customer.id,{goal:'Förtydligad fiktiv kundplan',issueAction:refreshedIssueAction,issueDue:refreshedIssueDue});
+  const issueRowsAfterRefresh=state.tasks.filter(t=>t.kind==='csm_issue');
+  assert.deepEqual(issueRowsAfterRefresh.map(t=>t.id).sort(),issueRowsBeforeRefresh.map(t=>t.id).sort());
+  const changedIssueIds=issueRowsBeforeRefresh.filter(old=>conflicts.recordBasis(state.tasks.find(t=>t.id===old.id))!==conflicts.recordBasis(old)).map(t=>t.id);
+  assert.deepEqual(changedIssueIds,[canonicalIssueBeforeRefresh.id],'Exactly the actual canonical issue task receives the plan action/date.');
+  for(const old of issueRowsBeforeRefresh)assert.deepEqual(state.tasks.find(t=>t.id===old.id),old.id===canonicalIssueBeforeRefresh.id?{...old,title:refreshedIssueAction,due:refreshedIssueDue}:old,'Every noncanonical issue row, including other customers, remains whole-exact.');
+  for(const old of [keptSelectedIssue,keptUnselectedIssue]){const next=state.tasks.find(t=>t.id===old.id);assert.equal(next.owner,old.owner);assert.equal(next.ownerProfileId,old.ownerProfileId);assert.deepEqual(next.responsibilityTransfers,old.responsibilityTransfers);}
+  assert.equal(state.tasks.find(t=>t.id===legacyIssueTask.id).ownerProfileId,targetProfile.id);assert.deepEqual(state.customers.find(c=>c.id===customer.id).plan.issueResponsibilityTransfers,keptIssueAudit);
   const issueFollowBefore=await get(),issueFollowPlan=issueFollowBefore.customers.find(c=>c.id===customer.id).plan,issueFollowTask=issueFollowBefore.tasks.find(t=>t.id===legacyIssueTask.id);
   const issueNextAction='Följ upp fiktivt storleksbesked',issueNextDate=core.plusDays(today,6);
   await post('follow_up',{taskId:issueFollowTask.id,expectedContext:followups.followupBasis(state,issueFollowTask.id),outcome:'internal',occurredOn:today,note:'Fiktiv intern uppföljning av det överlämnade ärendet',completed:false,nextAction:issueNextAction,nextDate:issueNextDate});
