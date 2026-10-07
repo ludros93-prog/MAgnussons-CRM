@@ -1,5 +1,17 @@
 # Magnussons CRM
 
+## Granskat avslut av resultatprofil – v55
+
+Efter att öppet arbete hanterats kan administratören öppna **Konton & roller → Överlämna arbete → Granska profilavslut** och göra resultatprofilen historisk i vald arbetsyta. Servern kontrollerar hela profilens operativa underlag, oavsett sökning, kategori eller antal visade kort. Orsak och ny uttrycklig granskning krävs. Profil-ID, tidigare resultat, mål, avslutade poster och sparad kontolänk bevaras.
+
+**Resultatprofil**, **CRM-konto** och **Sidåtkomst** visar olika tillstånd. Profilavslutet stänger inget konto och kontrollerar inte andra arbetsytor eller produktionens användaransvar. Det är därför ingen full personalavveckling. [OPERATIONS](OPERATIONS.md) beskriver handlingen och kvarvarande steg.
+
+Kod `01bead7b097673b7c74499786e0f4a0bc602a4ca`, app-main `3162d6ef5546ac5192510a9b75799733714a923d`, [app-PR #84](https://github.com/ludros93-prog/MAgnussons-CRM/pull/84). Lokala slutkontroller: 5/5 exit 0 på ren, oförändrad head: CRM/Outlook-regressioner, icke-inkrementell TypeScript, produktionsbygge, isolerad runtime och git diff --check; isolerade browserprov: 16/16 PASS. Samma Site: version `55`, source `9fe89ae7167d6561ae56b99d822228effcd8f435`, deploy `appgdep_6ac6c009b0bc8191b6fc8f115b22f7ac`, succeeded `2026-10-07T21:56:49.614848+00:00`. [VALIDATION](VALIDATION.md) skiljer detta från verkliga konto-, integrations-, personal- och hostingåterställningsprov.
+
+Profilavslutets historik kräver en **v55-kompatibel skrivare**. Äldre oförändrad v54 kan skriva bort den nya historiken och är därför ingen säker skrivande återgång efter nya v55-data. Behåll en v55-kompatibel korrigering eller genomför en faktiskt verifierad full återställning med plan för senare arbete; se [RUNBOOK](agent/RUNBOOK.md).
+
+## Historik före v55
+
 ## Samlad arbetsöverlämning – v54
 
 Administratören öppnar **Konton & roller → Överlämna arbete**, väljer en säljarprofil och ser personens kvarvarande kundrelationer och öppna ansvarsdelar. Sökning, arbetskategori och **Visa fler ansvarsposter** gör urvalet hanterbart. **Granska** öppnar rätt befintlig överlämning; orsak, mottagare, uppgiftsval och sparning görs där. Äldre eller oklar ansvarskoppling märks tydligt, och inaktiva profiler kan fortfarande ha arbete kvar.

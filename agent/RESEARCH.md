@@ -1,5 +1,19 @@
 # CRM-källor för Magnussons byggagent
 
+## Profilavslut – officiella källor för v55
+
+Sju officiella källor lästes direkt och med fokuserade textöppningar. Klockobservationerna låg mellan **2026-10-07 21:23:00 och 21:23:56 UTC**; första sökningen/läsningen skedde före första observationen och individuella anropsstarter registrerades inte. Kvitto `/workspace/scratch/crm55/research/official-sources.json`, SHA256 `d114b2a5365308ee6094f71cc185bd6e1b7d9d96ccc9e5f23877e3bbef75afd0`.
+
+[Salesforce Deactivate Users](https://help.salesforce.com/s/articleView?id=sf.how_to_deactivate_users.htm&language=en_US&type=5) och [Considerations for Deactivating Users](https://help.salesforce.com/s/articleView?id=sf.users_deactivate_considerations.htm&language=en_US&type=5) skiljer åtkomst från ägarskap och bevarad historik/filer. [Salesforce Admins artikel från 2015](https://admin.salesforce.com/blog/2015/users-may-come-go-records-must-live) visar samma skillnad mellan kontoavstängning, överföring och processansvar; aktuell Help-text ovan ger det aktuella stödet. Magnussons fullständiga avslutsregel bestäms av dess eget serverkontrakt, inte Salesforces regler.
+
+[Lime Security FAQ](https://platform.docs.lime-crm.com/en/latest/configuration/sso-federation-security-faq/) och [User Provisioning](https://platform.docs.lime-crm.com/en/latest/configuration/scim_provisioning/) beskriver separata externa/CRM-identiteter och bevarade inaktiva användare vid konfigurerad provisioning. [Lime Boolean Labels](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/readonly-boolean/) stödjer tydliga textetiketter för vilket tillstånd som visas. Sidans första direktöppning gav Internal Error; senare direktöppningar gav artikeln. Vår tillämpning är separata besked för **Resultatprofil**, **CRM-konto** och **Sidåtkomst**, utan gissad kontoaktivitet eller namnkoppling till produktions-ID.
+
+[Saleshub AI Funktioner](https://saleshubai.se/funktioner) beskriver samlat kund-/arbetsunderlag och nästa aktivitet. Profilens kvarvarande arbete hålls därför kopplat till befintliga kundkort och granskningsflöden. Källan är produktbeskrivning, inte en teknisk garanti för avveckling eller automatiska överföringar.
+
+HTTP-status och helsidehashar fanns inte i läsverktygets svar. Inga autentiserade leverantörskonton, SSO-/SCIM-anslutningar eller externa åtkomständringar prövades. Svenska etiketter, 44 px, dialogrullning och fokus är våra lokala designval. Källorna fastställer inga Magnussonsanställningsregler, anslutningar, garantier eller världsranking. Läsunderlag: `/workspace/scratch/crm55/research/design-notes.md`; faktisk lokal verifiering anges separat i [VALIDATION](../VALIDATION.md).
+
+## Historik före v55
+
 ## Admininventering – officiell källkontroll för v54, 2026-10-07
 
 Efter sista webbuppföljningen lästes klockan **20:23:11 UTC**. [Saleshub AI Funktioner](https://saleshubai.se/funktioner) lästes direkt: gemensamt kundsammanhang och nästa aktivitet. [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) gav först 429 men därefter direkt fulltext och aktuella handlingsavsnitt: relevanta handlingar i rätt sammanhang, konkreta verb. Vår tillämpning är separat admininventering med tydliga **Granska**-handlingar till befintligt kund-/arbetsunderlag.

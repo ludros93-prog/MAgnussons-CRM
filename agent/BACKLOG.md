@@ -1,5 +1,15 @@
 # Arbetskö för Magnussons CRM
 
+## v55: granskat profilavslut med bevarad historik
+
+B01b2 får **Granska profilavslut** i admininventeringen. Servern granskar hela ofiltrerade operativansvaret i vald arbetsyta. Godkänd orsak/granskning gör resultatprofilen historisk och tar bort dess operativa alias atomiskt, med avslutshistorik. Profil-ID, medlemslänk, mål, tidigare resultat och samtliga poster bevaras. Nytt/återöppnat ansvar för en profil med registrerat avslut spärras. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktiska prov och release.
+
+B01b2 är fortsatt öppet. Ett konkret nästa val är granskad återöppning med uttryckligt aktivt nytt kundrelationsansvar och oförändrat historiskt resultat. Borttaget operativt alias gör att vanliga historiska kund-/affärs-/orderformulär fortfarande kan nekas av `owner()`; v55 lovar historisk läsning och resultatbevarande, inte generell historikredigering eller återöppning. Nästa del väljs efter färsk kod-/driftkontroll: samordnat konto-/flerarbetsyteflöde med tydlig behörighetsgräns, produktionens användaransvar och granskade överföringar för `csm`, `csm_need`, `prospecting`, `delivery`, okända specialuppgifter och event/checklistor. Sitesåtkomst är separat. En historisk resultatprofil innebär ingen full personalavveckling; kontolänk eller tomt filtrerat urval är inget sådant bevis.
+
+V55:s nya avslutshistorik kräver v55-kompatibel skrivare; äldre oförändrad v54 är ingen säker skrivande återgång. Full ansvarsinventering vid senare skrivningar med registrerad avslutshistorik och vid kandidatrendering är ännu inte kostnadskvantifierad. B07:s första laddning/mobilmeny och Outlook-läsning före färdig produktionsroll, privata årshjulsserverutkast, B02 chefsroll, B04 privata konto-/utkast-/Outlookbackuper och faktisk hostingåterställning, verkliga integrationer och observerad personalpilot består. Verifierade åtkomst-/data-/orderfel går före normal kö. Scheman, prompter och aktivering ändras inte.
+
+## Historik före v55
+
 ## v54: samlad inventering inför personalöverlämning
 
 B01b2 får **Konton & roller → Överlämna arbete**: admin väljer stabil säljarprofil eller omappat ansvar, ser kvarvarande ansvarsdelar och öppnar rätt befintlig granskning. Inaktiva/äldre identiteter, alla öppna uppgifter, pausade affärer, fakturaåterstående order och eventförberedelser efter avslutad aktivitet hålls synliga. Historia, privat data och separata produktionsansvar flyttas inte. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering/release.

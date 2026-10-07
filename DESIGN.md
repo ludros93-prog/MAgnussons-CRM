@@ -1,5 +1,17 @@
 # Magnussons CRM – designriktning
 
+## Tre begripliga tillstånd och granskat profilavslut – v55
+
+**Resultatprofil**, **CRM-konto** och **Sidåtkomst** får separata textbesked. Aktuell/historisk profil innebär inte aktivt/avstängt konto eller verifierad sidåtkomst. Fullständigt namn, profil-ID, äldre ansvarskoppling och arbetsyta finns nära **Granska profilavslut**. Handlingens kvittens gäller resultatprofilen i vald arbetsyta.
+
+Dialogen visar hela profilens blockerare, vad som ändras/bevaras, orsak och en uttrycklig granskningsruta. Filter i översikten påverkar inte denna kontroll. Hämtning, adoption av aktuell version, ändrad orsak, sparning och faktiskt resultat har skilda besked. Konflikt och läsfel behåller öppen text. Ändrat osparat formulär stängs via ett uttryckligt kasseringval; något privat serverutkast finns inte.
+
+Långa identiteter och orsak radbryts. Dialogen har begränsad höjd och scroll, textfältet egen begränsad rullning och vanliga kontroller minst 44 px avsedd höjd. Fokus återgår till användbar öppnare eller aktuell profilrubrik när öppnaren försvinner, bara i samma identitet/vy. Slutbrowserprov: 16/16 PASS; Root öppnade och granskade åtta faktiska slut-PNG från desktop/mobil, inklusive 320×360, 390×844, fokuserad sparknapp med dubblerad CSS-text, separat kontobesked, historik och konfliktadoption. Ingen horisontell klippning syntes i dessa bilder; mycket långa syntetiska namn radbryts över många rader. Detta är inte full sidzoom eller fysisk telefonverifiering. [VALIDATION](VALIDATION.md) anger faktiska kvitton och gränsen mot fysisk telefon, hjälpmedel och personalacceptans.
+
+Sju officiella Saleshub-/Lime-/Salesforce-källor finns i [RESEARCH](agent/RESEARCH.md). Lokala designval och Magnussons serverregler är separata från leverantörernas konto-/SSO-/SCIM-regler. B07:s första laddning och andra kvarvarande arbetsflöden är egna uppgifter.
+
+## Historik före v55
+
 ## Intuitiv adminöverlämning – v54
 
 **Överlämna arbete** placerar sällan använd personaladministration i **Konton & roller**. Profil, arbetskategori och lokal sökning har egna etiketter. Full personidentitet visas intill den kortare väljaren. Kortens tydliga verb leder till relevant befintlig granskning; status och osäker identitet uttrycks med text och färg. Antal skiljer visade poster, matchande poster och hela valt ansvar så filtrering inte ser ut som färdig överlämning.
