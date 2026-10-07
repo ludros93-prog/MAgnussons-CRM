@@ -138,7 +138,13 @@ export async function verifySellerProfiles({core,sqlite,get,post,headers,api,con
  const qualification=c=>({customerId:c.id,prospecting:{...c.prospecting,stage:'qualified',reason:'Relevant',need:'Arbetskläder',scope:'10 plagg',timing:core.day(),nextAction:'Förbered offert',nextDate:core.day(),qualifiedOwnerId:idA,qualifiedOwner:names.a}});
  await reject('prospecting',qualification(futureProspect));
  await save('customer',{name:'seller-profile-future-order-customer',owner:names.future,contact:'Testkontakt',status:'active'});const futureOrderCustomer=state.customers.find(c=>c.name==='seller-profile-future-order-customer');
- await save('catalog_order',{customerId:futureOrderCustomer.id,owner:names.future,title:'Profil-ID följer orderansvar',lines:[{id:'seller-profile-new-line',article:'TEST-PROFILE',description:'Testjacka',quantity:2,unitPrice:100,unitCost:60}],deliveryDate:core.day(),accepted:true,nextDate:core.day()});
+ const pendingLines=[{id:'seller-profile-new-line',article:'TEST-PROFILE',description:'Testjacka',quantity:2,unitPrice:100,unitCost:60}];
+ await reject('catalog_order',{customerId:futureOrderCustomer.id,owner:names.future,title:'Profil-ID följer orderansvar',lines:pendingLines,deliveryDate:core.day(),accepted:true,nextDate:core.day()});
+ // This is an explicitly imported old record, not permission to create a new
+ // unanchored order. Its invoice must still wait for a reviewed seller profile.
+ const importedBase=await store.load('demo'),importedPending=structuredClone(importedBase),pendingDeal=core.DealSchema.parse({id:'seller-profile-pending-legacy-deal',customerId:futureOrderCustomer.id,owner:names.future,title:'Äldre order med ännu omappat ansvar',stage:'won',confirmed:true,value:200,cost:120,lines:pendingLines,deliveryDate:core.day()});
+ importedPending.deals.push(pendingDeal);importedPending.orders.push(core.OrderSchema.parse({id:'seller-profile-pending-legacy-order',customerId:futureOrderCustomer.id,dealId:pendingDeal.id,owner:names.future,stage:'handover',proofRequired:false,proofApproved:false,supplierConfirmed:false,deliveryDate:core.day(),deliveredDate:'',invoiceDate:'',invoiceRef:'',invoiceValue:null,actualCost:null,notes:'Explicit äldre importfixtur'}));
+ assert.equal(await store.commit('demo',importedBase,importedPending,crypto.randomUUID()),true);state=await get('demo');
  let newOrder=state.orders.find(o=>o.customerId===futureOrderCustomer.id);
  await save('direct_dispatch',{orderId:newOrder.id,expectedContext:direct.directBasis(state,newOrder.id),entries:[{lineId:'seller-profile-new-line',quantity:2}],dispatchedOn:core.day(),method:'collection',recipient:'Testkontakt',address:{},evidence:'Isolerad verifierad avhämtning',supplierConfirmed:true,noProofNeeded:true});newOrder=state.orders.find(o=>o.id===newOrder.id);
  const invoice=o=>({...o,invoiceValue:200,actualCost:120,invoiceRef:'SELLER-PROFILE-NEW',invoiceDate:core.day(),invoiceOwner:names.a,invoiceOwnerId:idA,invoiceOwnerSource:'legacy_recorded'});
@@ -150,7 +156,10 @@ export async function verifySellerProfiles({core,sqlite,get,post,headers,api,con
  assert.equal(state.customers.find(c=>c.id===futureProspect.id).prospecting.qualifiedOwnerId,idFuture);assert.equal(state.customers.find(c=>c.id===futureProspect.id).prospecting.qualifiedOwner,names.future);
  await save('order',invoice(state.orders.find(o=>o.id===newOrder.id)));newOrder=state.orders.find(o=>o.id===newOrder.id);
  assert.equal(newOrder.invoiceOwnerId,idFuture);assert.equal(newOrder.invoiceOwner,names.future);assert.equal(newOrder.invoiceOwnerSource,'recorded');
- await save('order',{...newOrder,owner:names.b,invoiceOwnerId:idB,invoiceOwner:names.b,invoiceOwnerSource:'legacy_fallback',invoiceRef:'SELLER-PROFILE-EDIT'});
+ const commercial=await import('../work/commercial-responsibility.mjs'),handover=commercial.commercialResponsibilityCandidates(state,'order',newOrder.id);
+ await save('commercial_responsibility_transfer',{targetType:'order',targetId:newOrder.id,targetProfileId:idB,selectedTaskIds:handover.requiredTaskIds,reviewed:true,reason:'Granskad orderöverlämning med oförändrad fakturahistorik',expectedContext:commercial.commercialResponsibilityBasis(state,'order',newOrder.id)});
+ newOrder=state.orders.find(o=>o.id===newOrder.id);assert.equal(newOrder.owner,names.b);assert.equal(newOrder.ownerProfileId,idB);
+ await save('order',{...newOrder,invoiceOwnerId:idB,invoiceOwner:names.b,invoiceOwnerSource:'legacy_fallback',invoiceRef:'SELLER-PROFILE-EDIT'});
  assert.equal(state.orders.find(o=>o.id===newOrder.id).invoiceOwnerId,idFuture);assert.equal(state.orders.find(o=>o.id===newOrder.id).invoiceOwner,names.future);assert.equal(state.orders.find(o=>o.id===newOrder.id).invoiceOwnerSource,'recorded');
  await reject('settings',{...state.settings,owners:[...state.settings.owners,names.retired]});
  // Old dialogs stay old even after refreshing the workspace version.
