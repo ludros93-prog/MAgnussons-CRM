@@ -126,4 +126,4 @@
 .visual-day .daily-drafts .draft-status,
 .visual-day .daily-drafts .draft-status > span { min-width: 0; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 .visual-day .daily-drafts .draft-status > .biz-buttons { min-width: 0; max-width: 100%; }
-.visual-day .daily-drafts .draft-status button { min-width: 0; max-width: 100%; min-height: 44px; overflow-wrap: anywhere; }
+.visual-day .daily-drafts .draft-status button { min-width: 0; max-width: 100%; min-height: 44px; margin: 0; overflow-wrap: anywhere; }
