@@ -1,8 +1,30 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Publicerad v44 ger administratören granskad fristående uppgiftsöverlämning/förankring från Min dag och serverägd uppgiftshistoria. Senare planerade uppgifter är nåbara och gamla oförankrade ansvar behålls för uttrycklig granskning. V42:s kundansvar och V41:s affärs-/orderansvar består med matchande uppgiftshistoria i nya överlämningar. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och återställningsgränser.
+Publicerad v45 förankrar planerade mötens ansvar i stabil säljarprofil och ger administratören granskad mötesöverlämning från Min dag och Kalender med serverägd historia. Tidigare kund-, uppgifts-, affärs- och orderöverlämningar består. Mötesansvar och en ny automatisk uppföljningsuppgift hänger ihop utan att tidigare uppgifter eller historiska resultat flyttas. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och kompatibilitet.
 
-## Granskad uppgiftsöverlämning – v44
+## Stabilt mötesansvar med granskad överlämning – v45
+
+På ett planerat möte i Min dag eller **Kalender → Kundmöten i CRM** kan administratören välja **Byt mötesansvar** eller **Förankra mötesansvar**. Målvalet börjar tomt. Välj aktiv granskad profil, ange orsak och granska vilket möte och vilken person ändringen gäller. Äldre tomt ID kan förankras hos samma aktiva profil; okänd äldre person gissas inte. En granskad inaktiv person kan lämna över till aktiv ansvarig.
+
+Egen mötesvy följer profilens UUID för kopplade möten. Visningen använder aktuellt namn och särskiljer sammanfallande namn med den ursprungliga ansvarskopplingen. Äldre tomma kopplingar behåller sitt tidigare etiketturval med synligt förankringsbehov; läsning byter eller migrerar inget ansvar.
+
+Ansvar och serverägd möteshistoria sparas tillsammans med fryst underlag, CAS och request-ID-skydd. Historien visar tidigare faktiskt lagrat ID, granskad från-/tillprofil, namn-/ansvarssnapshots, orsak, autentiserad aktör och tid. Efter profilinitiering är befintliga generella mötesformulärs ansvar skrivskyddat; nyregistrering behåller aktiv profilväljare. Oförändrat ansvar vid vanlig redigering/avslut behåller tidigare ID, även blankt eller inaktivt.
+
+Överlämningen ändrar bara det valda mötets ansvar. Mötestid, status, plats och anteckningar ligger kvar. Kund-, affärs-, order- och tidigare uppgiftsansvar samt historiskt försäljningsresultat bevaras; privata utkast/Outlook delas eller flyttas inte. Ingen Microsoft-inbjudan skickas. När mötet markeras genomfört och en ny automatisk uppföljningsuppgift skapas får den exakt mötets profil-ID, även blankt, och egen tom uppgiftshistoria. Detta omfördelar inga tidigare uppgifter.
+
+Funktionen gäller aktuell status planerat. Befintligt återöppnande från genomfört till planerat finns kvar; detta är inget nytt oföränderligt möteslivscykelskydd. Ett möte som nu är genomfört eller avbokat kan inte överlämnas genom ansvarshandlingen.
+
+**Hämta aktuellt underlag** bevarar den öppna granskningens tidigare version. **Läs in nytt granskningsunderlag** är det uttryckliga versionsvalet och kräver ny granskning. Fel bevarar lokal orsak/val medan dialogen är öppen. Kopiera orsaken före omladdning: formuläret är inget varaktigt privat serverutkast. Gamla generiska privata mötesutkast är separata sparade underlag och kan behöva granskning av Ansvarskoppling/Ansvarshistorik med råvärden/kopiering kvar.
+
+Fem slutkontroller, isolerad runtime/restore och 31 browserfall plus en faktisk HTTP-sekvens passerar på kandidat `de76cb0f`. App-PR #64 är sammanslagen till main `308d9e1`; exakt-head/main-CI är gröna. Sites **v45 är publicerad 2026-10-07 06:42:46 UTC** från verifierad source `b4ea99ee`. Anonym startsida och CRM-API gav 401/401; autentiserad live-UI och riktiga konto-/personalprov återstår. Dokumentationsleveransen är separat och återpublicerar inte appen.
+
+V44 är inte en säker skrivande återgång efter att nya mötesfält registrerats. Ett faktiskt isolerat prov körde v44:s MeetingSchema från exakt basrevision `bba8a1e5d156e858d2bb208c97ef0bb0e017a3c7` på syntetiskt underlag: både ownerProfileId och responsibilityTransfers strippades. Kvitto `/workspace/scratch/crm45/contract/v44-parser-rollback-proof.json`, SHA256 `34c71f4acb00feea6e30fde45b2a033b804cd1bf44377019f2f7f13740cfc828`. Behåll v45-modellen/serverreglerna genom schemabevarande framåträttning eller verifierad datamedveten återställning. Tidigare Task-/kund-/kommersiella återgångsgränser består. Ingen faktisk live-rollback eller hostingåterställning har utförts.
+
+B01b2 är delvis levererat. Specialflödesansvar/full personalavveckling, B07:s tidigare textklippning, separat chefsroll, verklig personalpilot och driftsåterställning kvarstår. Utvecklingsprov ger inga riktiga konto-/integrationsgarantier.
+
+## Historik: Granskad uppgiftsöverlämning – v44, 2026-10-07
+
+Detta avsnitt beskriver den då publicerade v44. Uppgiftsfunktionerna består; mötesansvar och aktuella käll-/driftkvitton beskrivs i v45 ovan.
 
 I Min dag kan administratören byta ansvar för en öppen fristående kunduppgift utan att samtidigt byta kundansvar. **Byt uppgiftsansvar** visas för kopplat ansvar; **Förankra ansvar** hjälper när uppgiften fortfarande har äldre tomt profil-ID. Välj en aktiv granskad person, ange orsak och granska uppgift, kund och ansvar före sparning. Val av samma person kan förankra den äldre kopplingen. Okänd äldre person gissas inte.
 
