@@ -134,10 +134,20 @@ export async function verifySellerProfiles({core,sqlite,get,post,headers,api,con
  const oldFutureOrder=core.OrderSchema.parse({...state.orders[0],id:'seller-profile-future-legacy-order',customerId:oldFutureCustomer.id,dealId:oldFutureDeal.id,owner:names.future,invoiceOwner:names.future,invoiceOwnerId:'',invoiceOwnerSource:'legacy_recorded',invoiceValue:70,actualCost:42});
  const legacyExtra=structuredClone(await store.load('demo'));legacyExtra.customers.push(oldFutureCustomer);legacyExtra.deals.push(oldFutureDeal);legacyExtra.orders.push(oldFutureOrder);legacyExtra.settings.sellerGoals[names.future]={[month]:{revenue:123,grossProfit:null,qualified:1}};
  assert.equal(await store.commit('demo',await store.load('demo'),legacyExtra,crypto.randomUUID()),true);state=await get('demo');
- await save('customer',{name:'seller-profile-future-new-prospect',owner:names.future,contact:'Testkontakt'});const futureProspect=state.customers.find(c=>c.name==='seller-profile-future-new-prospect');
+ const beforeUnmappedCustomers=await store.load('demo');
+ await reject('customer',{name:'seller-profile-future-new-prospect',owner:names.future,contact:'Testkontakt'});
+ assert.deepEqual(await store.load('demo'),beforeUnmappedCustomers,'Creating an unreviewed new customer cannot change any stored CRM record.');
+ await reject('customer',{name:'seller-profile-future-order-customer',owner:names.future,contact:'Testkontakt',status:'active'});
+ assert.deepEqual(await store.load('demo'),beforeUnmappedCustomers,'The same profile gate applies to an active new customer.');
+ // These are explicitly seeded old records for the existing unmapped
+ // qualification/order-history tests, not newly permitted customer creation.
+ const importedCustomers=structuredClone(beforeUnmappedCustomers);
+ importedCustomers.customers.push(core.CustomerSchema.parse({id:'seller-profile-future-legacy-prospect',name:'seller-profile-future-new-prospect',owner:names.future,contact:'Testkontakt'}),core.CustomerSchema.parse({id:'seller-profile-future-legacy-order-customer',name:'seller-profile-future-order-customer',owner:names.future,contact:'Testkontakt',status:'active'}));
+ assert.equal(await store.commit('demo',beforeUnmappedCustomers,importedCustomers,crypto.randomUUID()),true);state=await get('demo');
+ const futureProspect=state.customers.find(c=>c.name==='seller-profile-future-new-prospect');
  const qualification=c=>({customerId:c.id,prospecting:{...c.prospecting,stage:'qualified',reason:'Relevant',need:'Arbetskläder',scope:'10 plagg',timing:core.day(),nextAction:'Förbered offert',nextDate:core.day(),qualifiedOwnerId:idA,qualifiedOwner:names.a}});
  await reject('prospecting',qualification(futureProspect));
- await save('customer',{name:'seller-profile-future-order-customer',owner:names.future,contact:'Testkontakt',status:'active'});const futureOrderCustomer=state.customers.find(c=>c.name==='seller-profile-future-order-customer');
+ const futureOrderCustomer=state.customers.find(c=>c.name==='seller-profile-future-order-customer');
  const pendingLines=[{id:'seller-profile-new-line',article:'TEST-PROFILE',description:'Testjacka',quantity:2,unitPrice:100,unitCost:60}];
  await reject('catalog_order',{customerId:futureOrderCustomer.id,owner:names.future,title:'Profil-ID följer orderansvar',lines:pendingLines,deliveryDate:core.day(),accepted:true,nextDate:core.day()});
  // This is an explicitly imported old record, not permission to create a new

@@ -415,7 +415,7 @@ await (await import('./workflow-safety.mjs')).verifyWorkflowSafety({core,sqlite,
 await (await import('./access-safety.mjs')).verifyAccessSafety({core,sqlite,objects,headers,get,post,roleGet});
 await (await import('./prospect-suppression.mjs')).verifyProspectSuppression({core,ops,sqlite,get,post,rolePost,roleGet,headers,api,conflicts});
 await (await import('./seller-profiles.mjs')).verifySellerProfiles({core,sqlite,get,post,headers,api,conflicts,dashboards});
-await (await import('./customer-responsibility.mjs')).verifyCustomerResponsibility({core,ops,sqlite,get,post,headers,api,conflicts,dashboards});
+await (await import('./customer-responsibility.mjs')).verifyCustomerResponsibility({core,ops,sqlite,objects,get,post,headers,api,conflicts,dashboards});
 await (await import('./commercial-responsibility.mjs')).verifyCommercialResponsibility({core,ops,sqlite,objects,get,post,headers,api,conflicts,dashboards});
 await (await import('./customer-workflow-drafts.mjs')).verifyCustomerWorkflowDrafts({core,sqlite,get,headers,api,conflicts});
 
