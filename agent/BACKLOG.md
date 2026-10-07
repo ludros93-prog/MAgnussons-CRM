@@ -1,6 +1,14 @@
 # Arbetskö för Magnussons CRM
 
-## v51: verifierat onboardingansvar
+## v52: stabilt ansvar för kundärendets arbete
+
+B01b2 får kundärendets eget profilansvar, granskad administratörsöverlämning med uttryckligt valda öppna uppgifter och egen ärendevy skild från kundrelationernas urval. Första ansvar för ett tidigare ägarlöst ärende väljs uttryckligen; gamla privata kundplaner behåller sin text vid adoption av de tre ansvarsfälten. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering och release.
+
+Nästa högsta genomförbara B01b2-del är **stabilt årshjulsansvar med granskad överlämning**, efter kontroll av färsk kod, pågående arbete och publicering. Därefter behövs en samlad granskad personalöverlämning av kvarvarande öppet arbete. Kundplanens ärende är fortfarande en föränderlig plats; ett separat ticketregister är inte levererat eller antaget.
+
+B01b2 är inte fullständigt klart. Chefsroll, privat konto-/utkast-/Outlookbackup, hostingåterställning, integrationer och personalpilot är fortsatt öppna med oförändrad prioritering nedan. Global första laddning/mobilmeny är konkret separat B07-designarbete: en meny som öppnas medan **Ansluter…** visas stängs när det första användarunderlaget läses in och provider-nyckeln byts. Gör laddningsgränsen begriplig och bevara en logisk nästa handling; testets readiness-spärr är ingen produktfix. Outlook-läsning före laddad produktionsroll är också en separat förbättring. Konkret data-/åtkomst-/orderfel går fortsatt före normal kö. Inga scheman, prompter eller aktiveringar ändras av leveransen.
+
+### Historik: v51 – verifierat onboardingansvar
 
 B01b2 får stabilt onboardingansvar och granskad förankring/överlämning med frivilligt valda öppna uppgifter. Personlig onboarding följer sitt eget ansvar. Lokal kod `d3de221` har fem gröna slutkontroller och 19 godkända browserfall; PR #76:s slut-head `f67b6d2` har samma träd och grön CI med 13 steg. App-main `298c3ac219cf67f86fbf1aac5bf29beff9c4b2df`, Sites-version `51`; [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger releasebevis.
 

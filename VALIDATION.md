@@ -1,3 +1,50 @@
+# Granskat kundärendeansvar – v52
+
+## Beteende och lokala slutkontroller
+
+Kundplanens ärende får `issueOwnerProfileId` och serverägd `issueResponsibilityTransfers`. Efter profilinitiering är tidigare registrerat ansvar skrivskyddat i vanlig kundplanredigering. Ett ärende utan tidigare ansvar, profil-ID eller historik kan få sitt första ansvar när det sparas som ett komplett öppet ärende: användaren väljer en aktiv profil uttryckligen, med matchande ursprunglig ansvarskoppling. Det gäller även äldre ägarlösa ärenden med kvarvarande text; ingen tidigare person hittas på.
+
+Administratören kan förankra äldre ansvar eller byta ett nu öppet ärendes ansvar. Endast uttryckligt valda, tillåtna öppna `csm_issue`-uppgifter följer med. Ärende och valda uppgifter sparas atomiskt med matchande historia, autentiserad aktör, orsak, CAS och skyddat återförsök. Andra ansvar, uppgifter, kundkontakt och historiska resultat ligger kvar. Nya ärendeuppgifter får ärendets exakt registrerade profil-ID, även tomt; vanliga planuppdateringar behåller befintliga uppgifters ansvar och historik.
+
+Slutkontroller för kandidat `2e3c102e3c7664adc9b27d2e5775023542ebfe70`, träd `dee4628a4eb3dc76f5916fff3441cd92647b1170`, 2026-10-07T17:04:13.504966+00:00–2026-10-07T17:06:11.517869+00:00: samtliga fem obligatoriska kontroller passerade på ren, oförändrad kandidat. Kontrollerna omfattar CRM/Outlook-regression, icke-inkrementell TypeScript, bygge, isolerad workerd/D1/R2-runtime och diffkontroll. Kvitto `/workspace/scratch/crm52/release-checks-r4/checks.json`, SHA256 `d983fc39456ec6359680e0287b372c98f041bac06e51bdc031e8b86f5606f358`. Runtime omfattar syntetiska data, filer och återläsning; detta är ingen hostingåterställning.
+
+Kandidat `9202740271c1d17fb87bd6e842be83c2762abb51` hade ett faktiskt misslyckat runtimeprov: för tidigt skapad ärendefixture störde ett befintligt krav på en ny uppgift vid privat planpublicering. Testunderlagets ordning rättades; kravet behölls och stärktes. `/workspace/scratch/crm52/release-checks/checks.json` står kvar med `pass:false` och räknas inte som slutQA. Oberoende granskning av slutkandidaten: inga funna kvarvarande blockerare; exakt ren slutkod och 22 granskade ingångar verifierade. Kvitto `/workspace/scratch/crm52/audit/independent-review-final-2e3c102.json`, SHA256 `124606912a988c52a98d0efb58e67999a5165a94a720bddd7fbe32c3a517f631`. Statisk granskning och en äldre kontrollkörning ersätter inte slutkandidatens faktiska testkvitto.
+
+R3-kandidat `e30126130b7187f942064e2bf00de5ddcd3249ba` hade också ett faktiskt misslyckat runtimeprov, bevarat i `/workspace/scratch/crm52/release-checks-r3/checks.json` med `pass:false`. Testet antog att en viss icke överlämnad ärendeuppgift alltid skulle förbli oförändrad efter planpublicering. UUID-ordningen kan i stället göra den till planens kanoniska öppna ärendeuppgift, vars åtgärd och datum uppdateras enligt befintlig produktregel. Testförväntan rättades till den faktiska kanoniska åtgärden/datumet; ansvar, profil-ID, hela historiken och alla andra uppgiftsfält jämförs fortsatt exakt. Rättningen gäller testet. Den nya fulla kontrollkörningen ovan verifierar den slutliga kandidaten; tidigare misslyckade kvitton står kvar.
+
+## Slutliga browserprov
+
+22/22 godkända på byggd isolerad Worker/D1/R2 med faktiska roller, 320/390/1280 px, 2× dialogtext, verklig 409, dubbelklick och privat utkaståterläsning/adoption/publicering; 282 källfiler/96 distfiler oförändrade, positiva 18 råtabeller och R2-/Outlook-/utkastgränser verifierade. Kvitto `/workspace/scratch/crm52/browser/final-receipt.json`, SHA256 `afacc49a52ee1bf47d924a66903a11a1e2f05abc53134586372b3e5ddfbc9109`. Root granskade faktiska mobilbilder för den vanliga svenska ärendeintroduktionen, fullt profilval/fokus och smal dialog med förstorad text; noll page errors, oväntade console errors eller externa anrop i slutmatrisen. En verklig förväntad 409 och tre befintliga nekade Outlook-läsningar för produktionsroller redovisas separat.
+
+En tidigare färsk browserkörning stoppades efter 15 registrerade fall när mobilmenyn öppnades för tidigt efter omladdning; `/workspace/scratch/crm52/browser/final-170736/report.json` står kvar med `FAIL_FINAL_BROWSER`, SHA256 `b28252e472c0d608b743fcd7027314ed348b527e232dbce9004cc96c46537e0d`. Före faktisk CRM-GET 200 visade appen **Ansluter…** och saknade den färdiga arbetsdagen. När användarstate kom in ändrades DraftProvider-nyckeln och menyn stängdes genom ommontering av SidebarProvider. Samma nyckeluttryck finns i basrevision `f9d26046079215bb9e1f04e179a4d906a27f6f0f` enligt källjämförelse; detta påstår inget separat körande äldre runtimeprov eller någon appfix.
+
+En separat läsande diagnos körde två faktiska omladdningar med 600 ms CDP-nätverkslatens, utan ersatta API-svar. Navigation fungerade när testet väntade på faktisk GET 200, renderad `visual-day` och databasens sparstatus före menyinmatning. Alla 18 råtabeller, R2 samt käll-/distfiler var oförändrade och inga CRM-/utkastskrivningar gjordes. Kvitto `/workspace/scratch/crm52/browser/reload-readiness-diagnosis/report.json`, SHA256 `54ac7d086884812dc742b82d5f9c56fc840c9ed8713161e72dc23d2bb7f45e2a`, status `PASS_READINESS_DIAGNOSIS`. Väntespärren rättar testets laddningsgräns; den är ingen rättning av appens kvarvarande menyfriktion under första laddningen och ersätter inte en ny full slutmatris. Den ändrade harnessens resultat redovisas endast i slutkvittot ovan.
+
+Browserunderlaget använder byggd lokal Worker, syntetisk D1/R2 och testroller. Dialogtextförstoring avser uppmätt 2× text i berörda dialoger, inte hela sidan eller browserzoom. Resultatet är inget autentiserat live-UI-, riktigt konto-/integrations-/personal-, fysisk telefon-, OS-tangentbords-, skärmläsar- eller hostingåterställningsprov och ingen full WCAG-certifiering. Föregående avbrutna browserkörningar behålls som sådana; endast det angivna slutkvittot är slutQA.
+
+## Kod, main och samma Site
+
+GitHubs `create_blob`-POST gav ett internt fel. Reservvägen via innehålls-API:ts PUT fungerade med verifierad förväntad parent och exakt träd. Källskrivningen är ett eget bevis och räknas inte som grön CI, merge eller publicering.
+
+| Underlag | Faktisk revision och kvittens |
+| --- | --- |
+| Lokal slutkod | `2e3c102e3c7664adc9b27d2e5775023542ebfe70`, träd `dee4628a4eb3dc76f5916fff3441cd92647b1170` |
+| [App-PR #78](https://github.com/ludros93-prog/MAgnussons-CRM/pull/78) | sammanslagen med fryst granskat head; exakt slut-head `ab4a92efb10310c463b4e22b40cdf9c47a7ac8c2`, samma verifierade träd; 13/13 completed/success i [run 37656249015](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37656249015), job 112911891582; faktiskt slut-head och träd verifierade |
+| App-main | `a81ce8870d8b1badf5cb4a7d85c0fe54178939f9`; 13/13 completed/success i [run 37657753375](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37657753375), job 112917103528; exakt merge-revision och träd återlästa |
+| Site-source | `f3235b48649ba0614422bdadacc6478a36c4936f`, 282 källfiler med samma träd; ordinarie fast-forward-push från verifierad v51-source och separat FETCH_HEAD-återläsning av exakt SHA/träd; ingen automatisk publicering |
+| Samma Site | Projekt `appgprj_6aa71b309d90819181a32a9af6e6baf2`, version `52`, deploy `appgdep_6ac680f1c6708191b91af1763a30dee7`, succeeded `2026-10-07T17:27:36.464574+00:00` |
+
+Arkivet `/workspace/scratch/crm52/site-v52.tar.gz` har 97 poster/96 distfiler och råtar 4771840 byte. Råtar SHA256 `6937a9246718ad8619ef12fd9c330fd29d079ca6c12b73858ee2206940b00db0`; gzip SHA256 `5cf8c7cfc6e076e0c0f01b04eb8b2a5bd73a9c45779e4c01210be398b8776203`. Lokal arkivkontroll ersätter inte source-push, save eller deploy. Full CUSTOM-policy revision 2 och hela miljöuppsättningen revision 1 var identiska före/efter publicering; noll automationer och samma DB-/BUCKET-manifest. Kvitto `/workspace/scratch/crm52/site-publication-proof.json`. Anonym `GET /` och `GET /api/crm?space=demo` nekades med 401 efter deploy; inget autentiserat live-UI-prov eller skrivprov på kunddata genomfördes.
+
+## Dataformat och återgång
+
+Ingen SQL-migration. Äldre planer och backuper får tomt ärendeprofil-ID och tom historia; GET, initiering och återställning förankrar inte ansvar automatiskt. Task-historik får källan `customer_issue`, med tvåvägsvaliderade kopplingar till ärendets överlämning. Löst och återöppnat ärende använder fortfarande samma föränderliga plats i kundplanen och dess ackumulerade ansvarshistoria; detta är inget nytt register med separata oföränderliga tickets.
+
+Fyra rena syntetiska parserprov mot den faktiska v51-koden `d3de221dcc7f65e82e254b996067f113f7c86523` passerade som återgångsdiagnos: gammal kod avvisar nya uppgiftshistorikkällor eller strippar ärendets nya ansvarsfält. Kvitto `/workspace/scratch/crm52/audit/downgrade-receipt.json`, SHA256 `b112654f31f8e7cc7c28f5495e8055f65181a91327c636d7a79968946243d732`; noll SQL-skrivningar. Efter registrering av v52-fälten/historiken är oförändrad v51 ingen säker skrivande återgång, även om ingen uppgift följde med. Behåll v52-formatet och serverreglerna vid korrigering. En äldre återgång kräver verifierad data och filer från före ändringen samt en uttrycklig plan för senare arbete; ingen live-rollback eller hostingåterställning är utförd.
+
+CRM-backup omfattar inte konton, privata utkast eller Outlook-anslutningar. Återställda profilkopplingar måste granskas och återanslutas uttryckligen; historiska aktörer ger ingen behörighet. Månads-/årsförsäljning mot mål, marginal och nya prospects samt tidigare orderkrav består. B01b2:s årshjul och full personalöverlämning återstår; övriga öppna behov finns i [BACKLOG](agent/BACKLOG.md). Codex-referensen är oläst eftersom `read_thread` saknas.
+## Historik – tidigare verifierade versioner
+
 # Granskat onboardingansvar – v51
 
 Lokal slutkod `d3de221dcc7f65e82e254b996067f113f7c86523`, träd `1fb1213ca8446f0ccee8d0948ae40db0a01278e8`, är verifierad med fem obligatoriska slutkontroller och 19 browserfall. Native slut-head `f67b6d2cd412491c2f04e0a0cfca9371ba8f6b7d` har exakt samma träd och godkänd PR-CI. Kod, main och Sites redovisas separat nedan.
