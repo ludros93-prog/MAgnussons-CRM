@@ -1,8 +1,16 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Publicerad v45 förankrar planerade mötens ansvar i stabil säljarprofil och ger administratören granskad mötesöverlämning från Min dag och Kalender med serverägd historia. Tidigare kund-, uppgifts-, affärs- och orderöverlämningar består. Mötesansvar och en ny automatisk uppföljningsuppgift hänger ihop utan att tidigare uppgifter eller historiska resultat flyttas. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och kompatibilitet.
+Publicerad v46 förbättrar Min dags läsbarhet med större text. Tidigare granskade kund-, uppgifts-, affärs-, order- och mötesöverlämningar består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och kompatibilitet.
 
-## Stabilt mötesansvar med granskad överlämning – v45
+## Läsbar Min dag med större text – v46
+
+Den privata sparstatusen kan brytas på flera rader, fokusetikettens text kan krympa och radbrytas bredvid sin ikon, och långa ord i tomma paneler bryts inom panelen. Det rättar klippningen av privat sparstatus och tom kontakttext samt fokusetikettens överbredd utan att förkorta statusmeddelanden eller dölja text. Min dags knappar i privat sparstatus, exempelvis återförsök, ryms och kan radbrytas inom sin yta med minst 44 px höjd. Den höjdgränsen gäller dessa knappar, inte alla CRM-kontroller. Befintliga färger, ikoner, kundsammanhang och primära handlingar används fortsatt.
+
+Privat utkaststatus och gemensam CRM-inlämning är fortsatt skilda besked. En läsbar status betyder det befintliga faktiska utfallet; den räknas inte som genomförd kundkontakt. Försenat, dagens möten, uppföljning och kunder att kontakta behåller sina handlingar och ansvar. Fem slutkontroller och 29 lokala browserfall passerar på slutkandidat `04dfa5cd`; app-PR #66 är sammanslagen till main `acc744d1` med gröna exakt-head/main-checks. Sites v46 är publicerad 2026-10-07 07:45:58 UTC från verifierad source `c8c922b3`. Riktiga konto-/personalprov återstår.
+
+Mobilkundlista, fokus efter arbetsytebyte och faktisk personalpilot återstår. [DESIGN](DESIGN.md) beskriver riktningen och [VALIDATION](VALIDATION.md) den avgränsade verifieringen.
+
+## Historik: Stabilt mötesansvar med granskad överlämning – v45
 
 På ett planerat möte i Min dag eller **Kalender → Kundmöten i CRM** kan administratören välja **Byt mötesansvar** eller **Förankra mötesansvar**. Målvalet börjar tomt. Välj aktiv granskad profil, ange orsak och granska vilket möte och vilken person ändringen gäller. Äldre tomt ID kan förankras hos samma aktiva profil; okänd äldre person gissas inte. En granskad inaktiv person kan lämna över till aktiv ansvarig.
 
