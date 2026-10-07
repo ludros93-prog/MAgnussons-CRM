@@ -1,6 +1,14 @@
 # Magnussons CRM – order, tryck och lager
 
-## Stäng kundkortet och fortsätt – v48
+## Byt arbetsyta och fortsätt – v49
+
+1. Öppna **Arbetsyta** med pointer eller tangentbord och välj **Demoyta** eller **Teamets arbetsyta**. Valet syns i väljaren/bannern.
+2. Utan fortsatt inmatning återgår fokus till den nya tillgängliga väljaren, annars aktuell tillgänglig huvudrubrik. Fortsätt med Tab.
+3. Fortsatt inmatning eller ett laddningsfel avslutar återgången. Befintligt återförsök återupplivar den inte.
+
+Byte registrerar ingen kontakt/CRM-inlämning. Privata utkast/serverroller består. [VALIDATION](VALIDATION.md) anger prov/återgång.
+
+## Historik: Stäng kundkortet och fortsätt – v48
 
 1. Öppna kundkortet från befintlig kundhandling.
 2. Stäng med Escape eller kundkortets stängknapp. När samma öppningskontroll finns kvar i samma konto/roll, arbetsyta och vy ligger fokus där igen. Fortsätt med Tab.

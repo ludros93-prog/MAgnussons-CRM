@@ -719,3 +719,9 @@ V48 återför fokus efter användarens stängning av kundkortet till samma öppn
 - Den tidigare stoppade microtask-kandidaten är diagnostik, inte slutQA; historik och rättning finns i VALIDATION.
 - App-PR #70 sammanslagen till app-main `245512582ebffb328ae2b6664eeb334629784392`, exakt-head/main-CI gröna. Samma Site v48: source `ca1681891da9a26f30c5639360c3081c72e0dd7a`, deploy `appgdep_6ac61978cd7c81919369a53f1885de31` succeeded 2026-10-07 10:06:08 UTC. CUSTOM-policyrevision 2/miljörevision 1/DB/R2/0 scheman bevaras.
 - Ingen migration; v47 återför fokusluckan. Äldre modellbundna gränser består. Ingen live-rollback/hostingåterställning. Officiella källor finns i RESEARCH. Inga riktiga kundskrivprov eller kund-/personalmeddelanden; schema/prompt/aktivering oförändrade. Codex-referensen oläst. Markdownleveransen är separat utan app-redeploy.
+
+## 2026-10-07 – fokus efter arbetsytebyte, v49
+
+- Arbetsytefokus och desktopheader förbättrade. Kandidat `ba0fb8cffb89846f9def7ca9c89432fe9df04a3a`, träd `a2636ff8ebdd2f17ab5135f1261322104f81f09b`: fem slutkontroller/54 browserfall passerade. [VALIDATION](../VALIDATION.md) har bas/exakta kvitton/diagnos/gränser.
+- PR #72 till app-main `beeba143f53771fe12a8700027db115b3c858d3f`, exakt-head/main-CI gröna. V49 source `df00f356d53f19aa8c08a372f569b6c3d7bb8b14`, deploy `appgdep_6ac63854a79481919e13e18cb7e471cf` succeeded 2026-10-07T12:17:48.787839+00:00. CUSTOM 2/miljö 1/DB/R2/0 scheman består; Markdown återpublicerar inte appen.
+- Ingen migration/live-rollback/hostingåterställning, kundskrivprov eller meddelanden. Äldre modellgränser består; schema/prompt/aktivering oförändrade, Codex oläst. Nästa designarbete och öppna ansvar-/konto-/drift-/personalärenden finns i BACKLOG.
