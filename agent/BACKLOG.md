@@ -1,5 +1,16 @@
 # Arbetskö för Magnussons CRM
 
+## v56: samlad granskad återöppning av kundrelation
+
+B01b2 får **Återöppna kundrelation** på samma avslutade kundkort: aktivt granskad kundrelationsansvarig, uttrycklig relation, orsak och en ny planerad uppföljning sparas atomiskt. En verklig kundansvarsöverföring registreras bara vid profilbyte; historisk försäljning och gamla aktiviteter flyttas inte. Den redan fungerande tvåstegsvägen bevaras. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering/release.
+
+Det tidigare återöppningsarbetet för själva kundrelationen får därmed en samlad adminhandling. Generell historisk affärs-/orderredigering är inte löst. B01b2 förblir öppet för specialuppgifter (`csm`, `csm_need`, `prospecting`, `delivery`, okända typer), event/checklistor, produktionens användaransvar och samordnade konto-/flerarbetsytekontroller. Nästa avgränsade B01b2-del bör väljas efter färsk kod-/driftkontroll; granskad överlämning av kvarvarande specialuppgifter är en konkret kandidat. Radera eller ändra inte historiskt resultat för att kringgå äldre formulärregler.
+
+Minsta kompatibla skrivare är fortsatt v55; v56 inför inget nytt lagringsfält eller SQL. B07:s första laddning/mobilmeny och Outlook-läsning före färdig produktionsroll, privata årshjulsserverutkast, B02 chefsroll, B04 privata konto-/utkast-/Outlookbackuper och faktisk hostingåterställning, verkliga integrationer och observerad personalpilot består. Verifierat åtkomst-/data-/orderfel går före normal kö. Scheman, prompter och aktivering ändras inte.
+
+## Historik före v56
+
+
 ## v55: granskat profilavslut med bevarad historik
 
 B01b2 får **Granska profilavslut** i admininventeringen. Servern granskar hela ofiltrerade operativansvaret i vald arbetsyta. Godkänd orsak/granskning gör resultatprofilen historisk och tar bort dess operativa alias atomiskt, med avslutshistorik. Profil-ID, medlemslänk, mål, tidigare resultat och samtliga poster bevaras. Nytt/återöppnat ansvar för en profil med registrerat avslut spärras. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktiska prov och release.

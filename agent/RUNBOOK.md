@@ -1,5 +1,14 @@
 # Återkommande arbete för CRM-superbyggaren
 
+## Datakompatibilitet vid kundåteröppning – v56
+
+V56 använder befintliga fält för kundstatus/ansvar, kundansvarshistorik, uppgift och händelse. Ingen ny tabell, SQL-migration eller höjning av minsta kompatibla skrivare över v55. Behåll v55:s profilavslutshistorik/validering vid återgång; oförändrad v54 är fortsatt osäker efter nya v55-data.
+
+Verifiera den sista kandidatens återöppningskontrakt, exakt återförsök/CAS, relevanta ändringar i visat granskningsunderlag och bevarad historisk attribution. Vid återgång till v55-kompatibel app ska nya task-/event-/kundansvarsposter bevaras i JSON/NDJSON-backup och isolerad faktisk återläsning. Kontrollera verklig formatkompatibilitet i [VALIDATION](../VALIDATION.md); lokal syntetisk återställning ersätter inte hostingåterställning.
+
+En kundåteröppning ändrar inte konto, sidåtkomst, privat kommunikation eller ansvar i andra arbetsytor. Gör inga skrivprov på riktiga kundorder. Körbokens befintliga mandat, arbetssätt och dataregel för v55 gäller fortsatt.
+
+
 ## Dataregel efter v55:s profilavslutshistorik
 
 Efter att `retirementHistory` sparats krävs **v55-kompatibel skrivare** för aktuell CRM-data. Äldre oförändrad v54 normaliserar bort den additiva profilhistoriken; dess gamla schema kan därför inte användas som säker skrivande återgång. Detta är en kompatibilitetsregel, inget påstående om att Sites automatiskt spärrar äldre deployer.

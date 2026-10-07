@@ -1,5 +1,20 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Återöppna relationen på samma kundkort – v56
+
+Administratören öppnar ett avslutat kundkort och väljer **Återöppna kundrelation**. Dialogen visar kundens tidigare relation och kundrelationsansvarig med profil-ID. Välj en aktiv granskad ansvarig och **Prospekt**, **Aktiv kund** eller **Vilande**, skriv varför relationen återupptas och planera en ny uppföljning med egen beskrivning och datum. Ingen mottagare, relation, aktivitet eller granskning väljs åt användaren.
+
+**Spara återöppnad kundrelation** sparar relation, kundrelationsansvar och en ny uppföljning tillsammans med spårbar historik. Samma kund-ID bevaras. Vid byte av profil registreras en verklig kundansvarsöverföring; samma redan aktiva profil kan behålla ansvaret utan falsk överföring. Aktiv kund kan inte väljas med startad ofullständig onboarding.
+
+**Befintligt öppet arbete behåller sitt ansvar** visar vad som finns kvar. Gamla uppgifter, kundplan, onboarding, årshjul, kvalificeringar, offerter, order, fakturaunderlag, mål och historiska resultat flyttas inte. Senaste kundkontakt ändras inte. En planerad uppföljning är inget påstående om genomförd kontakt eller nytt behov.
+
+Den tidigare tvåstegsvägen via granskad kundansvarsöverföring och vanlig statusredigering finns kvar med sina befintliga rättigheter. Generell historisk affärs-/orderredigering och full personalavveckling ingår inte. Konto/Sitesåtkomst och privata utkast/Outlook är separata. Försäljning mot månads-/årsmål, marginal och nya prospects består; TB är inget huvudmått.
+
+Orsak och val bevaras vid fel i den öppna dialogen. Hämtning och uttrycklig inläsning av aktuellt underlag skiljs åt; nytt underlag eller ändrade fält kräver ny granskning. Formuläret har inget privat serverutkast. [VALIDATION](VALIDATION.md) anger faktisk release och provgränser.
+
+## Historik före v56
+
+
 ## Gör en resultatprofil historisk med granskning – v55
 
 Under **Konton & roller → Överlämna arbete** kan administratören välja profil och öppna **Granska profilavslut**. Dialogen visar fullständigt namn, profil-ID, äldre ansvarskoppling, vald arbetsyta och hela profilens kvarvarande ansvar. Listans sökning/filter räcker inte som avslutsunderlag; servern granskar samtliga ansvarsdelar.
