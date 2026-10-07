@@ -1,3 +1,51 @@
+# Privata företagsaktiviteter – v39, 2026-10-07
+
+## Beteende och avgränsning
+
+Säljare och administratörer kan planera en företagsaktivitet som ett eget privat utkast och fortsätta från **Min dag** eller **Mina privata aktivitetsutkast** i företagskalendern. Rubrik, rå text med radbrytningar/mellanslag, ofärdiga datum, ansvar, status och alla förberedelser bevaras privat; ursprungligt kalenderunderlag följer samma utkast. **Spara utkast & stäng** väntar på privat sparning. **Spara i företagskalendern** är ett separat uttryckligt val: aktiviteten uppdateras och exakt den sparade privata revisionen avslutas atomiskt. Privat autosparning ändrar inte teamets kalender. En annan enhets privata version och en ändrad gemensam aktivitet är olika konflikter. Hela underlaget visas före val; jämförelse och en versionsbunden markerad bekräftelse krävs. Ändrade uppgifter ogiltigförklarar valet. Nytt granskat kalenderunderlag kan väljas med egna råvärden kvar, men en borttagen aktivitet återbildas inte tyst. Oförändrat CRM-återförsök efter förlorad kvittens behåller värden, originalbasis, privat revision och begärans-ID; ledgern kan återspela första framgång.
+
+Misslyckad privat sparning behåller panelen och full kopierbar text. **Stäng och behåll på denna enhet** kräver återläsning av samma lokala reservkopia; det är ingen bekräftad serversparning eller driftbackup och skyddar inte mot rensad enhetslagring. **Ta bort privat utkast** är ett separat bekräftat val och tar inte bort en gemensam kalenderaktivitet. Efter förlorad arkivkvittens kan en enda commit redan ha lyckats; exakt arkiveringsreplay eller automatisk lokal rensning utlovas inte.
+
+Befintlig utkasttyp `form` med context `company_event` används med ett nytt strikt kuvert. SQL, enumvärden och privat localStorage-nyckel är oförändrade. Ägare/arbetsyta, serverroller, CAS, atomiska skrivningar och idempotens består; privata utkast delas inte med andra användare. Kalenderinbjudningar skickas inte. B05 är bara delvis levererad.
+
+## Faktiska prov på baslinje och slutkandidat
+
+Före ändringen reproducerades faktisk förlust i byggd v38 i två isolerade Chromiumfall: stäng/öppna och omladda/öppna tömde råa ofärdiga aktivitetsfält och förberedelser. Noll POST; alla 18 råtabeller/R2 och 257 käll-/96 distfiler var oförändrade. Baslinjerapport SHA256 `c24261a47e142514b6c52e2143f43073e584ffc6323d748410af0e2d475c58f2`. Dessa två bristreproduktioner ingår inte i slutv39:s godkända fall.
+
+Första lokala kandidaten `d215ea1ee71343f496ab8a6b51c5fba04c088268` stoppades före merge/publicering. Dess begränsade matris med åtta konflikt-/läs-layoutfall passerade, men den kompletterande sparade redigerbara panelen vid 320×844 och uppmätt 2× text gav 300 px tillgänglig bredd mot 449 px scrollbredd. Motsvarande 1× sparade fall passerade; felet gäller 2×. FAIL-rapport SHA256 `678b578e1de3212fbdcc4597d0ea0eebeaa3a1cf7673177be7c016603fae9809`; begränsad tidigare PASS-rapport `5800d9f3e686c8d139fec9d502406d2c9d1f0b834e14ec8fd6738ec13d0baaaa`. Dessa äldre fall räknas inte som godkända slutprov för den korrigerade kandidaten. Endast nya kompletta slutrapporter och obligatoriska kontroller för den nya kandidatens verifierade bytes ligger till grund för releasekvittensen.
+
+På slutkandidaten passerade `node tests/outlook.mjs`, icke-inkrementell TypeScript, `corepack pnpm build`, `node tests/runtime-smoke.mjs` och `git diff --check`: fem exit 0; logghashar återlästa mot checks.json (SHA256 `53e2eacca86b637e2147181ea61da4f8d709d313b1baadcfda8cf80d35b6cca4`). Node 24.19/pnpm 11.25.0. Slutmatris: **64 unika isolerade runtimefall, PASS: 63 körda i webbläsare och 1 direkt via API**. De 31 rena läsfallen är en delmängd, inte extra fall. Alla 261 källfiler och 96 distfiler ingår i oförändringskontrollen. Egen runtime/store är borttagen.
+
+Slutregressionen innehåller 56 privata skrivförsök och 50 aktivitetsbegäran: 14×400, 7×403, 14×409, ett privat CAS-race, ett SQL-utkastrace, två SQL-arbetsyterace, tre CRM-rollrace, tre privata rollrace, ett dubbelklickspar och två exakta CRM-replays. Helpern accepterar tre exakta råa nya/aktiva/arkiverade poster och nekar 16 osäkra identitets-/kopplings-/normaliseringsfall utan indataändring. Jämförelser av 18 råtabeller och sex modellerade R2-objekt skyddar övrigt underlag.
+
+Slutrapport `/workspace/scratch/event39-browser/combined-receipt.json` SHA256 `606c23a07401f88a2d8d84db57513daef79e332934069d48efee769c0b5c7d77`. Huvudruntime: SHA256 `028d40f075b38db1c15404f4f9344a2d1e9ec5c60e89bc9b4bbd5c6e37a30b7c`; Versionsjämförelse/layout: SHA256 `84a364abae1c2c0590b6e0f63ef74392ab59d5c6ea29cc2196e38dc9d6c55132`; Aktiva sparknappar/layout: SHA256 `727fd1749282cfaeeb263b550bc30fe5d5698e961b9cc1a76313c212df581b97`; Grupperna summeras inte som extra fall.
+
+Alla slutkandidatens käll-/distbytes återlästa mot manifest: källmanifest SHA256 `dab6d4b7a8955352a4b340f3e2a434e5b32101f7bf1bf2aa14a05a333b98c79c`, distmanifest `8f1f5c0e47c42ebd7f740d2415260b95f063d9a16fcb8ee191e0ddfeda044945`. Kandidatens lokala HEAD/träd och dokumentationsbasens app-main/träd verifierades var för sig före dokumentationsskrivning.
+
+## Källa, main och live
+
+Fryst lokal kandidat `ad44b299f4caec7b21b6ce3fd8de3f7444998f74`, träd `53b0e8ada64d238db0988d1998f545bae1c5e99f`; [app-PR #52](https://github.com/ludros93-prog/MAgnussons-CRM/pull/52)-head `8dda208f72aeb1316c1d16610636a6ff19838d3b`, app-main `e6ab232fd0ce149ef8d4f3d4e4c8baf3b7eee9e7` och pushad Sites-källa `cea9cd97d9f9caa13f0d58f6a43bb29dda49d28d` redovisas separat. Exakt-head CI [37553188761](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37553188761)/jobb `112573257637` och app-main CI [37554084073](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37554084073)/jobb `112576136103` är success med samtliga 13 steg vardera.
+
+Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2` publicerade **v39**: deploy `appgdep_6ac598a38dfc8191b8f0016a3fe0f560`, **succeeded 2026-10-07T00:56:13.486481+00:00**, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_51d0d211bb148191b02d4f29e1c7fc95`, på https://magnussons-crm.rosen123.chatgpt.site. Begränsad custom-delning är bekräftat oförändrad. Anonyma GET för `/` och `/api/crm?space=live` gav 403/403; det är inget autentiserat användarprov. Senare dokumentations-main/checks kvitteras separat; en docsmerge återpublicerar inte appen.
+
+Lokalt publiceringspaket: 97 filer (dist + hosting.json), 4433920 råtarbytes; råtar SHA256 `d46dad35256d6f8e9bf7195ce0436689acb7fe3518bb454965a2df7ef9771973`, gzip SHA256 `0fcc701ff0219bc85781aae61f19e83a8ec2a05f4e35c0314a3dfa5eccd1f0fc`. Lokal byteåterläsning och native metadata är olika belägg; ingen separat lyckad native arkivbytehämtning påstås.
+
+## Slutruntime och publiceringspaket
+
+Slutruntime registrerade exakt 9 nya CRM-versioner/ledgerposter och 8 atomiska avslut av rätt privata revision. Privat lagring fick 77 nya sparrevisioner (85 med de atomiska avsluten). De 31 rena läsfallen är en delmängd av de 64 fallen. Två faktiska förlorade privata 200-svar och två förlorade CRM-200-svar testades efter commit; exakta återförsök gav ingen extra CRM-commit. Simulerade 503 i browserproxy, faktisk CAS och en avgränsad syntetisk D1-borttagning redovisas separat i rapporterna. Oberoende råaudit SHA256 `abdc18d4c7a9281230bdc2e0f6c6476a49229770ae6eca212c8f0b46042a086a`. Orelaterade CRM-/demo-/orderdata och samtliga R2-byte/metadata bevarades.
+
+Sites normaliserade paketets filordning lexikografiskt och vanliga filrättigheter från 0600 till 0644. Lokal rekonstruktion med exakt samma 97 namn och filinnehåll gav råtar SHA256 `89bc26ff567e7899c2b9d0826708663bfccc8fd43c8c5cb6f42a5849de12fc54`, identisk med native-versionens `sha256:89bc26ff567e7899c2b9d0826708663bfccc8fd43c8c5cb6f42a5849de12fc54` och 4 433 920 råtarbytes. Originalarkivet ovan är oförändrat; inga käll- eller distbytes ändrades. Normaliseringskvitto SHA256 `74877e2ef3c8117dd36e27c640f8cf76fa823506a93c47650b4b275d460b65a0`. Direkt hämtning av native-arkivbyte nekades med `file could not be authorized or resolved`; ingen sådan lyckad hämtning påstås. Likheten styrks av rekonstruktionens SHA256 och native metadata, utöver lokal byteåterläsning.
+
+## Lagring, återgång och kvarvarande arbete
+
+V38:s generella formhantering kan inte återuppta det nya aktivitetskuvertet i en kompatibel editor. Operativ återgång till bara äldre UI är därför inte verifierat säker: behåll v39:s serverskydd och kompatibla editor eller stäng av äldre aktivitetsredigering/publicering. Ingen datamigrering eller faktisk rollback har genomförts. CRM-backup omfattar fortfarande inte privata utkast, konton eller Outlook.
+
+Nästa avgränsning: **Åtkomlig mobilmeny på korta skärmar med bevarat fokus och sidinnehåll**. Global sidebaröverlagring vid 390×360 är ett separat observerat navigeringsfel och är inte rättat här; jämför äldre byggd runtime innan det kallas tidigare befintligt. B01b2:s stabila kommersiella ansvar, övriga specialdialoger, mobilkundlista/fokus, separat utkast-/konto-/Outlookbackup, hostingåterställning och personalpilot kvarstår. Skrivprov använder syntetiska data i isolerad runtime. Autentiserad live-UI, verkliga personal-/konto-/integrations-/telefon-/skärmläsarprov och faktisk hostingåterställning är oprövade. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant read_thread saknas; brief/repo används. Scheman, prompter och aktivering är oförändrade; inga kundmejl eller riktiga kundorder skrivs. Ingen världsranking eller personalacceptans garanteras.
+
+---
+
+Tidigare v38-verifiering behålls nedan:
+
 # Egna artikelutkast efter rollbyte – v38, 2026-10-06
 
 ## Beteende och gränser

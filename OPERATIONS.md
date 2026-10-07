@@ -1,5 +1,20 @@
 # Magnussons CRM – order, tryck och lager
 
+## Fortsätt en privat företagsaktivitet – v39, 2026-10-07
+
+1. Välj **Ny aktivitet** i företagskalendern eller öppna ditt eget utkast från **Min dag → Fortsätt där du slutade** eller **Mina privata aktivitetsutkast**. Sälj- eller administratörsbehörighet krävs.
+2. Skriv rubrik, planering och förberedelser. Även ofärdiga fält kan sparas privat. Läs sparstatusen: privat sparat betyder att endast ditt utkast har sparats.
+3. Välj **Spara utkast & stäng** för att fortsätta senare. Om sparning misslyckas stannar panelen öppen. **Visa hela mitt bevarade underlag → Kopiera hela mitt underlag** ger hela råversionen.
+4. Vid två enheters konflikt: jämför **Mitt öppna underlag** med **Sparad privat serverversion**, markera **Jag har jämfört de privata versionerna och vill välja underlag.** och välj uttryckligt serverversionen eller **Spara mina uppgifter som ny utkastversion**. Detta publicerar inget.
+5. Om teamets aktivitet ändrats: välj **Granska aktuell aktivitet**, jämför, markera **Jag har jämfört mina uppgifter med den aktuella aktiviteten.** och välj **Använd aktuellt underlag och behåll mina uppgifter**. Dina privata råvärden behålls; kalendern är fortfarande oförändrad. En borttagen aktivitet måste hanteras separat.
+6. Fyll i det giltiga kalenderunderlaget och välj **Spara i företagskalendern** när teamet ska se det. Kalenderaktiviteten och avslut av exakt sparat utkast sker tillsammans. Inga Microsoft-kalenderinbjudningar skickas.
+7. Vid obekräftad kalendersparning kan första försöket redan ha lyckats. **Försök samma kalendersparning igen** behåller exakt begäran; ändra inte uppgifterna för att återförsöka den.
+8. För att avsluta bara det privata utkastet: **Ta bort privat utkast → Ja, ta bort utkast**. Detta tar inte bort teamets aktivitet.
+
+Misslyckad privat sparning behåller panelen och full kopierbar text. **Stäng och behåll på denna enhet** kräver återläsning av samma lokala reservkopia; det är ingen bekräftad serversparning eller driftbackup och skyddar inte mot rensad enhetslagring. **Ta bort privat utkast** är ett separat bekräftat val och tar inte bort en gemensam kalenderaktivitet. Efter förlorad arkivkvittens kan en enda commit redan ha lyckats; exakt arkiveringsreplay eller automatisk lokal rensning utlovas inte.
+
+V38:s generella formhantering kan inte återuppta det nya aktivitetskuvertet i en kompatibel editor. Operativ återgång till bara äldre UI är därför inte verifierat säker: behåll v39:s serverskydd och kompatibla editor eller stäng av äldre aktivitetsredigering/publicering. Ingen datamigrering eller faktisk rollback har genomförts. CRM-backup omfattar fortfarande inte privata utkast, konton eller Outlook. Nästa avgränsning: **Åtkomlig mobilmeny på korta skärmar med bevarat fokus och sidinnehåll**. Global sidebaröverlagring vid 390×360 är ett separat observerat navigeringsfel och är inte rättat här; jämför äldre byggd runtime innan det kallas tidigare befintligt. B01b2:s stabila kommersiella ansvar, övriga specialdialoger, mobilkundlista/fokus, separat utkast-/konto-/Outlookbackup, hostingåterställning och personalpilot kvarstår. [VALIDATION](VALIDATION.md) skiljer isolerade prov från verklig drift.
+
 ## Återhämta eget artikelutkast – v38, 2026-10-06
 
 1. Öppna ditt utkast från **Min dag → Fortsätt där du slutade** eller **Mina artikelutkast** i katalogen. Med säljarroll kan du läsa och kopiera egna uppgifter; redigering/publicering kräver administratör.
