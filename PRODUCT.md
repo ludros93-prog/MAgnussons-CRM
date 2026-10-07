@@ -1,6 +1,20 @@
 # Magnussons CRM – aktuellt produktunderlag
 
-Publicerad v42 förankrar kundansvar i en stabil säljarprofil för nya kunder och vid granskad överföring, med kontrollerad ansvarskedja och slutägare. Tomma ansvarsprofil-ID:n på befintliga kunder bevaras tills uttryckligt granskat arbete förankrar dem. V41:s affärs-/orderansvar, v40:s mobilnavigation och tidigare privata arbetsflöden består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger källa, main, live, begränsning och rollbackrisk.
+Publicerad v43 förankrar uppgiftsansvar i stabila säljarprofiler och visar aktuella ansvariga i Min dag. Äldre oförankrat ansvar bevaras för granskning. V42:s kundansvar och V41:s affärs-/orderansvar består. [STATUS](STATUS-2026-10-05.md), [VALIDATION](VALIDATION.md) och [OPERATIONS](OPERATIONS.md) anger faktisk källa, main, live och återställningsgränser.
+
+## Stabilt uppgiftsansvar – v43
+
+`Task.ownerProfileId` förankrar uppgiftens ansvar i en säljarprofil; `Task.id` är dess redan befintliga post-ID. Efter granskad profilinitiering väljer servern en aktiv granskad profil vid nyregistrering eller uttryckligt ansvarsbyte i befintligt generellt uppgiftsformulär. Före initieringen tillåts tomt ansvarsprofil-ID. Befintligt oförändrat ansvar med tomt profil-ID förblir tomt, även vid redigering/avslut för en inaktiv eller ej längre listad ansvarig. Läsning förankrar inga äldre uppgifts- eller källposter.
+
+Nya automatiska uppgifter använder ett medfört ansvarsprofil-ID eller ett relevant kund-/affärs-/order-ID med matchande ansvar; annars kan en redan granskad profils oföränderliga ansvarsetikett ge kopplingen. Inaktiva profiler får följa med från underlaget utan att stoppa orderarbete. Endast helt omappat ansvar förblir tomt. Befintliga kund-/affärs-/orderöverlämningars avsedda uppgifter får målprofilens ID atomiskt inom deras befintliga historik. Receipt-GET är striktare: den projicerar exakt orderns profil-ID eller tomma värde, utan aliasupplösning eller skrivning.
+
+Min dags ID-kopplade egna uppgifter och uppgiftssignaler filtreras på profil-UUID; äldre tomma uppgifter behåller befintligt etiketturval. Visningen använder aktuellt profilnamn, ursprunglig ansvarsetikett vid samma visningsnamn och **ansvar behöver förankras** för äldre ansvar utan profil-ID efter initiering, även om ansvarsetiketten redan matchar en granskad profil. Order-/leveransköernas övriga urval är oförändrat. Vanliga uppgiftsrader öppnar befintligt **Följ upp**; ingen ny separat uppgiftsöverlämningsdialog, publik redigeringsingång eller auditmodell införs.
+
+Äldre privata underlag kan kräva uttrycklig granskning av **Ansvarskoppling** med texten bevarad. [OPERATIONS](OPERATIONS.md) förklarar detta och återgångsgränsen; [VALIDATION](VALIDATION.md) kvitterar 14 browserfall plus fem HTTP-fall, tekniska kontroller och kod/main/live. Sites v43 är faktiskt publicerad; exakt källa/main/live och provgränser finns i VALIDATION.
+
+B07 har observerad kvarvarande 200-procentsklippning i befintlig utkaststatus, fokustagg och tom kontaktvy. Slutproven med fördubblad text avser ändrade uppgiftsetiketter, rader/knappar, scopeknappar och dokumentbredd, inte hela Min dag eller WCAG. Kod-/hashjämförelsen mot v42 visar oförändrade berörda områden; den är inget separat byggt v42-runtimeprov.
+
+B01b2 är fortsatt delvis levererat: uttryckligt granskad fristående uppgiftsöverlämning, återstående mötes-/specialflödesansvar och full personalavveckling återstår. Historiskt försäljningsresultat, privat kommunikation och fysisk produktionshistorik bevaras. Separat affärschefsroll, övriga privata specialdialoger, mobilkundlista/workspacefokus, separat backup, hostingbudget/återställning, riktiga integrationer och personalpilot kvarstår.
 
 ## Stabilt kundansvar – v42
 

@@ -1,5 +1,19 @@
 # Magnussons CRM – order, tryck och lager
 
+## Uppgiftsansvar – v43
+
+Vanliga uppgiftsrader använder fortsatt **Följ upp**. Efter granskad profilinitiering förankrar servern nytt ansvar eller ett uttryckligt ansvarsbyte i en aktiv granskad profil i befintligt generellt uppgiftsformulär. Före initieringen tillåts tomt ansvarsprofil-ID. En vanlig redigering/ett avslut med oförändrad äldre ansvarig behåller tidigare ID, även ett tomt ID eller en inaktiv/ej listad person. Detta inför ingen separat Byt uppgiftsansvar-dialog eller ny publik redigeringsingång.
+
+Nya automatiska uppgifter kan följa medfört/källans ansvarsprofil-ID eller en redan granskad profil med matchande oföränderlig ansvarsetikett, även inaktiv. Helt omappat ansvar förblir tomt; befintliga tomma uppgifter/källposter skrivs inte om. Kund-/affärs-/orderöverlämningar stämplar bara deras redan avsedda uppgifter inom befintlig atomisk historik. Receipt-GET projicerar exakt order-ID/tomt värde utan skrivning eller aliasförankring.
+
+I Min dag följer ID-kopplade egna uppgifter/signaler profilens UUID. Äldre uppgifter utan profil-ID behåller etiketturval. Aktuellt namn och ursprunglig etikett särskiljer lika namn; **ansvar behöver förankras** anger att uppgiften ännu saknar profil-ID, även när ansvarsetiketten redan matchar en granskad profil.
+
+Task-/receiptbasis omfattar profil-ID och upptäcker därmed även en ID-ändring med oförändrad etikett. Äldre frysta privata underlag kan därför kräva ny granskning av **Ansvarskoppling**. Öppen text/kopieringsväg bevaras; privata baser skrivs inte om automatiskt och CAS kringgås inte. JSON/NDJSON bevarar och validerar ansvarsprofil-ID:n, medan aktuella medlemslänkar fortfarande rensas vid restore. Privata utkast, konton och Outlook ingår inte i CRM-kopian. **V42 är inte en säker skrivande rollback**: dess äldre TaskSchema strippade det nya fältet i ett isolerat parserprov. Bevara modellen/serverreglerna genom schemabevarande framåträttning eller en verifierad datamedveten återställningsväg.
+
+Vid gammalt uppgiftsutkast: läs konflikten **Ansvarskoppling**, kopiera öppna uppgifter och granska aktuell sparad version innan versionsval. Automatisk omläsning godkänner inte ett nytt underlag. Befintliga överlämningsformulär har lokal text-/stängningsvakt; kopiera osparad orsak före reload.
+
+B01b2 är fortsatt delvis levererat: uttryckligt granskad fristående uppgiftsöverlämning, återstående mötes-/specialflödesansvar och full personalavveckling återstår. Historiskt försäljningsresultat, privat kommunikation och fysisk produktionshistorik bevaras. Separat affärschefsroll, övriga privata specialdialoger, mobilkundlista/workspacefokus, separat backup, hostingbudget/återställning, riktiga integrationer och personalpilot kvarstår.
+
 ## Stabilt kundansvar – v42, 2026-10-07
 
 1. Som administratör: öppna kundkortet och välj **Byt kundansvar**.
