@@ -11,7 +11,7 @@ import {type State,type Order,day,DELIVERY,label} from '@/lib/crm';import {Produ
 import {BusinessField as F,Pick,displayDate,type SaveAction} from './business-ui';
 const stageName={draft:'Ej skickad till tryck',submitted:'Väntar på tryck',printed:'Färdigtryckt',dispatched:'Skickad',cancelled:'Avbruten'};
 const issueTime=(value:string)=>!value?'Tidpunkt saknas i underlaget':Number.isNaN(new Date(value).getTime())?value:new Date(value).toLocaleString('sv-SE');
-const issueButton='h-auto min-h-11 min-w-0 max-w-full whitespace-normal break-words';
+const issueButton='h-auto min-h-11! min-w-0 max-w-full whitespace-normal break-words';
 export function ProductionBoard({st,space,mode,save,busy,onOrder,onResponsibility,onProductionAssignment,owner='all'}:{st:State;owner?:string;space:string;mode:'print'|'warehouse'|'sales';save:SaveAction;busy:boolean;onOrder:(o:Order)=>void;onResponsibility?:(o:Order)=>void;onProductionAssignment?:(o:Order)=>void}){
  const [resolution,setResolution]=useState(''),[issueError,setIssueError]=useState('');
  const [query,setQuery]=useState(''),[tab,setTab]=useState('active'),[issue,setIssue]=useState<{id:string;text:string;basis:string;original:{message:string;ownerName:string;reportedAt:string;customerName:string;jobTitle:string;workId:string}}|null>(null),[quantity,setQuantity]=useState<{id:string;kind:MovementKind}|null>(null),[cancel,setCancel]=useState<{id:string;text:string}|null>(null);

@@ -17,7 +17,7 @@ function nextWork(o:Order){const p=o.production,rows=productionProgress(p);if(p.
 const labels={received:'Registrera mottagna varor',printed:'Registrera färdigt tryck',dispatched:'Registrera utleverans',scrap_unprinted:'Kassera före tryck',scrap_printed:'Kassera efter tryck'};
 const active=(o:Order)=>['submitted','printed'].includes(o.production.status);
 const issueTime=(value:string)=>!value?'Tidpunkt saknas i underlaget':Number.isNaN(new Date(value).getTime())?value:new Date(value).toLocaleString('sv-SE');
-const issueButton='h-auto min-h-11 min-w-0 max-w-full whitespace-normal break-words';
+const issueButton='h-auto min-h-11! min-w-0 max-w-full whitespace-normal break-words';
 export function ProductionWorkspace({st,space,save,busy,refresh,selectedId,onSelect,onProductionAssignment}:{st:State;space:string;save:SaveAction;busy:boolean;refresh:()=>Promise<void>;selectedId:string;onSelect:(id:string)=>void;onProductionAssignment?:(o:Order)=>void}){
  const [tab,setTab]=useState('mine'),[search,setSearch]=useState('');
  const uid=st.viewer?.id||'',orders=st.orders.filter(o=>o.production.status!=='draft'),mine=orders.filter(o=>active(o)&&o.production.assigneeId===uid),queue=orders.filter(active);
