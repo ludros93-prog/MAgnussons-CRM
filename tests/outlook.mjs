@@ -1,9 +1,11 @@
+import './account-change-review.mjs';
 import './crm.mjs';
 await (await import('./company-event-responsibility.mjs')).verifyCompanyEventResponsibility();
 await (await import('./company-activity-responsibility.mjs')).verifyCompanyActivityResponsibility();
 await (await import('./delivery-task-responsibility.mjs')).verifyDeliveryTaskResponsibility();
 await (await import('./production-assignment.mjs')).verifyProductionAssignment();
 await (await import('./production-inventory.mjs')).verifyProductionInventory();
+await (await import('./account-change-review.mjs')).verifyAccountChangeReview();
 import ts from 'typescript';import {readFileSync,writeFileSync} from 'node:fs';import assert from 'node:assert/strict';
 const transpile=(source,target)=>writeFileSync(target,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);
 transpile(readFileSync('lib/outlook-shared.ts','utf8'),'work/outlook-shared.mjs');

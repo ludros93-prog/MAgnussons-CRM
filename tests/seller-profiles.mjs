@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 // Exercise real SQLite, authentication, CAS retries and serialized recovery.
 // The fixture occupies demo only; the existing live integration tests remain intact.
 export async function verifySellerProfiles({core,sqlite,get,post,headers,api,conflicts,dashboards}) {
- const sellers=await import('../work/seller-profiles.mjs'),responsibility=await import('../work/customer-responsibility.mjs'),store=await import('../work/crm-store.mjs'),stream=await import('../work/crm-backup-stream.mjs'),restore=await import('../work/crm-restore.mjs'),direct=await import('../work/direct-delivery.mjs'),members=await import('../work/members-api.mjs');
+ const sellers=await import('../work/seller-profiles.mjs'),responsibility=await import('../work/customer-responsibility.mjs'),store=await import('../work/crm-store.mjs'),stream=await import('../work/crm-backup-stream.mjs'),restore=await import('../work/crm-restore.mjs'),direct=await import('../work/direct-delivery.mjs'),members=await import('../work/members-api.mjs'),accountChanges=await import('../work/account-change-review-api.mjs'),accountDomain=await import('../work/account-change-review.mjs');
  const actor={id:'test-admin',name:'Isolerad administratör',role:'admin',owner:''},month='2026-09',year='2026',at='2026-09-04T10:00:00Z';
  const names={a:'Profiltest ansvar A',b:'Profiltest ansvar B',retired:'Profiltest tidigare säljare',goal:'Profiltest historiskt mål',task:'Profiltest äldre uppgiftsansvar',future:'Profiltest nytillagd ansvarig'};
  const accounts={a:{id:'seller-profile-member-a',user:'seller-profile-user-a',email:'seller-profile-a@example.com',owner:names.a},b:{id:'seller-profile-member-b',user:'seller-profile-user-b',email:'seller-profile-b@example.com',owner:names.b},replacement:{id:'seller-profile-replacement',user:'seller-profile-replacement-user',email:'seller-profile-replacement@example.com',owner:names.a},future:{id:'seller-profile-member-future',user:'seller-profile-user-future',email:'seller-profile-future@example.com',owner:names.future},production:{id:'seller-profile-production',user:'seller-profile-production-user',email:'seller-profile-production@example.com',owner:''},reader:{id:'seller-profile-reader',user:'seller-profile-reader-user',email:'seller-profile-reader@example.com',owner:''}};
@@ -15,7 +15,14 @@ export async function verifySellerProfiles({core,sqlite,get,post,headers,api,con
   return {status:r.status,data:await r.json(),id};
  }
  async function memberSave(account,active,role='seller'){
-  const r=await members.POST(new Request('https://crm.test/api/crm/members',{method:'POST',headers:{...headers,'Content-Type':'application/json',Origin:'https://crm.test'},body:JSON.stringify({email:account.email,name:'Samma kontonamn',role,owner:account.owner,active})}));
+  const current=sqlite.prepare('SELECT id,role,active FROM crm_members WHERE email=?').get(account.email),payload={email:account.email,name:'Samma kontonamn',role,owner:account.owner,active};
+  if(current&&accountDomain.accountChangeNeedsReview(current,{role,active})){
+   const response=await accountChanges.GET(new Request('https://crm.test/api/crm/account-change-review?'+new URLSearchParams({memberId:current.id,role,active:String(active)}),{headers}));
+   assert.equal(response.status,200);const review=await response.json();assert.equal(review.blocked,false,JSON.stringify(review));
+   assert.ok(review.workspaces.every(workspace=>workspace.jobCount===0&&workspace.issueCount===0&&workspace.unresolvedCount===0));
+   payload.accountReview={memberId:current.id,expectedAccount:review.expectedAccount,expectedContext:review.expectedContext,confirmed:true};
+  }
+  const r=await members.POST(new Request('https://crm.test/api/crm/members',{method:'POST',headers:{...headers,'Content-Type':'application/json',Origin:'https://crm.test'},body:JSON.stringify(payload)}));
   assert.equal(r.status,200,JSON.stringify(await r.json()));
  }
  async function resetDemo(){
