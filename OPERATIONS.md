@@ -1,5 +1,27 @@
 # Magnussons CRM – order, tryck och lager
 
+## Återhämta ändrad kontokatalog i inventeringen – crm70-kod
+
+1. Öppna rätt arbetsyta och **Inställningar → Konton & roller → Produktionsarbete per konto**. Välj konto eller arbetskö och önskade ansvar-/sökfilter.
+2. Om kontokatalogen ändras vid de kontrollerade läspunkterna får hämtningen ett läskonfliktfel. Inga tidigare arbetsrader visas; väljaren, ansvarsfiltret och söktexten behåller din avsikt.
+3. Välj **Hämta aktuellt underlag**. Kontrollera det färska kontots namn, roll, aktivitet och konto-ID. Ett borttaget tidigare konto kräver nytt uttryckligt val; ett tomt filtrerat resultat innebär ingen färdig personalavveckling.
+4. Använd befintlig granskningshandling för varje aktuell ansvarsdel. Jobbansvar, hinderansvar och kommersiellt ansvar flyttas inte av en läsning. Ny kontoändringsgranskning behövs fortfarande efter faktiskt hanterat arbete.
+5. Om administratörsåtkomsten har återkallats kan katalogen inte lämnas ut. Återhämtning kräver rätt faktisk kontobehörighet; upprepade hämtningsklick ändrar ingen åtkomst.
+
+Produktionsinventeringen jämför nu två ordningsoberoende läsningar av den registrerade kontokatalogen, inklusive medlems-ID, användarkoppling, namn, roll och aktivitet. Ändrad katalog ger 409 utan kontolista eller arbetsrader efter förnyad adminautentisering. Befintlig dubbelläsning av relevant produktionsunderlag består. Detta är en upptäckt ändring mellan kontrollerade läspunkter, ingen allmän databastransaktion, kontinuerlig uppdatering eller garanti mot ändringar efter slutkontrollen.
+
+Kod `fe5ad1cf8b7eaa0772967aba670617c31ea1851c`, träd `07179bb5cd3e21b8390625fd7232014fdf563818`; GitHub app-main `ef476953f4ce50240450e6bd071e34542bd21433`. Fem obligatoriska slutkontroller är gröna på den frysta slutkandidaten: regressioner, icke-inkrementell TypeScript, bygge, isolerad runtime och diffkontroll. Kontrollkvitto SHA-256 `1f7d485e574f924c89dc443cf98b3d8570658a9b1c92b66dd5afdf6cff25cf87`; exakt-head CI [37859328931](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37859328931) har samtliga 13 steg completed/success. Browser: 11 (8 native HTTP/UI och 3 separat mockade409 UI/retry) godkända fall, 20 original sparade bilder, kvitto `b707bbd0c5b02cee4dfb8bce58d68568ae9063a896b65930ba7c49be2531c7f6`.
+
+**Publicering blockerad:** den föreskrivna Sites-sourcehelpern `site-workflow.mjs` är fortfarande inte tillgänglig enligt denna körnings kontroll. Ingen ny Site-version har sparats eller publicerats i crm70. [Samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) ligger kvar på **v68**, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`. Github-main innehåller även v69:s inventeringsfix som ännu inte ligger live. Färsk efterkontroll av samma Site, full begränsad åtkomstpolicy och runtime-konfiguration redovisas i [VALIDATION](VALIDATION.md).
+
+Ingen ändrad lagring, SQL-migration eller backupsemantik. `magnussons-crm-1` och v66-kompatibelt läsar-/skrivargolv efter äldre jobbansvarsrättning består. Jobb-/hinder-/kommersiellt ansvar, serverroller, skriv-CAS och idempotens bevaras. Kontrollerna är isolerade; verklig personalinloggning/pilot, full hostad återställning och riktiga integrationer är fortsatt oprövade. Codex-referensen är oläst.
+
+**Nästa:** återfå den föreskrivna Sites-sourcehelpern, hämta färsk Site-källa och publicera exakt verifierad kandidat med bevarad identitet, miljö och begränsad delning. Därefter granskat hinderansvarsbyte och återstående oklara kopplingar enligt färsk inventering. Full personalöverlämning, chefsroll, privata backuper, personalpilot och faktiska integrationskonton kvarstår.
+
+## Historik före crm70-koden
+
+# Magnussons CRM – order, tryck och lager
+
 ## Hitta ett kvarstående hinder inför kontoändring – v69-kod
 
 1. Öppna rätt arbetsyta och **Konton & roller → Produktionsarbete per konto**. Välj verkligt konto eller **Alla jobb och öppna hinder**.
