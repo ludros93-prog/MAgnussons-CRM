@@ -1,5 +1,15 @@
 # CRM-källor för Magnussons byggagent
 
+## v58: roll, laddning och privat livscykel
+
+Sex officiella sidtexter lästes 2026-10-08 01:26:47 UTC; `/workspace/scratch/crm58/research/official-sources.json`, SHA-256 `8f6264bf6ed450f9b6a3bf2899c998d3cacbe3fcecca5355a91a053941e18889`.
+
+[Salesforce startsidor](https://help.salesforce.com/s/articleView?id=xcloud.admin_home_lex_app_assign.htm&language=en_US&type=5) stödjer rollanpassning; [Lime synliga handlingar](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/custom-visibility-of-actions/) kontextvillkor; [Saleshub funktioner](https://saleshubai.se/funktioner) gemensamt kundsammanhang. [Salesforce Data Privacy](https://help.salesforce.com/s/articleView?id=sales.activity_capture_data_privacy.htm&language=en_US&type=5) skiljer personlig kommunikation/delning; [React useEffect](https://react.dev/reference/react/useEffect) städning/sena svar; [W3C statusmeddelanden](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) begriplig status utan fokusstöld.
+
+Lokala beslut, inga anslutnings-/säkerhetsgarantier. Misslyckad Lime Actions/SLDS-läsning och obekräftad Saleshub-rollsnutt räknas inte. React ersätter inte serverkontroller; W3C innebär inget hjälpmedelsprov. [VALIDATION](../VALIDATION.md) anger bevis. Codex-referensen oläst; explicit brief/repo används.
+
+## Historik före v58
+
 ## v57: aktivitetens ansvar är skilt från kundrelationen
 
 Fem officiella sidor lästes direkt och deras relevanta innehåll verifierades 2026-10-07, kvitterat i `/workspace/scratch/crm57/research/official-sources.json` vid `2026-10-07T23:29:02Z`, SHA-256 `0b280e57b853ca3b30b313b7c17095bddf9350ab9e723036b0f4904922ec83cf`. Källorna ger principer för produkt/design; ingen autentiserad leverantörsprodukt, deras API/anslutning eller interaktiv skärmbild granskades. Verktygets direkta textläsning visar inget separat HTTP-200-kvitto.

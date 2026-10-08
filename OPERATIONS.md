@@ -1,5 +1,16 @@
 # Magnussons CRM – order, tryck och lager
 
+## Kom igång och återförsök laddningen – v58
+
+1. Kontrollera **Arbetsyta** i startvyn. Arbetsmenyn väntar på känd roll.
+2. Vid fel: läs beskedet och välj **Försök igen** eller rätt arbetsyta.
+3. Tillåtna arbetsvyer öppnas när användaren är känd. Tryck/lager får sitt arbetsflöde direkt.
+4. Outlook följer den tillåtna live-identiteten. Gamla svar fyller inte nästa identitets vy; avbrott ångrar ingen redan accepterad serverhandling.
+
+Microsoft-kontoprov, full personalavveckling och privat backup återstår. [RUNBOOK](agent/RUNBOOK.md) kräver fortsatt v57-kompatibel läsare/skrivare.
+
+## Historik före v58
+
 ## Överlämna en kundavstämning, ett kundbehov eller en prospektkontakt – v57
 
 1. Logga in som administratör och öppna den befintliga öppna uppgiften i **Min dag** eller via **Konton & roller → Överlämna arbete**. Välj **Byt uppgiftsansvar**. De nya specialtyperna måste sakna affärskoppling. Kontrollera kund, aktivitetstyp, fullständiga ansvariga/profil-ID och arbetsyta. Okänd eller motsägande personkoppling ska inte gissas.

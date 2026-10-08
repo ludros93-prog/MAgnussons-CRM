@@ -1,5 +1,13 @@
 # Arbetskö för Magnussons CRM
 
+## v58: första laddning, avgränsad B07-del
+
+Neutral start/felvy, rätt produktionsvy direkt och Outlook-isolering rättar dokumenterad första-laddningsfriktion; [VALIDATION](../VALIDATION.md) anger belägg.
+
+**B07 är öppet** för pilot med Sebbe, säljare och produktionsperson. Nästa kandidat: B01b2 leverans-/okända uppgifter och kontaktkontext efter färsk inventering. Event/checklistor, produktionsansvar, konto-/Sites-/flerarbetsyteavveckling, B02 chefsroll, privata årshjulsutkast, B04 backup/hostingåterställning och integrationer består. Åtkomst-/data-/orderfel går först. Schema/prompt/aktivering och v57-kompatibilitet oförändrade.
+
+## Historik före v58
+
 ## v57: granskad direkt överlämning av tre kundaktivitetstyper
 
 B01b2 får direkt adminöverföring av öppna `csm`, `csm_need` och `prospecting` utan affärskoppling. Uppgiftens ägare/profil-ID och befintlig överföringshistorik/händelse sparas atomiskt med orsak/granskning. Kundrelationsansvar, kundplan/prospektunderlag, kvalificering, nya affärers kundbaserade ansvar och tidigare resultat bevaras. Befintliga specialuppgifters ansvar överlever vanligt plan-/prospektsparande. Exakt profil-ID för ny nästaaktivitet avgränsas till de tre specialkälltyperna utan affärskoppling; äldre manuella/övriga källregler ändras inte. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering/release.

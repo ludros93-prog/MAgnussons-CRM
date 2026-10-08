@@ -1,5 +1,13 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Börja i rätt arbetsvy – v58
+
+Första laddningen visar ett neutralt besked. Vid fel kan användaren välja arbetsyta eller **Försök igen**. Känd identitet/roll öppnar tillåtna arbetsvyer; produktionsroller får sin arbetskö direkt.
+
+Outlook följer arbetsyta/användare/medlem/roll. Avbrott ångrar ingen accepterad serverhandling; privata CRM-utkast behåller sin identitetskoppling. Huvudmått: försäljning mot månads-/årsmål, marginal och nya prospects; TB är inget huvudmått.
+
+## Historik före v58
+
 ## Byt uppgiftsansvar, behåll kundrelationsansvaret – v57
 
 Administratören kan överlämna en öppen **Kundavstämning**, **Kommande kundbehov** eller **Prospektkontakt** utan affärskoppling. **Byt uppgiftsansvar** visar uppgiftens nuvarande ansvar och **Kundrelationsansvar · ligger kvar** var för sig. För äldre blank profilkoppling visas **Förankra ansvar** när den verkliga personkopplingen kan granskas; okänd person väljs inte åt användaren.

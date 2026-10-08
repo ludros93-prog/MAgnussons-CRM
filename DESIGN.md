@@ -1,5 +1,13 @@
 # Magnussons CRM – designriktning
 
+## Rätt identitet före arbetsmenyn – v58
+
+Svensk neutral start/felvy, arbetsyta/återförsök och produktionens rätta vy direkt. Outlook döljer gamla data före effektstädning; DraftProvider behåller sin nyckel.
+
+Root öppnade fyra slut-PNG: start 320, fel 390/2×, första produktionsvy och mobilmeny/fokus. Stor text rullar vertikalt. [VALIDATION](VALIDATION.md) anger browser-/tangentbordsprov; [RESEARCH](agent/RESEARCH.md) skiljer officiella principer från lokala val. Pilot/full tillgänglighetsgranskning återstår.
+
+## Historik före v58
+
 ## Tydlig aktivitet och kundrelation i samma granskning – v57
 
 Dialogen visar **Kundavstämning**, **Kommande kundbehov** eller **Prospektkontakt** på svenska. **Uppgiftens nuvarande ansvar** och **Kundrelationsansvar · ligger kvar** ligger i separata textblock. Ett profil-ID eller grön profilstatus säger inte att personen äger hela kundrelationen eller har verifierad konto-/Sitesåtkomst. **Följ upp** förblir arbetsflödets vanliga handling; **Byt uppgiftsansvar** är den administrativa sidohandlingen.
