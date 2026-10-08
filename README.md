@@ -1,5 +1,25 @@
 # Magnussons CRM
 
+## Ändra hinderbeskrivningen med bevarad rapportör – v67
+
+När rapportören eller en administratör ändrar ett öppet produktionshinders beskrivning ligger registrerat rapportörs-ID, namn och rapporttid kvar. Redigeraren registreras i den befintliga händelsen; redigeringen flyttar inget ansvar. Därmed kan en administratörs textändring inte längre tömma rapportörens hinderansvar i kontoändringens kontroll.
+
+Rapportering, beskrivningsredigering och registrering av lösningen har skilda instruktioner och handlingar. Dialogen visar kund, affär, order, arbetsreferens och det ursprungliga underlaget. Lokalt skriven text finns kvar vid fel i den öppna dialogen; den är inget varaktigt privat utkast.
+
+De fyra berörda beskrivnings- och lösningsfälten har begränsad höjd och intern rullning för att göra lång text och tangentbordsfokus hanterbara på små skärmar. Hinderdialogens titel samt rubrikerna för registrerat underlag och lösning får radbrytas inom tillgänglig bredd. Jobbdetaljernas motsvarande breddanpassning gäller när hinderhanteringen är öppen. Hinderformulärens knappar har uttrycklig minimihöjd 44 CSS-pixlar som lokalt designmål. Övriga textfält följer sin tidigare utformning. Faktiska slutliga browserbelägg redovisas i [VALIDATION](VALIDATION.md).
+
+När hinderformuläret är öppet visas jobbdatum i en kolumn på smala skärmar. Långa knapp- och varningstexter får radbrytas inom jobbvyns tillgängliga bredd; innehållet finns kvar.
+
+Jobbdetaljernas två hindertextfält rullar vyn till fältet vid fokus utan att ändra text, fokus eller sparunderlag. Det är en lokal anpassning för ett faktiskt fynd där ett fokuserat fält delvis låg utanför skärmen.
+
+Kod `7aece13c6905eac12dd0eb5a345b373e13092d3c`, GitHub app-main `67d53b987554449298c78b8dfa3ba943ed8b6cd0` via [PR #108](https://github.com/ludros93-prog/MAgnussons-CRM/pull/108). Kontroller: Alla fem obligatoriska kontroller passerade på den frysta slutkandidaten; varje exitkod var 0 och samtliga 337 spårade filer, head och träd var oförändrade efter provet. Live: Version 67 är publicerad med lyckad deploy på samma befintliga Site och adress på [samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site), verifierad källa `6ed430523ab5c55cb7f23688513448728f80a947`. Dokumentationen har separat revision. [VALIDATION](VALIDATION.md) anger belägg och gränser.
+
+Ingen ny lagring eller formatgräns: v66-golvet efter äldre jobbansvarsrättning gäller fortsatt. Granskat byte av hinderansvar, verkliga personalprov och full hostad återställning återstår. Försäljning mot månads-/årsmål, marginal och nya prospects är fortsatt huvudmåtten. Codex-referensen är oläst.
+
+## Historik före v67
+
+# Magnussons CRM
+
 ## Rätta äldre jobbansvar med granskning – v66
 
 Administratören kan välja **Rätta äldre jobbansvar** för ett aktuellt jobb som är lämnat eller tryckt och bara har ett sparat ansvarigt namn. Läs det äldre namnet och tidsfältet, välj ett befintligt anslutet CRM-konto, beskriv det verkliga underlaget och granska före **Registrera rättning**. Det valda kontot får jobbansvaret från rättningen; namnet identifierar ingen tidigare person.

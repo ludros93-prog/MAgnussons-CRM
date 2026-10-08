@@ -1,3 +1,29 @@
+# Källor och tillämpade principer – v67
+
+## Begriplig hinderredigering med bevarad originalrapportering
+
+Sju officiella sidtexter hämtades 2026-10-08 och varje kortcitat kontrollerades mot sparad HTML/text. Evidens SHA-256 `663927b40b19672f419850a68a813b01bddf4b39791c30b2bd19d13d0b2fb658`.
+
+| Källa | Verifierad princip och Magnussons tillämpning |
+| --- | --- |
+| [Salesforce Record-Level Security](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) | Poståtkomst styr vilka poster användaren får läsa/redigera. Redigeringsrätt hålls skild från registrerat hinderansvar; en administratörs textändring flyttar inget ansvar. |
+| [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | Konkreta imperativverb i rätt sammanhang. Rapportera, ändra beskrivning och registrera lösningen får skilda instruktioner/handlingar. |
+| [Lime Change Log](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/changelog/) | Vad som ändrades, vem och när är skilda uppgifter. Originalrapportör/tid bevaras; redigeraren registreras i Magnussons befintliga händelse. |
+| [Saleshub funktioner](https://saleshubai.se/funktioner) | Uppgifter, ansvariga och statusrader i projektsammanhang. Hindret och originalrapporteringen visas vid kund-/jobbkontexten. |
+| [W3C Labels](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html), [Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) och [Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) | Begripliga inmatningsinstruktioner, fokus i dialogen och läsbart innehåll vid smal viewport. Lokal granskning riktas mot de berörda formulären. |
+
+Salesforce Help för Task Fields/Field History, SLDS modals och developer audit-fields returnerade bara klientskal. Deras artikeltext är inte färskt verifierad; en först försökt Trailhead custom-fields-URL gav 404 och används inte. Ingen autentiserad leverantörsprodukt provades. Leverantörernas identitets-, historik- och retentionregler kopieras inte. Magnussons roller, CAS, idempotens och kontospärr är egna kontrakt.
+
+Hinderformulärens knappar har minimihöjd 44 CSS-pixlar som lokalt designmål enligt den avsedda utformningen. Ett uppmätt 38-pixlarsfall motiverade en avgränsad lokal rättning; det fastställer inget generellt WCAG-underkännande eller någon full tillgänglighetsacceptans.
+
+Reflow-principen tillämpas även på jobbdetaljernas datum, knappar och varningar med öppet hinderformulär: mobilstapling och lokal radbrytning bevarar innehållet. Ett faktiskt Workspace-fynd vid CSS-text 200 procent styr denna avgränsning; ingen global font-/CSS-ändring eller dold information används som lösning.
+
+Ett ytterligare faktiskt nativeprov på desktop visade ett delvis klippt fokuserat lösningsfält. Jobbdetaljernas två hindertextfält får lokal rullning vid fokus utan att fokus flyttas eller värden/sparregler ändras. Detta är en egen avgränsad produktanpassning, ingen leverantörskopiering eller full tillgänglighetsacceptans.
+
+Full isolerad native Chromium/Worker-matris: 22 av 22 fall passerade. Tolv layoutfall omfattade Board och Workspace på 320×568, 390×844 och 1280×900 med normal respektive exakt CSS-text 200 procent. Alla 48 native tangentbordsfokuserade kontroller var fullt synliga; hinderformulärens inre knappar nådde det lokala målet 44 CSS-pixlar. Fyra textfält behöll caret, åäö och intern rullning utan horisontell klippning. Root granskade sex faktiska bilder och oberoende granskare fem; 36 bildhashar kontrollerades. CSS-textförstoring är inget prov av browserzoom, skärmläsare eller full WCAG; [VALIDATION](../VALIDATION.md) anger faktisk omfattning. Lokala prov innebär ingen full WCAG-bedömning, personalacceptans eller integration. Codex-referensen är oläst; dokumenterad brief/färsk main användes. Huvudmåtten är försäljning mot månads-/årsmål, marginal och nya prospects.
+
+## Historik före v67
+
 # Källor och tillämpade principer – v66
 
 ## Tydligt jobbansvar och intuitiv granskning

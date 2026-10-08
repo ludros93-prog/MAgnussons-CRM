@@ -1,5 +1,23 @@
 # Arbetskö för Magnussons CRM
 
+## Avgränsad B01b2-del: bevarad hinderidentitet vid textredigering – v67
+
+Bekräftad brist: en annan administratörs beskrivningsredigering ersatte ett öppet hinders registrerade rapportörs-ID, namn och rapporttid. Faktiska HTTP-handlers/SQLite visade att originalrapportörens kontoändringsspärr då försvann. Rättningen bevarar de tre fälten, höjer hinderrevisionen och registrerar redigeraren i den befintliga händelsen; spärren består.
+
+UI skiljer rapportering, beskrivningsändring och lösning och visar fryst kund-/jobb-/ursprungskontext. Långa texter använder intern fältrullning, berörda rubriker får radbrytas och hinderformulärens knappar har lokal minimihöjd 44 CSS-pixlar. Lokal felretention är inget varaktigt privat utkast. Fysiskt och kommersiellt ansvar, serverroller, CAS och idempotens bevaras. Ingen ny lagring/formatgräns införs; v66-golvet efter rättningshistorik består.
+
+Workspace-detaljernas datum, knappar och varningstext anpassas inom tillgänglig bredd när hinderformuläret är öppet, efter ett faktiskt CSS-text 200-procentsfynd. Det är tre lokala villkorade layoutändringar; innehåll, globala stilar och verksamhetsregler bevaras.
+
+Ett efterföljande faktiskt nativeprov på desktop gav lokal rullning vid fokus för jobbdetaljernas två hindertextfält. Det ändrar ingen text, fokus, komponenttillstånd eller sparregel. Slutacceptans kräver den nya kandidatens egna kontroller och full native-matris.
+
+Slutkod `7aece13c6905eac12dd0eb5a345b373e13092d3c`, app-main `67d53b987554449298c78b8dfa3ba943ed8b6cd0` via PR #108. Alla fem obligatoriska kontroller passerade på den frysta slutkandidaten; varje exitkod var 0 och samtliga 337 spårade filer, head och träd var oförändrade efter provet. PR #108 hade exakt-head CI 37833922940, jobb 113506025165, med samtliga 13 steg completed/success. Den aktuella basen kontrollerades innan merge och main återlästes med exakt slutträd. Full isolerad native Chromium/Worker-matris: 22 av 22 fall passerade. Tolv layoutfall omfattade Board och Workspace på 320×568, 390×844 och 1280×900 med normal respektive exakt CSS-text 200 procent. Alla 48 native tangentbordsfokuserade kontroller var fullt synliga; hinderformulärens inre knappar nådde det lokala målet 44 CSS-pixlar. Fyra textfält behöll caret, åäö och intern rullning utan horisontell klippning. Root granskade sex faktiska bilder och oberoende granskare fem; 36 bildhashar kontrollerades. CSS-textförstoring är inget prov av browserzoom, skärmläsare eller full WCAG. Version 67 är publicerad med lyckad deploy på samma befintliga Site och adress från källa `6ed430523ab5c55cb7f23688513448728f80a947`. [VALIDATION](../VALIDATION.md) samlar belägg och gränser.
+
+B01b2 är fortsatt öppet. **Nästa avgränsning:** ett uttryckligt granskat hinderansvarsbyte med stabila kontoidentiteter, bevarad originalrapportering/historik och konfliktspärr. Inventera även de kvarvarande äldre oklara hinderkopplingarna; textredigering ska bevara dem, inte rätta dem genom namnmatchning. Full personalavveckling, chefsroll, privata backuper, hostad återställning, verkliga personalkonton/pilot och integrationernas riktiga konton/underlag återstår. Mandat, scheman, prompter och aktivering ändras inte; Codex-referensen är oläst.
+
+## Historik före v67
+
+# Arbetskö för Magnussons CRM
+
 ## Avgränsad B01b2-del: granskad rättning av äldre namnbaserat jobbansvar – v66
 
 En administratör kan uttryckligen rätta ett aktuellt lämnat/tryckt jobb med sparat ansvarigt namn, tomma användar-/medlems-ID:n och tom ansvarshistorik. Mottagaren väljs bland verkliga anslutna aktiva konton med stabilt konto-ID. Faktiskt underlag, orsak och granskning krävs. Första `resolve_legacy`-raden bevarar äldre namn och ursprungligt tidsfält `legacyAssignedAt` utan att fastställa tidigare person eller starttid. Ordinarie jobbansvarsbyten, fysiskt arbete, kommersiellt ansvar och separata hinderansvar bevaras.

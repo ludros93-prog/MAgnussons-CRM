@@ -1,5 +1,27 @@
 # Magnussons CRM – order, tryck och lager
 
+## Rapportera, ändra beskrivning och lösa hinder – v67
+
+1. Öppna rätt kund och produktionsjobb i rätt arbetsyta. Kontrollera affär, order och arbetsreferens före handlingen.
+2. När inget hinder är öppet, välj **Rapportera hinder**, beskriv det faktiska hindret och spara. Denna rapportering registrerar rapportör och rapporttid.
+3. För ett öppet hinder, välj **Hantera hinder**. Läs den registrerade rapportören, rapporttiden och ursprungliga beskrivningen. Saknade äldre uppgifter visas som saknade; ett namn bevisar ingen kontoidentitet.
+4. För att förtydliga hindret, ändra beskrivningen och välj **Spara beskrivning**. Registrerad rapportör och rapporttid ligger kvar även när administratören redigerar. Ett beskrivningsbyte är ingen ansvarsöverlämning.
+5. När hindret faktiskt är löst, ange hur det löstes i det separata lösningsfältet och välj **Hindret är löst**. Lösningshistoriken bevarar registrerad rapportör och rapporttid samt den sparade hinderbeskrivningen och anger vem som registrerade lösningen. Osparade beskrivningsändringar ingår inte i lösningen.
+6. Vid fel finns din lokala text kvar i den öppna dialogen. Vid konflikt, läs aktuellt underlag innan ett nytt försök. Kopiera text före omladdning; formuläret är inget varaktigt privat utkast.
+7. Om kontoändringen varit spärrad, hämta dess granskning igen efter att ansvaret faktiskt har hanterats. Beskrivningsredigering tömmer inget öppet hinderansvar.
+
+Långa beskrivningar och lösningar rullas inuti respektive textfält med begränsad höjd. Hindertiteln och rubrikerna för registrerat underlag och lösning får radbrytas inom tillgänglig bredd. Övrigt jobbunderlag och handlingar följer sidans eller dialogens vertikala rullning. Fälthöjden gäller de fyra textfälten i hinderhanteringen; jobbdetaljernas breddanpassning gäller när hinderhanteringen är öppen. Hinderformulärens knappar har lokal minimihöjd 44 CSS-pixlar.
+
+Med öppet hinderformulär staplas jobbdatum på smala skärmar och visas i tre kolumner på bredare skärmar. Långa knapptexter och varningar får radbrytas; innehållet finns kvar.
+
+När ett av jobbdetaljernas två hindertextfält får fokus rullas vyn till fältet. Din text och fokus ligger kvar; ingen sparning sker genom rullningen.
+
+En separat granskad överlämning av hinderansvar återstår; gissa inget konto från namn och använd inte textredigering för att flytta ansvar. Ingen lagring eller formatgräns ändras. V66-golvet efter äldre jobbansvarsrättning gäller fortsatt. Formatkompatibel återgång till v66 återför redigeringsfelet; använd kompatibel korrigerad kod. [VALIDATION](VALIDATION.md) anger faktiska slutprov och återställningsgränser.
+
+## Historik före v67
+
+# Magnussons CRM – order, tryck och lager
+
 ## Granska och rätta äldre jobbansvar – v66
 
 1. Öppna rätt arbetsyta som administratör. I **Konton & roller → Produktionsarbete per konto** kan du välja **Ansvar som behöver granskas**. Ett aktuellt lämnat eller tryckt jobb som bara har ett äldre ansvarigt namn erbjuder **Rätta äldre jobbansvar**. Samma handling finns på jobbkortet.

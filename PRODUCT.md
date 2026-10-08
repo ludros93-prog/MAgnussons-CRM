@@ -1,5 +1,25 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Beskrivningen ändras, rapportören ligger kvar – v67
+
+Ett öppet produktionshinder har ett registrerat rapportörs-ID, namn och rapporttid. Rapportören eller en administratör kan ändra beskrivningen utan att dessa uppgifter ersätts. Hinderrevisionen ökar och den befintliga händelsen registrerar den faktiska redigeraren. Ny rapportering och senare registrering av lösningen följer sina egna handlingar.
+
+Rapportera, redigera och lösa har separata instruktioner. Dialogen visar kund, affär, order och arbetsreferens från öppningstillfället. Det öppnade hindret och produktionsunderlaget behåller sitt frysta skrivunderlag. En konflikt i det frysta skrivunderlaget kräver ny inläsning; fel bevarar lokal text i den öppna dialogen. Texten är inget serverlagrat privat utkast.
+
+Långa beskrivningar och lösningar använder begränsad fälthöjd och intern rullning i de fyra berörda kontrollerna. Hinderdialogens titel och rubrikerna för registrerat hinderunderlag och lösning får radbrytas inom tillgänglig bredd. Jobbdetaljernas motsvarande anpassning gäller när hinderhanteringen är öppen. Hinderformulärens knappar har uttrycklig minimihöjd 44 CSS-pixlar som lokalt designmål. Faktiska nativeprov hittade ett för högt textfält, rubriköverflöde vid CSS-text 200 procent och en knapp som inte nådde den avsedda minimihöjden. Utformningen är riktad till hinderhanteringen och ändrar inte globala Textarea-/Button-komponenter. Full isolerad native Chromium/Worker-matris: 22 av 22 fall passerade. Tolv layoutfall omfattade Board och Workspace på 320×568, 390×844 och 1280×900 med normal respektive exakt CSS-text 200 procent. Alla 48 native tangentbordsfokuserade kontroller var fullt synliga; hinderformulärens inre knappar nådde det lokala målet 44 CSS-pixlar. Fyra textfält behöll caret, åäö och intern rullning utan horisontell klippning. Root granskade sex faktiska bilder och oberoende granskare fem; 36 bildhashar kontrollerades. CSS-textförstoring är inget prov av browserzoom, skärmläsare eller full WCAG.
+
+Jobbdetaljernas ytterligare breddanpassning gäller bara när hinderformuläret är öppet: datum har en kolumn under 768 px och tre från 768 px; knappar och varningstext får radbrytas inom tillgänglig bredd. Detta följer ett faktiskt Workspace-fynd vid CSS-text 200 procent. Ingen text eller kontroll döljs och inga globala CSS-/fontregler eller verksamhetsregler ändras genom denna layoutändring.
+
+Jobbdetaljernas två hindertextfält använder dessutom lokal rullning vid fokus för att visa fältet. Funktionen ändrar inte fokus, värde, komponenttillstånd eller sparunderlag; den följer ett faktiskt desktopfynd där ett native-fokuserat fält delvis klipptes.
+
+Jobbansvar, kommersiellt orderansvar, mängder och fysisk historik ligger kvar. Kontoändringens kontroll kan därför fortsatt räkna originalrapportörens öppna hinder. Namnbaserade, tomma eller andra oklara hinderidentiteter rättas inte genom textredigering. Redan historiskt överskrivna uppgifter rekonstrueras inte.
+
+Ingen lagrings-/backupformatändring. V66-kompatibelt läsar-/skrivargolv efter jobbansvarsrättning består. V66 är formatkompatibelt men återinför redigeringsfelet. Alla fem obligatoriska kontroller passerade på den frysta slutkandidaten; varje exitkod var 0 och samtliga 337 spårade filer, head och träd var oförändrade efter provet; [VALIDATION](VALIDATION.md) skiljer faktiska prov från kvarvarande personal-/integrations-/återställningsprov.
+
+## Historik före v67
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Ett granskat konto får det äldre jobbansvaret från rättningen – v66
 
 **Rätta äldre jobbansvar** är administratörens avgränsade väg för ett aktuellt lämnat eller tryckt jobb med sparat ansvarigt namn, men utan användar-ID, medlems-ID eller registrerad ansvarshistorik. Handlingen finns på jobbkortet och i **Produktionsarbete per konto** för den berättigade jobbraden. **Sparat äldre underlag**, **Orderansvar · ligger kvar** och granskningen visar vad som ändras och vad som bevaras.
