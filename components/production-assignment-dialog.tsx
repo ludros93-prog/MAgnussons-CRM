@@ -58,7 +58,7 @@ export function ProductionAssignmentDialog({st,orderId,space,save,busy,refresh,o
  const active=!!production&&['submitted','printed'].includes(production.status);
  const canReview=visible&&active&&directoryMatches&&!draft.review?.blockedReason&&!conflict&&!requiresCurrent&&!!target&&!!draft.reason.trim();
  const dirty=!!draft.targetMemberId||draft.reason!=='';
- const ownerName=production?.assigneeId?(production.assigneeName||'Registrerad ansvarig utan namn'):'Ingen har tagit jobbet';
+ const ownerName=production?.assigneeId?(production.assigneeName||'Registrerad ansvarig utan namn'):production?.assigneeName?production.assigneeName+' · äldre namn utan konto-ID':'Ingen har tagit jobbet';
  const title=production?.assigneeId?'Byt produktionsansvar':'Tilldela produktionsansvar';
 
  useEffect(()=>{alive.current=true;return()=>{alive.current=false;operation.current++;};},[]);

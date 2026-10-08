@@ -64,6 +64,7 @@ export function applyOperations(st:State,action:Action,actor:Actor):State{
  if(['production_claim','production_release'].includes(action.type)){
   const p=z.object({orderId:id,expectedAssignment:z.string().max(100000)}).parse(action.data),o=order(p.orderId),v=o.production;
   must(['admin','production','print','warehouse'].includes(actor.role),'Arbetsansvar hanteras av produktionen eller administratör.');
+  must(v.assigneeId||!v.assigneeName,'Jobbet har ett tidigare ansvarigt namn utan användaridentitet. Granska den äldre ansvarskopplingen innan arbetsansvaret ändras.');
   must(['submitted','printed'].includes(v.status),'Arbetsordern är inte aktiv.');must(p.expectedAssignment===assignmentBasis(v),'Arbetsansvaret har ändrats. Läs in aktuellt jobb.');
   if(action.type==='production_claim'){must(!v.assigneeId,'Jobbet har redan en ansvarig.');recordProductionAssignment(o,actor,{userId:actor.id,memberId:actor.memberId||'',name:actor.name},'claim','Jag tog ansvar för arbetsordern.',now);event(o.customerId,o.dealId,actor.name+' tog ansvar för arbetsordern.');}
   else {must(v.assigneeId,'Jobbet saknar ansvarig.');must(v.assigneeId===actor.id||actor.role==='admin','Bara den ansvariga eller administratören kan lämna tillbaka jobbet.');event(o.customerId,o.dealId,'Arbetsordern lämnades tillbaka till gemensam kö. Tidigare ansvarig: '+v.assigneeName);recordProductionAssignment(o,actor,{userId:'',memberId:'',name:''},'release','Arbetsordern lämnades tillbaka till gemensam kö.',now);}

@@ -30,6 +30,7 @@ export function productionAssignmentBlockedReason(st:State,orderId:string,workId
  if(!orders.length)return 'Arbetsordern finns inte.';
  if(!order||st.customers.filter(customer=>customer.id===order.customerId).length!==1||st.deals.filter(deal=>deal.id===order.dealId&&deal.customerId===order.customerId).length!==1)return 'Arbetsorderns kopplingar behöver granskas innan ansvaret ändras.';
  if(!['submitted','printed'].includes(order.production.status))return 'Avslutade, avbrutna och ännu inte inlämnade jobb behåller sitt registrerade ansvar.';
+ if(!order.production.assigneeId&&order.production.assigneeName)return 'Jobbet har ett tidigare ansvarigt namn utan användaridentitet. Granska den äldre ansvarskopplingen innan någon tilldelas jobbet.';
  if(!workId||order.production.workId!==workId)return 'Arbetsversionen har ändrats eller saknar ett stabilt id. Läs in och granska aktuellt jobb.';
  if(order.production.assignmentHistory.length>=1000)return 'Arbetsordern har nått gränsen för ansvarshistorik.';
  return '';
@@ -69,11 +70,15 @@ export function validateProductionAssignmentReferences(st:State){
  const ids=new Set<string>();
  for(const order of st.orders)for(const production of [order.production,...order.productionHistory]){
   need(!production.assigneeMemberId||production.assigneeId,'Arbetsansvaret har en kontokoppling utan användaridentitet.');
+  need(!production.assigneeMemberId||production.assignmentHistory.length,'Arbetsansvarets kontokoppling saknar den registrerade ansvarshistoriken.');
   let previous:ProductionAssignmentHistory|undefined;
   for(const raw of production.assignmentHistory){
    const row=ProductionAssignmentHistorySchema.parse(raw);need(!ids.has(row.id),'Arbetsansvaret innehåller dubbla historik-id:n.');ids.add(row.id);
    need(row.orderId===order.id&&row.workId===production.workId,'Arbetsansvarets historik har en bruten order- eller arbetsversionskoppling.');
    need(!row.fromMemberId||row.fromUserId,'Arbetsansvarets historik har en kontokoppling utan användaridentitet.');
+   // Legacy work had no member link. A first known audit may start at any
+   // legacy revision/user, but a linked source needs its preceding audit.
+   need(previous||!row.fromMemberId,'Arbetsansvarets historik saknar den tidigare registrerade kontokopplingen.');
    const releasing=row.action==='release',assigning=row.action==='assign'||row.action==='claim';
    need(releasing?!!row.fromUserId&&!row.toUserId&&!row.toMemberId&&!row.toName:!!row.toUserId&&!!row.toName,'Arbetsansvarets historik har en ogiltig ansvarskoppling.');
    need(!assigning||!row.fromUserId&&!row.fromMemberId&&!row.fromName,'Ett nytt arbetsansvar får inte ersätta en befintlig ansvarig.');
