@@ -1,3 +1,21 @@
+# Källor och tillämpade principer – v66
+
+## Tydligt jobbansvar och intuitiv granskning
+
+Färsk officiell dokumentation kontrollerades under crm66. [Salesforce Deactivate Users](https://help.salesforce.com/s/articleView?id=sf.how_to_deactivate_users.htm&language=en_US&type=5) skiljer inaktivt konto från bevarade poster. [Lime Users and groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) stöder separata användar-/gruppidentiteter. Tillämpning: ett äldre namn fastställer ingen person; rättningen kräver uttryckligt valt aktivt anslutet CRM-konto och eget underlag, bevarar kommersiellt ansvar och hindrens egna identiteter och kringgår ingen kontoändringsspärr.
+
+[Lime relation pickers](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/relation-pickers/) och [action design guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) ger principer för begripliga relationsval och konkreta handlingar. [Saleshub AI:s funktioner](https://saleshubai.se/funktioner) beskriver samlat arbetsunderlag och uppföljning. Tillämpning: **Rätta äldre jobbansvar**, tomt förvalt konto, synlig roll/Konto-ID vid lika namn, kund-/jobbkontext, äldre underlag skilt från aktuellt registrerat ansvar och granskning före registrering. Återinläst redan rättad post visar det verkliga aktuella kontot och hänvisar till vanlig ansvarsändring. Detta beskriver tillämpade produktprinciper, inga leverantörskopplingar eller utförd användaracceptans.
+
+Officiell Cloudflare D1-dokumentation om [batch](https://developers.cloudflare.com/d1/worker-api/d1-database/#batch) och [result objects](https://developers.cloudflare.com/d1/worker-api/return-object/), samt [SQLite UPDATE](https://www.sqlite.org/lang_update.html), kontrollerades: SQL-fel i batch kan rulla tillbaka, men UPDATE med noll ändrade rader är inget SQL-fel. Tillämpning: befintlig gemensam CAS/write-token och guards behålls för alla framgångsskrivningar; ny rättning förblir atomisk och idempotent. SQLmigrations- och lagringsbytes är oförändrade.
+
+[W3C modal dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) och [Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) användes vid dialoggranskningen. Faktiska native Chromium-prov täcker mobilbredder, text 2×, tangentbord, fokus och klickyta; 37 godkända native browserfall på exakt slutrevision, med 35 oförändrade originalbilder och separat manuell bildgranskning. Detta är inte en full WCAG-granskning eller ett skärmläsar-/fysiskt telefon-/personalprov.
+
+Källinsamlingens kvitto SHA-256 `bc4a324ad44c01232165378815f2984f534f76161dfcf719bad3b8f9c0869c96`, tillämpade fynd `e51e44ab0b1e559a3359a5ac3d2279af6e09548cdb6a798d7eef393468419fec`. För verifierad datagräns hänvisas till [VALIDATION](../VALIDATION.md): v66-golv efter rättningshistorik, faktisk lokal full JSON/native NDJSON-restore; full hostad återgång återstår.
+
+Codex-referensen `01a104c7-a5c5-7350-8577-a4f941138061` är oläst. Tillgänglig `read_thread` avser Slack, inte Codex; dokumenterad brief/färsk main användes. Veckokollen TB-import tillhör annat uppdrag och importerades inte i Magnussons. Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmått.
+
+## Historik före v66
+
 # CRM-källor för Magnussons byggagent
 
 ## Officiella principer för konkret kontoändringsdiagnos – v65

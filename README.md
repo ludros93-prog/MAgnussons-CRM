@@ -1,5 +1,21 @@
 # Magnussons CRM
 
+## Rätta äldre jobbansvar med granskning – v66
+
+Administratören kan välja **Rätta äldre jobbansvar** för ett aktuellt jobb som är lämnat eller tryckt och bara har ett sparat ansvarigt namn. Läs det äldre namnet och tidsfältet, välj ett befintligt anslutet CRM-konto, beskriv det verkliga underlaget och granska före **Registrera rättning**. Det valda kontot får jobbansvaret från rättningen; namnet identifierar ingen tidigare person.
+
+Mängder, tryck, kassation, delleveranser, hinderansvar och kommersiellt orderansvar bevaras. Andra oklara eller motsägande kopplingar behöver sina egna granskade arbetsflöden. Efter hanterat ansvar behöver kontoändringens granskning hämtas igen.
+
+Ny rättningshistorik kräver **v66-kompatibel läsare och skrivare**. Backupformatet är fortsatt `magnussons-crm-1`; inga SQL-tabeller eller migrationer tillkommer. [OPERATIONS](OPERATIONS.md) beskriver arbetsgången. Fem obligatoriska slutkontroller passerade på exakt ren och oförändrad kod `36723ebb39b83623b0ddc27733d8b702515aaeec`, träd `11419ea162363bf95b744b7c94d352c68cb8cfbe`: regressioner, TypeScript, bygge, isolerad D1/R2-runtime och diffkontroll. Kontrollkvitto SHA-256 `f69375d58d09b44ac9ba6b44aaf08180297be52b868e5762593882a4db5113e8`.
+
+GitHub app-main: `9d239cfaf14a6a14d538833dde44b02f7dce4c9b`. Main-CI `37814702689` är completed/success med samtliga 13 steg på exakt app-main `9d239cfaf14a6a14d538833dde44b02f7dce4c9b`. Sites **v66** är publicerad från source `9d976e0ac746796977d48ad11d1062adfb12a3e0`, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_bc068e7250a48191aae8c62728539bab`. Deploy `appgdep_6ac7d0da31708191aeb81131ad613855` gav terminalt `succeeded` direkt, faktisk uppdateringstid `2026-10-08T17:20:37.463233+00:00`. Färsk återläsning bekräftade samma URL, custom-delning revision 2, hela åtkomstpolicyn, runtime-miljö revision 1 och automationer oförändrade. Native arkivmetadata stämmer med lokalt verifierad tarhash, storlek och antal. Samma [Magnussons CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) används; dokumentationen har separat revision.
+
+Verkliga personalinloggningar, personalpilot, full hostad återställning samt kommersiell/privat/extern personalavveckling och Sites-åtkomst återstår. Försäljning mot månads-/årsmål, marginal och nya prospects är fortsatt huvudmåtten.
+
+## Historik före v66
+
+# Magnussons CRM
+
 ## Se arbetet som spärrar kontoändringen – v65
 
 Under **Konton & roller → Ändra → Granska kontoändringen** kan administratören välja **Visa arbete som spärrar ändringen**. Listan visar arbetsyta, arbetsreferens, order-ID, produktionsstatus och konkret orsak för varje **Jobbansvar** eller **Öppet hinderansvar**. **Visa fler ansvarsdelar** hämtar nästa 20.

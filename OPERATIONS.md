@@ -1,5 +1,23 @@
 # Magnussons CRM – order, tryck och lager
 
+## Granska och rätta äldre jobbansvar – v66
+
+1. Öppna rätt arbetsyta som administratör. I **Konton & roller → Produktionsarbete per konto** kan du välja **Ansvar som behöver granskas**. Ett aktuellt lämnat eller tryckt jobb som bara har ett äldre ansvarigt namn erbjuder **Rätta äldre jobbansvar**. Samma handling finns på jobbkortet.
+2. Kontrollera kund, jobb, order- och arbetsreferens. Läs **Sparat äldre namn** och **Sparad tid i äldre underlag · inte verifierad**. Dessa uppgifter bevisar inte vem som tidigare hade ansvar eller när det började.
+3. Läs **Orderansvar · ligger kvar** och **Jobbets registrerade underlag · ligger kvar**. Orderns säljare, mängder, tryck, kassation, leveranser, datum och hinderansvar följer sina befintliga registreringar.
+4. Välj **Produktionsansvarig efter ändringen** bland verkliga aktiva anslutna CRM-konton. Kontrollera **Konto-ID** och roll, särskilt vid lika namn. Beskriv vilket faktiskt underlag du granskat och varför kontot ska få jobbansvaret nu. Namnet kopplas inte automatiskt till det valda kontot.
+5. Läs **Granska rättningen** och markera granskningen. Välj **Registrera rättning**. Vänta på kvittot. Det valda kontots jobbansvar gäller från rättningen; äldre namn/tidsfält bevaras i historiken som ej verifierade. Ingen avisering eller kundkommunikation skickas.
+6. Vid ändrat underlag, välj **Hämta aktuellt underlag**, sedan **Läs in nytt granskningsunderlag**. Orsaken finns kvar, men ett kontoval som inte längre är tillgängligt kan tömmas. Om jobbet fortfarande bara har äldre namn utan identitetskoppling, välj ett tillgängligt konto och granska rättningen igen. Om ansvar redan har förankrats, kontrollera det aktuellt registrerade kontot som visas; stäng dialogen och öppna jobbets vanliga ansvarsflöde för en annan ändring. Vid osäkert sparningsförsök kan samma oförändrade begäran återförsökas. Kopiera text före omladdning; dialogen är inget sparat privat utkast.
+7. Om en kontoändring varit spärrad, hämta kontoändringens granskning igen efter att rätt ansvar hanterats. Rättningen flyttar inte andra jobb eller separata hinder. Kvarvarande ansvar och andra oklara kopplingar kan fortfarande spärra åtkomstminskningen.
+
+Rättningen gäller bara namn utan användar-/medlemskoppling och utan tidigare ansvarshistorik på aktuella lämnade/tryckta jobb. Trasiga eller motsägande kopplingar, andra arbetsytor och hinderidentiteter behöver sina egna granskade vägar. Gissa ingen person från namnet. CRM-konto, kommersiellt ansvar, privata utkast/mejl, externa konton och Sites-åtkomst hanteras var för sig.
+
+Efter registrerad rättningshistorik krävs **v66-kompatibel läsare och skrivare**, även vid export och återställning. Den nya `resolve_legacy`-raden bevarar äldre tidsfält som `legacyAssignedAt`, inte som ett verifierat datum. Backupformatet är fortsatt `magnussons-crm-1`; inga SQL-migrationer tillkommer. Använd kompatibel kod vid korrigering, eller en faktiskt verifierad full återställning med plan för senare arbete. Personalpilot och full hostad återställning återstår. Fem obligatoriska slutkontroller har passerat på samma oförändrade slutkandidat. [VALIDATION](VALIDATION.md) anger källrevision, kontroller och faktisk JSON/native NDJSON-återläsning; syntetiska prov verifierar ingen verklig inloggning eller personalacceptans.
+
+## Historik före v66
+
+# Magnussons CRM – order, tryck och lager
+
 ## Läs arbetet bakom en spärrad kontoändring – v65
 
 1. Öppna **Konton & roller** som administratör. Välj **Ändra** vid rätt CRM-konto och kontrollera konto-ID och den ändring du vill göra.

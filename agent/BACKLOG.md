@@ -1,5 +1,25 @@
 # Arbetskö för Magnussons CRM
 
+## Avgränsad B01b2-del: granskad rättning av äldre namnbaserat jobbansvar – v66
+
+En administratör kan uttryckligen rätta ett aktuellt lämnat/tryckt jobb med sparat ansvarigt namn, tomma användar-/medlems-ID:n och tom ansvarshistorik. Mottagaren väljs bland verkliga anslutna aktiva konton med stabilt konto-ID. Faktiskt underlag, orsak och granskning krävs. Första `resolve_legacy`-raden bevarar äldre namn och ursprungligt tidsfält `legacyAssignedAt` utan att fastställa tidigare person eller starttid. Ordinarie jobbansvarsbyten, fysiskt arbete, kommersiellt ansvar och separata hinderansvar bevaras.
+
+Fem obligatoriska slutkontroller passerade på exakt ren och oförändrad kod `36723ebb39b83623b0ddc27733d8b702515aaeec`, träd `11419ea162363bf95b744b7c94d352c68cb8cfbe`: regressioner, TypeScript, bygge, isolerad D1/R2-runtime och diffkontroll. Kontrollkvitto SHA-256 `f69375d58d09b44ac9ba6b44aaf08180297be52b868e5762593882a4db5113e8`.
+
+Faktiska handlers/SQLite och byggd HTTP-Worker/D1/R2 verifierar strikt granskning, sena konto-/jobbkonflikter, CAS, rollback, dubbelklick, exakt återförsök efter förlorad kvittens och oberoende rebase. Sent byte av administratörens medlems-ID nekar 403; en namnändring får aktuellt auditnamn. Befintliga regressioner bevarar 40→45, uttryckligt syntetiskt godkänd 50→48, kassation och delleverans.
+
+Faktisk oförändrad v65 avvisade den nya auditen i 12 prov. V66 bevarade hela delade underlaget och ordnad aktuell/arkiverad ansvarshistorik genom autentiserad rättning/återförsök, vanlig orderskrivning, JSON/native NDJSON-export samt full JSON/native NDJSON-återställning med återläsning. Tre syntetiska provfiler, totalt 138 byte, och tre råa privata utkastformat kontrollerades; samtliga 18 råtabeller och positiva privata Outlook-/R2-sentineler jämfördes. Den extra arkiverade rättningsraden är en semantisk fixture, inget prov av dess arkiveringslivscykel. Kompatibilitetskvitto SHA-256 `9033719574abb5b12aeb19bad42a01edc6a673f2c54c6dd6f4f8788956e10168`. Dessa isolerade prov verifierar ingen full hostad återställning eller personalacceptans.
+
+GitHub app-main: `9d239cfaf14a6a14d538833dde44b02f7dce4c9b`. Main-CI `37814702689` är completed/success med samtliga 13 steg på exakt app-main `9d239cfaf14a6a14d538833dde44b02f7dce4c9b`. Sites **v66** är publicerad från source `9d976e0ac746796977d48ad11d1062adfb12a3e0`, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_bc068e7250a48191aae8c62728539bab`. Deploy `appgdep_6ac7d0da31708191aeb81131ad613855` gav terminalt `succeeded` direkt, faktisk uppdateringstid `2026-10-08T17:20:37.463233+00:00`. Färsk återläsning bekräftade samma URL, custom-delning revision 2, hela åtkomstpolicyn, runtime-miljö revision 1 och automationer oförändrade. Native arkivmetadata stämmer med lokalt verifierad tarhash, storlek och antal.
+
+B01b2 är fortsatt öppet. **Nästa avgränsning:** inventera kvarvarande okända/frikopplade/motsägande jobb- och hinderidentiteter i alla lagrade arbetsytor. Välj ett eget granskat flöde för nästa faktiskt styrkta fall med stabila identiteter, bevarad historik och konfliktspärr. Rätta inga trasiga medlems-/auditkopplingar genom namnmatchning och ändra inte kontoändringens spärr för att kringgå kvarvarande ansvar.
+
+Ny rättningshistorik kräver v66-kompatibel läsare och skrivare; backupformat `magnussons-crm-1` består och inga SQL-tabeller/migrationer tillkommer. B02:s chefsroll, B04:s privata backup/full hostad återställning, B07:s verkliga personalinloggningar och observerade pilot samt full kommersiell/privat/extern avveckling och Sites-åtkomst förblir öppna. Riktiga Fortnox-/Microsoft-konton och verksamhetsunderlag är fortsatta hinder för dessa prov. Syntetiska prov blir ingen personalacceptans. Mandat, scheman, prompter och aktivering ändras inte; Codex-referensen är oläst.
+
+## Historik före v66
+
+# Arbetskö för Magnussons CRM
+
 ## Avgränsad B01b2-del: arbete bakom kontoändringens spärr – v65
 
 Administratören läser varje registrerad ansvarsdel bakom den spärrade kontoändringen, inklusive oklara aktuella kopplingar i andra lagrade arbetsytor. Arbetsyta, arbetsreferens, order-ID, status och orsak visas i kontoformuläret. Högst 20 rader hämtas per sida mot samma granskningsunderlag. Ingen rättning, massflytt, navigering eller kontoskrivning tillkommer.
