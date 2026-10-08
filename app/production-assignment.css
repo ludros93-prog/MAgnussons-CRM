@@ -1,0 +1,27 @@
+/* Only reviewed production responsibility; quantity registration stays separate. */
+.production-assignment-dialog { min-width: 0; overflow-wrap: anywhere; scroll-padding-block: 12px; }
+.production-assignment-dialog fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.production-assignment-dialog textarea { field-sizing: fixed; min-height: 64px; height: 96px; max-height: min(160px, 32dvh); resize: none; overflow-y: auto; }
+.production-assignment-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; min-width: 0; }
+.production-assignment-head [data-slot=dialog-title] { min-width: 0; flex: 1; line-height: 1.4; }
+.production-assignment-dialog [tabindex="-1"]:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+.production-assignment-current { min-width: 0; padding: .8rem 1rem; margin-bottom: 1rem; border: 1px solid #dce5ef; border-radius: 10px; background: #f7fafc; }
+.production-assignment-current h3 { margin: .25rem 0 .5rem; }
+.production-assignment-current p { margin: .3rem 0; }
+.production-assignment-dialog .production-assignment-select { width: 100%; height: auto; min-height: 44px; min-width: 0; max-width: 100%; white-space: normal; }
+.production-assignment-select [data-slot=select-value] { min-width: 0; flex: 1; overflow: hidden; }
+.production-assignment-selected { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 1.4; max-height: 2.8em; min-width: 0; flex: 1; text-align: left; }
+.production-assignment-options [data-slot=select-item] { min-width: 0; max-width: 100%; overflow-wrap: anywhere; white-space: normal; min-height: 44px; }
+.production-assignment-dialog .check-field { min-width: 0; align-items: flex-start; min-height: 44px; padding-block: .6rem; }
+.production-assignment-dialog .check-field > span { min-width: 0; overflow-wrap: anywhere; }
+.production-assignment-dialog button,
+.business-ui.production-assignment-dialog .biz-details > summary { min-width: 0; min-height: 44px; height: auto; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.production-assignment-dialog .biz-buttons { min-width: 0; flex-wrap: wrap; }
+.production-assignment-dialog [data-slot=alert-dialog-footer] { flex-wrap: wrap; }
+.production-assignment-entry { min-width: 0; max-width: 100%; padding: .875rem; margin-block: 1rem; border: 1px solid #dce5ef; border-radius: 10px; background: #f7fafc; overflow-wrap: anywhere; }
+.production-assignment-entry h3 { margin: 0 0 .35rem; }
+.production-assignment-entry p { margin: .35rem 0; }
+.production-assignment-entry button { min-width: 0; min-height: 44px; height: auto; max-width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.5; margin-top: .5rem; }
+.production-assignment-entry [tabindex="-1"]:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+@media (max-width: 767px) { .production-assignment-head { flex-wrap: wrap; } }
+
