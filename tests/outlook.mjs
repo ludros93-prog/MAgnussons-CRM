@@ -38,3 +38,6 @@ try{
  await o.publishItem('seller1',first.id,first.customerId,'',false);assert.equal((await o.readState(request('seller2'))).items.length,0);
 }finally{globalThis.fetch=realFetch}
 console.log('PASS: Outlook configuration gate, authenticated identity, encrypted credentials, PKCE/state replay protection, private matching, visibility isolation, explicit sharing, stable IDs, updated/cancelled/removed meetings, preserved sharing, provider URL validation, CSRF, disconnect. Microsoft responses mocked; no live Microsoft account used.');
+
+// Real React lifecycle regressions for private Outlook identity/workspace changes.
+await import('./outlook-hook.mjs');

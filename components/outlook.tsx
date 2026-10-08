@@ -1,13 +1,10 @@
 'use client';
-import {useCallback,useEffect,useRef,useState} from 'react';
+import {useState} from 'react';
 import {Mail,CalendarDays,RefreshCw,Link2,LockKeyhole,Users,ExternalLink} from 'lucide-react';
 import {Button} from '@/components/ui/button';import {Select,SelectTrigger,SelectValue,SelectContent,SelectItem} from '@/components/ui/select';import {Tabs,TabsList,TabsTrigger} from '@/components/ui/tabs';import {AlertDialog,AlertDialogContent,AlertDialogHeader,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogAction,AlertDialogCancel,AlertDialogTrigger} from '@/components/ui/alert-dialog';import {toast} from 'sonner';
-import {OUTLOOK_REDIRECT,type OutlookItem,type OutlookState} from '@/lib/outlook-shared';import type {State} from '@/lib/crm';
-export function useOutlook(enabled:boolean){const [state,setState]=useState<OutlookState|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');const run=useRef(false),generation=useRef(0),stateRef=useRef<OutlookState|null>(null);
- const request=useCallback(async(body?:unknown)=>{if(!enabled||run.current)return false;run.current=true;setBusy(true);const g=generation.current;try{const r=await fetch('/api/outlook',body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:undefined);const data:any=await r.json();if(!r.ok)throw Error(data.error||'Outlook kunde inte läsas.');if(g===generation.current){setState(data);stateRef.current=data;setError('')}return true}catch(e){if(g===generation.current)setError((e as Error).message);return false}finally{run.current=false;if(g===generation.current)setBusy(false)}},[enabled]);
- useEffect(()=>{generation.current++;setState(null);stateRef.current=null;setError('');setBusy(false);if(!enabled)return;request().then(()=>{const c=stateRef.current?.connection;if(c?.status==='connected'&&(!c.lastSync||Date.now()-Date.parse(c.lastSync)>300000))request({action:'sync'})});const interval=setInterval(()=>{if(document.visibilityState==='visible'&&stateRef.current?.connection?.status==='connected')request({action:'sync'});else if(document.visibilityState==='visible')request()},300000);return()=>{clearInterval(interval);generation.current++}},[enabled,request]);
- return{state,busy,error,request};
-}
+import {OUTLOOK_REDIRECT,type OutlookItem} from '@/lib/outlook-shared';import type {State} from '@/lib/crm';
+import {useOutlook} from '@/lib/use-outlook';
+export {useOutlook} from '@/lib/use-outlook';
 export type OutlookContext=ReturnType<typeof useOutlook>;
 type Context=OutlookContext;
 const time=(s:string)=>s?new Date(s).toLocaleString('sv-SE',{timeZone:'Europe/Stockholm',dateStyle:'medium',timeStyle:'short'}):'Aldrig';
