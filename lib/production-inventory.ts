@@ -6,7 +6,9 @@ import {productionAssignmentBlockedReason} from './production-assignment';
 
 const text=z.string().max(4000),assignmentState=z.enum(['assigned','unassigned','unresolved']);
 export const ProductionInventoryAccountSchema=z.object({memberId:text.min(1),name:text,role:RoleSchema,active:z.boolean(),connected:z.boolean(),identityStatus:z.enum(['connected','unconnected','ambiguous'])}).strict();
-export const ProductionInventoryRowSchema=z.object({orderId:text.min(1),workId:text,customerName:text,title:text,dueAt:z.string().regex(/^(?:\d{4}-\d{2}-\d{2})?$/),status:z.enum(['submitted','printed']),assigneeMemberId:text,assigneeName:text,assignmentState,issueOwnerMemberId:text,issueOwnerName:text,issueOwnerState:z.enum(['assigned','unassigned','unresolved','none']),issue:text,blockedReason:text}).strict();
+export const ProductionInventoryRowSchema=z.object({orderId:text.min(1),workId:text,customerName:text,title:text,dueAt:z.string().regex(/^(?:\d{4}-\d{2}-\d{2})?$/),status:z.enum(['submitted','printed','dispatched']),assigneeMemberId:text,assigneeName:text,assignmentState,issueOwnerMemberId:text,issueOwnerName:text,issueOwnerState:z.enum(['assigned','unassigned','unresolved','none']),issue:text,blockedReason:text}).strict().superRefine((row,ctx)=>{
+ if(row.status==='dispatched'&&!row.issue)ctx.addIssue({code:'custom',message:'A dispatched inventory row requires a current open issue'});
+});
 export const ProductionInventoryReviewSchema=z.object({expectedContext:z.string().regex(/^[a-f0-9]{64}$/),accounts:z.array(ProductionInventoryAccountSchema),rows:z.array(ProductionInventoryRowSchema)}).strict();
 export type ProductionInventoryAccount=z.infer<typeof ProductionInventoryAccountSchema>;
 export type ProductionInventoryRow=z.infer<typeof ProductionInventoryRowSchema>;
@@ -15,12 +17,15 @@ export type ProductionInventoryReview=z.infer<typeof ProductionInventoryReviewSc
 // They never form part of the account or row response objects.
 export type ProductionInventoryMember={id:string;user_id:string|null;name:string;role:Role;active:number};
 const activeJob=(order:State['orders'][number])=>order.production.status==='submitted'||order.production.status==='printed';
+// A sent job no longer has current job responsibility, but its unresolved
+// issue still blocks the reporter's account change and needs a visible route.
+const inventoryWork=(order:State['orders'][number])=>activeJob(order)||order.production.status==='dispatched'&&!!order.production.issue;
 const canonicalRows=<T,>(rows:T[])=>rows.map(value=>({value,basis:recordBasis(value)})).sort((a,b)=>a.basis<b.basis?-1:a.basis>b.basis?1:0).map(row=>row.value);
 
 // Shared local-only input lets the UI hide an old inventory immediately after
 // a relevant CRM change. It is never returned by the API or rendered as text.
 export function productionInventoryInput(st:State):string{
- const orders=st.orders.filter(activeJob),orderIds=new Set(orders.map(order=>order.id)),customerIds=new Set(orders.map(order=>order.customerId)),dealIds=new Set(orders.map(order=>order.dealId));
+ const orders=st.orders.filter(inventoryWork),orderIds=new Set(orders.map(order=>order.id)),customerIds=new Set(orders.map(order=>order.customerId)),dealIds=new Set(orders.map(order=>order.dealId));
  return recordBasis({
   orders:canonicalRows(orders.map(order=>{const p=order.production;return {id:order.id,customerId:order.customerId,dealId:order.dealId,production:{status:p.status,workId:p.workId,assigneeId:p.assigneeId,assigneeMemberId:p.assigneeMemberId,assigneeName:p.assigneeName,assignmentRevision:p.assignmentRevision,assignmentHistoryLength:p.assignmentHistory.length,issue:p.issue,issueOwnerId:p.issueOwnerId,issueOwnerName:p.issueOwnerName,issueRevision:p.issueRevision,printDeadline:p.printDeadline,dispatchDeadline:p.dispatchDeadline,deliveryDate:p.deliveryDate}}})),
   // Inactive duplicate records also prevent safe navigation/transfer of a job.
@@ -50,10 +55,10 @@ export function buildProductionInventory(st:State,members:readonly ProductionInv
   // treated as an unassigned queue or replaced by someone with the same name.
   return {memberId:account.id,name:account.name,state:'assigned'};
  };
- const rows:ProductionInventoryRow[]=st.orders.filter(activeJob).map(order=>{
+ const rows:ProductionInventoryRow[]=st.orders.filter(inventoryWork).map(order=>{
   const p=order.production,assignee=resolve(p.assigneeId,p.assigneeName,p.assigneeMemberId),issueOwner=p.issue?resolve(p.issueOwnerId,p.issueOwnerName):{memberId:'',name:'',state:'none' as const};
   const customers=st.customers.filter(customer=>customer.id===order.customerId),deals=st.deals.filter(deal=>deal.id===order.dealId&&deal.customerId===order.customerId);
-  return {orderId:order.id,workId:p.workId,customerName:customers.length===1?customers[0].name:'Kundkoppling behöver granskas',title:deals.length===1?deals[0].title:'Arbetsorder',dueAt:(p.status==='printed'?p.dispatchDeadline:p.printDeadline)||p.deliveryDate,status:p.status as 'submitted'|'printed',assigneeMemberId:assignee.memberId,assigneeName:assignee.name,assignmentState:assignee.state,issueOwnerMemberId:issueOwner.memberId,issueOwnerName:issueOwner.name,issueOwnerState:issueOwner.state,issue:p.issue,blockedReason:productionAssignmentBlockedReason(st,order.id,p.workId)};
+  return {orderId:order.id,workId:p.workId,customerName:customers.length===1?customers[0].name:'Kundkoppling behöver granskas',title:deals.length===1?deals[0].title:'Arbetsorder',dueAt:(p.status==='submitted'?p.printDeadline:p.dispatchDeadline)||p.deliveryDate,status:p.status as ProductionInventoryRow['status'],assigneeMemberId:assignee.memberId,assigneeName:assignee.name,assignmentState:assignee.state,issueOwnerMemberId:issueOwner.memberId,issueOwnerName:issueOwner.name,issueOwnerState:issueOwner.state,issue:p.issue,blockedReason:activeJob(order)?productionAssignmentBlockedReason(st,order.id,p.workId):''};
  });
  return {accounts,rows};
 }
