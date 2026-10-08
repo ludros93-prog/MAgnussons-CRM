@@ -1,5 +1,17 @@
 # Magnussons CRM – order, tryck och lager
 
+## Överlämna leveransuppföljningen – v59
+
+1. Admin: **Byt uppgiftsansvar**/**Förankra ansvar** på öppen **Leveransuppföljning** i **Min dag**, eller **Granska leveranskontaktens ansvar** i **Överlämna arbete**.
+2. Läs skilda uppgifts-/kundrelationsansvar och **Leverans & kontakt · oförändrat vid ansvarsbytet**: orderansvar, kontaktvägar och registrerat mottagande. Dialogen skapar inget mottagande/kundgodkännande; saknat/tvetydigt underlag spärrar byte.
+3. Välj aktiv ansvarig, ange orsak, granska och välj **Spara nytt uppgiftsansvar**/**Spara förankrat ansvar**.
+4. Vid ändrat underlag/känt nekat försök: läs beskedet, **Hämta aktuellt underlag**, **Läs in nytt granskningsunderlag**, granska igen. Hämtning ersätter inte tidigare underlag; orsak och fortsatt giltiga val bevaras.
+5. Obekräftad sparning kan ha lyckats: återförsök samma oförändrade avsikt eller hämta/läs in/granska. Nytt mål är en ny avsikt.
+
+Formuläret är inget privat serverutkast; kopiera orsaken före reload. [RUNBOOK](agent/RUNBOOK.md) anger v59:s data-/återgångsgräns.
+
+## Historik före v59
+
 ## Kom igång och återförsök laddningen – v58
 
 1. Kontrollera **Arbetsyta** i startvyn. Arbetsmenyn väntar på känd roll.

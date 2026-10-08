@@ -1,5 +1,13 @@
 # Magnussons CRM
 
+## Överlämna kundkontakten efter leveransen – v59
+
+Administratören kan granska och byta ansvar för en öppen **Leveransuppföljning** efter registrerat kundmottagande och komplett avsändningsunderlag. Dialogen visar skilda uppgifts-, kundrelations- och orderansvar. Endast uppgiften överlämnas; mottagande, fakturering och tidigare resultat ligger kvar. Orsak/val bevaras vid fel.
+
+Fem slutkontroller och 22 isolerade browserfall passerade. Samma Site har publicerad v59. [OPERATIONS](OPERATIONS.md) beskriver arbetssättet; [VALIDATION](VALIDATION.md) belägg/gränser. Ny länkhistorik kräver **v59-kompatibel läsare och skrivare**. Konto-/personalprov och full hostingåterställning återstår.
+
+## Historik före v59
+
 ## Rätt arbetsvy från första laddningen – v58
 
 CRM visar en neutral svensk startvy tills användaren är känd. Vid fel finns **Arbetsyta** och **Försök igen**. Tryck/lager får direkt sin tillåtna vy. Outlook följer rätt live-identitet och döljer tidigare innehåll vid byte.

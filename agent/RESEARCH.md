@@ -1,5 +1,15 @@
 # CRM-källor för Magnussons byggagent
 
+## v59: kontextnära ansvar och tydlig granskning
+
+Sex officiella sidtexter lästes 2026-10-08 03:19:36 UTC; `/workspace/scratch/crm59/research/official-sources.json`, SHA-256 `0c528660567afaea6df00c03c93b69b224a361d57786e0c2c295812d035e9d7c`.
+
+[Salesforce ägaröverföring](https://help.salesforce.com/s/articleView?id=xcloud.account_owner_transfer.htm&language=en_US&type=5) skiljer omfattning; [Lime handlingsdesign](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) konkreta verb; [Lime handlingsvillkor](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/custom-visibility-of-actions/) kontextvillkor; [Saleshub funktioner](https://saleshubai.se/funktioner) samlat kundunderlag. W3C:s felprevention/statusmeddelanden lästes också enligt kvittot.
+
+Magnussons server-/ansvars-/leveransregler är lokala. Första misslyckade Lime-försöket räknas inte. Research bevisar ingen integration, personalacceptans eller WCAG. Codex-referensen är oläst; brief/repo används.
+
+## Historik före v59
+
 ## v58: roll, laddning och privat livscykel
 
 Sex officiella sidtexter lästes 2026-10-08 01:26:47 UTC; `/workspace/scratch/crm58/research/official-sources.json`, SHA-256 `8f6264bf6ed450f9b6a3bf2899c998d3cacbe3fcecca5355a91a053941e18889`.

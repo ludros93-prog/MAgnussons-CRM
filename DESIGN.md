@@ -1,5 +1,13 @@
 # Magnussons CRM – designriktning
 
+## Kundkontaktens ansvar med leveransen som underlag – v59
+
+**Leveransuppföljning**, skilda uppgifts-/kundrelations-/orderansvar och expanderbar fryst **Leverans & kontakt** visar ändringens omfattning. Fulla identiteter finns i detaljer. Svenska knappar skiljer hämta, läsa in och granska. Känd servernekning bevarar avsikten; tappad bekräftelse får ärligt besked om möjlig sparning/exakt återförsök.
+
+22 slutbrowserfall prövade mobil/desktop, strikt större text, native fokus och faktiska konflikter/nekningar/replay. Root öppnade fyra slutbilder; stora/långa värden radbryts i vertikalt scrollbar dialog. [VALIDATION](VALIDATION.md) anger gränser; [RESEARCH](agent/RESEARCH.md) belagd Saleshub-/Lime-/Salesforce-inspiration. Full tillgänglighetsgranskning och personalpilot återstår.
+
+## Historik före v59
+
 ## Rätt identitet före arbetsmenyn – v58
 
 Svensk neutral start/felvy, arbetsyta/återförsök och produktionens rätta vy direkt. Outlook döljer gamla data före effektstädning; DraftProvider behåller sin nyckel.
