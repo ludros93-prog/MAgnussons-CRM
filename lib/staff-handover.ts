@@ -7,10 +7,11 @@ import {meetingResponsibilityCandidates} from './meeting-responsibility';
 import {onboardingResponsibilityCandidates} from './onboarding-responsibility';
 import {issueResponsibilityCandidates} from './issue-responsibility';
 import {yearwheelResponsibilityCandidates} from './yearwheel-responsibility';
+import {companyEventResponsibilityCandidates} from './company-event-responsibility';
 
 export type StaffHandoverAction={
- kind:'customer'|'deal'|'order'|'task'|'meeting'|'onboarding'|'issue'|'yearwheel'|'companyEvent';
- id:string;customerId?:string;needId?:string;
+ kind:'customer'|'deal'|'order'|'task'|'meeting'|'onboarding'|'issue'|'yearwheel'|'companyEvent'|'companyEventPreparation';
+ id:string;customerId?:string;needId?:string;checklistId?:string;
 };
 export type StaffHandoverRow={
  key:string;kind:string;typeLabel:string;title:string;customerName:string;customerId:string;
@@ -157,7 +158,12 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
  for(const event of st.companyEvents){
   const action:StaffHandoverAction={kind:'companyEvent',id:event.id};
   if(event.status==='planned')add({kind:'companyEvent',typeLabel:'Företagsaktivitet',title:event.title,customerId:'',owner:event.owner,ownerProfileId:'',due:event.date,dueLabel:'Aktivitetsdatum',status:'Planerad',action,actionLabel:'Öppna företagsaktivitet',hint:'Separat kalenderflöde med ansvar kopplat till namn. Aktiviteten saknar stabilt profil-ID och granskad ansvarsöverlämning.'},['companyEvent',event.id],true);
-  for(const task of event.checklist.filter(value=>!value.done))add({kind:'companyEventTask',typeLabel:'Eventförberedelse',title:task.title,customerId:'',owner:task.owner,ownerProfileId:'',due:task.due,dueLabel:'Klart senast',status:event.status==='planned'?'Öppen förberedelse':'Öppen trots avslutad aktivitet',action,actionLabel:'Öppna företagsaktivitet',hint:(event.status==='planned'?'':event.status==='done'?'Aktiviteten är genomförd men denna förberedelse är fortfarande öppen. ':'Aktiviteten är avbokad men denna förberedelse är fortfarande öppen. ')+'Aktivitet: '+event.title+'. Separat kalenderflöde med ansvar kopplat till namn; ingen granskad uppgiftsöverlämning.'},['companyEventTask',event.id,task.id],true);
+  for(const task of event.checklist.filter(value=>!value.done)){
+   const candidates=companyEventResponsibilityCandidates(st,event.id,task.id);
+   add({kind:'companyEventTask',typeLabel:'Eventförberedelse',title:task.title,customerId:'',owner:task.owner,ownerProfileId:task.ownerProfileId,due:task.due,dueLabel:'Klart senast',status:event.status==='planned'?'Öppen förberedelse':'Öppen trots avslutad aktivitet',
+    action:{kind:'companyEventPreparation',id:event.id,checklistId:task.id},actionLabel:'Granska förberedelsens ansvar',
+    hint:(event.status==='planned'?'':event.status==='done'?'Aktiviteten är genomförd men denna förberedelse är fortfarande öppen. ':'Aktiviteten är avbokad men denna förberedelse är fortfarande öppen. ')+'Aktivitet: '+event.title+'. '+(candidates.blockedReason||'Endast denna förberedelse överlämnas. Aktivitetens ansvar och andra förberedelser ligger kvar.')},['companyEventTask',event.id,task.id]);
+  }
  }
  return rows;
 }

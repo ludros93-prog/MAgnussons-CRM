@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { LineSchema,AddressSchema,validDate,VariantFields } from './business';
+import {CompanyEventResponsibilityHistorySchema} from './company-event-responsibility-schema';
 const text=z.string().trim().max(4000),required=text.min(1,'Fyll i obligatoriska uppgifter.'),date=validDate;
 export const RoleSchema=z.enum(['admin','seller','reader','print','warehouse','production']);
 export type Role=z.infer<typeof RoleSchema>;
@@ -40,7 +41,7 @@ export function leadContactDecisions(leads:Lead[]){
  for(const row of leads){const identity=leadIdentity(row);for(const entry of row.contactHistory){retain(current,identity,entry);retain(captured,entry.identity,entry);}}
  return new Map(leads.map(row=>{const identity=leadIdentity(row),a=current.get(identity),b=captured.get(identity);return [row.id,!a?b:!b?a:compareContactDecisions(a,b)<0?b:a] as const;}));
 }
-export const CompanyEventSchema=z.object({id:text.default(''),title:required.max(200),date:date.refine(Boolean,'Välj datum.'),endDate:date.default(''),owner:required,category:z.enum(['event','campaign','internal','holiday']).default('event'),notes:text.default(''),status:z.enum(['planned','done','cancelled']).default('planned'),checklist:z.array(z.object({id:required,title:required,owner:required,due:date.refine(Boolean),done:z.boolean().default(false)})).max(50).default([])});
+export const CompanyEventSchema=z.object({id:text.default(''),title:required.max(200),date:date.refine(Boolean,'Välj datum.'),endDate:date.default(''),owner:required,category:z.enum(['event','campaign','internal','holiday']).default('event'),notes:text.default(''),status:z.enum(['planned','done','cancelled']).default('planned'),checklist:z.array(z.object({id:required,title:required,owner:required,ownerProfileId:z.union([z.literal(''),z.string().uuid()]).default(''),responsibilityTransfers:z.array(CompanyEventResponsibilityHistorySchema).max(1000).default([]),due:date.refine(Boolean),done:z.boolean().default(false)})).max(50).default([])});
 export type CompanyEvent=z.infer<typeof CompanyEventSchema>;
 export function distanceKm(a:number,b:number,c:number,d:number){const r=Math.PI/180,x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 6371*2*Math.atan2(Math.sqrt(x),Math.sqrt(Math.max(0,1-x)))}
 export const operations=new Set(['production_claim','production_release','prepare_order','receipt_confirm','receipt_issue','article','article_import','catalog_order','production_submit','production_accept','production_received','production_printed','production_dispatched','production_scrap_unprinted','production_scrap_printed','production_issue','production_issue_resolve','direct_dispatch','production_cancel','order_shortfall','order_amend','order_amend_accept','order_amend_discard','notice_read','lead_import','lead_convert','lead_contact','company_event']);

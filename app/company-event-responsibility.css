@@ -1,0 +1,29 @@
+/* Only the preparation rows, reviewed dialog and picker; calendar planning stays separate. */
+.company-calendar .event-card { align-items: flex-start; }
+.company-calendar .event-card > div:first-child { min-width: 0; flex: 1 1 16rem; overflow-wrap: anywhere; }
+.company-calendar .event-preparations { min-width: 0; flex: 1 1 22rem; max-width: 100%; }
+.company-calendar .event-preparation { min-width: 0; display: grid; gap: .75rem; padding: .875rem; border: 1px solid #dce5ef; border-radius: 10px; background: #f7fafc; }
+.company-calendar .event-preparation > label { min-width: 0; min-height: 44px; padding-block: .25rem; align-items: flex-start; gap: .625rem; cursor: pointer; }
+.company-calendar .event-preparation > label > [data-slot=checkbox] { flex-shrink: 0; margin-top: .125rem; }
+.company-calendar .event-preparation > label > span { min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.company-calendar .event-preparation > label b { color: #24384f; font-size: .875rem; line-height: 1.5; }
+.company-calendar .event-preparations small { font-size: .8125rem; line-height: 1.5; }
+.company-calendar .event-preparation-action { min-width: 0; display: grid; gap: .5rem; }
+.company-calendar .event-preparation-action > button { min-width: 0; max-width: 100%; min-height: 44px; height: auto; padding: .5rem .75rem; white-space: normal; overflow-wrap: anywhere; line-height: 1.5; text-align: left; justify-content: flex-start; }
+.company-calendar .event-preparation-action > p { margin: 0; font-size: .8125rem; line-height: 1.5; overflow-wrap: anywhere; }
+.company-calendar .event-card > button { min-width: 0; max-width: 100%; min-height: 44px; height: auto; white-space: normal; overflow-wrap: anywhere; }
+.company-event-responsibility-dialog { min-width: 0; overflow-wrap: anywhere; }
+.company-event-responsibility-dialog fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.company-event-responsibility-dialog textarea { field-sizing: fixed; min-height: 64px; height: 96px; max-height: min(160px, 32dvh); resize: none; overflow-y: auto; }
+.company-event-responsibility-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
+.company-event-responsibility-head [data-slot=dialog-title] { min-width: 0; flex: 1; line-height: 1.4; }
+.company-event-responsibility-current { padding: .8rem 1rem; margin-bottom: 1rem; border: 1px solid #dce5ef; border-radius: 10px; background: #f7fafc; }
+.company-event-responsibility-current p { margin: .3rem 0; }
+.company-event-responsibility-selected { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 1.4; max-height: 2.8em; min-width: 0; flex: 1; text-align: left; }
+.company-event-responsibility-options [data-slot=select-item] { min-width: 0; overflow-wrap: anywhere; }
+.company-event-responsibility-dialog .check-field { align-items: flex-start; min-height: 44px; padding-block: .6rem; }
+.company-event-responsibility-dialog .check-field > span { min-width: 0; }
+.company-event-responsibility-dialog button,
+.business-ui.company-event-responsibility-dialog .biz-details > summary,
+.company-event-responsibility-options [data-slot=select-item] { min-height: 44px; height: auto; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+@media(max-width:767px) { .company-event-responsibility-head { flex-wrap: wrap; } }
