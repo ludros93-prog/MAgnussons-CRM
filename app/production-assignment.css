@@ -8,13 +8,15 @@
 .production-assignment-current { min-width: 0; padding: .8rem 1rem; margin-bottom: 1rem; border: 1px solid #dce5ef; border-radius: 10px; background: #f7fafc; }
 .production-assignment-current h3 { margin: .25rem 0 .5rem; }
 .production-assignment-current p { margin: .3rem 0; }
+.production-assignment-legacy-time { overflow-wrap: anywhere; white-space: normal; }
 .production-assignment-dialog .production-assignment-select { width: 100%; height: auto; min-height: 44px; min-width: 0; max-width: 100%; white-space: normal; }
 .production-assignment-select [data-slot=select-value] { min-width: 0; flex: 1; overflow: hidden; }
 .production-assignment-selected { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 1.4; max-height: 2.8em; min-width: 0; flex: 1; text-align: left; }
 .production-assignment-options [data-slot=select-item] { min-width: 0; max-width: 100%; overflow-wrap: anywhere; white-space: normal; min-height: 44px; }
 .production-assignment-dialog .check-field { min-width: 0; align-items: flex-start; min-height: 44px; padding-block: .6rem; }
 .production-assignment-dialog .check-field > span { min-width: 0; overflow-wrap: anywhere; }
-.production-assignment-dialog button,
+.production-assignment-dialog .check-field button[role=checkbox] { width: 1.125rem; height: 1.125rem; min-width: 1.125rem; min-height: 1.125rem; max-width: 1.125rem; max-height: 1.125rem; padding: 0; line-height: 1; flex-shrink: 0; margin-top: .15rem; }
+.production-assignment-dialog button:not([role=checkbox]),
 .business-ui.production-assignment-dialog .biz-details > summary { min-width: 0; min-height: 44px; height: auto; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 .production-assignment-dialog .biz-buttons { min-width: 0; flex-wrap: wrap; }
 .production-assignment-dialog [data-slot=alert-dialog-footer] { flex-wrap: wrap; }
