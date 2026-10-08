@@ -14,6 +14,7 @@
 .company-calendar .event-card > button { min-width: 0; max-width: 100%; min-height: 44px; height: auto; white-space: normal; overflow-wrap: anywhere; }
 .company-event-responsibility-dialog { min-width: 0; overflow-wrap: anywhere; }
 .company-event-responsibility-dialog fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.company-event-responsibility-dialog textarea { field-sizing: fixed; min-height: 64px; height: 96px; max-height: min(160px, 32dvh); resize: none; overflow-y: auto; }
 .company-event-responsibility-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
 .company-event-responsibility-head [data-slot=dialog-title] { min-width: 0; flex: 1; line-height: 1.4; }
 .company-event-responsibility-current { padding: .8rem 1rem; margin-bottom: 1rem; border: 1px solid #dce5ef; border-radius: 10px; background: #f7fafc; }
