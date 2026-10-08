@@ -7,7 +7,7 @@ import {AccountChangeWorkSchema,type AccountChangeWork,type AccountChangeWorkRow
 import type {AccountChangeReview} from '@/lib/account-change-review-schema';
 
 type Props={review:AccountChangeReview;onStale:(focusReview:boolean)=>void};
-type FocusIntent={basis:string;operation:number;offset:number;opener:HTMLElement|null;failed:boolean};
+type FocusIntent={basis:string;operation:number;offset:number;opener:HTMLElement|null;dialog:HTMLElement|null;failed:boolean};
 const workspaceLabel=(id:string)=>id==='live'?'Verksamhetens arbetsyta':id==='demo'?'Demoarbetsyta':'Registrerad arbetsyta: '+id;
 const statusLabel={draft:'Ej skickad till tryck',submitted:'Väntar på tryck',printed:'Färdigtryckt',dispatched:'Skickad',cancelled:'Avbruten'};
 const reasons:Record<AccountChangeWorkRow['reason'],string>={
@@ -19,7 +19,7 @@ const reasons:Record<AccountChangeWorkRow['reason'],string>={
  ambiguous_account:'Kontokopplingen är inte entydig och behöver granskas.'
 };
 const rowKey=(row:AccountChangeWorkRow)=>JSON.stringify([row.spaceId,row.orderId,row.kind]);
-const canRestoreFocus=(opener:HTMLElement|null)=>document.activeElement===opener||document.activeElement===document.body||document.activeElement===document.documentElement;
+const canRestoreFocus=(opener:HTMLElement|null,dialog:HTMLElement|null)=>document.activeElement===opener||!!dialog&&document.activeElement===dialog||document.activeElement===document.body||document.activeElement===document.documentElement;
 
 export function AccountReviewWork({review,onStale}:Props){
  const headingId=useId(),rowId=useId();
@@ -37,7 +37,7 @@ export function AccountReviewWork({review,onStale}:Props){
   const intent=focusIntent.current;
   if(!intent||intent.basis!==basis||intent.operation!==operation.current||loading)return;
   focusIntent.current=null;
-  if(!canRestoreFocus(intent.opener))return;
+  if(!canRestoreFocus(intent.opener,intent.dialog))return;
   const target=intent.failed?errorNode.current:intent.offset?list.current?.querySelector<HTMLElement>('[data-account-work-row="'+intent.offset+'"]'):heading.current;
   if(target){target.scrollIntoView({block:'nearest',inline:'nearest'});target.focus({preventScroll:true});}
  },[work,error,loading,basis]);
@@ -48,6 +48,7 @@ export function AccountReviewWork({review,onStale}:Props){
   const previous=offset?visible:null;
   if(offset&&(!previous||previous.nextOffset!==offset))return;
   const startedOperation=++operation.current,opener=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  const dialog=opener?.closest<HTMLElement>('[role=dialog]')||null;
   controller.current?.abort();const request=new AbortController();controller.current=request;
   lock.current=true;setLoading(true);setError('');
   try{
@@ -55,7 +56,7 @@ export function AccountReviewWork({review,onStale}:Props){
    let response:Response;
    try{response=await fetch('/api/crm/account-change-work?'+query,{cache:'no-store',signal:request.signal});}catch(cause){if(request.signal.aborted)throw cause;throw Error('Arbetsunderlaget kunde inte hämtas. Kontrollera anslutningen och försök igen.');}
    if(!alive.current||current.current!==startedBasis||operation.current!==startedOperation||request.signal.aborted)return;
-   if(response.status===409){onStale(canRestoreFocus(opener));return;}
+   if(response.status===409){onStale(canRestoreFocus(opener,dialog));return;}
    let data:unknown;
    try{data=await response.json();}catch{throw Error('Arbetsunderlaget kunde inte läsas. Hämta underlaget igen.');}
    if(!response.ok)throw Error('Arbetsunderlaget kunde inte hämtas. Hämta kontoändringens granskning igen innan du går vidare.');
@@ -66,10 +67,10 @@ export function AccountReviewWork({review,onStale}:Props){
    const rows=previous?[...previous.rows,...next.rows]:next.rows;
    if(new Set(rows.map(rowKey)).size!==rows.length)throw Error('Arbetsunderlaget innehåller upprepade ansvarsdelar. Hämta kontoändringens granskning igen.');
    if(!alive.current||current.current!==startedBasis||operation.current!==startedOperation||request.signal.aborted)return;
-   focusIntent.current={basis:startedBasis,operation:startedOperation,offset,opener,failed:false};
+   focusIntent.current={basis:startedBasis,operation:startedOperation,offset,opener,dialog,failed:false};
    workBasis.current=startedBasis;setWork({...next,rows});
   }catch(cause){
-   if(alive.current&&current.current===startedBasis&&operation.current===startedOperation&&!request.signal.aborted){focusIntent.current={basis:startedBasis,operation:startedOperation,offset,opener,failed:true};setWork(null);workBasis.current='';setError((cause as Error).message||'Arbetsunderlaget kunde inte hämtas.');}
+   if(alive.current&&current.current===startedBasis&&operation.current===startedOperation&&!request.signal.aborted){focusIntent.current={basis:startedBasis,operation:startedOperation,offset,opener,dialog,failed:true};setWork(null);workBasis.current='';setError((cause as Error).message||'Arbetsunderlaget kunde inte hämtas.');}
   }finally{if(alive.current&&current.current===startedBasis&&operation.current===startedOperation){lock.current=false;setLoading(false);}}
  }
 
