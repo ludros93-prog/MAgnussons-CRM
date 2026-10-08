@@ -1,5 +1,25 @@
 # Arbetskö för Magnussons CRM
 
+## Avgränsad B01b2/T16-del: nå kvarstående hinder på skickat jobb – v68
+
+Bekräftad åtkomstlucka: servern tillät redan lösning av ett öppet hinder på `dispatched`, men Board och Workspace dolde handlingen. **Lös kvarstående hinder** gör den befintliga lösningen nåbar i **Historik**/**Avslutat**, med registrerad rapportör/adminvillkor, fryst produktionsunderlag, CAS och idempotens.
+
+Vägen erbjuder endast lösning av det befintliga hindret. Skickad status, mängder, moment, leveranser, jobbansvar och kommersiellt ansvar bevaras. Lösningshistoriken behåller registrerad rapportör/tid och sparad hindertext samt faktisk lösningsaktör/tid. Beskrivningen vid öppning är inte ett oföränderligt första rapportutkast. Äldre oklara identiteter rättas inte genom namnmatchning.
+
+Den reproducerade luckan valdes före det planerade hinderansvarsbytet enligt befintlig prioritering av konkreta åtkomst-/data-/orderfel. T16 kompletteras med nåbar lösning efter avsändning; T04/T09/T18:s avgränsning, konfliktretention och återförsöksskydd består. B01b2 och verkligt T26-personalprov är fortsatt öppna.
+
+Kod `1aa1e5df8b5fbce00d5a570ae935f2eac461edff`, app-main `36975b211b31d097039bb791fa3e0e35de96af5c`; fem obligatoriska slutkontroller och CI 37840496296 med samtliga 13 steg passerade. Native Chromium/Worker: 36 godkända fall, 66 sparade bilder. V68 är publicerad på samma Site från `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_743535521c788191a30a3856c9e19d17`, deploy `appgdep_6ac8032156cc8191b491fe39f44c6650`, succeeded `2026-10-08T20:55:20.682180+00:00`. [VALIDATION](../VALIDATION.md) anger provgränser.
+
+**Nästa avgränsning:** uttryckligt granskat hinderansvarsbyte med stabila kontoidentiteter, bevarad originalrapportering/historik och konfliktspärr, efter färsk inventering av kvarvarande oklara kopplingar. Lösning av ett hinder kräver ny aktuell kontoändringsgranskning; andra spärrar kan kvarstå. Full personalavveckling är inte färdig.
+
+B02:s chefsroll, B04:s privata backup/full hostad återställning, B05:s övriga specialutkast, B07:s riktiga personalkonton/observerade pilot och behöriga integrationskonton förblir öppna. Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects. Codex-referensen är oläst.
+
+Ingen ny lagring, SQL-migration eller backupformat; v66-golvet efter äldre jobbansvarsrättning består. V67 är formatkompatibelt men döljer fixen. Mandat, prioritering i originaltabellerna, AGENTS/MISSION/RUNBOOK, schema, prompt och aktivering ändras inte.
+
+## Historik före v68
+
+# Arbetskö för Magnussons CRM
+
 ## Avgränsad B01b2-del: bevarad hinderidentitet vid textredigering – v67
 
 Bekräftad brist: en annan administratörs beskrivningsredigering ersatte ett öppet hinders registrerade rapportörs-ID, namn och rapporttid. Faktiska HTTP-handlers/SQLite visade att originalrapportörens kontoändringsspärr då försvann. Rättningen bevarar de tre fälten, höjer hinderrevisionen och registrerar redigeraren i den befintliga händelsen; spärren består.

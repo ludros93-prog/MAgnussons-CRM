@@ -1,5 +1,23 @@
 # Magnussons CRM
 
+## Lös ett kvarstående hinder på ett skickat jobb – v68
+
+Ett skickat jobb med ett befintligt öppet hinder erbjuder nu **Lös kvarstående hinder** i produktionsvyerna. Rapportören eller en administratör kan läsa det registrerade underlaget, beskriva den faktiska lösningen och välja **Hindret är löst**. Den befintliga serverbehörigheten gäller fortsatt.
+
+Dialogen visar kund, affär, order, arbetsreferens och den sparade hinderbeskrivningen från öppningstillfället. Beskrivningen är inget oföränderligt första rapportutkast. Lösningshistoriken bevarar registrerad rapportör, rapporttid och sparad hindertext samt anger faktisk lösningsaktör och tid.
+
+Jobbet förblir skickat. Lösningsvägen ändrar inte beskrivningen, rapporterar inget nytt hinder och registrerar inga produktionsmängder. Kundmottagande och fakturering följer sina egna handlingar. Lokal text finns kvar vid fel i den öppna dialogen; kopiera den före stängning eller omladdning.
+
+Kod `1aa1e5df8b5fbce00d5a570ae935f2eac461edff`, GitHub app-main `36975b211b31d097039bb791fa3e0e35de96af5c`. Alla fem obligatoriska slutkontroller och CI-körning 37840496296 med samtliga 13 steg passerade. Nativeprov: 36 godkända fall, 66 sparade bilder. [VALIDATION](VALIDATION.md) anger provgränser.
+
+Samma [CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) har v68, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_743535521c788191a30a3856c9e19d17`, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`, deploy `appgdep_6ac8032156cc8191b491fe39f44c6650`, succeeded `2026-10-08T20:55:20.682180+00:00`. Dokumentationen har separat revision.
+
+Ingen lagrings-/backupformatändring; v66-golvet efter äldre jobbansvarsrättning består. V67 är formatkompatibelt men döljer denna lösningsväg. Granskat hinderansvarsbyte, andra oklara kopplingar, full personalavveckling, privata backuper, personalpilot, full hostad återställning och riktiga integrationskonton återstår. Codex-referensen är oläst. Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects.
+
+## Historik före v68
+
+# Magnussons CRM
+
 ## Ändra hinderbeskrivningen med bevarad rapportör – v67
 
 När rapportören eller en administratör ändrar ett öppet produktionshinders beskrivning ligger registrerat rapportörs-ID, namn och rapporttid kvar. Redigeraren registreras i den befintliga händelsen; redigeringen flyttar inget ansvar. Därmed kan en administratörs textändring inte längre tömma rapportörens hinderansvar i kontoändringens kontroll.

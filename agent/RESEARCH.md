@@ -1,3 +1,24 @@
+# Källor och tillämpade principer – v68
+
+## Begriplig lösning av befintligt hinder på skickat jobb
+
+Färsk officiell sidtext hämtades 2026-10-08 20:27 UTC. Sex exakta kortcitat och källhashar verifierades; evidens SHA-256 `9d115c531308488c447dfcd69a4a2f7eba2c7b300b5387cf03fa987d65dcbb11`. Tillämpningen är Magnussons egen avgränsning och ändrar inga leverantörskopplingar.
+
+| Officiell källa och faktiskt läst citat | Tillämpning |
+| --- | --- |
+| [Salesforce Record-Level Security](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records): “Record access determines which individual records users can view and edit in each object they have access to.” | Historikens synlighet innebär ingen ny generell redigeringsrätt. Behåll serverroller och rapportör/adminvillkor. |
+| [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/): `Use verbs in imperative form such as “Add” or “Upvote”`; `"Assign me" should only show if I'm not already assigned ans "Close ticket" shold only show if ticket is open.` (artikelns stavning). | **Lös kvarstående hinder** är konkret och visas i det relevanta sammanhanget: ett befintligt öppet hinder. Skickat jobb får endast lösningsvägen. |
+| [Lime Change Log](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/changelog/): “what changed, who did it, and when, with the value both before and after each change.” (sidtextens radbrytningar normaliserade här). | Bevara registrerad rapportör/tid och sparad hindertext i befintlig lösningshistorik; registrera faktisk lösningsaktör/tid. Ingen Lime-retention kopieras. |
+| [Saleshub funktioner](https://saleshubai.se/funktioner): “Kundkort med kontakter, filer, mail, samtal och nästa aktivitet”; “Projektboard med uppgifter, flera ansvariga och statusrader”. | Visa kund/jobbreferens, registrerat hinder och konkret nästa handling. Jobbets skickade status är skild från det öppna hindret. |
+
+Salesforce Task Fields gav HTTP 200 med endast 62 tecken laddnings-/CSS-felskal; försökt Trailhead case-queues-adress gav 404. Dessa är inte artikelbevis och används inte. Lime users/groups och relation-picker återhämtades med riktig sidtext för den ursprungligt planerade handoverdelen men behövs inte för denna smalare tillämpning. Saleshub-sidan är en offentlig funktionsbeskrivning, ingen teknisk integrationsgaranti.
+
+Ingen autentiserad leverantörsprodukt eller riktig personal-/kunddata provades i forskningen. Granskat hinderansvarsbyte, oklara identiteter, riktiga personalkonton/pilot, integrationsnycklar och full hostad återställning kvarstår. Codex-referensen är oläst; tillgängligt `read_thread` avser Slack.
+
+För kod `1aa1e5df8b5fbce00d5a570ae935f2eac461edff` redovisar [VALIDATION](../VALIDATION.md) fem slutkontroller, CI 37840496296 med 13 steg och 36 nativefall/66 bilder. Isolerade browserprov innebär ingen personalacceptans, skärmläsar-/browserzoomkontroll eller full WCAG-bedömning. Lagringsformat och v66-golv består; försäljning mot månads-/årsmål, marginal och nya prospects är fortsatt huvudmåtten.
+
+## Historik före v68
+
 # Källor och tillämpade principer – v67
 
 ## Begriplig hinderredigering med bevarad originalrapportering
