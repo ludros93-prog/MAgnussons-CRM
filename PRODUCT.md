@@ -1,5 +1,21 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Begripligt arbete bakom kontoändringens spärr – v65
+
+**Arbete som spärrar ändringen** visas i administratörens kontoformulär när produktionskontrollen spärrar minskad åtkomst. **Visa arbete som spärrar ändringen** hämtar underlaget uttryckligt. Raderna håller ihop arbetsyta, arbetsreferens, order-ID, produktionsstatus, ansvarsdel och orsak. **Visar X av Y ansvarsdelar** anger hur mycket som är hämtat; **Visa fler ansvarsdelar** hämtar nästa 20.
+
+Kvarvarande kontoansvar och oklara kopplingar har skilda orsaksbesked. Ett äldre namn väljer ingen person. Gemensam kö med tom identitet/namn är inte oklar identitet; ett inaktivt entydigt kopplat konto är inte okänt. Ett skickat jobb kan ha öppet hinderansvar, och samma order kan ha två ansvarsdelar.
+
+Listan läser samtliga lagrade arbetsytor mot kontoändringens aktuella granskningskontext. Ändrat underlag kräver **Hämta kontoändringens granskning igen**. Nät-/format-/sidfel döljer tidigare detaljrader och bevarar formulärvärden. Byte eller stängning avslutar tidigare läsning; sena svar får inte visas för nytt underlag.
+
+Listan flyttar inget ansvar, rättar ingen koppling och växlar inte arbetsyta. Rätt arbetsyta/jobbreferens tas till ansvarets befintliga arbetsflöde; granskad rättning av okända/motsägande äldre kopplingar återstår. Tom eller helt läst lista är inget generellt avvecklingsklartecken.
+
+Ingen ny lagring/formatändring. Backupformat `magnussons-crm-1`, läsar-/skrivargräns v62 och v64:s kontoändringsspärr bevaras. [VALIDATION](VALIDATION.md) redovisar faktiska prov. Full kommersiell/privat/extern avveckling, Sites-åtkomst och personalpilot återstår.
+
+## Historik före v65
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Minskad kontoåtkomst kräver aktuell produktionskontroll – v64
 
 **Granska kontoändringen** hör till administratörens befintliga kontoformulär. Den behövs när ett aktivt CRM-konto inaktiveras eller en rolländring tar bort någon av kontots befintliga rättigheter för jobb eller hinder. Kontrollen följer verkliga rättigheter, inte bara rollnamnet. Namnbyte och ändringar som behåller dessa rättigheter omfattas inte av den nya produktionsgranskningen.

@@ -1,5 +1,19 @@
 # Magnussons CRM
 
+## Se arbetet som spärrar kontoändringen – v65
+
+Under **Konton & roller → Ändra → Granska kontoändringen** kan administratören välja **Visa arbete som spärrar ändringen**. Listan visar arbetsyta, arbetsreferens, order-ID, produktionsstatus och konkret orsak för varje **Jobbansvar** eller **Öppet hinderansvar**. **Visa fler ansvarsdelar** hämtar nästa 20.
+
+Ett jobb kan ha två ansvarsdelar, och ett skickat jobb kan ha ett öppet hinder. Äldre oklara kopplingar visas utan att en person gissas från namnet. Listan är läsande; granskad rättning av oklara kopplingar behöver ett separat arbetsflöde. [Arbetsgång](OPERATIONS.md) och [verifiering](VALIDATION.md) beskriver omfattningen.
+
+Kod: `7d99c066e435a082fe3673636977676ff2079058`. GitHub app-main: `12c1ac6a794a7728f40f2fa080ae49eaf1a51fb8`, produkt-PR [#104](https://github.com/ludros93-prog/MAgnussons-CRM/pull/104). Live: **v65**, verifierad Sites-källa `9fe2deaf213944105264362cdcd807c0e1086436` och lyckad publicering på [samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site). Dokumentationen har separat revision.
+
+Full kommersiell/privat/extern personalavveckling, samordnad Sites-åtkomst, granskad rättning av äldre identitetskopplingar, verkliga personalinloggningar, personalpilot och full hostad återställning återstår. Försäljning mot månads-/årsmål, marginal och nya prospects är fortsatt huvudmåtten. Codex-referensen är oläst; den uttryckliga briefen och färskt repo används.
+
+## Historik före v65
+
+# Magnussons CRM
+
 ## Granska kontoändringar innan produktionsåtkomst minskas – v64
 
 Under **Konton & roller** visar **Granska kontoändringen** vad som behöver lämnas över innan ett aktivt CRM-konto inaktiveras eller får mindre produktionsbehörighet. Kontrollen visar **Jobbansvar**, **Öppet hinderansvar** och **Kopplingar att granska** per lagrad arbetsyta. Ett tomt urval i den vanliga produktionskön räcker inte.

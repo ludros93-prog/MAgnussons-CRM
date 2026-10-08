@@ -1,5 +1,19 @@
 # Arbetskö för Magnussons CRM
 
+## Avgränsad B01b2-del: arbete bakom kontoändringens spärr – v65
+
+Administratören läser varje registrerad ansvarsdel bakom den spärrade kontoändringen, inklusive oklara aktuella kopplingar i andra lagrade arbetsytor. Arbetsyta, arbetsreferens, order-ID, status och orsak visas i kontoformuläret. Högst 20 rader hämtas per sida mot samma granskningsunderlag. Ingen rättning, massflytt, navigering eller kontoskrivning tillkommer.
+
+Kod `7d99c066e435a082fe3673636977676ff2079058`; app-main `12c1ac6a794a7728f40f2fa080ae49eaf1a51fb8`; Site v65 från verifierad källa `9fe2deaf213944105264362cdcd807c0e1086436`. Fem obligatoriska slutkontroller passerade på exakt slutrevision: full regression, TypeScript, Worker/client-bygge, isolerad D1/R2-runtime och diffkontroll. Native Chromium: 15/15 fall, 18 originalbilder, mobil/textförstoring/tangentbord, sidning och fel-/samtidighetsfall verifierade med syntetiska data. [VALIDATION](../VALIDATION.md) innehåller exakt kvittens.
+
+B01b2 är fortsatt öppet. Nästa avgränsning är ett uttryckligt granskat arbetsflöde för att rätta okända/motsägande äldre produktionsidentiteter, med verkligt underlag, stabila kontoidentiteter, bevarad historik och skydd mot ändrat underlag. Diagnosen är ingen genomförd rättning eller full personalavveckling.
+
+Full kommersiell/privat/extern avveckling och samordnad Sites-åtkomst, B02:s chefsroll, B04:s privata backup/full hostad återställning och B07:s faktiska personalpilot förblir öppna. Backupformat `magnussons-crm-1` och läsar-/skrivargräns v62 är oförändrade. Mandat, scheman, prompter och aktivering ändras inte; Codex-referensen är oläst.
+
+## Historik före v65
+
+# Arbetskö för Magnussons CRM
+
 ## Avgränsad B01b2-del: produktionsspärr vid kontoändring – v64
 
 Aktiv kontoinaktivering och verklig förlust av befintliga jobb-/hinderrättigheter får granskning mot registrerat produktionsansvar i samtliga lagrade arbetsytor. Kvarvarande ansvar, oklara kopplingar och felaktig lagring spärrar åtkomstminskningen. Befintliga överlämningsflöden används per ansvarsdel; ingen automatisk massflytt eller omfördelning ingår.
