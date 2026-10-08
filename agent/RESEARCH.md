@@ -1,3 +1,21 @@
+# Källor och tillämpade principer – kontokatalog i produktionsinventering, crm70-kod
+
+Sju exakta kortcitat verifierades 2026-10-08 mot faktiskt returnerad offentlig officiell webverktygstext. Evidens SHA-256 `f1264ae5ef4aebbaf55fc0d9ea99105e091d0e1bb53e4d79baaf2d88bc1029fb`. Ingen komplett HTML/HTTP-status, autentiserad leverantörsvy eller ansluten integration påstås.
+
+| Officiell källa | Belagd princip och Magnussons tillämpning |
+| --- | --- |
+| [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | Handlingsverb och relevant sammanhang: **Hämta aktuellt underlag** hjälper användaren tillbaka efter läskonflikt. Ingen automatisk ansvarsändring. |
+| [Saleshub Funktioner](https://saleshubai.se/funktioner) | Uppgifter, ansvariga och statusrader hör till samma arbetsmoment. Aktuellt lästa konto-/jobbfakta gör urvalet begripligt; sidan är offentlig funktionsbeskrivning, inget tekniskt API-/synkbevis. |
+| [Salesforce Record-Level Security](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) | Läsning och redigering har egna rättigheter. Förnyad adminautentisering föregår katalogsvaret; en inventering ger ingen ny behörighet eller kontoändring. |
+| [W3C Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html), [ARIA19](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA19.html) och [ARIA22](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22.html) | Programbestämbara fel/statusbesked utan obeställt fokusbyte. Befintligt alert-/statussammanhang och urval bevaras; faktisk skärmläsaruppläsning är inte prövad. |
+| [W3C Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) | Radbrytbar smal vy. Lokal browserverifiering och CSS-textförstoring är begränsade prov, ingen allmän WCAG-garanti. |
+
+Två kanoniska katalogläsningar, vilka fält som jämförs, 409-gränsen och serverprotokollet är Magnussons egna kontrakt. Källorna belägger varken en allmän databassnapshot, kontinuerlig aktualitet, ändringar efter sista kontrollen eller produktens verkliga personal-/kontoacceptans. Granskat hinderansvarsbyte, oklara identiteter/full personalöverlämning, chefsroll, privata backuper, faktisk personalpilot, full hostad återställning och riktiga integrationskonton kvarstår. Codex-referensen är oläst.
+
+Sites-sourcehelperhinder och skillnad mellan kod/main/live redovisas i [VALIDATION](../VALIDATION.md). Ingen ny hostingväg, ny delning, kundutskick eller ändring av scheman/prompt/aktivering följer av denna research.
+
+## Historik före crm70-koden
+
 # Källor och tillämpade principer – inventeringsfix för v69-kod
 
 Fem exakta kortcitat verifierades mot faktiskt returnerade officiella webverktygstexter 2026-10-08 22:20:36 UTC. Evidens SHA-256 `973ab1c0afc2c0e1d8b69a2073037f5c7fa8d202060b9cbf2a3286634e9b7002`; ingen komplett HTML/HTTP-status eller autentiserad leverantörsvy påstås.

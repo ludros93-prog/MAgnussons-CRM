@@ -1,5 +1,25 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Granska kontot mot aktuellt läst underlag – crm70-kod
+
+Produktionsinventeringen jämför nu två ordningsoberoende läsningar av den registrerade kontokatalogen, inklusive medlems-ID, användarkoppling, namn, roll och aktivitet. Ändrad katalog ger 409 utan kontolista eller arbetsrader efter förnyad adminautentisering. Befintlig dubbelläsning av relevant produktionsunderlag består. Detta är en upptäckt ändring mellan kontrollerade läspunkter, ingen allmän databastransaktion, kontinuerlig uppdatering eller garanti mot ändringar efter slutkontrollen.
+
+Vid läskonflikt visas inga gamla arbetsrader. Befintligt valt konto, ansvarstyp och söktext finns kvar. **Hämta aktuellt underlag** läser in CRM och inventering på nytt; granska namn, roll och koppling i det färska resultatet. Ett tidigare valt konto som har försvunnit kräver ett nytt uttryckligt val.
+
+Inventeringen ändrar inget ansvar och stänger inget konto. Konto-ID skiljer personer med samma namn; ett namn används inte för att rätta eller tilldela äldre arbete. Skickade jobb med öppna hinder behåller v69:s läsrepresentation och historiska jobbansvar; det öppna hindret är fortfarande en separat ansvarsdelsfråga.
+
+Kod `fe5ad1cf8b7eaa0772967aba670617c31ea1851c`, träd `07179bb5cd3e21b8390625fd7232014fdf563818`; GitHub app-main `ef476953f4ce50240450e6bd071e34542bd21433`. Fem obligatoriska slutkontroller är gröna på den frysta slutkandidaten: regressioner, icke-inkrementell TypeScript, bygge, isolerad runtime och diffkontroll. Kontrollkvitto SHA-256 `1f7d485e574f924c89dc443cf98b3d8570658a9b1c92b66dd5afdf6cff25cf87`; exakt-head CI [37859328931](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37859328931) har samtliga 13 steg completed/success. Browser: 11 (8 native HTTP/UI och 3 separat mockade409 UI/retry) godkända fall, 20 original sparade bilder, kvitto `b707bbd0c5b02cee4dfb8bce58d68568ae9063a896b65930ba7c49be2531c7f6`.
+
+**Publicering blockerad:** den föreskrivna Sites-sourcehelpern `site-workflow.mjs` är fortfarande inte tillgänglig enligt denna körnings kontroll. Ingen ny Site-version har sparats eller publicerats i crm70. [Samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) ligger kvar på **v68**, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`. Github-main innehåller även v69:s inventeringsfix som ännu inte ligger live. Färsk efterkontroll av samma Site, full begränsad åtkomstpolicy och runtime-konfiguration redovisas i [VALIDATION](VALIDATION.md).
+
+Ingen ändrad lagring, SQL-migration eller backupsemantik. `magnussons-crm-1` och v66-kompatibelt läsar-/skrivargolv efter äldre jobbansvarsrättning består. Jobb-/hinder-/kommersiellt ansvar, serverroller, skriv-CAS och idempotens bevaras. Kontrollerna är isolerade; verklig personalinloggning/pilot, full hostad återställning och riktiga integrationer är fortsatt oprövade. Codex-referensen är oläst.
+
+Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmåtten. Granskat hinderansvarsbyte och övriga tidigare öppna produktkrav är fortsatt öppna.
+
+## Historik före crm70-koden
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Skickat jobb kan ha ett öppet hinder – v69-kod
 
 **Produktionsarbete per konto** innehåller aktiva lämnade/tryckta jobb samt skickade jobb med öppna hinder. **Alla jobb och öppna hinder** beskriver urvalet. Avbrutna jobb och skickade jobb utan hinder ingår inte. Inventeringens läsrespons får `dispatched` med öppet hinder; det lagrade produktionsformatet är oförändrat.
