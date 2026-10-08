@@ -1,5 +1,13 @@
 # Magnussons CRM
 
+## Rätt arbetsvy från första laddningen – v58
+
+CRM visar en neutral svensk startvy tills användaren är känd. Vid fel finns **Arbetsyta** och **Försök igen**. Tryck/lager får direkt sin tillåtna vy. Outlook följer rätt live-identitet och döljer tidigare innehåll vid byte.
+
+Fem slutkontroller och 23 browserfall passerade; samma Site har publicerad v58. [OPERATIONS](OPERATIONS.md) beskriver starten; [VALIDATION](VALIDATION.md) anger bevis/gränser. Verkliga Microsoft-konton och personalpilot återstår.
+
+## Historik före v58
+
 ## Överlämna en kundaktivitet med granskning – v57
 
 Administratören kan välja **Byt uppgiftsansvar** för en öppen **Kundavstämning**, **Kommande kundbehov** eller **Prospektkontakt** utan affärskoppling. Välj en tillgänglig aktiv granskad profil, skriv varför och granska innan sparning. En enda skrivning ändrar uppgiftens ansvar och registrerar dess överföring/händelse. **Kundrelationsansvar · ligger kvar** visar vem som fortfarande äger relationen; kundplan, prospektkvalificering och tidigare resultat flyttas inte.

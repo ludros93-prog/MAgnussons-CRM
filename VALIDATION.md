@@ -1,4 +1,20 @@
-# Magnussons CRM – verifiering av kundaktivitetsansvar, v57
+# Magnussons CRM – verifiering av rollstyrd start, v58
+
+## Verifierad rollstyrd start – v58
+
+Ren kandidat `a8e1d5e400fe8973095e9ed5bb4fad0d43f658de`, träd `89b2c47e1a6621a67ccfd07efd42e86d37009818`: **5/5 exit 0** för CRM/Outlook, icke-inkrementell TypeScript, bygge, isolerad runtime och git diff --check. `/workspace/scratch/crm58/checks-app-final-3/checks.json`, SHA-256 `b31736a18d021995ae25c95e042dd995610c7a2d797bee1aacfb6e452a250f29`; källfilerna bevarades byte för byte.
+
+**16 React-livscykelgrupper** kör verklig Outlook-hook med kontrollerad fetch/abort/timers/synlighet; inget Microsoft-konto/DOM. **23/23 browserfall**: sex faktiska serverroller mot byggd lokal Worker/D1/R2, separat kontrollerad transport/Outlook för fel, ogiltig viewer och sena GET/POST trots ignorerad abort; 320/390/1280 px, exakt 2× CSS-text, tangentbord/bevarad mobilmeny. 18 råtabeller, två arbetsytor och R2 bevarades; noll nya mutationskvitton. `/workspace/scratch/crm58/browser/final-015516/report.json`, SHA-256 `dd0fdba108e4744e44a0847081e04cb294c9855e9a0c102abafd8f6451b50a47`; cleanup PASS. Root granskade fyra slut-PNG (`visual-review.json`).
+
+Tidigare StrictMode-prov hittade låst ersättningsläsning. Första browsern stoppades vid fontövergång; separat statisk äldre-CSS-diagnos visade överbredd vid 320 px/2×, inget Worker-/kontoprov. Mätning/CSS och svensk transportfeltext rättades; endast sista kandidaten räknas som slutbevis.
+
+[PR #90](https://github.com/ludros93-prog/MAgnussons-CRM/pull/90) → app-main `7b969805b67283543a1374a1c94557186f07d7fa`. [Head-CI 37715034595](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37715034595)/[main-CI 37715514298](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37715514298) har vardera 13/13 steg completed/success. Native source `e27c0797aebfcf4b384ac0c4ee231cfb9cf87e36`: samma appträd, normal FF. Samma Site v58 `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_3c951bab37988191af6116af98be508e`, deploy `appgdep_6ac6f9e1cec08191b85c6de93c329146`, succeeded `2026-10-08T02:03:24.478092+00:00`.
+
+Native source/metadata matchar `sha256:5ab0064498df01f4f6fcc1a4c670e79f51afd4a30b557566378b2a4d2249bbcd`, 5 068 800 tarbyte/97 poster. Lokalt payload återläst; native-payloadhämtning nekad. `native.json`, `native-readback-limits.json`, `anonymous.json`: full oförändrad custom-policy rev2/miljö rev1/en post; noll automations; anonym `/` och `/api/crm?space=live` 401/401 utan auth/cookies. Dokumentationsrevisionens egna kontroller och main redovisas separat i körningens releasekvitto; Markdown återpublicerar inte appen.
+
+Ingen ny lagring/SQL/API-schema. V57:s läsar-/skrivargräns består; v57-återgång återinför UI-bristen, v56 fortsatt osäker. CRM-backup saknar konton/privata utkast/Outlook. Tidigt klientanrop bevisar ingen serverläcka: servernekningen bestod. Telefon, sidzoom, hjälpmedel, pilot, riktiga integrationer, autentiserad live-UI/full hostingåterställning oprövade. Inga riktiga kundskrivprov/meddelanden.
+
+## Historik före v58
 
 ## Direkt överföring av kundaktivitet med stabilt profil-ID – v57
 
