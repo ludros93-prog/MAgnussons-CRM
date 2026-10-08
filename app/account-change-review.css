@@ -1,6 +1,6 @@
 .account-change-workspace,.account-change-sheet,.account-change-workspace .biz-repeat>div{min-width:0;overflow-wrap:anywhere}
 .account-change-workspace h2,.account-change-sheet h3{scroll-margin:1rem}
-.account-change-workspace button,.account-change-sheet button{min-height:44px;height:auto;min-width:0;max-width:100%;white-space:normal;line-height:1.5;overflow-wrap:anywhere}
+.account-change-workspace button:not([data-slot=checkbox]),.account-change-sheet button:not([data-slot=checkbox]){min-height:44px;height:auto;min-width:0;max-width:100%;white-space:normal;line-height:1.5;overflow-wrap:anywhere}
 .account-change-workspace input,.account-change-sheet input{min-width:0;max-width:100%;min-height:44px;font-size:1rem}
 .account-change-sheet [data-slot=select-trigger]{min-height:44px;height:auto;max-width:100%;white-space:normal;font-size:1rem;line-height:1.5}
 .account-change-sheet [data-slot=select-value]{min-width:0;white-space:normal;overflow-wrap:anywhere}
