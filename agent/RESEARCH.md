@@ -1,5 +1,24 @@
 # CRM-källor för Magnussons byggagent
 
+## v57: aktivitetens ansvar är skilt från kundrelationen
+
+Fem officiella sidor lästes direkt och deras relevanta innehåll verifierades 2026-10-07, kvitterat i `/workspace/scratch/crm57/research/official-sources.json` vid `2026-10-07T23:29:02Z`, SHA-256 `0b280e57b853ca3b30b313b7c17095bddf9350ab9e723036b0f4904922ec83cf`. Källorna ger principer för produkt/design; ingen autentiserad leverantörsprodukt, deras API/anslutning eller interaktiv skärmbild granskades. Verktygets direkta textläsning visar inget separat HTTP-200-kvitto.
+
+| Officiell källa | Verifierad princip och lokal användning | Gräns |
+| --- | --- | --- |
+| [Salesforce: Task Fields](https://help.salesforce.com/s/articleView?id=sf.task_fields.htm&language=en_US&type=5) | Assigned To är skilt från Name/Related To. Dialogen visar uppgiftsansvar och kvarvarande kundrelationsansvar separat. | Fält-/versionsbeskrivningen är ingen Magnussons roll- eller överföringspolicy. |
+| [Salesforce: Considerations for Using Tasks](https://help.salesforce.com/s/articleView?id=sales.task_considerations.htm&language=en_US&type=5) | Beskriver begränsningar i ansvar/uppgifter; den specifika köregeln illustrerar att relaterad post och uppgiftsansvar inte alltid flyttas tillsammans. | Ett första sidfel lästes om med verkligt innehåll. Salesforce-köregeln generaliseras inte till våra kundprofiler eller notifieringar. |
+| [Lime: Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | Kontextnära verb och begränsat antal framträdande handlingar. Följ upp förblir vanlig handling, Byt uppgiftsansvar administrativ sidohandling. | Svenska knappar, granskning och sparregler är egna produktbeslut. |
+| [Lime: Notifications](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) | Assign gäller ansvar, Mention information och Follow prenumeration. Ansvarsbyte och meddelande hålls begripliga var för sig. | Ingen Limeanslutning, bakgrundsnotifiering, personal-/kundavisering eller prenumeration byggs här. |
+| [Saleshub: Funktioner](https://saleshubai.se/funktioner) | Samlat kundkort, aktiviteter och ansvar stödjer granskning i samma arbetsflöde. | Marknadsbeskrivning, ingen verifiering av deras internlogik/API eller prestanda. |
+
+`design-notes.md` i samma scratchkatalog skiljer dessa belagda principer från våra lokala val: svenska aktivitetstyper, två ansvarstexter, läsande aktuellt plan-/prospektunderlag, fullt profil-ID, fryst granskning, avgränsad scroll och avsedd 44-px-kontrollhöjd. Den faktiska sista browser-/bildgranskningen anges i [VALIDATION](../VALIDATION.md), inte som en garanti hämtad från leverantörerna. Serverroller, CAS/idempotens, stabila UUID:n och oförändrad historisk attribution följer Magnussons kontrakt.
+
+V57:s minsta kompatibla läsare/skrivare är en slutsats från verklig äldre kod och det nya historikkontraktet, inte från någon leverantörs dokumentation. Inga kundkontaktdata, konton, marginalkostnader, kvalificeringar eller fungerande integrationer härleds från inspirationen. Codex-referensen är oläst eftersom relevant `read_thread` saknas; explicit brief/repo används.
+
+## Historik före v57
+
+
 ## Granskad kundåteröppning – officiella källor för v56
 
 Fem officiella källor lästes genom offentlig sökning, direkt URL-öppning och fokuserad textläsning. Samlat lästidskvitto: **2026-10-07T22:20:41Z**; ingen separat tidsstämpel för varje artikel påstås. Kvitto `/workspace/scratch/crm56/research/official-sources.json`, SHA256 `1db376fd9c3472e5f23129507a53b8b81ea2112d25e05e08d27d05471d9844a2`.

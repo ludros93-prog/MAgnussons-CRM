@@ -1,5 +1,23 @@
 # Magnussons CRM – order, tryck och lager
 
+## Överlämna en kundavstämning, ett kundbehov eller en prospektkontakt – v57
+
+1. Logga in som administratör och öppna den befintliga öppna uppgiften i **Min dag** eller via **Konton & roller → Överlämna arbete**. Välj **Byt uppgiftsansvar**. De nya specialtyperna måste sakna affärskoppling. Kontrollera kund, aktivitetstyp, fullständiga ansvariga/profil-ID och arbetsyta. Okänd eller motsägande personkoppling ska inte gissas.
+2. Läs **Uppgiftens nuvarande ansvar** och **Kundrelationsansvar · ligger kvar**. Öppna vid behov det läsande kundplan-/prospekteringsunderlaget. Överlämningen gäller denna aktivitet; hela relationen eller planens ansvar byts inte här. Prospektkontakt kräver ett kvarvarande relevant prospekt utan omvandlad affär. Kommande kundbehov kräver ett sparat behov och datum.
+3. Välj **Ansvarig efter ändringen** bland tillgängliga aktiva granskade profiler och skriv **Varför ändras ansvarskopplingen?**. För blank äldre ansvarskoppling kan **Förankra ansvar** kräva uttryckligt val av den faktiskt matchande profilen. Välj inte ett namn enbart därför att det liknar äldre text.
+4. Läs **Granska ändringen**, markera **Jag har granskat uppgiftsansvaret** och välj **Spara nytt uppgiftsansvar** eller den särskilda förankringsknappen. Servern sparar uppgiftsansvar och historik tillsammans. Själva överlämningen skapar eller avslutar ingen uppgift och registrerar ingen genomförd kundkontakt.
+5. Vid konflikt: behåll öppen orsak, välj **Hämta aktuellt underlag**, sedan **Läs in nytt granskningsunderlag** och granska igen. Ett inte längre tillgängligt mål töms; ingen ersättare väljs automatiskt. Hämtning är läsning och ändrar inte ditt frysta granskningsunderlag före uttrycklig inläsning.
+6. Kontrollera faktiskt sparbesked och **Tidigare ansvarsändringar**. Vanligt plan-/prospektsparande bevarar denna uppgifts ansvar. Ett tappat svar kan redan ha registrerat ändringen; stängning återställer inte servern. **Stäng utan att spara** kasserar lokal osparad text efter uttryckligt val. Formuläret har inget privat serverutkast.
+
+**Följ upp** har kvar sitt befintliga kundkontakt-/nästaaktivitetflöde. Kommande kundbehov kan inte klarmarkeras där. De tre specialkälltyperna utan affärskoppling bevarar sitt exakt registrerade profil-ID för en ny nästaaktivitet; andra/manuella källtyper följer tidigare regler. Ny kanonisk kundaktivitet, senare kvalificering och ny affär utgår fortsatt från kundrelationsansvarig.
+
+Konto, sidåtkomst, privata utkast/Outlook, andra arbetsytor och produktionens användaransvar hanteras separat. Event/checklistor och leverans-/okända uppgifter får ingen ny generell överföringsväg genom detta arbete. Flytta inte historiskt resultat för att få tom ansvarskö.
+
+**Återgång:** efter en direkt överföring av de tre specialtyperna krävs v57-kompatibel **läsare och skrivare**. Äldre oförändrad v56 kan även avvisa laddning/export/restore. Oförändrade databasfält/SQL gör inte äldre app säker. Behåll v57-kompatibel korrigering eller utför en faktiskt verifierad full återställning med plan för senare arbete; [RUNBOOK](agent/RUNBOOK.md) och [VALIDATION](VALIDATION.md) beskriver provmiljö och begränsningar.
+
+## Historik före v57
+
+
 ## Återöppna en avslutad kundrelation – v56
 
 1. Logga in som administratör och öppna det befintliga avslutade kundkortet. Välj **Återöppna kundrelation**. Kontrollera samma kund och fullständiga kundnamn, tidigare kundrelationsansvarig, profil-ID och arbetsyta; skapa inget nytt kundkort för återöppningen. Servern behåller kundens befintliga ID.

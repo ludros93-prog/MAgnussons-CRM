@@ -1,5 +1,20 @@
 # Magnussons CRM – designriktning
 
+## Tydlig aktivitet och kundrelation i samma granskning – v57
+
+Dialogen visar **Kundavstämning**, **Kommande kundbehov** eller **Prospektkontakt** på svenska. **Uppgiftens nuvarande ansvar** och **Kundrelationsansvar · ligger kvar** ligger i separata textblock. Ett profil-ID eller grön profilstatus säger inte att personen äger hela kundrelationen eller har verifierad konto-/Sitesåtkomst. **Följ upp** förblir arbetsflödets vanliga handling; **Byt uppgiftsansvar** är den administrativa sidohandlingen.
+
+Kundplanens eller prospekteringens sparade underlag visas läsande i ett expanderbart avsnitt. Ingen ny planredigering blandas in i överlämningen. Fullständig identitet finns nära den kortare målprofilväljaren och i **Visa registrerade ansvarskopplingar**. Målval/orsak/granskning börjar utan påhittad överföring. Svenska verb anger vad som händer: hämta, läsa in nytt granskningsunderlag, granska och spara.
+
+Relevant konflikt bevarar öppen text och fryst underlag. Läsning antar inte en ny version; uttrycklig inläsning kräver ny granskning och väljer ingen ersättare automatiskt. Ändrat osparat formulär stängs via **Fortsätt redigera** eller **Stäng utan att spara**. Ett obekräftat tidigare sparförsök kan redan ha ändrat CRM; stängning är ingen ångrahandling. Något privat serverutkast finns inte i denna dialog.
+
+Den befintliga formulärstrukturen använder avgränsad scroll/radbrytning och fokusåtergång till användbar öppnare eller uppgiftsavsnitt i samma identitet/vy. Två tidigare browserprov hittade faktiska brister: toppreglaget **Stäng** var 38 px högt vid 320 × 360; efter den första rättelsen klarade mobilen 44 px men desktopens prospekteringsunderlag blev 42 px på grund av senare CSS. Den riktade rättelsen ger uppgiftsdialogens knappar, sammanfattningar och granskningsrad minst 44 px, radbryter dess huvud på mobil och förstärker bara sammanfattningsselektorn mot den senare regeln. Ingen global knappregel eller sänkt provgräns införs. Två senare locatorfel i QA rättades utan appändring; samma verkliga öppnarnod och aktuellt namn prövas fortsatt vid fokusåtergång. Den färska hela körningen har 24/24 PASS; slutbrowserkvittens: 24/24 PASS; Root öppnade fem faktiska slut-PNG: mobil 390×844, desktop 1280, fokuserad sparknapp vid 320×360 med exakt dubblerad CSS-text, desktop med dubblerad text och sparad äldre förankring. Uppgiftsansvar och kvarvarande kundrelationsansvar är läsbara, ljusa underlagskort/svenska handlingar behåller befintligt formspråk och lång text visas inom rullande dialog. Sparad förankring byter synligt till Byt uppgiftsansvar. Bilderna är scrollade vyer, inte ett påstående att hela dialogen syns samtidigt. Detta är inte fysisk telefon, verklig sidzoom, personalacceptans eller full WCAG-granskning. [VALIDATION](VALIDATION.md) skiljer de faktiska appfelen från harnessdiagnoser och anger provens gränser, inklusive fysisk telefon, hjälpmedel och full tillgänglighet.
+
+Fem officiella källor finns i [RESEARCH](agent/RESEARCH.md). Salesforce skiljer aktivitetens ansvar från relaterad kund/post; Lime beskriver kontextnära handlingar och skillnaden mellan ansvarstilldelning och information; Saleshub beskriver samlat kund-/aktivitetsarbete. Svenska typnamn, 44-px-val, Magnussons behörighet, fryst granskning och atomiska skrivregel är lokala produktbeslut. Ingen leverantörsprodukt, notifiering eller integration ansluts genom inspirationen.
+
+## Historik före v57
+
+
 ## Samma kundkort, tydlig ny relation och uppföljning – v56
 
 **Kundrelationen är avslutad** leder administratören till **Återöppna kundrelation** på samma kundkort. Kundrelation, resultatprofil och inloggningsåtkomst uttrycks separat. Dialogen visar fullständigt kundnamn, tidigare profilstatus, målprofil med full identitet och ett uttryckligt relationsval. Långa namn kan kortas i väljaren men finns i närliggande beskrivning med profil-ID.

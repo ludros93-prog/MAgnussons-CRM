@@ -1,5 +1,20 @@
 # Återkommande arbete för CRM-superbyggaren
 
+## Dataregel efter v57:s direkta specialuppgiftsöverföringar
+
+Efter att en direkt `source:'task'`-överföring har sparats för `csm`, `csm_need` eller `prospecting` utan affärskoppling krävs **v57-kompatibel läsare och skrivare**. Inga fält/tabeller/SQL tillkommer, men historikens tillåtna semantik utökas. Äldre oförändrad v56 avvisar sådana poster redan vid normalisering/laddning och även JSON-/NDJSON-export/restore; välj därför inte en äldre app för att få åtkomst till nyare backupdata. Den äldre v55-skrivgränsen för profilavslutshistorik räcker inte efter denna v57-historik. Behåll även v55:s profilhistorik och avslutsskydd.
+
+Den faktiska äldre-kodrapporten visar 21 förväntade avvisningar och fyra kompatibla kontroller på orörd v56-kod med syntetiska data/Node/SQLite. Den visar inte tyst v57-historikförlust, separat gammal hostad Worker eller live-rollback. [VALIDATION](../VALIDATION.md) anger exakt revision, rapporthash, operationer och sista kandidatens aktuella återläsningsbevis.
+
+Vid korrigering/återgång: behåll v57-kompatibel parser, historikvalidering, API, plan-/prospektlivscykel, exakt avgränsad nästaaktivitetsmappning och JSON-/NDJSON-import/export. Kör obligatoriska kontroller och isolerad faktisk fil-/dataåterläsning på exakt slutkandidat. Återpublicera inte oförändrad v56 eller äldre efter ny v57-historik. En äldre app kräver faktiskt verifierad full databas-/fil-/versions-/länkåterställning från före ändringen och en plan för senare arbete; ingen sådan hostingåterställning eller live-rollback påstås här.
+
+Gemensam CRM-backup omfattar inte konton, privata serverutkast eller Outlook. Befintlig restore tömmer aktuella profilmedlemslänkar för uttrycklig återanslutning; historiska aktörsfält ger ingen åtkomst. Överlämningen ändrar bara den valda uppgiften, inte kundrelation, konto, Sitesåtkomst, produktionens användaransvar eller andra arbetsytor. B01b2 och faktisk full hostingåterställning kvarstår.
+
+De äldre kompatibilitetsstyckena nedan beskriver v56/v55-data före den nya v57-historiken. De bevaras som underlag och ersätter inte den högre aktuella läsar-/skrivargränsen. Körbokens mandat, färsk källkontroll, regressioner, exakt-head CI, same-Site-publicering, begränsad delning och förbud mot riktiga kundskrivprov gäller fortsatt.
+
+## Kompatibilitetsunderlag före v57
+
+
 ## Datakompatibilitet vid kundåteröppning – v56
 
 V56 använder befintliga fält för kundstatus/ansvar, kundansvarshistorik, uppgift och händelse. Ingen ny tabell, SQL-migration eller höjning av minsta kompatibla skrivare över v55. Behåll v55:s profilavslutshistorik/validering vid återgång; oförändrad v54 är fortsatt osäker efter nya v55-data.
@@ -16,6 +31,8 @@ Efter att `retirementHistory` sparats krävs **v55-kompatibel skrivare** för ak
 Vid korrigering/återgång, behåll v55:s profilfält, historikvalidering och spärr mot ny tilldelning/återöppning. Kontrollera kandidatens parser, API, JSON/NDJSON-backup och isolerad faktisk återläsning med syntetiska filer innan publicering. Återpublicera ingen äldre skrivare enbart för att dess UI laddar. En äldre app kräver faktisk full databas-/fil-/versions-/länkåterställning från före ändringen och en plan för arbete som tillkommit därefter.
 
 Gemensam CRM-backup omfattar inte konton, privata utkast eller Outlook. Profilernas aktuella medlemslänkar töms vid befintlig återställning och måste återkopplas uttryckligen; historiska aktörsfält ger ingen åtkomst. Lokal syntetisk återställning är ingen utförd hostingåterställning. [VALIDATION](../VALIDATION.md) anger den senaste faktiskt prövade kompatibiliteten och provens miljö.
+
+## Aktuell arbetsprocess
 
 Följ [MISSION.md](MISSION.md), aktuell [AGENTS.md](../AGENTS.md) och [BACKLOG.md](BACKLOG.md). Körboken beskriver hur en schemalagd eller direkt startad körning förbättrar den befintliga produkten. En körning kan fortsätta en tidigare leverans, men ska utgå från färsk källa och dagens kontroller.
 
