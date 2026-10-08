@@ -1,5 +1,23 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Vem håller ihop produktionsjobbet? – v62
+
+**Produktionsansvar** är ett separat ansvar för ett jobb. **Orderansvar** är det kommersiella ansvaret. En administratör kan granska och tilldela eller byta produktionsansvar på ett aktivt jobb som är lämnat till produktion eller tryckt. Historiska, avslutade och avbrutna jobb är inte mål för denna handling. Arbetssättet med **Jag tar jobbet**, **Lämna tillbaka till kön** och registrering av tryck, kassation och leverans finns kvar.
+
+Mottagaren är ett verkligt, aktivt och kopplat CRM-konto med en tillåten produktionsroll: administratör, produktion, tryck eller lager. En säljarprofil och ett produktionskonto är olika identiteter. Kontot väljs tomt från början; namn, roll och konto-ID visas vid granskningen. Namn används inte för att gissa ett konto eller återskapa saknad äldre kontoidentitet.
+
+Jobbets stabila användaridentitet är `assigneeId`; de nya serverägda fälten är `assigneeMemberId` och `assignmentHistory`. Varje ny registrerad ansvarshändelse får en revision och audit med jobb, aktör, tidigare och nytt konto, tid och skäl. En registrerad medlemskoppling kräver sammanhängande, icke-tom audit. Äldre ansvar med användar-ID men okänd medlemskoppling får behålla sitt verkliga underlag; en första ny audit kan därför börja efter revision 1. Den första auditposten får inte hänvisa till en tidigare registrerad medlemskoppling som saknar föregående audit. Vanliga orderändringar bevarar de nya serverägda fälten.
+
+Ett äldre ansvar med namn men utan användar-ID blockeras för den här handlingen. Ingen ny identitet gissas; det kräver separat granskning och återställning av rätt underlag. Denna ändring innehåller ingen färdig återställningsdialog för det fallet. Kontrollerna upptäcker motsägande registrerade kedjor, men kan inte bevisa att varje borttagen historikprefix saknas, exempelvis efter att ett jobb har lämnats. Audit är inte kryptografiskt manipulationssäker.
+
+Den granskade sparningen binder samma jobb och samma kontounderlag som användaren såg. Servern läser kontot igen och kontrollerar det vid den atomiska skrivningen. Ett ändrat jobb eller ett ändrat/inaktiverat konto kräver förnyad granskning. Ett återförsök efter osäker sparning återanvänder den ursprungliga begäran; ett dubbelklick ska inte skapa en andra ansvarshändelse. Faktiska API-handlers med 18 migrerade SQLite-tabeller verifierade sena mål-/aktörskontroller, förnyad aktörsidentitet, relaterad CAS och orelaterad ombasering, dubbelklick, ABA, förlorad kvittens och rollback. Kundgodkänd 50→48, ändrad order 40→45, kassation/delleverans och oberoende kommersiellt/hinderansvar bevaras. 20 korrupta JSON/NDJSON-importer nekas före skrivning; legacy okänd medlem/revision 8 och avbrytning→återinlämning bevaras.
+
+Ansvarsflytten ändrar inte kundgodkännande, orderantal, korrekturversion, priser, marginalkostnader eller bokföring. Den skickar inga mejl, pushnotiser eller meddelanden. Full medarbetaravveckling och kontroll av faktisk kontoåtkomst återstår. Källrevision `d1b47198a3986a20d40006dd249658e302eb5bbf`; datakompatibilitet: Efter att v62 har skrivit de nya member-/historikfälten krävs v62-kompatibel läsare och skrivare. Äldre saknade fält får tomma värden utan namn→konto-gissning. Ingen maskinframtvingad versionsspärr infördes i backupmanifestet.
+
+## Historik före v62
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Eget ansvar på företagsaktiviteten – v61
 
 Företagsaktiviteten och varje förberedelse är relaterade poster med olika ansvar. Föräldraaktiviteten har additiva `ownerProfileId` och `responsibilityTransfers`. Granskat byte ändrar bara förälderns registrerade ansvar och ansvarshistorik; förberedelser, kundkopplade tidslinjeposter, datum och klarstatus förblir egna uppgifter.

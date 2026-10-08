@@ -1,5 +1,26 @@
 # Magnussons CRM – order, tryck och lager
 
+## Tilldela eller byta produktionsansvar – v62
+
+Produktionsansvarig håller ihop nästa steg i jobbet. Orderansvarig behåller kund- och affärsansvaret.
+
+1. Öppna det aktuella jobbet i produktionskön. Administratören kan även gå till **Tryck & leverans → Gemensam kö → Öppna jobb**.
+2. Läs **Produktionsansvar** och **Orderansvar · ligger kvar**. Välj **Tilldela produktionsansvar** om jobbet saknar ansvarig, annars **Byt produktionsansvar**.
+3. Välj **Produktionsansvarig efter ändringen**. Kontrollera namn, roll och konto-ID, särskilt om två konton har samma namn.
+4. Skriv **Varför ändras produktionsansvaret?** Läs vem som tar över och jobbets registrerade underlag. Antal, tryck, kassation, leveranser, instruktioner och korrektur följer jobbet.
+5. Markera **Jag har granskat produktionsansvaret** och välj **Spara produktionsansvar**. Använd sedan det sparade ansvaret och jobbets ansvarshistorik för att se utfallet.
+6. Om underlaget har ändrats: välj **Hämta aktuellt underlag**, läs ändringen och välj uttryckligen **Läs in nytt granskningsunderlag**. Dina val och skäl bevaras, men måste granskas igen. Vid osäker sparning följer du dialogens återförsöksväg; systemet visar inte ett säkert resultat innan det är känt.
+
+Vill du stänga med osparade val får du välja **Fortsätt redigera** eller **Stäng utan att spara**. Byte av inloggad användare eller arbetsyta avslutar denna lokala granskning. Det är inte ett sparat privat utkast.
+
+Tilldelningen gäller ett jobb och ändrar inte mängder eller kundacceptans. Produktionsrollen kan fortfarande hjälpa till att registrera arbetet enligt sina befintliga rättigheter. Kontot måste ha tilldelad åtkomst för att personen ska kunna använda CRM; ett ansvarsbyte är ingen ny inbjudan eller verifierad inloggning.
+
+Tekniskt belägg för källrevision `d1b47198a3986a20d40006dd249658e302eb5bbf`: Det frysta bygget kördes i lokal Cloudflare workerd med persistenta isolerade D1/R2-bindningar. Verkliga HTTP-flöden verifierade kontoval, roller, dubbelklick/exakt återförsök och oförändrade positiva privata/Outlook-/filsentineler. Full NDJSON-återställning läste tillbaka tre filer på 13 500 000 byte, filhashar/versioner/länkar samt produktionsaudit. Åtta semantiskt korrupta strömmar med korrekt checksumma nekades atomiskt. Detta är lokal runtime, inte full hosted återställning. 33/33 browserfall passerade på exakt slutbygge: båda adminingångarna, 320/390/1280px, CSS-text 2×, native tangentbord/fokus, stängningsval, faktisk 403/409, uttrycklig återinläsning, dubbelklick och tappad/felaktig kvittens efter riktig skrivning, kontobyte/arbetsytebyte samt fem andra roller. Syntetiskt underlag skapades med 90 faktiska POST200 och tio kontoavläsningar. Råa 18 tabeller och R2 samt 321 källfiler/97 buildfiler kontrollerades före/efter; egna testprocesser, lagring och portar är stängda. Browserrapport SHA-256 `49647981b62e0ca112309be58d79d749b3c6b515582f216a88af7b258b95cb9f`. Faktiska API-handlers med 18 migrerade SQLite-tabeller verifierade sena mål-/aktörskontroller, förnyad aktörsidentitet, relaterad CAS och orelaterad ombasering, dubbelklick, ABA, förlorad kvittens och rollback. Kundgodkänd 50→48, ändrad order 40→45, kassation/delleverans och oberoende kommersiellt/hinderansvar bevaras. 20 korrupta JSON/NDJSON-importer nekas före skrivning; legacy okänd medlem/revision 8 och avbrytning→återinlämning bevaras. Datakompatibilitet och återställningsväg beskrivs i [RUNBOOK](agent/RUNBOOK.md). Faktisk oförändrad v61-kod kördes i elva prov: sju läs-/exportvägar tappar nya fält i returnerat underlag; två restorevägar och vanlig orderskrivning tappar dem i faktiskt sparade SQLite-rader; en äldre kontroll är kompatibel. Exakt kopierad v62 återläste JSON/NDJSON med audit och användar-/member-ID bevarade, endast fil-ID remappades för tre filer (138 byte). Tre privata råformat klarade save/read/replay och främmande konto-/Outlook-/fildata bevarades. Alla 321 nya/316 äldre källfiler jämfördes mot faktisk Git-källa. Separat gammal hosted Worker och live-rollback är inte provade.
+
+## Historik före v62
+
+# Magnussons CRM – order, tryck och lager
+
 ## Granska och ändra en företagsaktivitets ansvar – v61
 
 Aktivitetens ansvar och en förberedelses ansvar visas separat. Förberedelserna ligger kvar hos sina ansvariga när aktivitetens ansvar ändras. En genomförd eller inställd aktivitet visar historiskt ansvar och har ingen sådan ändringsåtgärd.

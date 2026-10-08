@@ -1,5 +1,23 @@
 # Återkommande arbete för CRM-superbyggaren
 
+## Datakompatibilitet för produktionsansvar – v62
+
+Detta är ett deklarativt underlag om dataformat och återställning. Bygguppdragets mandat, prioritering, schema, prompt och aktivering ligger kvar i tidigare avsnitt.
+
+Orderns produktionsdata får tilläggsfälten `assigneeMemberId` och `assignmentHistory` både för aktuell produktion och bevarade produktionsrevisioner. Gammal data utan fälten får tom medlemskoppling och tom historik; okänd äldre identitet fylls inte ut från ett namn. Nya händelser beskriver från-/tillkonto, aktör, tid, skäl och revision. Ordinarie orderändringar ska bevara de serverägda fälten. En icke-tom medlemskoppling kräver sammanhängande registrerad audit; äldre okänd medlemskoppling och en första auditrevision över 1 kan däremot vara giltiga. Första auditposten får inte påstå en tidigare registrerad medlemskoppling utan föregående audit. Ett äldre fristående namn utan användar-ID blockeras och kräver separat granskning; ingen färdig återställningsdialog påstås.
+
+Kedjekontroll är inte ett kryptografiskt manipulationsskydd. Utan särskild ursprungsmarkering går det inte att upptäcka varje borttagen prefix, exempelvis efter en tidigare återgång till gemensam kö. Bevara hela underlaget och historiken vid backup och återläsning.
+
+Läsar-/skrivargräns, bevarandeprov och återläsning: Efter att v62 har skrivit de nya member-/historikfälten krävs v62-kompatibel läsare och skrivare. Äldre saknade fält får tomma värden utan namn→konto-gissning. Ingen maskinframtvingad versionsspärr infördes i backupmanifestet. Faktisk oförändrad v61-kod kördes i elva prov: sju läs-/exportvägar tappar nya fält i returnerat underlag; två restorevägar och vanlig orderskrivning tappar dem i faktiskt sparade SQLite-rader; en äldre kontroll är kompatibel. Exakt kopierad v62 återläste JSON/NDJSON med audit och användar-/member-ID bevarade, endast fil-ID remappades för tre filer (138 byte). Tre privata råformat klarade save/read/replay och främmande konto-/Outlook-/fildata bevarades. Alla 321 nya/316 äldre källfiler jämfördes mot faktisk Git-källa. Separat gammal hosted Worker och live-rollback är inte provade. Rapport SHA-256 `08a85e6757cd4d4b7edd96ac8f3c0a6e3a8df63002102454ace60be3e87bfac3`; exakt källrevision `d1b47198a3986a20d40006dd249658e302eb5bbf`, träd `609632102d6619d27d1a1a3add285dffb867fd8c`. Alla sex befintliga SQL-migrationsfiler är byteidentiska med v61. Ingen ny migration, privat datalagring eller Outlook-modul infördes. Gränsen är dokumenterad kompatibilitet och är inte en maskinframtvingad versionsspärr i backupmanifestet.
+
+En återställningsväg måste omfatta hela relevanta databasunderlaget och uppladdade filer, filversioner samt orderns kopplingar till korrektur och godkännanden. Den gemensamma CRM-backupen ersätter inte separat säkring av konton, privata utkast och Outlook-data. Återställda historiska konto-ID ger ingen ny inloggning, återanslutning eller behörighet; verkliga konton måste kontrolleras separat.
+
+Efter att nya ansvarshändelser har skrivits ska en bakåtrullning bevara den nya historiken och använda en kompatibel läsare och skrivare. En framåtriktad rättning är den normala vägen. Äldre kod får inte väljas bara för att gränssnittet startar: en tidigare full backup kräver plan för senare ändringar och separat återläsningsprov av filer och kopplingar. Det här belägget verifierar inte en full återställning eller bakåtrullning av den hostade miljön. Publiceringsläge: Samma [Magnussons Site](https://magnussons-crm.rosen123.chatgpt.site) har version 62, källrevision `18b2d59e8a9022a59b336173e4b5d984b635db1e`, lyckad deployment `appgdep_6ac75bdc35648191b85f4391757838d2`. Alla 321 källfiler och produktträdet matchar den testade kandidaten. Lokalt paket (98 filer, 5 273 600 tarbyte) matchar native metadata/hash; native payload har inte laddats ned för bytejämförelse. Full begränsad delningspolicy revision 2, runtime-konfiguration revision 1 och noll automations är oförändrade. Dokumentationsrevisionen publiceras inte som ny appversion.
+
+## Kompatibilitetsunderlag före v62
+
+# Återkommande arbete för CRM-superbyggaren
+
 ## Dataregel efter v61:s granskade aktivitetsansvar
 
 Företagsaktivitetens top-level `ownerProfileId` och `responsibilityTransfers` är additiva JSON-fält, skilda från varje checklistförberedelses egna ansvarsfält och historik. Registrerat aktivitetsansvar och audit skapas i en servergranskad åtgärd; vanliga kalenderformulär och privat utkast kan inte leverera egna ersättande UUID-/historikfält. Fryst aktivitet, förberedelser och visade profiler bildar granskningsunderlaget.

@@ -1,5 +1,19 @@
 # Magnussons CRM
 
+## Granskat produktionsansvar för ett jobb – v62
+
+Administratören kan tilldela eller byta vem som håller ihop ett aktivt jobb i tryck och lager. Öppna jobbet, välj **Tilldela produktionsansvar** eller **Byt produktionsansvar**, välj ett befintligt CRM-konto, skriv varför och granska innan du sparar. **Orderansvar** visas separat och ligger kvar. Mängder, instruktioner och registrerade leveranser följer jobbet.
+
+Konton med samma namn skiljs åt med sitt verkliga konto-ID. Sparat ansvar och tidigare byten kan följas i jobbets ansvarshistorik. En ändring i jobbet eller det valda kontot kräver ett nytt granskningsunderlag; en osäker sparning får en tydlig återförsöksväg. [Arbetsgången finns i OPERATIONS.md](OPERATIONS.md).
+
+Källrevision `d1b47198a3986a20d40006dd249658e302eb5bbf`, träd `609632102d6619d27d1a1a3add285dffb867fd8c`. Slutkandidaten är oberoende källgranskad och har fem gröna obligatoriska kontroller samt 33 faktiska browserfall. GitHub-main och publicerad version redovisas separat: Produkt-PR [#98](https://github.com/ludros93-prog/MAgnussons-CRM/pull/98) slogs samman med aktuell bas till app-main `139407e3164b8c7baef7d5fbd356340596f58dc1`, samma produktträd. PR-CI [37752477119](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37752477119) och app-main-CI [37753435157](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37753435157) har vardera 13 gröna steg. Dokumentationen hanteras i en separat revision efter produktleveransen. Samma [Magnussons Site](https://magnussons-crm.rosen123.chatgpt.site) har version 62, källrevision `18b2d59e8a9022a59b336173e4b5d984b635db1e`, lyckad deployment `appgdep_6ac75bdc35648191b85f4391757838d2`. Alla 321 källfiler och produktträdet matchar den testade kandidaten. Lokalt paket (98 filer, 5 273 600 tarbyte) matchar native metadata/hash; native payload har inte laddats ned för bytejämförelse. Full begränsad delningspolicy revision 2, runtime-konfiguration revision 1 och noll automations är oförändrade. Dokumentationsrevisionen publiceras inte som ny appversion.
+
+Ändringen gäller ett aktivt jobb. Full personalavveckling, verkliga personalprov, verifierad inloggning för Sebbe och levande Fortnox-/Outlookanslutningar är fortsatt separata införandefrågor. Försäljning mot månads-/årsmål, marginal och nya prospects är fortsatt huvudmåtten; TB är inget huvudmått. Nästa steg: Inventera samtliga öppna produktionsjobb för ett konto inför personalbyte och koppla granskad överlämning till säker kontoinaktivering. Behåll kommersiellt ansvar och historiska resultat; full Sites-/flerarbetsyteavveckling och faktisk personalpilot återstår.
+
+## Historik före v62
+
+# Magnussons CRM
+
 ## Aktivitetens ansvar och förberedelsernas ansvar – v61
 
 En företagsaktivitet har nu eget stabilt ansvar. Varje förberedelse behåller sitt eget ansvar, datum och status. Ett byte av aktivitetsansvar flyttar därför inte checklistans uppgifter. I kalendern visar separata rubriker vilken nivå du granskar.
