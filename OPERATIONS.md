@@ -1,5 +1,22 @@
 # Magnussons CRM – order, tryck och lager
 
+## Läs arbetet bakom en spärrad kontoändring – v65
+
+1. Öppna **Konton & roller** som administratör. Välj **Ändra** vid rätt CRM-konto och kontrollera konto-ID och den ändring du vill göra.
+2. När minskad produktionsåtkomst visar **Ändringen är spärrad**, läs summeringen per lagrad arbetsyta. Välj **Visa arbete som spärrar ändringen**.
+3. Kontrollera arbetsyta, **Arbetsreferens**, **Order-ID**, **Produktionsstatus**, ansvarsdel och orsaksbesked. Ett jobb kan ha både **Jobbansvar** och **Öppet hinderansvar**; ett skickat jobb kan fortfarande ha ett hinder.
+4. Läs **Visar X av Y ansvarsdelar**. Välj **Visa fler ansvarsdelar** tills du har läst hela underlaget. Varje hämtning visar upp till 20 nya ansvarsdelar från samma granskning.
+5. Ta med rätt arbetsyta och jobbreferens till ansvarets befintliga arbetsflöde. Listan öppnar inte jobbet, växlar inte arbetsyta och flyttar inget ansvar. Granskad jobböverlämning gäller ett jobb i taget och flyttar inte automatiskt hinderansvar eller kommersiellt ansvar.
+6. Vid en oklar äldre koppling: kontrollera verkligt underlag. Listan förklarar felet men rättar det inte. Välj ingen person enbart utifrån namnet; granskad rättning av dessa kopplingar återstår som separat arbetsflöde.
+7. Vid hämtnings-/formatfel används inga tidigare detaljrader. Formulärvärdena finns kvar; välj **Hämta arbetsunderlaget igen**. Vid ändrat granskningsunderlag, välj **Hämta kontoändringens granskning igen** och börja detaljläsningen från första sidan.
+8. Efter att ansvaret faktiskt har hanterats, hämta kontoändringens granskning igen. Först när den aktuella produktionskontrollen tillåter ändringen kan du granska och spara enligt kontoformulärets befintliga arbetsgång.
+
+Den här listan är läsande och skickar inga meddelanden. Den visar registrerat produktionsansvar i lagrade arbetsytor och ger inget generellt klartecken för personalavveckling. Kommersiellt ansvar, privata utkast och mejl, externa konton och Sites-åtkomst behöver hanteras separat. [VALIDATION](VALIDATION.md) skiljer syntetiska tekniska prov från verklig personalinloggning och personalpilot.
+
+## Historik före v65
+
+# Magnussons CRM – order, tryck och lager
+
 ## Granska kontoändringen innan åtkomst minskas – v64
 
 1. Öppna **Konton & roller** som administratör. Välj **Ändra** vid rätt registrerat CRM-konto och kontrollera namn, inloggningsadress och **Konto-ID**.

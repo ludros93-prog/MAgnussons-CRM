@@ -1,5 +1,27 @@
 # CRM-källor för Magnussons byggagent
 
+## Officiella principer för konkret kontoändringsdiagnos – v65
+
+Faktiska officiella sidtexter och fokuserade sök-/open-/find-svar lästes. Klockan efter webbläsningen var **2026-10-08 14:25:33 UTC**. Kvitto `/workspace/scratch/crm65/research/receipt.json`, SHA-256 `238fc7e0d580784afc5529cfe953da1e202ac7b1e2f46696e7d88bef0468dc68`, verifierar sju korta citat och URL:er mot sparade faktiskt returnerade verktygstexter.
+
+| Källa | Belagd princip | Magnussons tillämpning och gräns |
+| --- | --- | --- |
+| [Saleshub Funktioner](https://saleshubai.se/funktioner) | Uppgifter, ansvariga och statusrader i samma projektsammanhang. | Ansvarsdel, status och jobbreferens visas tillsammans. Offentlig produktbeskrivning, inte ett verifierat identitetskontrakt. |
+| [Lime Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | Få kontextrelevanta handlingar och imperativverb. | **Visa arbete som spärrar ändringen** och **Visa fler ansvarsdelar** har synliga svenska etiketter. |
+| [Salesforce Task Fields](https://help.salesforce.com/s/articleView?id=sf.task_fields.htm&language=en_US&type=5) | Uppgiftens ägare skiljs från den relaterade posten. | Jobbansvar och hinderansvar hålls skilda från orderns kommersiella ansvar. |
+| [Salesforce Deactivate Users](https://help.salesforce.com/s/articleView?id=sf.how_to_deactivate_users.htm&language=en_US&type=5) | Kontoavstängning och överföring av postansvar är separata tillstånd. | Diagnosen ändrar varken kontoåtkomst eller ansvar. Leverantörens policy kopieras inte. |
+| [W3C Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) | Icke undantaget innehåll behöver flöda om vid motsvarande 320 CSS-pixlar. | Staplade rader och radbrutna ID:n/texter. Lokala viewportprov är ingen full WCAG-bedömning. |
+| [W3C Target Size (Enhanced)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html) | Större tryckytor, med 44×44 CSS-pixlar som Enhanced/AAA-riktning. | Lokalt stora knappar och etiketttryckytor; inga fulla AA-/AAA-garantier. |
+| [W3C ARIA22](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22.html) | Status/resultat kan meddelas utan att fokus flyttas till meddelandet. | Lässtatus och resultaträkning använder begriplig text och statusregion; inget faktiskt skärmläsarprov påstås. |
+
+Salesforce returnerade faktisk artikeltext tillsammans med CSS-feltext. Lime direktöppning gav verktygsrapporterad 429; ett officiellt indexresultat returnerade den relevanta saktext som faktiskt lästes. Webverktyget gav inga individuella anropstider eller fullständiga HTTP-svar; kvittot sparar den returnerade texten och påstår ingen komplett HTML-hämtning.
+
+Magnussons exakta orsaksregler, serverroller, samtliga lagrade arbetsytor, granskningskontext, sidgränser och skydd mot sena svar är egna kontrakt. Inga autentiserade leverantörsvyer, fungerande integrationer, personalacceptans eller full WCAG-bedömning ingick i researchen. [VALIDATION](../VALIDATION.md) redovisar produktkandidatens faktiska prov. Codex-referensen är oläst.
+
+## Historik före v65
+
+# CRM-källor för Magnussons byggagent
+
 ## Officiella principer inför granskad kontoändring – v64
 
 Faktiska officiella sidtexter och fokuserade utdrag lästes. Klockan efter webbläsningen var **2026-10-08 12:29:19 UTC**. Kvitto `/workspace/scratch/crm64/research/receipt.json`, SHA-256 `0fd33dabbd66a5c74b19170e42dea6cccd84c50cdd40db50c0ff045ecd998179`, verifierar sju korta citat mot verkligt returnerad text eller ny direkt hämtad Lime-HTML.
