@@ -1,5 +1,19 @@
 # Magnussons CRM
 
+## Aktivitetens ansvar och förberedelsernas ansvar – v61
+
+En företagsaktivitet har nu eget stabilt ansvar. Varje förberedelse behåller sitt eget ansvar, datum och status. Ett byte av aktivitetsansvar flyttar därför inte checklistans uppgifter. I kalendern visar separata rubriker vilken nivå du granskar.
+
+Administratören kan för en planerad aktivitet välja **Byt aktivitetsansvar**, eller **Granska aktivitetens ansvar** när en äldre namnkoppling behöver förankras. Dialogen visar aktivitetens nuvarande ansvar, förberedelserna som ligger kvar, ett uttryckligt val av mottagare, orsak och granskningsruta. Vanlig kalenderredigering ändrar inte ett redan registrerat aktivitetsansvar. Ett äldre privat utkast med eget ändrat ansvar kräver ett uttryckligt ställningstagande.
+
+V61 är publicerad efter obligatoriska regressioner, TypeScript, bygge och isolerad runtime på exakt slutkandidat samt 23 lokala browserfall och grön PR-/main-CI. Fullständig spårbarhet, formatgräns v61 och publiceringsbegränsningar finns i aktuell STATUS och VALIDATION.
+
+Försäljning mot månads-/årsmål, marginal och nya prospects är fortsatt huvudmåtten. Denna leverans ansluter inga Fortnox-, Outlook-, produkt- eller AI-konton och bekräftar ingen persons inloggning. Fullständig överlämning av en medarbetares arbete och verkligt återställnings-/personalprov är fortfarande separata uppgifter.
+
+## Historik före v61
+
+# Magnussons CRM
+
 ## Eget ansvar för varje eventförberedelse – v60
 
 Administratören kan granska och överlämna en öppen förberedelse i **Företagets aktiviteter**. **Förberedelsens ansvar** och **Aktivitetens ansvar** visas separat. Ett uttryckligt profilval, en orsak och granskning ändrar bara den valda radens ansvar och registrerar historiken atomiskt. Vanlig aktivitetssparning och klarmarkering bevarar historiken.

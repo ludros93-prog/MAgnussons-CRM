@@ -1,5 +1,31 @@
 # Magnussons CRM – order, tryck och lager
 
+## Granska och ändra en företagsaktivitets ansvar – v61
+
+Aktivitetens ansvar och en förberedelses ansvar visas separat. Förberedelserna ligger kvar hos sina ansvariga när aktivitetens ansvar ändras. En genomförd eller inställd aktivitet visar historiskt ansvar och har ingen sådan ändringsåtgärd.
+
+1. Öppna den planerade aktiviteten i kalendern, eller **Granska** i inventeringen av medarbetarens arbete.
+2. Välj **Byt aktivitetsansvar**. För äldre namnansvar heter handlingen **Granska aktivitetens ansvar**, och dialogen kan visa **Förankra aktivitetens ansvar**.
+3. Läs **Aktivitetens nuvarande ansvar** samt **Förberedelsernas ansvar · ligger kvar**. Utveckla förberedelserna när du behöver granska deras egna ansvar, datum och klarstatus.
+4. Välj uttryckligen **Aktivitetsansvarig efter ändringen**. Valet börjar tomt. Skriv varför aktiviteten ska byta ansvar och markera **Jag har granskat aktivitetsansvaret**.
+5. Välj **Spara aktivitetens ansvar**, eller **Spara förankrat aktivitetsansvar**. Synlig sparstatus skiljer på pågående, avvisat, konflikter och bekräftat resultat.
+
+Ändrat kalender-/profilunderlag behöver läsas in och jämföras. Att hämta underlaget betyder inte att det ersätter det redan granskade underlaget; användaren väljer uttryckligen att granska det aktuella. Egen orsak och fortsatt giltigt mottagarval bevaras, medan granskningsrutan måste markeras på nytt.
+
+Ett osäkert svar är ett osäkert resultat. Samma åtgärd kan återförsökas utan att klienten uppfinner en ny överföring. Pågående sparning låser dialogen. Att stänga ett ändrat osparat formulär visar att texten inte är ett sparat privat utkast och erbjuder uttrycklig stängning eller fortsatt arbete. Fokus återgår till öppnaren eller en logisk efterföljare när den finns kvar.
+
+I vanlig aktivitetredigering är **Aktivitetens ansvar** läsbart när stabila profiler är initierade. Om ett äldre privat utkast innehåller eget ändrat ansvar finns **Använd registrerat aktivitetsansvar**. Valet ändrar bara det privata underlaget; ett nytt kalenderunderlag behöver fortfarande jämföras separat före delad sparning. Utkastets ursprungliga innehåll finns i förhandsgranskningen med tydliga aktivitets-/förberedelserubriker.
+
+Slutkandidatens byggda Worker kördes isolerat med faktisk HTTP och syntetisk D1/R2-adapter. Samtliga 15 nya aktivitetsflaggor och 13 befintliga förberedelseflaggor passerade, inklusive verklig roll-/kontospärr, parent-/förberedelse-CAS 409, atomisk rollback vid ledgerfel, dubbelklick och exakt återförsök efter förlorad svarskropp. JSON och NDJSON återlästes med 18 råtabeller, tre filer och 13 500 000 filbyte; ett integritetsgiltigt men felrefererat underlag avvisades atomiskt. Regressionen bevarar mängdfallen 40→45 med förnyad acceptans, 50→48 med granskat godkännande, kassation och delleverans. Inga riktiga order skrevs. `runtime/final-runtime-3.json` och checks-app-3:s faktiska loggar är beläggen; hosted återställning är inte verifierad.
+
+Slutlig lokal Chromium-körning på exakt 7056a62/träd eb83c76 gav `PASS_FINAL_BROWSER` i 23 skilda fall. Matrisen omfattar 320×360, 390×844 och 1280×900 med normal och exakt CSS 2×-text, tangentbord/fokus, 44px-kontroller, fryst underlag, båda öppningsvägarna, faktisk 403/409, förlorad svarskropp, dubbelklick, explicit legacy-förankring, två äldre privata format och stängd historik. 29 byggda HTTP-anrop konstruerade underlaget; positiva privata/Outlook-/R2-data och 18 råtabellers övriga poster bytekontrollerades före/efter. Alla egna previewprocesser och temporär lagring städades. `browser/final-074521/report.json` har SHA-256 `e904a4aa6077a1a9d01c1467ed18301025b10ba30239f701d0cdbd6d710e7a13`.
+
+Ingen kund-/medarbetaravisering skickas av ansvarsåtgärden. Den bekräftar inte verklig inloggning, externa anslutningar eller accepterad ordermängd.
+
+## Historik före v61
+
+# Magnussons CRM – order, tryck och lager
+
 ## Överlämna en eventförberedelse – v60
 
 1. Admin: öppna **Företagets aktiviteter** och välj **Granska förberedelsens ansvar**/**Byt förberedelseansvar** på vald öppen rad. **Överlämna arbete** öppnar samma granskning. En öppen förberedelse efter genomförd/avbokad aktivitet kan granskas utan att aktiviteten återöppnas.

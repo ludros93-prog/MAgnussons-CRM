@@ -1,5 +1,26 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Eget ansvar på företagsaktiviteten – v61
+
+Företagsaktiviteten och varje förberedelse är relaterade poster med olika ansvar. Föräldraaktiviteten har additiva `ownerProfileId` och `responsibilityTransfers`. Granskat byte ändrar bara förälderns registrerade ansvar och ansvarshistorik; förberedelser, kundkopplade tidslinjeposter, datum och klarstatus förblir egna uppgifter.
+
+- En inloggad administratör granskar en **planerad** aktivitet. Vanlig kalenderredigering ändrar inte ett registrerat ansvar efter att stabila profiler är initierade.
+- Ny aktivitet kräver ett uttryckligt ansvarsalternativ. Servern kopplar den godkända profilen; klienten hittar inte på ett UUID.
+- Äldre entydigt namnansvar kan förankras på samma profil. Ett namnbyte bryter inte ett registrerat profil-ID. En historisk källa kan vara inaktiv; mottagaren måste vara aktiv, entydig och operativ.
+- Överföringen kräver vald mottagare, orsak och uttrycklig granskning. Servern skapar historik med källa, mottagare, aktör, tid, orsak och typ av åtgärd.
+- Genomförda/inställda aktiviteter behåller sitt historiska ansvar. Läsning skapar inget nytt ansvar eller ny historik.
+- Kalenderns ordinarie redigering visar befintligt aktivitetsansvar som läsuppgift. Ett äldre privat utkast med avsiktligt ändrat ansvar avvisas i det vanliga kalenderflödet; användaren får uttryckligen välja registrerat aktivitetsansvar och fortfarande jämföra förändrat kalenderunderlag.
+
+Dialogen fryser både aktivitet, förberedelser och visade profilval. Ändrat relevant underlag kräver ny jämförelse och granskning. Osäkert svar innebär inte att gränssnittet påstår en lyckad skrivning. Exakt återförsök använder samma payload; serverns idempotens och CAS avgör om en tidigare åtgärd redan är sparad.
+
+Oberoende källgranskning av exakt sluthead gav `PASS_CODE_REVIEW_NO_BLOCKERS` i åtta områden, med alla 23 ändrade filer och åtta relaterade skyddsfiler bytekontrollerade. `scope/final-code-review-3.json` har SHA-256 `e2fac0bf33c2a409f42f64da7f47a0f3c28b6e1b1ff8a39c1c756f41017d8162`. Läsgranskningen påstår inga egna körda tester; körda domän-/API-/lagringsprov finns i den obligatoriska regressionens och runtimens loggar.
+
+Detta är ett avgränsat steg i B01b2. Det är ingen fullständig automatisk medarbetaröverlämning, avveckling av konton eller flytt av historiska försäljningsresultat. Ingen avisering, kundkommunikation eller extern anslutning tillkommer. Orderintag/fakturerad försäljning och kostnader i marginalen behöver fortfarande följa dokumenterade affärsdefinitioner.
+
+## Historik före v61
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Förberedelsens ansvar är skilt från aktivitetens – v60
 
 En administratör kan förankra äldre ansvar eller överlämna exakt en öppen eventförberedelse till en aktiv granskad profil. Samma rad får stabilt profil-ID och spårbar ansvarsändring. Granskningen slutför inget arbete, återöppnar ingen genomförd/avbokad aktivitet och flyttar inget kund-/affärs-/orderansvar eller historiskt resultat.

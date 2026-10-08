@@ -1,5 +1,30 @@
 # CRM-källor för Magnussons byggagent
 
+## Separat ansvar för aktivitet och förberedelser – offentlig research 2026-10-08
+
+Fem officiella CRM-sidor lästes mellan 07:15:54 och 07:15:55 UTC och tre W3C-sidor 07:16:09 UTC. Webverktyget returnerade text och verifierbara kortcitat men ingen HTTP-status. Kvittot `fresh-official-source-evidence.json` har SHA-256 `04ba877848523f4f835734ea969d430c510071f094e8c0c4cf4c1c46c038934c`.
+
+| Källa | Verifierat kortcitat | Användbar princip och gräns |
+|---|---|---|
+| [Saleshub AI – Funktioner](https://saleshubai.se/funktioner) | ”Projektboard med uppgifter, flera ansvariga och statusrader” | Synligt ansvar och status i sammanhängande arbete. Offentlig produktbeskrivning, inte bevis på exakt implementation eller kontoanslutning. |
+| [Lime – Actions design guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | ”Use verbs in imperative mood” | Begripliga kontextrelevanta handlingar med svenska verb. Sällan använda adminhandlingar får lägre visuell tyngd. |
+| [Lime – Notifications / Assign](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) | ”you assign them directly in a designated field” | Ansvar ges i en särskild medarbetarkoppling. Att meddela någon betyder inte samma sak som att ge ansvar. Ingen avisering ansluts här. |
+| [Salesforce – Task Fields](https://help.salesforce.com/s/articleView?id=sf.task_fields.htm&language=en_US&type=5) | ”Indicates the assigned owner of a task.” | Assigned To anger uppgiftens ansvar; Related To anger relaterad post. Sammanhanget behöver inte ha samma ansvar. |
+| [Salesforce – Assign Tasks and Events](https://help.salesforce.com/s/articleView?id=Can-I-assign-tasks-or-events-to-other-users&language=en_US&type=1) | ”The Assigned To field designates a single owner for the activity.” | En aktivitet har eget ansvar och kan tilldelas aktiv användare. Sidans returnerade publiceringsdatum var Jun 14, 2026. Magnussons exakta rättigheter och UUID/CAS-regler är lokala val. |
+| [W3C – Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) | ”320 CSS pixels” | Icke undantaget formulärinnehåll ska kunna flöda om. Lokala 320-/CSS 2×-prov är inte full WCAG- eller verklig zoomgranskning. |
+| [W3C – Target Size (Enhanced)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html) | ”44 by 44” | Enhanced/AAA-riktning med undantag. Lokalt 44×44-krav är inget bevis på full AA/AAA-efterlevnad. |
+| [W3C – Modal Dialog Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) | ”When a dialog closes, focus returns to the element that invoked the dialog” | Dialogsekvens och meningsfull fokusåtergång. Extra dirty-/busy-/granskningsskydd är lokala produktregler. |
+
+Den konkreta tillämpningen är två tydliga nivåer: aktivitetens eget ansvar och varje förberedelses eget ansvar. Parentdialogen anger vad som ligger kvar, visar fryst underlag och kräver tomt initialt mottagarval, orsak och explicit granskning. Stabila profil-ID:n, oföränderlig historik, serverroller, CAS, idempotens och hantering av äldre privata utkast är Magnussons implementationer och separata testkontrakt.
+
+Oberoende browsergranskning läste nio av de 23 faktiska slutbilderna. Root läste dessutom tre slutbilder för smal normal vy, smal CSS 2×-text och bred separat aktivitets-/förberedelsevy. Tydliga svenska rubriker och handlingar, radbrutna knappar och synligt fokus kontrollerades. Rootbelägg: `root-visual.json`; full WCAG-, skärmläsar-, fysisk telefon- eller personalacceptans har inte provats.
+
+Åtkomstgränser: ingen autentiserad leverantörsvy, riktig Magnussons-integration, personalacceptans, fysisk telefon, skärmläsare eller full WCAG-granskning. V60-bilder som användes vid förberedande designgranskning är inte v61-browserbevis. Codex-task 01a104c7-a5c5-7350-8577-a4f941138061 är oläst: tillgängliga verktyg saknade Codex read_thread. Den uttryckliga briefen och färska repo-underlaget användes.
+
+## Historik före v61
+
+# CRM-källor för Magnussons byggagent
+
 ## v60: individuellt förberedelseansvar och begriplig aktivitet
 
 Fem officiella sidtexter lästes 2026-10-08, med fokuserad textkontroll 05:29:58–05:29:59 UTC. `/workspace/scratch/crm60/research/fresh-official-source-evidence.json`, SHA-256 `3f34d6d4f6d5b0408048866fe491e79d081ee7552964864314d167a1d0fea17f`, verifierar fem korta citat i faktiskt returnerad text; verktyget gav ingen separat HTTP-status.

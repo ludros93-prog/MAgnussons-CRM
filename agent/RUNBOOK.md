@@ -1,5 +1,21 @@
 # Återkommande arbete för CRM-superbyggaren
 
+## Dataregel efter v61:s granskade aktivitetsansvar
+
+Företagsaktivitetens top-level `ownerProfileId` och `responsibilityTransfers` är additiva JSON-fält, skilda från varje checklistförberedelses egna ansvarsfält och historik. Registrerat aktivitetsansvar och audit skapas i en servergranskad åtgärd; vanliga kalenderformulär och privat utkast kan inte leverera egna ersättande UUID-/historikfält. Fryst aktivitet, förberedelser och visade profiler bildar granskningsunderlaget.
+
+Ingen SQL-migrering eller ändring av privat/Outlook-lagring gjordes. Föräldrafälten är additiva JSON. Efter att v61 skapat registrerat aktivitetsansvar är minsta kompatibla läsare och skrivare v61; v60:s läs-/export-/skriv-/restorevägar kan tappa parentmetadata. Återställningsvägen måste därför använda v61-kompatibel kod och kompletta data/filer. Kopierade äldre källprover styrker denna gräns, inte en separat gammal hosted Worker eller genomförd live-rollback.
+
+Exakt tidigare v60-källa 923c253/träd fd49dc3 kopierades i 51 filer och slutkandidaten i 54 filer till isolerad Node/SQLite-körning. Elva faktiskt körda äldre operationer omfattade en kompatibel kontroll, sju returnerade läs-/exportrepresentationer och tre bestående skrivvägar (JSON-restore, NDJSON-restore och vanlig aktivitetsskrivning). V60 utelämnade/förlorade de nya parentfälten men behöll förberedelsemetadata. Två äldre privata format och sex korrupta referensfall passerade separat. Alla sex SQL-filer är byteidentiska; `compatibility/final-4/independent-source-review.json` binder källhashar, körda prov och begränsningar till exakt sluthead.
+
+SHA-256 för det utförda äldre kompatibilitetsprovet: `1f5b6795430c700707b64ba6fc106b5b5b32e6ad8bb00aaa9b3cf3834fccea72`. Proven använder kopierad tidigare källa med isolerad Node/SQLite och syntetisk filadapter. De är inte separat äldre hosted Worker eller genomförd live-rollback. Delad CRM-backup innehåller inte personliga konton, privata utkast eller Outlook. Full hosted återställning med databas, riktiga bilagor, filversioner och kopplingar är fortfarande ett separat driftprov.
+
+Detta avsnitt är deklarativt kompatibilitetsunderlag. Uppdrag, återkommande schema, prompts, aktivering och godkännandemandat har inte ändrats.
+
+## Kompatibilitetsunderlag före v61
+
+# Återkommande arbete för CRM-superbyggaren
+
 ## Dataregel efter v60:s eventförberedelsehistorik
 
 Förberedelsernas additiva `ownerProfileId` och `responsibilityTransfers` i befintlig företagsaktivitets-JSON kräver **v60-kompatibel läsare och skrivare** efter nya data. Ingen SQL-migration. Orörd faktisk v59 utelämnade fälten i läsrepresentationen; giltiga restores och vanlig aktivitetsskrivning sparade bort dem i syntetiska Node-/SQLite-prov. [VALIDATION](../VALIDATION.md) anger exakt äldre revision, operationer och aktuell återläsning.
