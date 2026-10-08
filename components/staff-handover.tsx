@@ -126,7 +126,7 @@ export function StaffHandover({st,space,save,busy,onAction,refresh}:Props){
    <h3>Det här behöver också granskas</h3>
    <p><b>Historiska resultat bevaras.</b> Tidigare försäljning, kvalificerade prospects och avslutat arbete flyttas inte av den här översikten.</p>
    <p><b>Tryck & leverans har egna ansvar.</b> Produktionsjobb och produktionsproblem är kopplade till användar-ID, inte säljarprofil-ID. Granska dem separat i Tryck & leverans.</p>
-   <p><b>Företagsevent och checklistor har namnansvar.</b> De visas som separata ansvarsdelar när namnet matchar. Granska dem i kalendern; de omfattas inte av de granskade profilöverlämningarna.</p>
+   <p><b>Företagsaktiviteter och förberedelser har egna ansvar.</b> En planerad aktivitet och varje öppen förberedelse granskas separat. Granska aktivitetens ansvar för själva aktiviteten; en förberedelse behåller sitt ansvar tills den överlämnas i sitt eget flöde.</p>
    <p><b>Konton och privata uppgifter är separata.</b> Den här vyn stänger inget konto och läser eller flyttar inga privata utkast eller personliga Outlook-data. Inga mejl eller inbjudningar skickas.</p>
   </aside>
  </section>;

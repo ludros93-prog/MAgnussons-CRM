@@ -12,6 +12,9 @@
 .company-calendar .event-preparation-action > button { min-width: 0; max-width: 100%; min-height: 44px; height: auto; padding: .5rem .75rem; white-space: normal; overflow-wrap: anywhere; line-height: 1.5; text-align: left; justify-content: flex-start; }
 .company-calendar .event-preparation-action > p { margin: 0; font-size: .8125rem; line-height: 1.5; overflow-wrap: anywhere; }
 .company-calendar .event-card > button { min-width: 0; max-width: 100%; min-height: 44px; height: auto; white-space: normal; overflow-wrap: anywhere; }
+.company-calendar .event-parent-responsibility-action { min-width: 0; display: grid; gap: .5rem; margin-block: .75rem; }
+.company-calendar .event-parent-responsibility-action > button { min-width: 0; max-width: 100%; min-height: 44px; height: auto; padding: .5rem .75rem; white-space: normal; overflow-wrap: anywhere; line-height: 1.5; text-align: left; justify-content: flex-start; }
+.company-calendar .event-parent-responsibility-action > p { margin: 0; font-size: .8125rem; line-height: 1.5; overflow-wrap: anywhere; }
 .company-event-responsibility-dialog { min-width: 0; overflow-wrap: anywhere; }
 .company-event-responsibility-dialog fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
 .company-event-responsibility-dialog textarea { field-sizing: fixed; min-height: 64px; height: 96px; max-height: min(160px, 32dvh); resize: none; overflow-y: auto; }

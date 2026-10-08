@@ -42,8 +42,8 @@ import {TaskResponsibility} from '@/components/task-responsibility';
 import {OnboardingResponsibilityDialog} from '@/components/onboarding-responsibility-dialog';
 import {IssueResponsibilityDialog} from '@/components/issue-responsibility-dialog';
 import {YearwheelResponsibilityDialog} from '@/components/yearwheel-responsibility-dialog';
-import {CompanyEventEditor} from '@/components/company-event-editor';
 import {CompanyEventResponsibility} from '@/components/company-event-responsibility';
+import {CompanyActivityResponsibility} from '@/components/company-activity-responsibility';
 import {CustomerWorkflows} from '@/components/crm-workflows';
 import type {WorkflowDraftRequest,WorkflowSaveControl} from '@/components/customer-workflow-draft';
 import {isCustomerWorkflowDraft} from '@/lib/customer-workflow-drafts';
@@ -386,7 +386,7 @@ export default function CRM(){
  if(handoverAction.kind==='issue')return <IssueResponsibilityDialog key={key} {...common} space={space} customerId={handoverAction.customerId||handoverAction.id} save={saveResponsibility}/>;
  if(handoverAction.kind==='yearwheel')return <YearwheelResponsibilityDialog key={key} {...common} space={space} customerId={handoverAction.customerId||''} needId={handoverAction.needId||''} save={saveResponsibility}/>;
  if(handoverAction.kind==='companyEventPreparation')return <CompanyEventResponsibility key={key} {...common} space={space} eventId={handoverAction.id} checklistId={handoverAction.checklistId||''} save={saveResponsibility}/>;
- if(handoverAction.kind==='companyEvent')return <CompanyEventEditor key={key} st={st} busy={busy} request={{eventId:handoverAction.id}} publish={(data,onFailure)=>save('company_event',data,false,undefined,onFailure)} onClose={common.onClose} returnFocus={handoverReturnFocus}/>;
+ if(handoverAction.kind==='companyEvent')return <CompanyActivityResponsibility key={key} {...common} space={space} eventId={handoverAction.id} save={saveResponsibility}/>;
  return null;
 })()}
 {st&&commercialTransfer&&st.viewer?.role==='admin'&&<CommercialResponsibility key={JSON.stringify([space,st.viewer.id,st.viewer.role,commercialTransfer.targetType,commercialTransfer.targetId])} st={st} targetType={commercialTransfer.targetType} targetId={commercialTransfer.targetId} save={save} busy={busy} refresh={async()=>{const identity=activeIdentity.current,r=await fetch('/api/crm?space='+space),result=await r.json() as State&{error?:string};if(!r.ok)throw Error(result.error||'Aktuellt underlag kunde inte hämtas.');if(activeIdentity.current===identity)setSt(result)}} onClose={()=>setCommercialTransfer(null)}/>}{st&&meetingTransferId&&st.viewer?.role==='admin'&&<MeetingResponsibility key={JSON.stringify([space,st.viewer.id,st.viewer.memberId,st.viewer.role,meetingTransferId])} st={st} meetingId={meetingTransferId} space={space} save={save} busy={busy} refresh={refreshResponsibility} onClose={()=>setMeetingTransferId('')}/>}<DiscardDialog open={discard} onOpenChange={setDiscard} onDiscard={finishForm}/><Toaster position="bottom-right" richColors/></SidebarProvider></DraftProvider>

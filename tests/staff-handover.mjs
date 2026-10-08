@@ -96,7 +96,11 @@ export async function verifyStaffHandover({core, business, ops}) {
   operations.CompanyEventSchema.parse({id:'planned-event', title:'Syntetisk planerad aktivitet', owner:owners.a, date, checklist:[{id:'b-check', title:'Separat syntetiskt ansvar B', owner:owners.b, ownerProfileId:ids.b, due:date},{id:'unresolved-event-check',title:'Syntetisk motstridig profil',owner:owners.a,ownerProfileId:ids.b,due:date}]}),
   operations.CompanyEventSchema.parse({id:'done-event', title:'Syntetisk avslutad aktivitet', owner:owners.b, date, status:'done', checklist:[{id:'shared-check', title:'Kvarstående syntetisk förberedelse', owner:owners.a, due:date},{id:'done-check', title:'Avslutad förberedelse', owner:owners.a, due:date, done:true},{id:'retired-event-check',title:'Syntetiskt historiskt ansvar',owner:owners.retired,ownerProfileId:ids.retired,due:date}]}),
   operations.CompanyEventSchema.parse({id:'cancelled-event', title:'Syntetisk avbokad aktivitet', owner:owners.b, date, status:'cancelled', checklist:[{id:'shared-check', title:'Separat kvarstående förberedelse', owner:owners.a, due:date}]}),
-  operations.CompanyEventSchema.parse({id:'unknown-event', title:'Syntetiskt omappat event', owner:owners.unknown, date})
+  operations.CompanyEventSchema.parse({id:'unknown-event', title:'Syntetiskt omappat event', owner:owners.unknown, date}),
+  operations.CompanyEventSchema.parse({id:'profile-event', title:'Syntetisk profilkopplad aktivitet B', owner:owners.b, ownerProfileId:ids.b, date, checklist:[{id:'separate-a-check', title:'Självständigt förberedelseansvar A', owner:owners.a, ownerProfileId:ids.a, due:date}]}),
+  operations.CompanyEventSchema.parse({id:'retired-parent-event', title:'Syntetisk äldre aktiv aktivitet', owner:owners.retired, ownerProfileId:ids.retired, date}),
+  operations.CompanyEventSchema.parse({id:'mismatched-parent-event', title:'Syntetisk motstridig aktivitetsprofil', owner:owners.a, ownerProfileId:ids.b, date}),
+  operations.CompanyEventSchema.parse({id:'unknown-id-parent-event', title:'Syntetisk saknad aktivitetsprofil', owner:owners.a, ownerProfileId:ids.unknown, date})
  ];
  // Read operations must work on a frozen graph; profile lookup may describe
  // legacy fields but must never fill UUIDs or rewrite historical attribution.
@@ -155,7 +159,21 @@ export async function verifyStaffHandover({core, business, ops}) {
  assert.ok(row('task','orphan-customer').hint);
  const openTaskRows = rows.filter(item=>item.kind==='task');
  assert.deepEqual(openTaskRows.map(item=>JSON.parse(item.key)[1]).sort(),st.tasks.filter(item=>!item.done).map(item=>item.id).sort(),'Every open task remains visible even if its parent moved, ended or disappeared.');
- assert.equal(row('companyEvent','planned-event').identity,'alias');
+ assert.equal(row('companyEvent','planned-event').identity,'legacy');
+ assert.equal(row('companyEvent','planned-event').ownerProfileId,'','Reading an older parent describes the legacy responsibility without anchoring it.');
+ action('companyEvent','planned-event',{kind:'companyEvent',id:'planned-event'});
+ assert.equal(row('companyEvent','planned-event').actionLabel,'Granska aktivitetens ansvar');
+ assert.match(row('companyEvent','planned-event').hint,/Endast aktivitetens övergripande ansvar överlämnas/);
+ assert.equal(row('companyEvent','profile-event').identity,'profile');
+ assert.equal(row('companyEvent','profile-event').ownerProfileId,ids.b);
+ action('companyEvent','profile-event',{kind:'companyEvent',id:'profile-event'});
+ assert.equal(row('companyEvent','retired-parent-event').ownerProfileId,ids.retired);
+ action('companyEvent','retired-parent-event',{kind:'companyEvent',id:'retired-parent-event'});
+ for(const id of ['unknown-event','mismatched-parent-event','unknown-id-parent-event']){
+  assert.equal(row('companyEvent',id).identity,'unresolved');
+  action('companyEvent',id,{kind:'companyEvent',id});
+  assert.ok(row('companyEvent',id).hint,'Unresolved parent responsibility stays visible with its actual review context.');
+ }
  assert.equal(row('companyEventTask','shared-check','').identity,'legacy');
  assert.equal(row('companyEventTask','shared-check','').ownerProfileId,'');
  assert.equal(row('companyEventTask','b-check').identity,'profile');
@@ -176,6 +194,15 @@ export async function verifyStaffHandover({core, business, ops}) {
  assert.ok(keys(aRows).has(row('task','legacy').key));
  assert.ok(keys(aRows).has(row('companyEvent','planned-event').key));
  assert.ok(keys(bRows).has(row('companyEventTask','b-check').key),'Checklist responsibility can differ from event responsibility.');
+ assert.ok(keys(bRows).has(row('companyEvent','profile-event').key),'Stable parent responsibility belongs to its actual profile.');
+ assert.ok(keys(aRows).has(row('companyEventTask','separate-a-check').key),'Parent B does not transfer its separately assigned preparation A during inventory reads.');
+ assert.ok(!keys(aRows).has(row('companyEvent','profile-event').key));
+ assert.ok(!keys(bRows).has(row('companyEventTask','separate-a-check').key));
+ assert.ok(keys(retiredRows).has(row('companyEvent','retired-parent-event').key),'An inactive source profile retains visibility of its own planned activity.');
+ for(const id of ['mismatched-parent-event','unknown-id-parent-event']){
+  assert.ok(!keys(aRows).has(row('companyEvent',id).key),'An explicit conflicting/unknown parent UUID never falls back to its alias: '+id);
+  assert.ok(!keys(bRows).has(row('companyEvent',id).key),'A conflicting alias never attributes the activity to another profile ID: '+id);
+ }
  assert.ok(keys(retiredRows).has(row('task','retired').key));
  assert.ok(keys(retiredRows).has(row('companyEventTask','retired-event-check').key));
  assert.ok(!keys(aRows).has(row('companyEventTask','unresolved-event-check').key),'A conflicting explicit preparation UUID never falls back to its alias.');

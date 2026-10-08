@@ -4,6 +4,7 @@ import {recordBasis} from './record-conflicts';
 import {RuleError} from './crm-errors';
 import {DraftInput,type DraftRecord} from './drafts';
 import {CompanyEventResponsibilityHistorySchema,type CompanyEventResponsibilityHistory} from './company-event-responsibility-schema';
+import {CompanyActivityResponsibilityHistorySchema,type CompanyActivityResponsibilityHistory} from './company-activity-responsibility-schema';
 
 // Unfinished titles, owners and dates belong in the private draft. Validate
 // business fields only when the owner explicitly publishes to the shared CRM.
@@ -12,9 +13,17 @@ const rawResponsibilityHistory=z.custom<CompanyEventResponsibilityHistory>(value
  const parsed=CompanyEventResponsibilityHistorySchema.safeParse(value);
  return parsed.success&&recordBasis(parsed.data)===recordBasis(value);
 },'Förberedelsens bevarade ansvarshistorik måste ha exakt registrerat format.');
+const rawActivityResponsibilityHistory=z.custom<CompanyActivityResponsibilityHistory>(value=>{
+ const parsed=CompanyActivityResponsibilityHistorySchema.safeParse(value);
+ return parsed.success&&recordBasis(parsed.data)===recordBasis(value);
+},'Aktivitetens bevarade ansvarshistorik måste ha exakt registrerat format.');
 export const CompanyEventDraftValuesSchema=z.object({
  id:z.string().max(4000),title:z.string().max(200),date:z.string().max(100),
  endDate:z.string().max(100),owner:z.string().max(4000),
+ // Existing acknowledged v60 parent bodies have no identity metadata. Keep
+ // them optional without defaults so reading/saving never rewrites that body.
+ ownerProfileId:z.union([z.literal(''),z.string().uuid()]).optional(),
+ responsibilityTransfers:z.array(rawActivityResponsibilityHistory).max(1000).optional(),
  category:z.enum(['event','campaign','internal','holiday']),notes:z.string().max(4000),
  status:z.enum(['planned','done','cancelled']),
  checklist:z.array(z.object({
@@ -42,6 +51,8 @@ export const CompanyEventDraftEnvelopeSchema=z.object({
    // Only the newly introduced empty defaults may be absent in a legacy base.
    // Validate all original business fields; never normalize the private body.
    const comparable=structuredClone(original.data) as CompanyEventDraftValues;
+   if(envelope.base.ownerProfileId===undefined)delete comparable.ownerProfileId;
+   if(envelope.base.responsibilityTransfers===undefined)delete comparable.responsibilityTransfers;
    comparable.checklist.forEach((row,index)=>{
     if(envelope.base.checklist[index].ownerProfileId===undefined)delete row.ownerProfileId;
     if(envelope.base.checklist[index].responsibilityTransfers===undefined)delete row.responsibilityTransfers;
@@ -54,10 +65,11 @@ export type CompanyEventDraftEnvelope=z.infer<typeof CompanyEventDraftEnvelopeSc
 export const isCompanyEventDraft=(kind:string,context:string)=>kind==='form'&&context==='company_event';
 
 // Called only after explicit comparison/adoption in the editor. Preserve all
-// planning text and deliberate owner edits. An unchanged old owner follows the
-// reviewed current row; a deliberate different owner still needs its own review.
+// planning text and deliberate owner edits at both levels. An unchanged old
+// owner follows the reviewed current identity; a different owner needs review.
 export function adoptCompanyEventDraftResponsibilities(values:CompanyEventDraftValues,base:CompanyEventDraftValues,current:CompanyEvent):CompanyEventDraftValues{
- return {...structuredClone(values),checklist:values.checklist.map(row=>{
+ return {...structuredClone(values),owner:values.owner===base.owner?current.owner:values.owner,
+  ownerProfileId:current.ownerProfileId,responsibilityTransfers:structuredClone(current.responsibilityTransfers),checklist:values.checklist.map(row=>{
   const previous=base.checklist.find(value=>value.id===row.id),actual=current.checklist.find(value=>value.id===row.id);
   if(!previous||!actual)return structuredClone(row);
   return {...structuredClone(row),owner:row.owner===previous.owner?actual.owner:row.owner,
