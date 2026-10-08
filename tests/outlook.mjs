@@ -6,6 +6,7 @@ await (await import('./delivery-task-responsibility.mjs')).verifyDeliveryTaskRes
 await (await import('./production-assignment.mjs')).verifyProductionAssignment();
 await (await import('./production-assignment-legacy.mjs')).verifyProductionAssignmentLegacy();
 await (await import('./production-issue-edit.mjs')).verifyProductionIssueEdit();
+await (await import('./production-dispatched-issue.mjs')).verifyProductionDispatchedIssue();
 await (await import('./production-inventory.mjs')).verifyProductionInventory();
 await (await import('./account-change-review.mjs')).verifyAccountChangeReview();
 await (await import('./account-change-work.mjs')).verifyAccountChangeWork();
