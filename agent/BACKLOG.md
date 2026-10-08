@@ -1,5 +1,19 @@
 # Arbetskö för Magnussons CRM
 
+## Nästa steg i B01b2: produktionsarbete per konto – v63
+
+Läsande inventering för administratören visar aktiva produktionsjobb och öppet hinderansvar per registrerat konto i vald arbetsyta. Inaktiva konton och okända/motsägande kopplingar hålls synliga. Samma jobb kan bära två separata ansvar. Inventeringsraden öppnar befintlig granskad jobböverlämning; ingen massflytt eller kontoinaktivering ingår.
+
+Källkandidat `e0958b8c1ec3880ca9a209339ed23b9e29a450d9`, träd `83b2fd73f1f8245f75cd1c86e9a730a0b7145db5`. Regressioner, TypeScript, bygge, isolerad runtime och diffkontroll: 5 av 5 passerade på samma frysta head, med oförändrade spårade bytes. 16 Chromiumfall passerade; 320/360 px, sökning/sidning, tangentbord/fokus, separata ansvar, sena svar, fel/återförsök och återställd syntetisk kontonamnsändring. [VALIDATION](../VALIDATION.md) anger prov på exakt slutkandidat. GitHub app-main `361703b7d862a3c0cb578beaf71379a00877699d`, produkt-PR [#100](https://github.com/ludros93-prog/MAgnussons-CRM/pull/100). Site version 63, source `5690de11319ca1fa1d87165b9a0e713e47a831de`, lyckad deployment `appgdep_6ac776182d34819180ab1ab716188046`. Dokumentationen hanteras separat.
+
+B01b2 är fortsatt öppet för säker kontoinaktivering, samordnad Sites-/flerarbetsyteavveckling och återstående identitets-/hinderansvarsfall. Ett tomt urval i en arbetsyta stänger inte uppdraget. Nästa genomförbara del är att granska kvarvarande jobb- och hinderansvar och koppla det till säkra spärrar vid CRM-kontoinaktivering, med uttrycklig avgränsning till verifierade arbetsytor. Sites-åtkomst och privata data behöver separat kontroll. Bevara kommersiellt ansvar, historiska resultat och serverroller.
+
+B02:s chefsroll, B04:s separata privata backup/full hosted återställning, B07:s observerade personalpilot och faktiska integrationer förblir öppna. Minsta kompatibla läsare/skrivare för befintlig historik är v62; ingen ny lagring ingår här. Mandat, schema, prompt och aktivering ändras inte.
+
+## Historik före v63
+
+# Arbetskö för Magnussons CRM
+
 ## Senaste steg i produktionsansvar – v62
 
 B01b2:s ansvarsspår får en avgränsad granskad tilldelning eller flytt på ett aktivt produktionsjobb. Administratören väljer ett verkligt aktivt konto, granskar jobb och mål, anger skäl och får en serverregistrerad ansvarshistorik. Orderansvar, mängder, korrektur och leveranser följer befintliga regler.

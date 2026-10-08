@@ -1,5 +1,19 @@
 # Magnussons CRM
 
+## Produktionsarbete per konto – v63
+
+Under **Konton & roller** kan administratören inventera ett kontos öppna produktionsjobb och hinder i den valda arbetsytan. Välj ett konto eller en arbetskö och använd **Granska jobbansvar** för befintlig granskad överlämning, eller **Öppna jobbet** för nästa arbetsmoment. Jobbansvar och hinderansvar visas var för sig. Orderns kommersiella ansvar ligger kvar.
+
+Inaktiva konton och oklara identitetskopplingar syns i underlaget. Konton med samma namn skiljs åt med konto-ID. Ett tomt urval betyder inte att kontot kan stängas. [Arbetsgång](OPERATIONS.md) och [aktuellt testbelägg](VALIDATION.md) beskriver omfattningen.
+
+Källkandidat `e0958b8c1ec3880ca9a209339ed23b9e29a450d9`. GitHub app-main `361703b7d862a3c0cb578beaf71379a00877699d`. Samma [Magnussons Site](https://magnussons-crm.rosen123.chatgpt.site) har publicerad version 63 från källrevision `5690de11319ca1fa1d87165b9a0e713e47a831de`, deployment `appgdep_6ac776182d34819180ab1ab716188046` med status succeeded. Dokumentationen sparas separat från appversionen.
+
+Full personalavveckling, verifierade personalinloggningar, faktisk pilot och full hosted återställning återstår. Försäljning mot månads-/årsmål, marginal och nya prospects är fortsatt huvudmåtten.
+
+## Historik före v63
+
+# Magnussons CRM
+
 ## Granskat produktionsansvar för ett jobb – v62
 
 Administratören kan tilldela eller byta vem som håller ihop ett aktivt jobb i tryck och lager. Öppna jobbet, välj **Tilldela produktionsansvar** eller **Byt produktionsansvar**, välj ett befintligt CRM-konto, skriv varför och granska innan du sparar. **Orderansvar** visas separat och ligger kvar. Mängder, instruktioner och registrerade leveranser följer jobbet.

@@ -1,3 +1,24 @@
+# Magnussons CRM – verifiering av produktionsinventering, v63
+
+## Verifiering av produktionsinventering – v63
+
+Slutkandidat `e0958b8c1ec3880ca9a209339ed23b9e29a450d9`, träd `83b2fd73f1f8245f75cd1c86e9a730a0b7145db5`. Äldre versionsprov är historik och räknas inte som prov på denna kandidat.
+
+- Fem obligatoriska kontroller på den frysta slutrevisionen passerade: regressioner, TypeScript, bygge, isolerad runtime och diffkontroll. Spårade källbytes var oförändrade. Kvitto SHA-256 `5e269ca168fa57f6b944bf0d03c85c8273b6d6e018d100f4f172276ac401ed29`.
+- Inventeringens domän- och API-prov: 15 aktuella jobb, 12 hashändringar, fem verkliga mellanliggande SQL-ändringar med 409 och fyra sena aktörsändringar med nekad åtkomst. Faktiska medlemskopplingar, dubblettnamn, inaktivt/okopplat konto, defensivt tvetydigt domänunderlag och bevarad verklig SQL-UNIQUE-regel; inga råa autentiserings-ID:n eller kontomejl i svaret. Proven omfattar adminåtkomst även efter läsningen, exakt aktörsidentitet, arbetsyta/parametrar, inaktiva och oklara kontokopplingar, skilda jobb-/hinderansvar och avsaknad av kontomejl/råa autentiserings-ID:n i det nya svaret.
+- Isolerad runtime: Faktisk byggd Worker-HTTP i lokal workerd/D1/R2: administratörsläsning, strikta parametrar/no-store, skilda jobb-/hinderkonton, inaktiva/okopplade konton och oförändrade positiva privata lager/18 tabeller. Det befintliga återställningsprovet läste tre syntetiska filer på 13 500 000 byte. Relevanta befintliga orderfall: Befintliga verkliga domän-/API-prov för 40→45 med förnyad acceptans, 50→48 med uttryckligt registrerat kundgodkännande, kassation, delleverans och dubbelklick passerar på syntetiskt underlag. Privata innehålls-/fil-/Outlookkontroller: Positiva privata utkast, Outlook-token/mejl/OAuth, 18 SQL-tabeller och R2-byte bevaras i faktiska isolerade prov.
+- Browser och design: 16 Chromiumfall passerade; 320/360 px, sökning/sidning, tangentbord/fokus, separata ansvar, sena svar, fel/återförsök och återställd syntetisk kontonamnsändring. Tvetydig browserstatus och fel/sena svar är uttryckliga injicerade grenar; övriga läsningar använder byggd Worker. Kvitto SHA-256 `2326f946bf41607b6f4646f21914292d4679f8d4c2ca123c3db56a512e6704ce`. Root och oberoende granskare har faktiskt sett läsbara native viewportbilder; tydliga svenska kontroller och separata ansvar, inga observerade horisontella klippningar vid 320/360 px och dubblerad CSS-text.
+- Oberoende källgranskning: Oberoende slutgranskning på samma head/träd passerar utan blockerare; kvitto SHA-256 fefa8562d5cf1cdccb5135686acb57be843cf0554e4e0492572f103d557e7cc6.
+- Datakompatibilitet: Alla 317 orörda basfiler, inklusive sex SQL-migrationer, auth, CAS, idempotens, privata lager och Outlook, är byteidentiska med färsk main. Inga lagrings- eller formatändringar införs; återgång till verifierad v62-kod behåller befintlig formatnivå. Ny SQL, lagring eller nya backupfält ingår inte; befintlig ansvarshistorik kräver fortsatt v62-kompatibel läsare och skrivare.
+
+GitHub: produkt-PR [#100](https://github.com/ludros93-prog/MAgnussons-CRM/pull/100), app-main `361703b7d862a3c0cb578beaf71379a00877699d`; [CI på exakt PR-head](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37764944904) passerade alla 13 steg före merge på aktuell bas. Även [app-main-CI](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37766159923) passerade alla 13 steg på `361703b7d862a3c0cb578beaf71379a00877699d`. Site: version 63, source `5690de11319ca1fa1d87165b9a0e713e47a831de`, lyckad deployment `appgdep_6ac776182d34819180ab1ab716188046`. Samma Site och begränsade custom-delning: policyrevision 2 och miljörevision 1 är oförändrade, inga automationer ändrades. Samtliga 326 källfiler matchar kandidaten. Native arkivets hash, 5 335 040 byte och 99 filer matchar det lokalt återlästa TAR-paketet. Fjärrarkivets bytes kunde inte auktoriseras/lösas av download_file; ingen sådan fjärrbyteåterläsning påstås. Färsk deploymentstatus är succeeded. Startsida, nya inventerings-API:n och favicon ger 401 utan autentisering. Inget verkligt personalkonto, kundorder-skrivprov eller hosted återställningsprov genomfördes.
+
+Den nya inventeringsfunktionen inför ingen ny skrivväg. Oförändrade tabellprov använder redan kopplade syntetiska konton; befintlig gemensam autentisering kan fortfarande etablera en medlemskoppling vid första inloggningen.
+
+Alla skrivprov gäller syntetiska data i isolerad miljö. Lokal runtime/återläsning, tekniska browserprov och CI bevisar inte fungerande verkliga personalinloggningar, full hosted återställning, fysisk telefon, skärmläsaracceptans, full WCAG-efterlevnad eller anslutna integrationer. Inventeringen genomför ingen kontoinaktivering eller full personalavveckling. Inga kund-/personalmeddelanden eller verkliga kundorder skrivs. Codex-referensen är oläst.
+
+## Historik före v63
+
 # Magnussons CRM – verifiering av produktionsansvar, v62
 
 ## Verifiering av produktionsansvar – v62

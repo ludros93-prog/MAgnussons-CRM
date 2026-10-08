@@ -1,5 +1,21 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Produktionsarbete per konto – v63
+
+**Produktionsarbete per konto** hjälper en administratör att se kvarvarande aktuellt arbete inför överlämning. Inventeringen gäller vald demo- eller verksamhetsarbetsyta och jobb med status lämnad till produktion eller tryckt. Historiska, avslutade och avbrutna jobb ingår inte.
+
+Kontot väljs uttryckligen. **Jobbansvar** och **Öppet hinderansvar** har separata fält och filter; samma jobb kan förekomma i båda ansvarsdelarna. Ett byte av jobbansvar flyttar inte hindrets ansvar eller orderns kommersiella ansvar. **Granska jobbansvar** öppnar v62:s befintliga granskade tilldelning/flytt för ett jobb. **Öppna jobbet** leder till produktionsarbetet.
+
+Servern upplöser registrerade kontoidentiteter. Ett namn eller en säljarprofil blir ingen användaridentitet. Inaktiva konton behåller sina registrerade jobb. Saknade och motsägande kopplingar visas som granskningsbehov; namn används inte för att hitta på en ansvarig. Det nya API-svaret innehåller konto-ID, visningsnamn och roll men inte kontomejl eller råa autentiserings-ID:n.
+
+Inventeringen är läsande. Underlag som ändrats, inte kan kontrolleras eller inte längre får läsas visas inte som aktuella jobb. Antalet före sökfilter hålls skilt från antal träffar och visade jobb. Mängder, acceptanser, korrektur, ansvarshistorik och privata utkast ändras inte av inventeringen.
+
+Källrevision `e0958b8c1ec3880ca9a209339ed23b9e29a450d9`; [verifiering](VALIDATION.md). Ingen ny lagring införs; kompatibilitetsgränsen för befintliga ansvarsfält förblir v62. Ett tomt urval bekräftar varken fullständig personalavveckling eller att kontot kan stängas. Verklig kontoåtkomst och personalpilot återstår.
+
+## Historik före v63
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Vem håller ihop produktionsjobbet? – v62
 
 **Produktionsansvar** är ett separat ansvar för ett jobb. **Orderansvar** är det kommersiella ansvaret. En administratör kan granska och tilldela eller byta produktionsansvar på ett aktivt jobb som är lämnat till produktion eller tryckt. Historiska, avslutade och avbrutna jobb är inte mål för denna handling. Arbetssättet med **Jag tar jobbet**, **Lämna tillbaka till kön** och registrering av tryck, kassation och leverans finns kvar.

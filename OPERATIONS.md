@@ -1,5 +1,22 @@
 # Magnussons CRM – order, tryck och lager
 
+## Inventera produktionsarbete inför överlämning – v63
+
+1. Logga in som administratör och öppna **Konton & roller → Produktionsarbete per konto**. Kontrollera vilken arbetsyta inventeringen gäller.
+2. Välj konto. Kontrollera namn, roll och **Konto-ID**, särskilt när konton har samma namn. Ett inaktiverat konto kan fortfarande ha registrerat arbete.
+3. Läs **Jobbansvar** och **Öppet hinderansvar** var för sig. Sök efter kund, jobb eller hinder. Resultatraden skiljer filtrerade träffar från hela det valda arbetet; använd **Återställ filter** och **Visa fler produktionsjobb** vid behov.
+4. Välj **Granska jobbansvar** för ett jobb vars ansvar du ska tilldela eller överlämna. Den befintliga dialogen kräver mottagare, skäl och granskning före sparning. Kommersiellt orderansvar och hinderansvar följer inte med automatiskt.
+5. Välj **Öppna jobbet** för att granska ett hinder eller nästa produktionsmoment. Hindrets ansvar har ett eget arbetsflöde.
+6. När CRM-underlaget ändrats eller ett fel visas, använd **Hämta aktuellt underlag** och granska igen. Tidigare jobb visas inte som aktuella under ett felaktigt eller ändrat underlag.
+
+**Arbete utan ansvarig** visar saknat ansvar. **Ansvar som behöver granskas** visar äldre, saknade eller motsägande identitetskopplingar. Gissa ingen person från namnet; kontrollera rätt underlag innan överlämning.
+
+Inventeringen omfattar aktuella jobb i vald arbetsyta. Den stänger inget konto och inventerar inte privata utkast, personlig mejl eller Sites-åtkomst. Ett tomt urval är inget klartecken för personalavveckling. Kontokopplingar bevisar inte personens aktuella inloggning. Se [VALIDATION](VALIDATION.md) för tekniska prov och kvarvarande införandegränser.
+
+## Historik före v63
+
+# Magnussons CRM – order, tryck och lager
+
 ## Tilldela eller byta produktionsansvar – v62
 
 Produktionsansvarig håller ihop nästa steg i jobbet. Orderansvarig behåller kund- och affärsansvaret.
