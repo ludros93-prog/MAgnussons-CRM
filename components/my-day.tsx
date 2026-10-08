@@ -8,7 +8,7 @@ import type {DraftRecord} from '@/lib/drafts';
 import {awaitingReceipt} from '@/lib/order-work';
 import {canFollowUp} from '@/lib/follow-up';
 import {personalOwner,personalResultScope,salesMetrics} from '@/lib/sales-dashboard';
-import {taskOwnerLabel} from '@/lib/task-responsibility';
+import {taskOwnerLabel,taskResponsibilityKind,taskResponsibilityContext} from '@/lib/task-responsibility';
 import {meetingOwnerLabel} from '@/lib/meeting-responsibility';
 import {day,plusDays,concerns,type State,type Order,type Task,type Meeting} from '@/lib/crm';
 import {useDrafts,DraftStatus} from './draft-workspace';
@@ -57,10 +57,10 @@ export function MyDay({st,space,save,busy,refreshResponsibility,owner,onOwnerCha
   :customer?{customerId:customer.id,label:'KUND ATT KONTAKTA',title:customer.name,description:concerns(customer,today,st)[0],meta:customer.owner,actionLabel:'Öppna kunden',action:()=>onCustomer(customer.id),urgent:false}
   :{label:'UTRYMME FÖR NÄSTA STEG',title:'Inga aktiviteter planerade till idag',description:'Planera nästa kundkontakt eller fortsätt med en offert.',meta:'',actionLabel:readonly?'Sök kund':'Planera aktivitet',action:()=>onCreate(readonly?'search':'task'),urgent:false};
 
- function taskRows(list:Task[]){return list.map(t=><div className="daily-row" key={t.id} data-late={t.due<today}>
-  <div><span className="day-row-kind">{t.kind==='quote'?'Offertuppföljning':t.kind==='invoice_ready'?'Fakturering':'Kundaktivitet'}</span><b>{t.title}</b><button className="daily-customer" data-customer-id={t.customerId} onClick={()=>onCustomer(t.customerId)}>{cname(t.customerId)}</button><small>{t.due<today?'Försenad · ':t.due===today?'Idag · ':''}{displayDate(t.due)}{team?' · '+taskResponsibility(t):''}</small></div>
-  {canTeam&&st.settings.sellerProfilesInitialized&&!t.dealId&&['manual','care','meeting_followup'].includes(t.kind)?<div className="task-day-actions"><Button variant="outline" onClick={()=>onTask(t)}>{taskLabel(t)}</Button><Button className="task-day-responsibility" variant="ghost" disabled={busy} onClick={()=>setResponsibilityTaskId(t.id)}>{t.ownerProfileId?'Byt uppgiftsansvar':'Förankra ansvar'}</Button></div>:<Button variant="outline" onClick={()=>onTask(t)}>{readonly?'Visa aktivitet':taskLabel(t)}</Button>}
- </div>)}
+ function taskRows(list:Task[]){return list.map(t=>{const context=taskResponsibilityContext(st,t);return <div className="daily-row" key={t.id} data-task-id={t.id} data-late={t.due<today}>
+  <div><span className="day-row-kind">{context?.typeLabel||(t.kind==='quote'?'Offertuppföljning':t.kind==='invoice_ready'?'Fakturering':'Kundaktivitet')}</span><b>{t.title}</b><button className="daily-customer" data-customer-id={t.customerId} onClick={()=>onCustomer(t.customerId)}>{cname(t.customerId)}</button><small>{t.due<today?'Försenad · ':t.due===today?'Idag · ':''}{displayDate(t.due)}{context?' · uppgiftsansvar: '+taskResponsibility(t):team?' · '+taskResponsibility(t):''}</small></div>
+  {canTeam&&st.settings.sellerProfilesInitialized&&taskResponsibilityKind(t)?<div className="task-day-actions"><Button variant="outline" onClick={()=>onTask(t)}>{taskLabel(t)}</Button><Button className="task-day-responsibility" variant="ghost" disabled={busy} onClick={()=>setResponsibilityTaskId(t.id)}>{t.ownerProfileId?'Byt uppgiftsansvar':'Förankra ansvar'}</Button></div>:<Button variant="outline" onClick={()=>onTask(t)}>{readonly?'Visa aktivitet':taskLabel(t)}</Button>}
+ </div>})}
 
  return <div className="business-ui my-day visual-day" data-has-scope={hasScope}>
   <div className="day-scope"><span>{dateLabel}</span>{(personal||canTeam)&&<div className="day-scope-switch" aria-label="Välj arbetsdag">{personal&&<Button variant="ghost" aria-pressed={!team} onClick={()=>onOwnerChange(personal)}><UserRound size={16}/>Mina uppgifter</Button>}{canTeam&&<Button variant="ghost" aria-pressed={team} onClick={()=>onOwnerChange('all')}><Users size={16}/>Teamets uppgifter</Button>}</div>}</div>
@@ -92,7 +92,7 @@ export function MyDay({st,space,save,busy,refreshResponsibility,owner,onOwnerCha
    </div>}
   </div>
   {hasScope&&<div id="daily-receipts" tabIndex={-1}><ReceiptQueue st={st} owner={owner} onReceipt={onReceipt} compact/></div>}
-  {responsibilityTaskId&&<TaskResponsibility key={responsibilityTaskId} st={st} taskId={responsibilityTaskId} space={space} save={save} busy={busy} refresh={refreshResponsibility} onClose={closeResponsibility}/>}
+  {responsibilityTaskId&&<TaskResponsibility key={responsibilityTaskId} st={st} taskId={responsibilityTaskId} space={space} save={save} busy={busy} refresh={refreshResponsibility} onClose={closeResponsibility} returnFocus={()=>document.getElementById('daily-tasks')}/>}
   {responsibilityMeetingId&&<MeetingResponsibility key={responsibilityMeetingId} st={st} meetingId={responsibilityMeetingId} space={space} save={save} busy={busy} refresh={refreshResponsibility} onClose={closeMeetingResponsibility}/>}
  </div>;
 }

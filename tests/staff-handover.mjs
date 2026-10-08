@@ -36,7 +36,9 @@ export async function verifyStaffHandover({core, business, ops}) {
   customer('mismatched-customer', {ownerProfileId:ids.b}),
   customer('ownerless-issue', {owner:owners.b, ownerProfileId:ids.b, plan:{issue:'Syntetiskt ärende utan registrerad ansvarig', issueStatus:'open', issueOwner:'', issueOwnerProfileId:''}}),
   customer('onboarding-a', {onboarding:{owner:owners.a, ownerProfileId:ids.a, dealId:'onboarding-first', startedAt:at, due:date}}),
-  customer('onboarding-complete', {onboarding:{owner:owners.a, ownerProfileId:ids.a, dealId:'historical-won', startedAt:at, completedAt:at}})
+  customer('onboarding-complete', {onboarding:{owner:owners.a, ownerProfileId:ids.a, dealId:'historical-won', startedAt:at, completedAt:at}}),
+  customer('planned-customer', {plan:{nextNeed:'Syntetiskt planerat återköp', nextNeedDate:date, nextAction:'Kontrollera kundens behov', nextDate:date}}),
+  customer('open-prospect', {status:'prospect', prospecting:{stage:'paused', reason:'Syntetiskt behov att undersöka', outcomeReason:'Syntetiskt vänteläge', nextAction:'Stäm av framöver', nextDate:date}})
  ];
  st.deals = [
   deal('paused',{stage:'paused', reason:'Syntetiskt vänteläge'}),
@@ -83,6 +85,10 @@ export async function verifyStaffHandover({core, business, ops}) {
   task('year-missing',{kind:'year:missing-synthetic-need'}),
   task('year-done',{kind:'year:finished-need'}),
   ...['csm','csm_need','prospecting','unknown_kind'].map(kind => task('unsupported-'+kind,{kind})),
+  task('planned-csm_need',{customerId:'planned-customer',kind:'csm_need'}),
+  task('paused-prospecting',{customerId:'open-prospect',kind:'prospecting'}),
+  task('closed-csm',{customerId:'closed-a',kind:'csm'}),
+  task('linked-csm',{kind:'csm',dealId:'order-won'}),
   task('unsupported-delivery',{dealId:'order-won', kind:'delivery'})
  ];
  st.meetings = [meeting('planned'), meeting('legacy',{ownerProfileId:''}), meeting('retired',{owner:owners.retired, ownerProfileId:ids.retired}), meeting('done',{status:'done'}), meeting('cancelled',{status:'cancelled'})];
@@ -126,6 +132,11 @@ export async function verifyStaffHandover({core, business, ops}) {
  assert.notEqual(missingInvoice.action?.kind,'order','A followed order is not presented as transferable merely because invoicing is outstanding.');
  assert.ok(missingInvoice.hint, 'Outstanding invoicing with a historical order has an explanation.');
  for(const id of ['manual','care','meeting-followup','legacy','retired','closed-customer']) action('task',id,{kind:'task',id,customerId:id==='closed-customer'?'closed-a':'active-a'});
+ for(const [id,customerId,label] of [['unsupported-csm','active-a','Kundavstämning'],['planned-csm_need','planned-customer','Kommande kundbehov'],['paused-prospecting','open-prospect','Prospektkontakt']]){
+  action('task',id,{kind:'task',id,customerId});
+  assert.equal(row('task',id).typeLabel,label);
+  assert.match(row('task',id).hint,/Endast denna uppgift överlämnas/);
+ }
  action('task','commercial-open',{kind:'deal',id:'open',customerId:'active-a'});
  action('task','commercial-paused',{kind:'deal',id:'paused',customerId:'active-a'});
  action('task','order-linked',{kind:'order',id:'open-order',customerId:'active-a'});
@@ -136,7 +147,7 @@ export async function verifyStaffHandover({core, business, ops}) {
   action('task',customerId==='active-a'?'year-a':'year-b',{kind:'yearwheel',id:'shared-need',customerId,needId:'shared-need'});
  }
  assert.notEqual(row('yearwheel','shared-need','active-a').key,row('yearwheel','shared-need','active-b').key,'The same mutable need ID on two customers stays distinct.');
- for(const id of ['parent-moved','commercial-mismatched-id','historical-parent','orphan-deal','wrong-customer-parent','completed-onboarding','year-moved','year-missing','year-done','unsupported-csm','unsupported-csm_need','unsupported-prospecting','unsupported-unknown_kind','unsupported-delivery']) {
+ for(const id of ['parent-moved','commercial-mismatched-id','historical-parent','orphan-deal','wrong-customer-parent','completed-onboarding','year-moved','year-missing','year-done','unsupported-csm_need','unsupported-prospecting','unsupported-unknown_kind','unsupported-delivery','closed-csm','linked-csm']) {
   const item=row('task',id); assert.equal(item.action?.kind,'customer','Unsupported/open child '+id+' uses its actual customer, not an unsafe transfer.');
   assert.equal(item.action.id,item.customerId); assert.ok(item.hint,'Unsupported child remains explained: '+id);
  }

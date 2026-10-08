@@ -419,6 +419,8 @@ await (await import('./customer-responsibility.mjs')).verifyCustomerResponsibili
 await (await import('./commercial-responsibility.mjs')).verifyCommercialResponsibility({core,ops,sqlite,objects,get,post,headers,api,conflicts,dashboards});
 await (await import('./task-responsibility.mjs')).verifyTaskResponsibility({core,sqlite,objects,get,post,headers,api,conflicts});
 await (await import('./task-responsibility-transfer.mjs')).verifyTaskResponsibilityTransfer({core,sqlite,objects,get,post,headers,api,conflicts});
+await (await import('./customer-activity-responsibility.mjs')).verifyCustomerActivityResponsibility({core,business,ops});
+await (await import('./customer-activity-responsibility-api.mjs')).verifyCustomerActivityResponsibilityAPI({core,sqlite,get,post,api,conflicts,dashboards,objects});
 await (await import('./meeting-responsibility.mjs')).verifyMeetingResponsibility({core,sqlite,objects,get,post,headers,api,conflicts});
 await (await import('./onboarding-responsibility.mjs')).verifyOnboardingResponsibility({core,sqlite,objects,get,post,headers,api,conflicts});
 await (await import('./issue-responsibility.mjs')).verifyIssueResponsibility({core,sqlite,objects,get,post,headers,api,conflicts});
