@@ -11,11 +11,12 @@ import {Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription} from '@
 import {AlertDialog,AlertDialogContent,AlertDialogHeader,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogCancel,AlertDialogAction} from '@/components/ui/alert-dialog';
 import {taskResponsibilityBasis,taskResponsibilityCandidates} from '@/lib/task-responsibility';
 import {PROSPECT_STAGES,RELATIONS,DELIVERY,label,type State} from '@/lib/crm';
-import {BusinessField as F,displayDate,type SaveAction} from './business-ui';
+import {BusinessField as F,displayDate} from './business-ui';
 
 type Snapshot=ReturnType<typeof taskResponsibilityCandidates>&{relationshipProfile:State['settings']['sellerProfiles'][number]|null;orderProfile:State['settings']['sellerProfiles'][number]|null};
 type Draft={identity:string;expectedContext:string;snapshot:Snapshot;targetProfileId:string;reason:string;reviewed:boolean};
-type Props={st:State;taskId:string;space:string;save:SaveAction;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void;returnFocus?:()=>HTMLElement|null};
+export type TaskResponsibilitySaveAction=(type:string,data:unknown,close?:boolean,onFailure?:(status:number,message?:string)=>void)=>Promise<boolean>;
+type Props={st:State;taskId:string;space:string;save:TaskResponsibilitySaveAction;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void;returnFocus?:()=>HTMLElement|null};
 const buttonClass='h-auto min-h-11 max-w-full min-w-0 whitespace-normal';
 const identityFor=(st:State,space:string,taskId:string)=>JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',st.viewer?.role||'',taskId]);
 const profileLabel=(profile:Snapshot['targetProfiles'][number])=>profile.displayName+(profile.displayName===profile.legacyOwnerName?'':' · '+profile.legacyOwnerName);
@@ -131,12 +132,14 @@ export function TaskResponsibility({st,taskId,space,save,busy,refresh,onClose,re
   if(!visible||locked||submitLock.current||discard||!canReview||!draft.reviewed)return;
   const startedIdentity=identity,startedOperation=++operation.current;
   submitLock.current=true;setSubmitting(true);setError('');
+  let failureStatus=0,failureMessage='';
+  const rejectedMessage=()=>failureStatus>=400&&failureStatus<500&&failureStatus!==409?(failureMessage||'CRM nekade ändringen.')+' Detta försök nekades. Din text och dina val finns kvar. Hämta och granska aktuellt underlag innan du försöker igen. Om du tidigare försökt spara kan det försöket redan ha lyckats.':'';
   try{
-   const saved=await save('task_responsibility_transfer',{taskId,targetProfileId:draft.targetProfileId,reason:draft.reason.trim(),reviewed:true,expectedContext:draft.expectedContext},false);
+   const saved=await save('task_responsibility_transfer',{taskId,targetProfileId:draft.targetProfileId,reason:draft.reason.trim(),reviewed:true,expectedContext:draft.expectedContext},false,(status,message)=>{failureStatus=status;failureMessage=message||'';});
    if(!alive.current||currentIdentity.current!==startedIdentity||operation.current!==startedOperation)return;
    if(saved)onClose();
-   else setError('Ändringen kunde inte bekräftas. Din text och dina val finns kvar. Första försöket kan redan ha lyckats. Hämta och granska aktuellt underlag eller försök igen med samma oförändrade val.');
-  }catch(e){if(alive.current&&currentIdentity.current===startedIdentity&&operation.current===startedOperation)setError(((e as Error).message||'Ändringen kunde inte bekräftas.')+' Din text och dina val finns kvar.');}
+   else setError(rejectedMessage()||'Ändringen kunde inte bekräftas. Din text och dina val finns kvar. Första försöket kan redan ha lyckats. Hämta och granska aktuellt underlag eller försök igen med samma oförändrade val.');
+  }catch(e){if(alive.current&&currentIdentity.current===startedIdentity&&operation.current===startedOperation)setError(rejectedMessage()||((e as Error).message||'Ändringen kunde inte bekräftas.')+' Din text och dina val finns kvar.');}
   finally{if(alive.current&&currentIdentity.current===startedIdentity&&operation.current===startedOperation){submitLock.current=false;setSubmitting(false);}}
  }
  function revealFocusedControl(event:FocusEvent<HTMLDivElement>){

@@ -18,14 +18,14 @@ import {ArticleDraftPreview} from './article-draft-preview';
 import {isArticleDraft} from '@/lib/article-drafts';
 import {isCompanyEventDraft} from '@/lib/company-event-drafts';
 import {CompanyEventDraftPreview} from './company-event-draft-preview';
-import {TaskResponsibility} from './task-responsibility';
+import {TaskResponsibility,type TaskResponsibilitySaveAction} from './task-responsibility';
 import {MeetingResponsibility} from './meeting-responsibility';
 import {money,displayDate,type SaveAction} from './business-ui';
 
 const taskLabel=(t:Task)=>t.kind==='quote'?'Följ upp offerten':t.kind==='invoice_ready'?'Registrera faktura':['handover','proof_deadline','order_deadline'].includes(t.kind)?'Färdigställ underlag':canFollowUp(t)?'Följ upp':'Hantera aktivitet';
 function openSection(id:string){const section=document.getElementById(id);if(section){section.focus({preventScroll:true});section.scrollIntoView({block:'start',behavior:'smooth'})}}
 
-export function MyDay({st,space,save,busy,refreshResponsibility,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder,onMeeting,onReceipt,onView,onDraft}:{st:State;space:string;save:SaveAction;busy:boolean;refreshResponsibility:()=>Promise<State>;owner:string;onOwnerChange:(owner:string)=>void;onCustomer:(id:string)=>void;onTask:(t:Task)=>void;onCreate:(type:string)=>void;onOrder:(o:Order)=>void;onMeeting:(m:Meeting)=>void;onReceipt:(id:string)=>void;onView:(view:string)=>void;onDraft:(draft:DraftRecord)=>void}){
+export function MyDay({st,space,save,saveResponsibility,busy,refreshResponsibility,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder,onMeeting,onReceipt,onView,onDraft}:{st:State;space:string;save:SaveAction;saveResponsibility:TaskResponsibilitySaveAction;busy:boolean;refreshResponsibility:()=>Promise<State>;owner:string;onOwnerChange:(owner:string)=>void;onCustomer:(id:string)=>void;onTask:(t:Task)=>void;onCreate:(type:string)=>void;onOrder:(o:Order)=>void;onMeeting:(m:Meeting)=>void;onReceipt:(id:string)=>void;onView:(view:string)=>void;onDraft:(draft:DraftRecord)=>void}){
  const draftListId=useId();
  const [showAllDrafts,setShowAllDrafts]=useState(false),[discardDraft,setDiscardDraft]=useState('');
  const [responsibilityTaskId,setResponsibilityTaskId]=useState(''),closeResponsibility=useCallback(()=>setResponsibilityTaskId(''),[]);
@@ -92,7 +92,7 @@ export function MyDay({st,space,save,busy,refreshResponsibility,owner,onOwnerCha
    </div>}
   </div>
   {hasScope&&<div id="daily-receipts" tabIndex={-1}><ReceiptQueue st={st} owner={owner} onReceipt={onReceipt} compact/></div>}
-  {responsibilityTaskId&&<TaskResponsibility key={responsibilityTaskId} st={st} taskId={responsibilityTaskId} space={space} save={save} busy={busy} refresh={refreshResponsibility} onClose={closeResponsibility} returnFocus={()=>document.getElementById('daily-tasks')}/>}
+  {responsibilityTaskId&&<TaskResponsibility key={responsibilityTaskId} st={st} taskId={responsibilityTaskId} space={space} save={saveResponsibility} busy={busy} refresh={refreshResponsibility} onClose={closeResponsibility} returnFocus={()=>document.getElementById('daily-tasks')}/>}
   {responsibilityMeetingId&&<MeetingResponsibility key={responsibilityMeetingId} st={st} meetingId={responsibilityMeetingId} space={space} save={save} busy={busy} refresh={refreshResponsibility} onClose={closeMeetingResponsibility}/>}
  </div>;
 }
