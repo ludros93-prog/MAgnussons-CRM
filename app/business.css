@@ -14,11 +14,13 @@
 /* Before the viewer is known, offer one clear workspace choice and real load status. */
 .crm-start{display:flex;flex-direction:column;min-height:100svh;color:#23364f;background:#f4f7fb}
 .crm-start .crm-start-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;padding:24px clamp(16px,4vw,48px);background:#172c4c}
-.crm-start .brand{font-size:1rem;min-width:0}
+.crm-start .brand{font-size:1rem;min-width:0;max-width:100%;flex-wrap:wrap}
+.crm-start .brand>div{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.crm-start .brand-mark{width:max-content;height:auto;min-width:45px;min-height:45px;line-height:1;flex:none}
 .crm-start .brand small{font-size:.6875rem;line-height:1.5;letter-spacing:.08em;color:#cfdae7}
 .crm-start .crm-start-workspace{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0;max-width:100%;color:#fff;font-size:.875rem}
 .crm-start .workspace-choice{height:auto;min-height:44px;max-width:100%;min-width:0;white-space:normal;background:#fff;color:#172c4c;font-size:.9375rem;line-height:1.5}
-.crm-start .workspace-choice [data-slot=select-value]{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.crm-start .workspace-choice [data-slot=select-value]{min-width:0;display:block;overflow:visible;-webkit-line-clamp:unset;white-space:normal;overflow-wrap:anywhere}
 .crm-start .workspace-choice:focus-visible{outline:3px solid #9fd7ef;outline-offset:4px}
 .crm-start .crm-start-main{display:grid;place-items:center;flex:1;min-width:0;padding:clamp(24px,6vw,72px) 16px}
 .crm-start .crm-start-card{width:100%;max-width:640px;min-width:0;padding:clamp(24px,5vw,44px);background:#fff;border:1px solid #dce5ef;border-radius:18px;box-shadow:0 12px 40px #20395d0a;overflow-wrap:anywhere}
@@ -33,4 +35,4 @@
 .crm-start .crm-start-actions button{height:auto;min-height:44px;max-width:100%;white-space:normal;font-size:1rem;line-height:1.5}
 @keyframes crm-start-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.crm-start .crm-start-spinner{animation:none}}
-@media(max-width:767px){.crm-start .crm-start-workspace{width:100%}.crm-start .workspace-choice{flex:1}.crm-start .crm-start-header{gap:20px}}
+@media(max-width:767px){.crm-start .crm-start-workspace{display:grid;grid-template-columns:minmax(0,1fr);width:100%;align-items:start}.crm-start .workspace-choice{width:100%}.crm-start .crm-start-header{gap:20px}}
