@@ -20,7 +20,7 @@ export async function commit(space:string,prev:State,next:State,requestId:string
  // writes. The same token gates every CRM row, event, draft and receipt below.
  const actorGate=actor?' AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND role=? AND owner=? AND active=1)':'';
  const authorization=mutation.sellerProfileAuthorization;
- // Only validated first issue/yearwheel/event-preparation assignments use the ordinary seller role.
+ // Only validated first issue/yearwheel/activity or preparation assignments use the ordinary seller role.
  // Existing responsibility/profile actions retain the default admin gate.
  const initialActorRole=authorization?.issueInitialActorRole||authorization?.yearwheelInitialActorRole||authorization?.companyEventInitialActorRole,profileActorRole=initialActorRole||'admin';
  if([authorization?.issueInitialActorRole,authorization?.yearwheelInitialActorRole,authorization?.companyEventInitialActorRole].filter(Boolean).length>1)return false;

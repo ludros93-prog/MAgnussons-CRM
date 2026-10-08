@@ -20,6 +20,7 @@ import {OnboardingResponsibilityTransferSchema,onboardingResponsibilityBasis} fr
 import {IssueResponsibilityTransferSchema,issueResponsibilityBasis,isIssueResponsibilityUnassigned} from '@/lib/issue-responsibility';
 import {YearwheelResponsibilityTransferSchema,yearwheelResponsibilityBasis,yearNeedEditBasis} from '@/lib/yearwheel-responsibility';
 import {CompanyEventResponsibilityTransferSchema,companyEventResponsibilityBasis} from '@/lib/company-event-responsibility';
+import {CompanyActivityResponsibilityTransferSchema,companyActivityResponsibilityBasis} from '@/lib/company-activity-responsibility';
 import {NeedSchema} from '@/lib/business';
 import {collectFileReferences} from '@/lib/export-references';
 import {orderBasis,receiptBasis,ensureReceiptTasks,awaitingReceipt} from '@/lib/order-work';
@@ -33,14 +34,14 @@ const db=database;
 const reply=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
 function authorizeAction(role:Role,type:string){
  if(roleActions[role]&&!roleActions[role]!.has(type))throw new AccessError('Din roll får inte utföra denna åtgärd.');
- if(['company_event_responsibility_transfer','yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','commercial_responsibility_transfer','customer_responsibility_transfer','customer_reopen','settings','seller_profiles_init','seller_profile','seller_profile_retire','import_customers','restore','article','article_import','lead_import'].includes(type)&&role!=='admin')throw new AccessError('Denna åtgärd kräver administratör.');
+ if(['company_activity_responsibility_transfer','company_event_responsibility_transfer','yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','commercial_responsibility_transfer','customer_responsibility_transfer','customer_reopen','settings','seller_profiles_init','seller_profile','seller_profile_retire','import_customers','restore','article','article_import','lead_import'].includes(type)&&role!=='admin')throw new AccessError('Denna åtgärd kräver administratör.');
 }
 async function profileAuthorization(req:Request,current:State,type:string,data:unknown):Promise<NonNullable<MutationMeta['sellerProfileAuthorization']>>{
  const initialIssue=type==='plan',initialYearwheel=type==='year_need',initialCompanyEvent=type==='company_event',initialAssignment=initialIssue||initialYearwheel||initialCompanyEvent,actor=await member(req,true,!initialAssignment);
- if(initialAssignment&&!['admin','seller'].includes(actor.role))throw new AccessError((initialCompanyEvent?'Den nya eventförberedelsen':initialYearwheel?'Det nya inköpsbehovet':'Det nya kundärendet')+' kräver säljar- eller administratörsbehörighet.');
+ if(initialAssignment&&!['admin','seller'].includes(actor.role))throw new AccessError((initialCompanyEvent?'Den nya aktiviteten eller förberedelsen':initialYearwheel?'Det nya inköpsbehovet':'Det nya kundärendet')+' kräver säljar- eller administratörsbehörighet.');
  const links:{id:string;owner:string}[]=[];
- if(type==='company_event_responsibility_transfer'||type==='yearwheel_responsibility_transfer'||type==='issue_responsibility_transfer'||type==='onboarding_responsibility_transfer'||type==='meeting_responsibility_transfer'||type==='task_responsibility_transfer'||type==='customer_responsibility_transfer'||type==='customer_reopen'||type==='commercial_responsibility_transfer'){
-  const input=(type==='company_event_responsibility_transfer'?CompanyEventResponsibilityTransferSchema:type==='yearwheel_responsibility_transfer'?YearwheelResponsibilityTransferSchema:type==='issue_responsibility_transfer'?IssueResponsibilityTransferSchema:type==='onboarding_responsibility_transfer'?OnboardingResponsibilityTransferSchema:type==='meeting_responsibility_transfer'?MeetingResponsibilityTransferSchema:type==='task_responsibility_transfer'?TaskResponsibilityTransferSchema:type==='customer_responsibility_transfer'?CustomerResponsibilityTransferSchema:type==='customer_reopen'?CustomerReopenSchema:CommercialResponsibilityTransferSchema).parse(data),target=current.settings.sellerProfiles.find(profile=>profile.id===input.targetProfileId);
+ if(type==='company_activity_responsibility_transfer'||type==='company_event_responsibility_transfer'||type==='yearwheel_responsibility_transfer'||type==='issue_responsibility_transfer'||type==='onboarding_responsibility_transfer'||type==='meeting_responsibility_transfer'||type==='task_responsibility_transfer'||type==='customer_responsibility_transfer'||type==='customer_reopen'||type==='commercial_responsibility_transfer'){
+  const input=(type==='company_activity_responsibility_transfer'?CompanyActivityResponsibilityTransferSchema:type==='company_event_responsibility_transfer'?CompanyEventResponsibilityTransferSchema:type==='yearwheel_responsibility_transfer'?YearwheelResponsibilityTransferSchema:type==='issue_responsibility_transfer'?IssueResponsibilityTransferSchema:type==='onboarding_responsibility_transfer'?OnboardingResponsibilityTransferSchema:type==='meeting_responsibility_transfer'?MeetingResponsibilityTransferSchema:type==='task_responsibility_transfer'?TaskResponsibilityTransferSchema:type==='customer_responsibility_transfer'?CustomerResponsibilityTransferSchema:type==='customer_reopen'?CustomerReopenSchema:CommercialResponsibilityTransferSchema).parse(data),target=current.settings.sellerProfiles.find(profile=>profile.id===input.targetProfileId);
   if(target?.memberId)links.push({id:target.memberId,owner:target.legacyOwnerName});
  }else if(initialIssue){
   const input=z.object({plan:PlanSchema}).parse(data),target=current.settings.sellerProfiles.find(profile=>profile.id===input.plan.issueOwnerProfileId);
@@ -50,6 +51,9 @@ async function profileAuthorization(req:Request,current:State,type:string,data:u
   if(target?.memberId)links.push({id:target.memberId,owner:target.legacyOwnerName});
  }else if(initialCompanyEvent){
   const input=CompanyEventSchema.parse(data),old=current.companyEvents.find(event=>event.id===input.id);
+  // A new activity has its own explicit responsibility even with no preparation.
+  // The parent and each new row must retain their account link until the SQL CAS.
+  if(!old){const target=current.settings.sellerProfiles.find(profile=>profile.legacyOwnerName===input.owner);if(target?.memberId)links.push({id:target.memberId,owner:target.legacyOwnerName});}
   for(const row of input.checklist.filter(row=>!old?.checklist.some(previous=>previous.id===row.id))){
    const target=current.settings.sellerProfiles.find(profile=>profile.legacyOwnerName===row.owner);
    if(target?.memberId&&!links.some(link=>link.id===target.memberId))links.push({id:target.memberId,owner:target.legacyOwnerName});
@@ -76,10 +80,10 @@ export async function POST(req:Request){try{
  if(!req.headers.get('content-type')?.includes('application/json'))return reply({error:'JSON krävs.'},415);
  const body=await req.text();if(body.length>10000000)return reply({error:'För stor begäran.'},413);
  let user=await member(req,true);
- const p=z.object({space:z.enum(['demo','live']),version:z.number().int().nonnegative(),requestId:z.string().uuid(),expectedRecord:z.string().max(3000000).optional(),type:z.enum(['company_event_responsibility_transfer','yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','commercial_responsibility_transfer','customer_responsibility_transfer','customer_reopen','production_claim','production_release','prepare_order','receipt_confirm','receipt_issue','customer','deal','order','task','meeting','note','customer_note','follow_up','settings','seller_profiles_init','seller_profile','seller_profile_retire','prospecting','qualify','onboarding','plan','year_need','complete_need','need_deal','products','repeat_order','import_customers','restore','article','article_import','catalog_order','production_submit','production_accept','production_received','production_printed','production_dispatched','production_issue','production_issue_resolve','direct_dispatch','production_cancel','production_scrap_unprinted','production_scrap_printed','order_shortfall','order_amend','order_amend_accept','order_amend_discard','notice_read','lead_import','lead_convert','lead_contact','company_event']),data:z.unknown()}).parse(JSON.parse(body));
+ const p=z.object({space:z.enum(['demo','live']),version:z.number().int().nonnegative(),requestId:z.string().uuid(),expectedRecord:z.string().max(3000000).optional(),type:z.enum(['company_activity_responsibility_transfer','company_event_responsibility_transfer','yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','commercial_responsibility_transfer','customer_responsibility_transfer','customer_reopen','production_claim','production_release','prepare_order','receipt_confirm','receipt_issue','customer','deal','order','task','meeting','note','customer_note','follow_up','settings','seller_profiles_init','seller_profile','seller_profile_retire','prospecting','qualify','onboarding','plan','year_need','complete_need','need_deal','products','repeat_order','import_customers','restore','article','article_import','catalog_order','production_submit','production_accept','production_received','production_printed','production_dispatched','production_issue','production_issue_resolve','direct_dispatch','production_cancel','production_scrap_unprinted','production_scrap_printed','order_shortfall','order_amend','order_amend_accept','order_amend_discard','notice_read','lead_import','lead_convert','lead_contact','company_event']),data:z.unknown()}).parse(JSON.parse(body));
  authorizeAction(user.role,p.type);
  await initialize(p.space);const hash=await requestHash(p.type,p.data);
- const retirementMutation=p.type==='seller_profile_retire',profileMutation=p.type==='seller_profiles_init'||p.type==='seller_profile',responsibilityMutation=['company_event_responsibility_transfer','yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','customer_responsibility_transfer','customer_reopen','commercial_responsibility_transfer'].includes(p.type);
+ const retirementMutation=p.type==='seller_profile_retire',profileMutation=p.type==='seller_profiles_init'||p.type==='seller_profile',responsibilityMutation=['company_activity_responsibility_transfer','company_event_responsibility_transfer','yearwheel_responsibility_transfer','issue_responsibility_transfer','onboarding_responsibility_transfer','meeting_responsibility_transfer','task_responsibility_transfer','customer_responsibility_transfer','customer_reopen','commercial_responsibility_transfer'].includes(p.type);
  // Private article and company-event publication carry frozen, server-checked
  // original data and exact draft revisions. Every private CAS retry rechecks
  // that envelope; direct article/import requests retain their workspace CAS.
@@ -90,6 +94,11 @@ export async function POST(req:Request){try{
  const previous=await db().prepare('SELECT result_json,user_id,request_hash FROM crm_mutations WHERE space=? AND id=?').bind(p.space,p.requestId).first<{result_json:string|null;user_id:string;request_hash:string}>();
  if(previous){if(previous.user_id&&previous.user_id!==user.user_id||previous.request_hash&&previous.request_hash!==hash)return reply({error:'Begäran har redan använts för en annan ändring.'},409);return reply({...visibleState(projectState(await load(p.space),p.space),viewer(user)),mutationResult:JSON.parse(previous.result_json||'{}')});}
  let sellerProfileAuthorization:MutationMeta['sellerProfileAuthorization'];
+ if(p.type==='company_activity_responsibility_transfer'){
+  const input=CompanyActivityResponsibilityTransferSchema.parse(p.data);
+  if(input.expectedContext!==companyActivityResponsibilityBasis(current,input.eventId))return reply({error:'Företagsaktiviteten eller aktivitetens ansvarsunderlag har ändrats. Dina val och din orsak finns kvar. Läs in och granska aktuellt underlag innan du sparar.',state:visibleState(current,viewer(user)),code:'company_activity_responsibility_conflict'},409);
+  sellerProfileAuthorization=await profileAuthorization(req,current,p.type,p.data);
+ }
  if(p.type==='company_event_responsibility_transfer'){
   const input=CompanyEventResponsibilityTransferSchema.parse(p.data);
   if(input.expectedContext!==companyEventResponsibilityBasis(current,input.eventId,input.checklistId))return reply({error:'Företagsaktiviteten eller förberedelsens ansvarsunderlag har ändrats. Dina val och din orsak finns kvar. Läs in och granska aktuellt underlag innan du sparar.',state:visibleState(current,viewer(user)),code:'company_event_responsibility_conflict'},409);
@@ -176,7 +185,7 @@ export async function POST(req:Request){try{
  }
  if(p.type==='company_event'&&current.settings.sellerProfilesInitialized){
   const input=CompanyEventSchema.parse(p.data),old=current.companyEvents.find(event=>event.id===input.id);
-  if(input.checklist.some(row=>!old?.checklist.some(previous=>previous.id===row.id)))sellerProfileAuthorization=await profileAuthorization(req,current,p.type,p.data);
+  if(!old||input.checklist.some(row=>!old.checklist.some(previous=>previous.id===row.id)))sellerProfileAuthorization=await profileAuthorization(req,current,p.type,p.data);
  }
  if(record&&['customer','deal','order','task','meeting'].includes(p.type)){
   const after=editableRecord(next,p.type,String(record.id));

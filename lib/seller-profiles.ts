@@ -1,7 +1,7 @@
 import {z} from 'zod';
 import {RuleError} from './crm-errors';
 import type {State,Settings,Actor} from './crm';
-import {validateCompanyEventResponsibilityReferences} from './company-event-responsibility';
+import {validateCompanyActivityResponsibilityReferences} from './company-activity-responsibility';
 
 const name=z.string().trim().min(1).max(150),text=z.string().trim().max(4000),memberId=z.string().trim().max(150);
 export const SellerProfileRetirementHistorySchema=z.object({
@@ -112,7 +112,7 @@ export function validateSellerProfileReferences(st:State){
   need(!prospect.qualifiedOwnerId||!!prospect.qualifiedAt&&sellerProfileById(st.settings,prospect.qualifiedOwnerId)?.legacyOwnerName===prospect.qualifiedOwner,'Prospektets säljarkoppling motsäger det historiska underlaget.');
  }
  for(const id of [...Object.keys(st.settings.sellerGoalsById),...Object.keys(st.settings.sellerAnnualGoalsById)])need(ids.has(id),'Ett säljarmål hänvisar till en saknad säljarprofil.');
- validateCompanyEventResponsibilityReferences(st);
+ validateCompanyActivityResponsibilityReferences(st);
 }
 export function protectSellerSettings(previous:Settings,next:Settings,rawData:unknown){
  const raw=rawData as Record<string,unknown>;

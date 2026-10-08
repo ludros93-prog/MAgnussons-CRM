@@ -18,6 +18,7 @@ import {OnboardingResponsibilityHistorySchema,OnboardingResponsibilityTransferSc
 import {IssueResponsibilityHistorySchema,IssueResponsibilityTransferSchema,protectIssueResponsibility,validateIssueResponsibilityReferences,transferIssueResponsibility} from './issue-responsibility';
 import {YearwheelResponsibilityTransferSchema,protectYearwheelResponsibility,validateYearwheelResponsibilityReferences,transferYearwheelResponsibility,yearNeedEditBasis,yearwheelResponsibleProfile} from './yearwheel-responsibility';
 import {CompanyEventResponsibilityTransferSchema,transferCompanyEventResponsibility} from './company-event-responsibility';
+import {CompanyActivityResponsibilityTransferSchema,transferCompanyActivityResponsibility,validateCompanyActivityResponsibilityReferences} from './company-activity-responsibility';
 export {RuleError} from './crm-errors';
 import { z } from 'zod';
 import { AddressSchema,SiteSchema,NeedSchema,LineSchema,ProductSchema,QuoteSnapshotSchema,GoalSchema,calculateQuote,addMonths } from './business';
@@ -166,7 +167,10 @@ export function applyAction(current:State,action:Action,actor?:Actor):State{
   need(actor,'Logga in för att ändra uppgiftsansvar.');transferTaskResponsibility(st,TaskResponsibilityTransferSchema.parse(action.data),actor!);return finish(st);
  }
  if(action.type==='company_event_responsibility_transfer'){
-  need(actor,'Logga in för att ändra förberedelsens ansvar.');transferCompanyEventResponsibility(st,CompanyEventResponsibilityTransferSchema.parse(action.data),actor!);return finish(st);
+  need(actor,'Logga in för att ändra förberedelsens ansvar.');transferCompanyEventResponsibility(st,CompanyEventResponsibilityTransferSchema.parse(action.data),actor!);validateCompanyActivityResponsibilityReferences(st);return finish(st);
+ }
+ if(action.type==='company_activity_responsibility_transfer'){
+  need(actor,'Logga in för att ändra aktivitetens ansvar.');transferCompanyActivityResponsibility(st,CompanyActivityResponsibilityTransferSchema.parse(action.data),actor!);return finish(st);
  }
  if(action.type==='meeting_responsibility_transfer'){
   need(actor,'Logga in för att ändra mötesansvar.');transferMeetingResponsibility(st,MeetingResponsibilityTransferSchema.parse(action.data),actor!);return finish(st);

@@ -8,6 +8,7 @@ import {onboardingResponsibilityCandidates} from './onboarding-responsibility';
 import {issueResponsibilityCandidates} from './issue-responsibility';
 import {yearwheelResponsibilityCandidates} from './yearwheel-responsibility';
 import {companyEventResponsibilityCandidates} from './company-event-responsibility';
+import {companyActivityResponsibilityCandidates} from './company-activity-responsibility';
 
 export type StaffHandoverAction={
  kind:'customer'|'deal'|'order'|'task'|'meeting'|'onboarding'|'issue'|'yearwheel'|'companyEvent'|'companyEventPreparation';
@@ -157,7 +158,10 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
  }
  for(const event of st.companyEvents){
   const action:StaffHandoverAction={kind:'companyEvent',id:event.id};
-  if(event.status==='planned')add({kind:'companyEvent',typeLabel:'Företagsaktivitet',title:event.title,customerId:'',owner:event.owner,ownerProfileId:'',due:event.date,dueLabel:'Aktivitetsdatum',status:'Planerad',action,actionLabel:'Öppna företagsaktivitet',hint:'Separat kalenderflöde med ansvar kopplat till namn. Aktiviteten saknar stabilt profil-ID och granskad ansvarsöverlämning.'},['companyEvent',event.id],true);
+  if(event.status==='planned'){
+   const candidates=companyActivityResponsibilityCandidates(st,event.id);
+   add({kind:'companyEvent',typeLabel:'Företagsaktivitet',title:event.title,customerId:'',owner:event.owner,ownerProfileId:event.ownerProfileId,due:event.date,dueLabel:'Aktivitetsdatum',status:'Planerad',action,actionLabel:'Granska aktivitetens ansvar',hint:candidates.blockedReason||'Endast aktivitetens övergripande ansvar överlämnas. Förberedelsernas egna ansvar och tidigare resultat ligger kvar.'},['companyEvent',event.id]);
+  }
   for(const task of event.checklist.filter(value=>!value.done)){
    const candidates=companyEventResponsibilityCandidates(st,event.id,task.id);
    add({kind:'companyEventTask',typeLabel:'Eventförberedelse',title:task.title,customerId:'',owner:task.owner,ownerProfileId:task.ownerProfileId,due:task.due,dueLabel:'Klart senast',status:event.status==='planned'?'Öppen förberedelse':'Öppen trots avslutad aktivitet',
