@@ -1,3 +1,51 @@
+# Validering – lös kvarstående hinder på skickat jobb v68
+
+Källgranskningen visade att `production_issue_resolve` redan tillåter `dispatched`, medan båda produktionsvyerna saknade ingången där. V68 exponerar endast befintlig lösning för ett redan öppet hinder. Skickat jobb återöppnas inte; beskrivningsändring, ny rapportering och fysiska moment får ingen ny väg.
+
+## Slutkandidat och leveransbelägg
+
+Kod `1aa1e5df8b5fbce00d5a570ae935f2eac461edff`, app-main `36975b211b31d097039bb791fa3e0e35de96af5c`. Samtliga fem obligatoriska kontroller passerade på slutkandidaten:
+
+| Kontroll | Resultat |
+| --- | --- |
+| `node tests/outlook.mjs` | PASS, exit 0 |
+| `node node_modules/typescript/bin/tsc --noEmit --incremental false` | PASS, exit 0 |
+| `corepack pnpm build` | PASS, exit 0 |
+| `node tests/runtime-smoke.mjs` | PASS, exit 0 |
+| `git diff --check` | PASS, exit 0 |
+
+CI 37840496296: samtliga 13 steg completed/success. Native Chromium/Worker: 36 godkända fall, 66 sparade bilder. Proven använder isolerat syntetiskt underlag; verklig personalacceptans, browserzoom, skärmläsare och full WCAG-bedömning följer inte av dessa resultat.
+
+Samma Site har publicerad v68, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_743535521c788191a30a3856c9e19d17`, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`, deploy `appgdep_6ac8032156cc8191b491fe39f44c6650`, succeeded `2026-10-08T20:55:20.682180+00:00`. Källkod, GitHub-main och Site-källa redovisas separat; dokumentationen ändrar inga appbytes.
+
+Rapportör/adminvillkor, serverroller, fryst produktionsbasis/CAS och idempotens består. Lösningshistoriken bevarar registrerad rapportör, rapporttid och sparad hindertext och registrerar lösningsaktör/tid. Ingen ny lagring, SQL-migration eller backupformat: `magnussons-crm-1` och v66-golvet efter äldre jobbansvarsrättning består. V67 är formatkompatibelt men döljer den nya ingången; en formatkompatibel återgång åtgärdar inte åtkomstbristen.
+
+Granskat hinderansvarsbyte/oklara identiteter, full personalavveckling, privata backuper, riktiga konton/integrationer, personalpilot och full hostad återställning återstår. En lösning kräver ny aktuell kontoändringsgranskning och är inget besked om att alla avvecklingsspärrar är borta. Codex-referensen är oläst.
+
+## Exakt provunderlag och begränsningar
+
+Slutkandidatens träd är `a94592b1bf210d13ec6e6e4a1b56e4c211596faf`. De fem lokala kontrollerna tog 68,71 / 11,06 / 9,54 / 174,37 / 0,00 sekunder och lämnade head, träd och samtliga 338 spårade filer oförändrade. Kontrollkvittens SHA-256: `ef7099f9bb182c1ec62b76c828c7c9bc9d45f1b5c19017a5a436b2929dae2176`. Exakt app-head fick CI-körning [37840496296](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37840496296), jobb `113528337584`: samtliga 13 verkliga steg completed/success. Separat slutgranskning hade inga blockerande fynd.
+
+`tests/production-dispatched-issue.mjs` använder autentiserade verkliga handlers och isolerade SQLite-tabeller efter migrering. Ett formatgiltigt skickat jobb med öppet hinder exporteras och återställs som full state; rapportör/admin kan lösa det. Rapportör, rapporttid, sparad text och tidigare historik bevaras. Reader, inaktiv/främmande aktör, tom lösning, gammal basis, beskrivningsändring och ny rapportering nekas utan skrivning. Exakt återförsök ger en historikhändelse och säljarens befintliga notis. Kontoändringsgranskningens aktuella hinderantal går 2→1→0.
+
+Native Worker-provet sätter dessa nya normaliserade syntetiska hinderfall direkt i isolerad D1 med befintliga mottagningsuppgifter förberedda. De har inte återlästs som en full native filbackup. Det separata befintliga fulla native NDJSON-/filprovet återläste 13 500 000 byte och tre syntetiska filer innan de nya fixturefallen. Samtliga sex nya runtimeflaggor passerade. Befintliga regressionsfall 40→45 med förnyad acceptans, 50→48 med uttryckligen syntetiskt godkännande, kassation, delleverans och återförsök passerade; inget verkligt kundgodkännande skapades eller prövades.
+
+Slutligt native Chromium/Worker-prov omfattar 36 godkända fall och 66 okapade bilder: tolv layouter i två vyer vid 320×568, 390×844 och 1280×900, varav sex med exakt 200 procent beräknad CSS-textstorlek. 36 kontroller nåddes med native Tab. Lösningsfältets 128 px höjd, interna rullning, Home/End, åäö, bibehållet textvärde och minst 44 px höga handlingsknappar kontrollerades utan horisontell klippning. Rotagenten och separat granskare såg vardera åtta faktiska slutbilder. Långa historiker har fortsatt vertikal rullning; bilderna visar inte varje historiktecken samtidigt.
+
+Tolv riktiga syntetiska browser-POST gav åtta lyckade handlingar och fyra verkliga 409-svar med gammal produktionsbasis. Konfliktproven använder avsiktlig ändring av den ägda syntetiska basisen. Lokal lösning, öppnat underlag och lösningsläge bevarades vid fel fram till uttrycklig stängning/ny öppning. Rapportör/admin dubbelklick gav en lösningshändelse/notis, oförändrade mängder/leveranser/kommersiella fält och minskat aktuellt hinderantal. Främmande aktör, reader, avbrutet/skickat jobb utan hinder och enbart arkiverat hinder fick ingen ny väg. Readerprovet verifierar frånvarande Workspace-meny, inte en påtvingad öppning. Rollfiltrerad säljar-notis verifierades separat i rådata/admin, inte genom att bredda operatörens vy.
+
+Strikt jämförelse tillät ändringar endast i fem befintliga tabeller för de sju namngivna syntetiska hinderorderna. Uppgifter, privata utkast, övriga tabeller och R2-filer förblev oförändrade. Alla 18 råtabeller och två R2-filer återställdes exakt: initial/slutlig hash `71d4b888c447d998feb0281df24a3a7b3e6f71dd98939997f3b6e2e13640bfb1`. Slutkvittens SHA `559884c0a0b837571b27284dac85cea6282380f896a908ed0240fd18ebc84aab`. Egna previewprocesser stoppades och den egna tillfälliga lagringen togs bort; 338 källfiler, 101 dist-filer och färdiga kontrolloggar var oförändrade.
+
+Fyra tidigare harnessförsök är tillbakadragna, inte slutbevis: 0 fall före felaktig underliggande dialoglocator; 6 fall före felaktig förväntad text om saknad rapportör; 28 fall före upptäckt ofullständig fixture som saknade befintliga mottagningsuppgifter; 30 fall före felaktig förväntan att en operatör skulle se säljarens privata notis. I 28-fallsförsöket är rååterställning inte bevisad; dess egna processer stoppades och temporära lagring raderades. De övriga tre återställdes exakt. Därefter normaliserades komplett underlag före baslinjen och rollriktig rådatakontroll användes. Endast slutkörningen `final-204652` uppfyller slutvillkoren; produktkoden och kriterierna ändrades inte för att få harnessproven gröna.
+
+Alla 20 skyddade server-/lagrings-/säkerhets-/schema-/API-/hostingfiler och sex SQL-migrationer behåller byte och filmoder. Backupformatet `magnussons-crm-1`, atomiska skrivningar, CAS och idempotens är oförändrade. Ingen datakonvertering krävs. V66-golvet efter äldre jobbansvarsrättning består; formatkompatibel v67 kan återpubliceras men döljer den nya lösningsingången.
+
+App-main, kandidat och verifierad Sites-källa har samtliga 338 spårade källfiler byteidentiska. Den lokala kanoniska tar-lasten lästes tillbaka helt: 5 457 920 byte, 102 filer, SHA `7688a1dd9da88cb3ff36592469ceeec91bcb54d2f00185325dd5c99c7deb7d3d`; gzip SHA `0fc8d979d5781958193c990500f1a6f2cf84a54950b0a243a3aeb6a1222e834e`. Sparad native arkivmetadata motsvarar denna tar-hash, storlek och filantal; en separat nedladdad fjärrlast är inte verifierad. Den faktiska source-pushen följdes av autentiserad Git-återläsning. Lyckad deploy följdes av jämförelse av samma Site/adress, begränsad custom-delning, miljörevision 1 och noll automations mot körningens baslinje.
+
+Inga riktiga kundorderskrivningar, personallogin-/acceptansprov, fungerande externa konton/integrationer, OS-tangentbords-/skärmläsarprov eller browserzoom/full WCAG-bedömning följer av resultaten. Full hostad backup-/filåterställning är fortsatt obevisad. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom inget Codex `read_thread` finns tillgängligt; dokumenterad brief och repo användes.
+
+## Historik före v68
+
 # Validering – bevarad rapportör vid hinderredigering v67
 
 ## Bekräftad brist och fokuserat före-/efterprov

@@ -1,5 +1,25 @@
 # Magnussons CRM – order, tryck och lager
 
+## Registrera lösning för kvarstående hinder på skickat jobb – v68
+
+1. Öppna rätt arbetsyta. I produktionsboarden välj **Historik**; i **Tryck & leverans** välj **Avslutat** och öppna jobbet. Kontrollera kund, affär, order och arbetsreferens.
+2. För ett skickat jobb med öppet hinder, välj **Lös kvarstående hinder**. Handlingen visas för registrerad rapportör eller administratör enligt befintlig behörighet. Läs **Hinder i det öppnade underlaget**, **Rapporterat av** och **Registrerad rapporttid**. Den sparade beskrivningen vid öppning är inte ett oföränderligt första rapportutkast.
+3. Kontrollera det faktiska lösningsunderlaget. Skriv **Hur löstes hindret?** först när hindret verkligen är löst. Denna väg ändrar inte hinderbeskrivningen och erbjuder ingen ny rapportering eller produktionsregistrering.
+4. Välj **Hindret är löst** och invänta faktiskt sparbesked. Lösningshistoriken bevarar registrerad hindertext, rapportör och rapporttid samt anger lösningsaktör/tid. Jobbet förblir skickat; mottagande och fakturering registreras separat. Säljaren får befintlig CRM-notis.
+5. Vid fel finns lösningstexten kvar i det öppna formuläret. Vid konflikt: kopiera texten, stäng formuläret, läs in aktuellt jobb/hinder och öppna handlingen igen. Kontrollera det nya underlaget innan nästa försök. Ett obekräftat svar kan följa en redan genomförd sparning.
+6. **Avbryt** eller stängning kasserar osparad lokal text. Kopiera före avbrytning/omladdning. Formuläret är inget varaktigt privat utkast; stängning återställer ingen serverhandling.
+7. Om en kontoändring varit spärrad, hämta **Granska kontoändringen** igen efter faktisk lösning. Andra jobb, öppna hinder eller oklara kopplingar kan fortfarande spärra. Ett löst hinder eller tomt filtrerat urval innebär inte att kontoavvecklingen godkänns.
+
+Aktiva lämnade/tryckta jobb behåller befintliga rapporterings-, beskrivnings- och lösningsflöden. Ett skickat jobb utan öppet hinder och ett avbrutet jobb får ingen ny sådan handling. Granskat byte av hinderansvar återstår; gissa inget konto från namn.
+
+Ingen lagrings-/backupformatändring; v66-golvet efter äldre jobbansvarsrättning består. V67 är formatkompatibelt men döljer denna lösningsväg. [VALIDATION](VALIDATION.md) anger verifierad kod `1aa1e5df8b5fbce00d5a570ae935f2eac461edff`, app-main `36975b211b31d097039bb791fa3e0e35de96af5c` och publicerad källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`.
+
+Personalkonton/pilot, privata backuper, full hostad återställning och riktiga integrationskonton återstår. Codex-referensen är oläst.
+
+## Historik före v68
+
+# Magnussons CRM – order, tryck och lager
+
 ## Rapportera, ändra beskrivning och lösa hinder – v67
 
 1. Öppna rätt kund och produktionsjobb i rätt arbetsyta. Kontrollera affär, order och arbetsreferens före handlingen.

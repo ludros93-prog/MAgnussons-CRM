@@ -1,5 +1,25 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Skickat jobb och kvarstående hinder är skilda tillstånd – v68
+
+Ett redan skickat jobb kan ha ett äldre eller återläst öppet hinder. **Lös kvarstående hinder** gör den befintliga lösningshandlingen nåbar i Board **Historik** och Workspace **Avslutat** för registrerad rapportör eller administratör med fortsatt serverrätt.
+
+Användaren ser kund, affär, order, arbetsreferens, den sparade hindertexten vid öppning, registrerad rapportör och rapporttid. Saknad rapportör/tid anges som saknad; namn identifierar inget konto. Texten i öppnat underlag är inte en oföränderlig första beskrivning.
+
+Endast **Hur löstes hindret?** kan fyllas i denna väg. **Hindret är löst** registrerar verklig lösning med befintlig atomisk serverhandling. Lösningshistoriken bevarar hindertext/rapportör/tid och anger faktisk lösningsaktör/tid. Jobbet förblir skickat; mängder, moment, leveranser, jobbansvar och orderansvar bevaras. Kundmottagande och fakturering är fortsatt separata händelser.
+
+Fel bevarar lokal lösningstext i det öppna formuläret. Fryst produktionsunderlag kräver aktuell inläsning vid konflikt. Texten är inget varaktigt privat utkast: kopiera före **Avbryt**, stängning eller omladdning. Avbryt/stängning ångrar ingen redan accepterad serverhandling.
+
+Kontoändringens granskning ska hämtas igen efter faktiskt hanterat hinder. Andra ansvar och oklara kopplingar kan fortsatt spärra; lösningsvägen ger ingen generell avvecklingsklarering.
+
+Kod `1aa1e5df8b5fbce00d5a570ae935f2eac461edff`, app-main `36975b211b31d097039bb791fa3e0e35de96af5c`, publicerad v68 från `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`. Fem obligatoriska kontroller, CI 37840496296 med 13 steg och 36 nativefall/66 bilder är redovisade i [VALIDATION](VALIDATION.md).
+
+Ingen ny lagring eller formatgräns. V66-golvet efter äldre jobbansvarsrättning består; v67 är formatkompatibelt men döljer åtkomstfixen. Granskat hinderansvarsbyte, andra oklara identiteter, full personalavveckling, privata backuper, personalpilot, full hostad återställning och riktiga integrationskonton återstår. Codex-referensen är oläst. Huvudmåtten är försäljning mot månads-/årsmål, marginal och nya prospects.
+
+## Historik före v68
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Beskrivningen ändras, rapportören ligger kvar – v67
 
 Ett öppet produktionshinder har ett registrerat rapportörs-ID, namn och rapporttid. Rapportören eller en administratör kan ändra beskrivningen utan att dessa uppgifter ersätts. Hinderrevisionen ökar och den befintliga händelsen registrerar den faktiska redigeraren. Ny rapportering och senare registrering av lösningen följer sina egna handlingar.
