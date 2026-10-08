@@ -828,3 +828,12 @@ Utgångspunkt: `Färsk appbas 1696012761efa49eb4a1b94455ceda7cf9b869e5 och sourc
 **Belägg/main/live:** fem slutkontroller, 16 hookgrupper, 23 browserfall och båda app-CI gröna. Samma Site v58 succeeded 02:03:24 UTC. [VALIDATION](../VALIDATION.md) anger revisioner, diagnoser och native-metadatagräns. Dokumentationsrevisionens egna kontroller och main redovisas separat i körningens releasekvitto; Markdown återpublicerar inte appen.
 
 **Nästa:** B07-pilot/ansvar/backup/integrationer öppna; v57-kompatibilitet består. Leverans-/okända uppgifter och kontaktkontext är nästa kandidat efter inventering. Inga riktiga kundskrivprov/meddelanden.
+
+
+## 2026-10-08 – v59, granskad leveranskontakt
+
+**Ändring:** vald öppen leveransuppföljning får granskad adminöverföring/stabilt profil-ID, atomisk uppgift/historik/händelse och fryst kontakt-/leveransunderlag. Kundrelation/order/faktura/mottagande/resultat består. Känd nekning visar faktiskt fel; tappad bekräftelse behåller exakt replay.
+
+**Belägg/main/live:** kandidat `401d695abb90abafcdd9edb64173708afd7f3ee7`, fem slutkontroller, 22 slutbrowserfall och faktisk v58-probe enligt [VALIDATION](../VALIDATION.md). [PR #92](https://github.com/ludros93-prog/MAgnussons-CRM/pull/92) → app-main `ac806d8635341941fe68afb0ec7a27983a5f206c`. Exakt head-/app-main-CI har vardera 13/13 steg completed/success. Samma Site v59, source `b491da16d0b2104c325774b925b233b6b59e991d`, deploy `appgdep_6ac719e7e89c81919f7dc5582de3dd99`, succeeded `2026-10-08T04:20:16.490343+00:00`. Tre stoppade browserförsök bevaras; endast sista frysta kandidatens slutprov räknas. Dokumentationskontroller/main redovisas separat i releasekvittot; Markdown återpublicerar inte appen.
+
+V59-läsare/skrivare krävs efter ny historik. B01b2, full hostingåterställning, konto-/personalprov och pilot kvarstår. Inga riktiga kundskrivprov/meddelanden eller schema-/prompt-/aktiveringsändringar. Codex-referensen är oläst; relevant read_thread saknas.

@@ -1,5 +1,13 @@
 # Arbetskö för Magnussons CRM
 
+## v59: leveranskontakt, avgränsad B01b2-del
+
+Granskat byte av leveranskontaktens eget uppgiftsansvar är levererat; fryst kontakt-/leveransunderlag och bevarad avsikt vid nekning stödjer arbetet. [VALIDATION](../VALIDATION.md) anger belägg. Ny länkhistorik kräver v59-läsare/skrivare.
+
+**B01b2 är öppet** för okända/frikopplade leveransuppgifter, event/checklistor, produktion, samordnad konto-/Sites-/flerarbetsyteavveckling och historisk affärs-/orderredigering. Nästa del väljs efter färsk inventering. B07-pilot, B02 chefsroll, privata årshjulsutkast, B04 separat privat backup/full hostingåterställning och integrationer består. Åtkomst-/data-/orderfel går först; schema/prompt/aktivering ändras inte.
+
+## Historik före v59
+
 ## v58: första laddning, avgränsad B07-del
 
 Neutral start/felvy, rätt produktionsvy direkt och Outlook-isolering rättar dokumenterad första-laddningsfriktion; [VALIDATION](../VALIDATION.md) anger belägg.

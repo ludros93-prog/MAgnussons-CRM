@@ -1,5 +1,13 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Eget ansvar för kontakten efter leveransen – v59
+
+**Leveransuppföljning** gäller kundkontakt efter registrerat mottagande. Granskat adminbyte omfattar vald öppen uppgift/historik/händelse; kundrelation, affär/order, mottagande, faktura och tidigare resultat ligger kvar. Entydig koppling, registrerat beslut/mottagande och komplett avsändningsunderlag krävs; saknat/motstridigt underlag spärrar byte.
+
+**Följ upp** skiljer faktisk kontakt från försök/intern anteckning. Nästa leveranskontakt behåller exakt delegerat profil-ID och tom egen historik. Känd servernekning bevarar orsak/val; obekräftad sparning kan återförsökas med samma avsikt. Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmått; TB är inget huvudmått.
+
+## Historik före v59
+
 ## Börja i rätt arbetsvy – v58
 
 Första laddningen visar ett neutralt besked. Vid fel kan användaren välja arbetsyta eller **Försök igen**. Känd identitet/roll öppnar tillåtna arbetsvyer; produktionsroller får sin arbetskö direkt.
