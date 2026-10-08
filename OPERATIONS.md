@@ -1,5 +1,17 @@
 # Magnussons CRM – order, tryck och lager
 
+## Överlämna en eventförberedelse – v60
+
+1. Admin: öppna **Företagets aktiviteter** och välj **Granska förberedelsens ansvar**/**Byt förberedelseansvar** på vald öppen rad. **Överlämna arbete** öppnar samma granskning. En öppen förberedelse efter genomförd/avbokad aktivitet kan granskas utan att aktiviteten återöppnas.
+2. Läs **Förberedelsens nuvarande ansvar** och **Aktivitetens ansvar · ligger kvar**. Öppna **Aktivitetens planering · ligger kvar** för det frysta underlaget. Denna handling byter inte den övergripande aktivitetens namnansvar.
+3. Välj aktiv ansvarig, skriv varför och markera granskningen. **Spara förberedelsens ansvar** överlämnar raden; **Spara förankrat ansvar** kopplar uttryckligen samma äldre person till sin profil. Okänd/motsägande personkoppling ska inte gissas.
+4. Vid konflikt/nekning: behåll öppen text, välj **Hämta aktuellt underlag**, sedan **Läs in nytt granskningsunderlag**, och granska igen. Hämtning ersätter inte det tidigare underlaget. Obekräftad sparning kan ha lyckats; återförsök samma oförändrade avsikt eller läs in/granska nytt underlag.
+5. **Redigera aktivitet** och kryssrutan för klart arbete bevarar ansvarshistoriken. Äldre privata aktivitetsutkast kan behöva **Granska aktuell aktivitet** och **Använd aktuellt underlag och behåll mina uppgifter**. Din planeringstext ligger kvar; eget ändrat ansvarsval publiceras inte som ett ogranskat byte.
+
+Ansvarsgranskningens orsak/val är inget privat serverutkast; **Stäng utan att spara** kasserar lokal text efter uttryckligt val. Kalenderredigeraren har separat privat utkastflöde. [RUNBOOK](agent/RUNBOOK.md) anger v60:s data-/återgångsgräns. Ingen kalenderinbjudan eller avisering skickas av ansvarsbytet.
+
+## Historik före v60
+
 ## Överlämna leveransuppföljningen – v59
 
 1. Admin: **Byt uppgiftsansvar**/**Förankra ansvar** på öppen **Leveransuppföljning** i **Min dag**, eller **Granska leveranskontaktens ansvar** i **Överlämna arbete**.

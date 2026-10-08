@@ -1,5 +1,13 @@
 # Arbetskö för Magnussons CRM
 
+## v60: eventförberedelse, avgränsad B01b2-del
+
+Granskad adminöverföring/förankring av en öppen företagsaktivitetsförberedelse är levererad med stabilt profil-ID, atomisk radhistorik och bevarat vanligt redigerings-/privatutkastflöde. [VALIDATION](../VALIDATION.md) anger belägg. Ny förberedelsehistorik kräver v60-läsare/skrivare.
+
+**B01b2 är öppet** för företagsaktivitetens övergripande namnansvar, okända/frikopplade leveransuppgifter, produktion, samordnad konto-/Sites-/flerarbetsyteavveckling och historisk affärs-/orderredigering. Nästa avgränsning väljs efter färsk inventering; ett konkret val är aktivitetens eget stabila ansvar med historik utan att flytta förberedelser automatiskt. B07-pilot, B02 chefsroll, privata årshjulsutkast, B04 separat privat backup/full hostingåterställning och riktiga integrationer består. Åtkomst-/data-/orderfel går först; schema/prompt/aktivering ändras inte.
+
+## Historik före v60
+
 ## v59: leveranskontakt, avgränsad B01b2-del
 
 Granskat byte av leveranskontaktens eget uppgiftsansvar är levererat; fryst kontakt-/leveransunderlag och bevarad avsikt vid nekning stödjer arbetet. [VALIDATION](../VALIDATION.md) anger belägg. Ny länkhistorik kräver v59-läsare/skrivare.

@@ -1,5 +1,15 @@
 # Återkommande arbete för CRM-superbyggaren
 
+## Dataregel efter v60:s eventförberedelsehistorik
+
+Förberedelsernas additiva `ownerProfileId` och `responsibilityTransfers` i befintlig företagsaktivitets-JSON kräver **v60-kompatibel läsare och skrivare** efter nya data. Ingen SQL-migration. Orörd faktisk v59 utelämnade fälten i läsrepresentationen; giltiga restores och vanlig aktivitetsskrivning sparade bort dem i syntetiska Node-/SQLite-prov. [VALIDATION](../VALIDATION.md) anger exakt äldre revision, operationer och aktuell återläsning.
+
+V60:s radhistorik och tidigare v59-/v57-/v55-historik behöver bevaras. Oförändrad äldre app är ingen säker läsande eller skrivande återgång. Full databas-/fil-/versions-/länkåterställning från före ändringen och hantering av senare arbete är oprövade; inget separat gammalt hostat Worker-prov/live-rollback påstås. Gemensam backup saknar konton, privata utkast och Outlook.
+
+Äldre stycken beskriver tidigare data. Mandat, arbetsprocess, scheman och aktivering är oförändrade.
+
+## Kompatibilitetsunderlag före v60
+
 ## Dataregel efter v59:s leveransuppföljningshistorik
 
 Efter direkt `source:'task'`-historik för affärskopplad `delivery` krävs **v59-kompatibel läsare och skrivare**. Inga nya fält/tabeller/SQL; tillåten historiksemantik utökas. Orörd faktisk v58 avvisade historiken vid normalisering/laddning, JSON-/NDJSON-export/import och autentiserad API-läsning/skrivning i syntetiskt Node-/SQLite-prov. Strukturschema accepterade formen utan semantisk kompatibilitet. [VALIDATION](../VALIDATION.md) anger exakt äldre revision/nio avvisningar och aktuell återläsning.
