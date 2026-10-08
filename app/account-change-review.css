@@ -30,4 +30,24 @@
 .account-change-readback{background:#fff9ed;border-color:#e5cd9a}
 .account-change-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.25rem}
 .account-change-sheet button:focus-visible,.account-change-sheet input:focus-visible,.account-change-sheet [data-slot=select-trigger]:focus-visible,.account-change-sheet [data-slot=checkbox]:focus-visible{outline:3px solid #148a99;outline-offset:3px}
+.account-review-work{min-width:0;border-top:1px solid #d4e0ea;margin-top:1rem;padding-top:1rem}
+.account-review-work h4{display:flex;align-items:flex-start;gap:.6rem;font-size:1rem;line-height:1.5;color:#193d50}
+.account-review-work h5{margin-block:.45rem .7rem;font-size:.96rem;line-height:1.5;color:#193d50}
+.account-review-work-count{font-weight:650}
+.account-review-work-count>span{display:block;margin-top:.3rem;font-weight:400}
+.account-review-work-list{display:grid;gap:.75rem;list-style:none;padding:0;margin-block:1rem}
+.account-review-work-list li{min-width:0;padding:.9rem;border:1px solid #dae4ed;border-radius:10px;background:#fff}
+.account-review-work-list article,.account-review-work-list dl,.account-review-work-list dl>div{min-width:0}
+.account-review-work-list .account-review-work-space{margin:0;font-size:.84rem;font-weight:650;color:#476176}
+.account-review-work-list dl{display:grid;gap:.65rem;margin:0}
+.account-review-work-list dt{font-size:.82rem;line-height:1.5;color:#476176}
+.account-review-work-list dd{margin:0;font-size:.94rem;line-height:1.6;font-weight:600}
+.account-review-work-reason{display:flex;align-items:flex-start;gap:.55rem;padding:.7rem;border:1px solid #e4c68d;border-radius:8px;background:#fff8e9;color:#68491b}
+.account-review-work-reason>span{min-width:0}
+.account-review-work-reason>svg{margin-top:.2rem}
+.account-review-work h4,.account-review-work h5,.account-review-work li,.account-review-work dl{white-space:normal;overflow-wrap:anywhere}
+.account-review-work h4,.account-review-work h5,.account-review-work [role=alert]{scroll-margin:1rem}
+.account-review-work h4:focus,.account-review-work h5:focus,.account-review-work [role=alert]:focus,.account-change-review>h3:focus{outline:3px solid #148a99;outline-offset:3px}
+.account-review-work>button{min-height:44px;width:100%}
+.account-review-work-empty{padding:.75rem;border:1px solid #e4c68d;border-radius:8px;background:#fff8e9;color:#68491b}
 @media(max-width:767px){.account-change-sheet .biz-grid,.account-change-counts dl{grid-template-columns:minmax(0,1fr)}.account-change-review,.account-change-readback{padding:.85rem}.account-change-counts dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:.65rem}.account-change-actions>button,.account-change-review>button,.account-change-readback>button{width:100%}.account-change-workspace .biz-repeat{flex-wrap:wrap;gap:.7rem}.account-change-workspace .biz-repeat>div{flex-basis:100%}.account-change-workspace .biz-repeat>button{width:100%}}

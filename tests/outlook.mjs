@@ -6,6 +6,7 @@ await (await import('./delivery-task-responsibility.mjs')).verifyDeliveryTaskRes
 await (await import('./production-assignment.mjs')).verifyProductionAssignment();
 await (await import('./production-inventory.mjs')).verifyProductionInventory();
 await (await import('./account-change-review.mjs')).verifyAccountChangeReview();
+await (await import('./account-change-work.mjs')).verifyAccountChangeWork();
 import ts from 'typescript';import {readFileSync,writeFileSync} from 'node:fs';import assert from 'node:assert/strict';
 const transpile=(source,target)=>writeFileSync(target,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);
 transpile(readFileSync('lib/outlook-shared.ts','utf8'),'work/outlook-shared.mjs');
