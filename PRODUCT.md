@@ -1,5 +1,23 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Minskad kontoåtkomst kräver aktuell produktionskontroll – v64
+
+**Granska kontoändringen** hör till administratörens befintliga kontoformulär. Den behövs när ett aktivt CRM-konto inaktiveras eller en rolländring tar bort någon av kontots befintliga rättigheter för jobb eller hinder. Kontrollen följer verkliga rättigheter, inte bara rollnamnet. Namnbyte och ändringar som behåller dessa rättigheter omfattas inte av den nya produktionsgranskningen.
+
+Kontrollen läser samtliga lagrade arbetsytor. **Jobbansvar** gäller aktuell produktion som är lämnad eller tryckt, kopplad till kontots registrerade användar-ID eller medlems-ID. **Öppet hinderansvar** gäller ett icke-tomt aktuellt hinder med kontots registrerade användar-ID, även på ett skickat jobb. Historiska produktionsrader används inte som aktuellt arbete.
+
+Kvarvarande ansvar spärrar förlusten av de rättigheter som behövs för det arbetet. En okänd eller motsägande aktuell ansvarskoppling i någon arbetsyta spärrar även när den inte säkert kan kopplas till det valda kontot. Felaktig lagring ger inget klartecken. Servern kontrollerar samma konto, underlag och aktuella villkor igen före skrivning. Inga jobb, hinder eller kommersiella ansvar flyttas automatiskt.
+
+Formuläret visar kontoidentitet, ändringen och separata antal per arbetsyta. **Produktionskontrollen tillåter den här ändringen** är ett avgränsat besked om produktionsansvar. Det bekräftar inte full personalavveckling, externa konton eller Sites-åtkomst.
+
+Vid fel bevaras formulärvärdena. **Läs kontots aktuella status** visar nuläget utan att ersätta dem. **Läs in aktuellt konto och ersätt formulärvärden** är ett uttryckligt val. Saknad sparningskvittens stoppar direkt omsändning; bekräftad sparning följd av misslyckad uppdatering visas som sparad med behov av omläsning.
+
+Ingen ny lagring, audit, ledger, massöverföring eller SSO byggs. Exakt upprepning genom ett redan nått slutläge är skild från varaktigt idempotens-/kvittensregister. Backupformatet är fortsatt `magnussons-crm-1`. Minsta kompatibla läsare/skrivare är fortsatt v62; en äldre läsare/skrivare saknar den nya åtkomstspärren. Källkandidat `c56486d42ad289bdbf722b74faab5cb1fafe229e`, träd `84eb44e6918c32e334a102b0880bcaa0751d3d61`. Tidigare kandidatprov är historik och räknas inte som slutkandidatens prov. [Faktisk verifiering](VALIDATION.md) redovisar slutkandidatens prov. Full kommersiell/privat/extern avveckling, Sites-åtkomst och verklig personalpilot återstår.
+
+## Historik före v64
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Produktionsarbete per konto – v63
 
 **Produktionsarbete per konto** hjälper en administratör att se kvarvarande aktuellt arbete inför överlämning. Inventeringen gäller vald demo- eller verksamhetsarbetsyta och jobb med status lämnad till produktion eller tryckt. Historiska, avslutade och avbrutna jobb ingår inte.

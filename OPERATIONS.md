@@ -1,5 +1,23 @@
 # Magnussons CRM – order, tryck och lager
 
+## Granska kontoändringen innan åtkomst minskas – v64
+
+1. Öppna **Konton & roller** som administratör. Välj **Ändra** vid rätt registrerat CRM-konto och kontrollera namn, inloggningsadress och **Konto-ID**.
+2. Välj ny **Roll och arbetsvy**, eller avmarkera **Kontot är aktivt**. När ändringen minskar befintlig produktionsåtkomst visas **Granska kontoändringen**.
+3. Läs **Jobbansvar**, **Öppet hinderansvar** och **Kopplingar att granska** för varje lagrad arbetsyta. Ett skickat jobb kan fortfarande ha ett hinder. Kontrollens omfattning är större än det valda urvalet i **Produktionsarbete per konto**.
+4. Vid **Ändringen är spärrad**: granska rätt underlag och lämna över varje ansvarsdel med dess befintliga arbetsflöde. Ett jobbbyte flyttar inte automatiskt hinderansvar eller kommersiellt ansvar. Gissa inte en person från ett äldre namn.
+5. Använd **Hämta kontoändringens granskning igen** efter överlämningen. När den nya produktionskontrollen tillåter ändringen, markera **Jag har granskat kontoändringen och produktionskontrollen.** Välj **Inaktivera CRM-konto** eller **Spara CRM-konto**.
+6. Vänta på sparningskvittot. Om sparningen är osäker, skicka inte samma ändring igen: välj **Läs kontots aktuella status**. Dina formulärvärden ligger kvar. Välj endast **Läs in aktuellt konto och ersätt formulärvärden** om du vill ersätta dem och granska en ny ändring.
+7. Om kontot bekräftas som sparat men översikten inte kunde uppdateras, använd **Hämta aktuell kontolista** före nästa kontoändring. Detta är ett uppdateringsfel efter sparning, inte ett besked om att sparningen misslyckades.
+
+Kontrollen gäller registrerat produktionsansvar i lagrade arbetsytor. Den flyttar inget arbete och skickar ingen inbjudan eller något meddelande. CRM-inaktivering ersätter inte hantering av kommersiellt ansvar, privata utkast och mejl, externa konton eller Sites-åtkomst. Dessa behöver hanteras separat före full personalavveckling.
+
+Källkandidat `c56486d42ad289bdbf722b74faab5cb1fafe229e`, träd `84eb44e6918c32e334a102b0880bcaa0751d3d61`. Tidigare kandidatprov är historik och räknas inte som slutkandidatens prov. Se [VALIDATION](VALIDATION.md) för faktiska tekniska prov. Verkliga personalinloggningar och personalpilot återstår.
+
+## Historik före v64
+
+# Magnussons CRM – order, tryck och lager
+
 ## Inventera produktionsarbete inför överlämning – v63
 
 1. Logga in som administratör och öppna **Konton & roller → Produktionsarbete per konto**. Kontrollera vilken arbetsyta inventeringen gäller.

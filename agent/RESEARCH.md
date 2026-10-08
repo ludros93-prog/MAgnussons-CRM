@@ -1,5 +1,27 @@
 # CRM-källor för Magnussons byggagent
 
+## Officiella principer inför granskad kontoändring – v64
+
+Faktiska officiella sidtexter och fokuserade utdrag lästes. Klockan efter webbläsningen var **2026-10-08 12:29:19 UTC**. Kvitto `/workspace/scratch/crm64/research/receipt.json`, SHA-256 `0fd33dabbd66a5c74b19170e42dea6cccd84c50cdd40db50c0ff045ecd998179`, verifierar sju korta citat mot verkligt returnerad text eller ny direkt hämtad Lime-HTML.
+
+| Källa | Belagd princip | Magnussons tillämpning och gräns |
+| --- | --- | --- |
+| [Salesforce Deactivate Users](https://help.salesforce.com/s/articleView?id=sf.how_to_deactivate_users.htm&language=en_US&type=5) | Avstängning bevarar historik och flyttar inte ägda poster. | Separata besked för kontoåtkomst och ansvar; Salesforce-regler kopieras inte. |
+| [Salesforce Considerations for Deactivating Users](https://help.salesforce.com/s/articleView?id=sf.users_deactivate_considerations.htm&language=en_US&type=5) | Historiska användare och filer kan finnas kvar. | Privat livscykel och filåtkomst kräver egna arbetsflöden och prov. |
+| [Salesforce Changing a Record’s Owner](https://help.salesforce.com/s/articleView?id=sf.account_owner_transfer.htm&language=en_US&type=5) | Överföring beror på objekt och status; avslutade aktiviteter följer inte automatiskt. | Inaktivering och ansvarsöverföring förblir skilda handlingar hos Magnussons. |
+| [Lime Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | ”Use verbs in imperative mood”; få relevanta framträdande handlingar. | Svenska granska-/läs-/spara-verb och separat, avgränsad granskning. |
+| [Saleshub Funktioner](https://saleshubai.se/funktioner) | ”Projektboard med uppgifter, flera ansvariga och statusrader”. | Visa ansvar och status i samma arbetssammanhang; inget tekniskt inaktiveringskontrakt verifierat. |
+| [Cloudflare D1 Database](https://developers.cloudflare.com/d1/worker-api/d1-database/) | Ett statement-fel i en batch avbryter eller återställer sekvensen. | Batch är tekniskt stöd, inte ett eget bevis på affärsregler eller CAS. |
+| [SQLite UPDATE](https://www.sqlite.org/lang_update.html) | En villkorad UPDATE med noll matchande rader är inte ett SQL-fel. | Kontroll av ändrade rader och villkorade efterföljande skrivningar behöver egna prov. |
+
+Salesforce artikeltext kom tillsammans med CSS-feltext. Lime weböppningar gav Internal Error/429; det officiella indexutdraget och en ny offentlig direkt HTML-hämtning gav relevant innehåll. Den hämtade HTML:n parsades med Python-standardbiblioteket efter att `bs4` saknades. Webverktyget gav inga HTTP-statusar eller individuella anropstider; någon specifik status för Lime-hämtningen sparades inte och påstås inte.
+
+Stabila kontoidentiteter, vilka produktionsrättigheter som utlöser granskning, alla lagrade arbetsytor, svenska formulärtexter, samtidighetskontroll och hantering av osäker kvittens är Magnussons egna produkt-/serverkontrakt. Ingen autentiserad leverantörsvy, fungerande integration, SSO-/Sites-avveckling, personalacceptans eller full WCAG-bedömning ingick i researchen. Slutkandidatens egna prov redovisas i [VALIDATION](../VALIDATION.md). Codex-referensen är oläst.
+
+## Historik före v64
+
+# CRM-källor för Magnussons byggagent
+
 ## Officiella designprinciper för produktionsinventering – v63
 
 Faktiska `search_service_web_run` sök-, open- och find-svar lästes. Klockan efter läsningen var 2026-10-08 10:31:27 UTC; enskilda webbanrop hade inga egna tidsstämplar. Scratchkvittot har SHA-256 `3dc045879e2d6aef155b287660406f9a39ff0e3476e246321ae2603d953ceef3` och bevarar faktiskt returnerad text, inte påstått komplett HTML eller HTTP-statusar.

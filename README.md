@@ -1,5 +1,19 @@
 # Magnussons CRM
 
+## Granska kontoändringar innan produktionsåtkomst minskas – v64
+
+Under **Konton & roller** visar **Granska kontoändringen** vad som behöver lämnas över innan ett aktivt CRM-konto inaktiveras eller får mindre produktionsbehörighet. Kontrollen visar **Jobbansvar**, **Öppet hinderansvar** och **Kopplingar att granska** per lagrad arbetsyta. Ett tomt urval i den vanliga produktionskön räcker inte.
+
+Administratören får ett tydligt besked före sparning. Kvarvarande ansvar och oklara kopplingar spärrar ändringen; inget arbete flyttas automatiskt. Vid fel finns formulärvärdena kvar. En osäker sparning kräver återläsning; en bekräftad sparning visas som sparad även om översikten inte kunde uppdateras. [Arbetsgång](OPERATIONS.md) och [verifiering](VALIDATION.md) beskriver omfattningen.
+
+Kod: `c56486d42ad289bdbf722b74faab5cb1fafe229e`. GitHub app-main: `0aa9d5ca01a0014f1b8e10f434bda9ea45e112d9`, produkt-PR [#102](https://github.com/ludros93-prog/MAgnussons-CRM/pull/102). Live: **v64**, lyckad publicering 2026-10-08 13:15:11 UTC på [samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site). Verifierad Sites-källrevision `c7bea6df6bd6857adcbd18a66dfcd92a1aaba17a` har samma produktträd. Begränsad delning är bevarad; verkliga personalinloggningar återstår.
+
+Kontrollen gäller registrerat produktionsansvar. Kommersiellt ansvar, privata utkast och mejl, externa konton och Sites-åtkomst behöver separata arbetsflöden. Full personalavveckling, verkliga personalinloggningar, personalpilot och full hostad återställning återstår. Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects.
+
+## Historik före v64
+
+# Magnussons CRM
+
 ## Produktionsarbete per konto – v63
 
 Under **Konton & roller** kan administratören inventera ett kontos öppna produktionsjobb och hinder i den valda arbetsytan. Välj ett konto eller en arbetskö och använd **Granska jobbansvar** för befintlig granskad överlämning, eller **Öppna jobbet** för nästa arbetsmoment. Jobbansvar och hinderansvar visas var för sig. Orderns kommersiella ansvar ligger kvar.
