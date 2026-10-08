@@ -4,6 +4,7 @@ await (await import('./company-event-responsibility.mjs')).verifyCompanyEventRes
 await (await import('./company-activity-responsibility.mjs')).verifyCompanyActivityResponsibility();
 await (await import('./delivery-task-responsibility.mjs')).verifyDeliveryTaskResponsibility();
 await (await import('./production-assignment.mjs')).verifyProductionAssignment();
+await (await import('./production-assignment-legacy.mjs')).verifyProductionAssignmentLegacy();
 await (await import('./production-inventory.mjs')).verifyProductionInventory();
 await (await import('./account-change-review.mjs')).verifyAccountChangeReview();
 await (await import('./account-change-work.mjs')).verifyAccountChangeWork();

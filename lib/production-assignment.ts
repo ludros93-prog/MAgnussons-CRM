@@ -11,7 +11,8 @@ export type ProductionAssignmentTransfer=z.infer<typeof ProductionAssignmentTran
 export type ProductionAssignmentRole=Extract<Role,'admin'|'production'|'print'|'warehouse'>;
 export type ProductionAssignmentTarget={memberId:string;userId:string;name:string;role:ProductionAssignmentRole;active:1;expectedTarget:string};
 export type ProductionAssignmentCandidate=Pick<ProductionAssignmentTarget,'memberId'|'name'|'role'|'expectedTarget'>;
-export type ProductionAssignmentReview={orderId:string;workId:string;expectedContext:string;candidates:ProductionAssignmentCandidate[];blockedReason:string};
+export type ProductionAssignmentPurpose='transfer'|'resolve_legacy';
+export type ProductionAssignmentReview={purpose:ProductionAssignmentPurpose;orderId:string;workId:string;expectedContext:string;candidates:ProductionAssignmentCandidate[];blockedReason:string};
 const need=(value:unknown,message:string)=>{if(!value)throw new RuleError(message)};
 export const productionAssignmentRole=(role:string):role is ProductionAssignmentRole=>['admin','production','print','warehouse'].includes(role);
 
@@ -21,16 +22,22 @@ export async function productionAssignmentTargetBasis(target:Omit<ProductionAssi
  const bytes=new TextEncoder().encode(recordBasis({memberId:target.memberId,userId:target.userId,name:target.name,role:target.role,active:target.active}));
  const digest=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest),value=>value.toString(16).padStart(2,'0')).join('');
 }
-export function productionAssignmentBasis(st:State,orderId:string){
+export function productionAssignmentBasis(st:State,orderId:string,purpose:ProductionAssignmentPurpose='transfer'){
  const orders=st.orders.filter(order=>order.id===orderId),order=orders.length===1?orders[0]:undefined;
- return recordBasis({orderId,orders,customers:order?st.customers.filter(customer=>customer.id===order.customerId).map(customer=>({id:customer.id,name:customer.name})):[],deals:order?st.deals.filter(deal=>deal.id===order.dealId).map(deal=>({id:deal.id,customerId:deal.customerId,title:deal.title})):[]});
+ const basis=recordBasis({orderId,orders,customers:order?st.customers.filter(customer=>customer.id===order.customerId).map(customer=>({id:customer.id,name:customer.name})):[],deals:order?st.deals.filter(deal=>deal.id===order.dealId).map(deal=>({id:deal.id,customerId:deal.customerId,title:deal.title})):[]});
+ // Ordinary transfers retain their existing context bytes. A legacy review is
+ // distinct evidence and cannot be authorized by a blocked transfer review.
+ return purpose==='resolve_legacy'?recordBasis({purpose,basis}):basis;
 }
-export function productionAssignmentBlockedReason(st:State,orderId:string,workId:string){
+export const isLegacyProductionAssignment=(production:Pick<State['orders'][number]['production'],'assigneeId'|'assigneeMemberId'|'assigneeName'|'assignmentHistory'>)=>!production.assigneeId&&!production.assigneeMemberId&&!!production.assigneeName.trim()&&!production.assignmentHistory.length;
+export function productionAssignmentBlockedReason(st:State,orderId:string,workId:string,purpose:ProductionAssignmentPurpose='transfer'){
  const orders=st.orders.filter(order=>order.id===orderId),order=orders.length===1?orders[0]:undefined;
  if(!orders.length)return 'Arbetsordern finns inte.';
- if(!order||st.customers.filter(customer=>customer.id===order.customerId).length!==1||st.deals.filter(deal=>deal.id===order.dealId&&deal.customerId===order.customerId).length!==1)return 'Arbetsorderns kopplingar behöver granskas innan ansvaret ändras.';
+ if(!order||st.customers.filter(customer=>customer.id===order.customerId).length!==1||st.deals.filter(deal=>deal.id===order.dealId&&deal.customerId===order.customerId).length!==1||purpose==='resolve_legacy'&&st.deals.filter(deal=>deal.id===order.dealId).length!==1)return 'Arbetsorderns kopplingar behöver granskas innan ansvaret ändras.';
  if(!['submitted','printed'].includes(order.production.status))return 'Avslutade, avbrutna och ännu inte inlämnade jobb behåller sitt registrerade ansvar.';
- if(!order.production.assigneeId&&order.production.assigneeName)return 'Jobbet har ett tidigare ansvarigt namn utan användaridentitet. Granska den äldre ansvarskopplingen innan någon tilldelas jobbet.';
+ if(purpose==='resolve_legacy'){
+  if(!isLegacyProductionAssignment(order.production))return 'Den här rättningen gäller bara ett äldre jobbansvar med namn, utan användar- eller kontokoppling och utan registrerad ansvarshistorik. Övriga ansvar kräver sitt vanliga granskningsflöde.';
+ }else if(!order.production.assigneeId&&order.production.assigneeName)return 'Jobbet har ett tidigare ansvarigt namn utan användaridentitet. Granska den äldre ansvarskopplingen innan någon tilldelas jobbet.';
  if(!workId||order.production.workId!==workId)return 'Arbetsversionen har ändrats eller saknar ett stabilt id. Läs in och granska aktuellt jobb.';
  if(order.production.assignmentHistory.length>=1000)return 'Arbetsordern har nått gränsen för ansvarshistorik.';
  return '';
@@ -47,23 +54,30 @@ export function protectProductionAssignmentInput(old:State['orders'][number],raw
 }
 export function recordProductionAssignment(order:State['orders'][number],actor:Actor,target:{userId:string;memberId:string;name:string},action:ProductionAssignmentHistory['action'],reason:string,at=new Date().toISOString()){
  const production=order.production;need(production.assignmentHistory.length<1000,'Arbetsordern har nått gränsen för ansvarshistorik.');
+ if(action==='resolve_legacy')need(isLegacyProductionAssignment(production),'Rättningen kräver ett äldre namn utan identitetskoppling eller registrerad ansvarshistorik.');
  const audit=ProductionAssignmentHistorySchema.parse({id:crypto.randomUUID(),orderId:order.id,workId:production.workId,revision:production.assignmentRevision+1,action,
   fromUserId:production.assigneeId,fromMemberId:production.assigneeMemberId,fromName:production.assigneeName,
-  toUserId:target.userId,toMemberId:target.memberId,toName:target.name,reason,at,byId:actor.id,byMemberId:actor.memberId||'',byName:actor.name});
+  toUserId:target.userId,toMemberId:target.memberId,toName:target.name,reason,at,byId:actor.id,byMemberId:actor.memberId||'',byName:actor.name,...(action==='resolve_legacy'?{legacyAssignedAt:production.assignedAt}:{})});
  production.assigneeId=audit.toUserId;production.assigneeMemberId=audit.toMemberId;production.assigneeName=audit.toName;production.assignedAt=audit.toUserId?at:'';production.assignmentRevision=audit.revision;production.assignmentHistory.push(audit);
 }
 // The target is separate trusted server context. A CRM action payload never
 // supplies its own account ID, name, role or historical audit.
 export function transferProductionAssignment(st:State,input:ProductionAssignmentTransfer,actor:Actor,target:ProductionAssignmentTarget){
+ changeProductionAssignment(st,input,actor,target,'transfer');
+}
+export function resolveLegacyProductionAssignment(st:State,input:ProductionAssignmentTransfer,actor:Actor,target:ProductionAssignmentTarget){
+ changeProductionAssignment(st,input,actor,target,'resolve_legacy');
+}
+function changeProductionAssignment(st:State,input:ProductionAssignmentTransfer,actor:Actor,target:ProductionAssignmentTarget,purpose:ProductionAssignmentPurpose){
  const parsed=ProductionAssignmentTransferSchema.parse(input);need(actor.role==='admin'&&actor.memberId,'Arbetsansvaret ändras av en inloggad administratör.');
- need(parsed.expectedContext===productionAssignmentBasis(st,parsed.orderId),'Arbetsordern eller granskningsunderlaget har ändrats. Läs in och granska aktuellt jobb.');
- const blocked=productionAssignmentBlockedReason(st,parsed.orderId,parsed.workId);need(!blocked,blocked);
+ need(parsed.expectedContext===productionAssignmentBasis(st,parsed.orderId,purpose),'Arbetsordern eller granskningsunderlaget har ändrats. Läs in och granska aktuellt jobb.');
+ const blocked=productionAssignmentBlockedReason(st,parsed.orderId,parsed.workId,purpose);need(!blocked,blocked);
  need(target.memberId===parsed.targetMemberId&&target.userId&&target.name.trim()&&target.active===1&&productionAssignmentRole(target.role),'Välj ett aktivt, anslutet tryck-, lager-, produktions- eller administratörskonto.');
  need(parsed.expectedTarget===target.expectedTarget,'Det valda kontot har ändrats. Läs in och granska kontolistan igen.');
  const order=st.orders.find(order=>order.id===parsed.orderId)!;need(order.production.assigneeId!==target.userId,'Jobbet har redan den valda ansvariga.');
- const action=order.production.assigneeId?'transfer':'assign';recordProductionAssignment(order,actor,target,action,parsed.reason);
+ const action=purpose==='resolve_legacy'?'resolve_legacy':order.production.assigneeId?'transfer':'assign';recordProductionAssignment(order,actor,target,action,parsed.reason);
  const audit=order.production.assignmentHistory.at(-1)!;
- st.events.unshift({id:crypto.randomUUID(),customerId:order.customerId,dealId:order.dealId,kind:'production',at:audit.at,text:'Arbetsansvar '+(action==='assign'?'tilldelat till '+target.name:'överlämnat från '+(audit.fromName||'tidigare konto')+' till '+target.name)+'. Orsak: '+parsed.reason,actor:{id:actor.id,name:actor.name}});
+ st.events.unshift({id:crypto.randomUUID(),customerId:order.customerId,dealId:order.dealId,kind:'production',at:audit.at,text:action==='resolve_legacy'?'Äldre jobbansvar granskat. Tidigare namn: '+audit.fromName+' (identitet inte fastställd). Nytt produktionsansvar registrerat för '+target.name+'. Underlag och orsak: '+parsed.reason:'Arbetsansvar '+(action==='assign'?'tilldelat till '+target.name:'överlämnat från '+(audit.fromName||'tidigare konto')+' till '+target.name)+'. Orsak: '+parsed.reason,actor:{id:actor.id,name:actor.name}});
  validateProductionAssignmentReferences(st);
 }
 export function validateProductionAssignmentReferences(st:State){
@@ -83,7 +97,8 @@ export function validateProductionAssignmentReferences(st:State){
    need(releasing?!!row.fromUserId&&!row.toUserId&&!row.toMemberId&&!row.toName:!!row.toUserId&&!!row.toName,'Arbetsansvarets historik har en ogiltig ansvarskoppling.');
    need(!assigning||!row.fromUserId&&!row.fromMemberId&&!row.fromName,'Ett nytt arbetsansvar får inte ersätta en befintlig ansvarig.');
    need(row.action!=='transfer'||!!row.fromUserId&&row.fromUserId!==row.toUserId,'Överlämningen behöver två olika användaridentiteter.');
-   need(!['assign','transfer'].includes(row.action)||!!row.toMemberId&&!!row.byMemberId,'Den granskade överlämningen saknar stabila kontokopplingar.');
+   need(row.action!=='resolve_legacy'||!previous&&!row.fromUserId&&!row.fromMemberId&&!!row.fromName&&typeof row.legacyAssignedAt==='string','Rättningen av äldre jobbansvar ska inleda historiken med tidigare namn och bevarat tidsfält utan gissad identitet.');
+   need(!['assign','transfer','resolve_legacy'].includes(row.action)||!!row.toMemberId&&!!row.byMemberId,'Den granskade överlämningen saknar stabila kontokopplingar.');
    need(row.action!=='claim'||row.toUserId===row.byId&&row.toMemberId===row.byMemberId,'Eget arbetsansvar måste tillhöra den inloggade användaren.');
    need(!previous||row.revision===previous.revision+1&&row.fromUserId===previous.toUserId&&row.fromMemberId===previous.toMemberId&&row.fromName===previous.toName,'Arbetsansvarets ändringar bildar inte en sammanhängande ansvarskedja.');previous=row;
   }

@@ -60,7 +60,7 @@ export function applyOperations(st:State,action:Action,actor:Actor):State{
   notify('seller',complete?'Hela ordern skickad – direktleverans bekräftad':'Delleverans registrerad',d.title+'. Kundmottagande registreras separat.',o.customerId,o.id,o.owner);
   return st;
  }
- if(action.type==='production_assignment_transfer')throw new RuleError('Arbetsansvaret kräver ett separat, servergranskat mottagarkonto.');
+ if(['production_assignment_transfer','production_assignment_legacy_resolve'].includes(action.type))throw new RuleError('Arbetsansvaret kräver ett separat, servergranskat mottagarkonto.');
  if(['production_claim','production_release'].includes(action.type)){
   const p=z.object({orderId:id,expectedAssignment:z.string().max(100000)}).parse(action.data),o=order(p.orderId),v=o.production;
   must(['admin','production','print','warehouse'].includes(actor.role),'Arbetsansvar hanteras av produktionen eller administratör.');

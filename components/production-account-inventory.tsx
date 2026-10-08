@@ -6,6 +6,7 @@ import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import type {Order,State} from '@/lib/crm';
 import {productionInventoryBasis,productionInventoryInput,ProductionInventoryReviewSchema,type ProductionInventoryAccount,type ProductionInventoryReview,type ProductionInventoryRow} from '@/lib/production-inventory';
+import {isLegacyProductionAssignment,productionAssignmentBlockedReason} from '@/lib/production-assignment';
 
 type Props={st:State;space:'demo'|'live';onProductionAssignment:(order:Order)=>void;onOpenJob:(orderId:string)=>void;refresh:()=>Promise<State>};
 type Inventory={identity:string;input:string;review:ProductionInventoryReview};
@@ -91,8 +92,14 @@ export function ProductionAccountInventory({st,space,onProductionAssignment,onOp
  const shown=matches.slice(0,visibleCount);
  const jobCount=selectedRows.filter(row=>belongs(row,'job')).length,issueCount=selectedRows.filter(row=>belongs(row,'issue')).length;
  function stillCurrent(){return !!inventory&&current.current.admin&&current.current.identity===inventory.identity&&current.current.input===inventory.input;}
+ function assignmentAction(row:ProductionInventoryRow){
+  const orders=st.orders.filter(order=>order.id===row.orderId);
+  if(orders.length!==1||orders[0].production.workId!==row.workId)return null;
+  if(isLegacyProductionAssignment(orders[0].production)&&!productionAssignmentBlockedReason(st,row.orderId,row.workId,'resolve_legacy'))return 'resolve_legacy';
+  return row.blockedReason?null:'transfer';
+ }
  function openAssignment(row:ProductionInventoryRow){
-  if(lock.current||!stillCurrent()||row.blockedReason||!belongs(row,'job'))return;
+  if(lock.current||!stillCurrent()||!assignmentAction(row)||!belongs(row,'job'))return;
   const orders=st.orders.filter(order=>order.id===row.orderId);
   if(orders.length===1&&orders[0].production.workId===row.workId)onProductionAssignment(orders[0]);
  }
@@ -118,14 +125,14 @@ export function ProductionAccountInventory({st,space,onProductionAssignment,onOp
   {review&&selected&&!unavailable&&<>
    <div className="production-inventory-summary"><div><p className="production-inventory-count" role="status" aria-atomic="true">Visar {shown.length} av {matches.length} jobb{filtered?' som matchar dina filter':''}. {filtered&&<span>Valt arbete innehåller {selectedRows.length} jobb före filtrering.</span>}</p><p className="biz-hint">Ett jobb kan ha både jobbansvar och ett separat öppet hinder.</p></div>{filtered&&<Button type="button" variant="outline" disabled={loading} onClick={resetFilters}>Återställ filter</Button>}</div>
    <ul className="production-inventory-counts" aria-label="Ansvar i hela det valda arbetet"><li><span>Jobbansvar</span><b>{jobCount}</b></li><li><span>Öppet hinderansvar</span><b>{issueCount}</b></li></ul>
-   <ol className="production-inventory-list" aria-label="Produktionsjobb att granska">{shown.map((row,index)=>{const ownsJob=belongs(row,'job'),ownsIssue=belongs(row,'issue');return <li key={row.orderId+'-'+row.workId+'-'+index}><article aria-labelledby={rowId+'-'+index}>
+   <ol className="production-inventory-list" aria-label="Produktionsjobb att granska">{shown.map((row,index)=>{const ownsJob=belongs(row,'job'),ownsIssue=belongs(row,'issue'),assignment=assignmentAction(row);return <li key={row.orderId+'-'+row.workId+'-'+index}><article aria-labelledby={rowId+'-'+index}>
     <div className="production-inventory-row-head"><span className="production-inventory-status">{row.status==='submitted'?'Lämnad till produktion':'Tryckt'}</span><span className="production-inventory-date">{dueLabel(row)}: {displayDate(row.dueAt)}</span></div>
     <h3 id={rowId+'-'+index}>{row.title}</h3><p className="production-inventory-customer"><b>Kund:</b> {row.customerName||'Kundkoppling behöver granskas'}</p>
     <dl><div><dt>Jobbansvar{ownsJob?' · ingår i urvalet':''}</dt><dd>{row.assignmentState==='unassigned'?'Ingen ansvarig':row.assigneeName||'Ansvarig saknas i underlaget'}{row.assignmentState==='assigned'&&<small>Konto-ID: {row.assigneeMemberId}.</small>}{row.assignmentState==='unresolved'&&<span className="production-inventory-attention">Kontokopplingen behöver granskas</span>}</dd></div><div><dt>Öppet hinderansvar{ownsIssue?' · ingår i urvalet':''}</dt><dd>{!row.issue?'Inget öppet hinder':row.issueOwnerState==='unassigned'?'Ingen ansvarig':row.issueOwnerName||'Ansvarig saknas i underlaget'}{row.issueOwnerState==='assigned'&&<small>Konto-ID: {row.issueOwnerMemberId}.</small>}{row.issueOwnerState==='unresolved'&&<span className="production-inventory-attention">Kontokopplingen behöver granskas</span>}</dd></div></dl>
     {row.issue&&<p className="production-inventory-issue"><AlertTriangle size={17} aria-hidden="true"/><span><b>Öppet hinder:</b> {row.issue}</span></p>}
     <p className="production-inventory-reference">Arbetsreferens: {row.workId||'saknas'}.</p>
     {row.blockedReason&&<p className="production-inventory-blocker"><AlertTriangle size={17} aria-hidden="true"/><span>{row.blockedReason}</span></p>}
-    <div className="production-inventory-actions">{ownsJob&&!row.blockedReason&&<Button type="button" variant="outline" onClick={()=>openAssignment(row)} aria-describedby={rowId+'-'+index}><ArrowRightLeft size={17} aria-hidden="true"/><span>Granska jobbansvar</span></Button>}<Button type="button" variant="outline" disabled={st.orders.filter(order=>order.id===row.orderId).length!==1} onClick={()=>openJob(row)} aria-describedby={rowId+'-'+index}>Öppna jobbet</Button></div>
+    <div className="production-inventory-actions">{ownsJob&&assignment&&<Button type="button" variant="outline" onClick={()=>openAssignment(row)} aria-describedby={rowId+'-'+index}><ArrowRightLeft size={17} aria-hidden="true"/><span>{assignment==='resolve_legacy'?'Rätta äldre jobbansvar':'Granska jobbansvar'}</span></Button>}<Button type="button" variant="outline" disabled={st.orders.filter(order=>order.id===row.orderId).length!==1} onClick={()=>openJob(row)} aria-describedby={rowId+'-'+index}>Öppna jobbet</Button></div>
     {ownsIssue&&<p className="biz-hint">Öppna jobbet för att granska hindret. Ett byte av jobbansvar flyttar inte hindrets ansvar.</p>}
    </article></li>;})}</ol>
    {!matches.length&&<div className="production-inventory-empty"><b>{filtered?'Inga jobb matchar dina filter.':'Inga öppna jobb finns i det här urvalet.'}</b><p>{filtered?'Återställ filter för att granska allt arbete i urvalet.':'Det här gäller aktuella produktionsjobb i vald arbetsyta. Ett tomt urval bekräftar inte en fullständig personalavveckling eller att kontot kan stängas.'}</p></div>}
