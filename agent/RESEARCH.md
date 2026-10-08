@@ -1,5 +1,25 @@
 # CRM-källor för Magnussons byggagent
 
+## Färska officiella källor för produktionsansvar – v62
+
+Läst med faktiska `search_service_web_run` sök-, open-, click- och find-svar 2026-10-08 08:20:42 UTC. Exakt returnerad text sparades i scratch; kvittots SHA-256 är `6b1ee21a9f5cd545351cdbde3a8f4e32cac9e8ad686ef06d23501f07bc2d0db4`. Inga HTTP-statusar eller autentiserade leverantörsvyer har påståtts.
+
+| Officiell källa | Kort faktiskt citat | Tillämpning hos Magnussons och gräns |
+| --- | --- | --- |
+| [Saleshub AI, Funktioner](https://saleshubai.se/funktioner) | “Projektboard med uppgifter, flera ansvariga och statusrader” | Ansvar visas vid jobbet. Produktbeskrivning, ingen provad kontobehörighet. |
+| [Lime, Notifications – Assign](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) | “Instead of mentioning someone in a note, you assign them directly in a designated field.” | Ett eget ansvarsfält. Magnussons ansvarsflytt skickar inga mejl eller notiser. |
+| [Lime, Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | “Use verbs in imperative mood” | Konkreta svenska handlingar: tilldela, byt, granska och spara. |
+| [Salesforce, Activities: Assignment Restrictions](https://help.salesforce.com/s/articleView?id=000385157&language=en_US&type=1) | “The Assigned To field designates a single owner for the activity.” | Jobbets och orderns ansvar skiljs åt. Faktisk artikeltext kom tillsammans med CSS-feltext; Salesforces regler är inte Magnussons policy. |
+| [W3C, Dialog (Modal) Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) | “When a dialog closes, focus returns to the element that invoked the dialog” | Modal fokusordning och återgång. Vägledning, inget eget skärmläsarprov. |
+| [W3C, Understanding Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) | “reflow when narrowed to a width equivalent to 320 CSS pixels.” | En kolumn på små skärmar. Lokala viewport/CSS-prov är ingen full WCAG-bedömning. |
+| [W3C, Target Size (Enhanced)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html) | “Make custom targets at least 44 by 44 pixels.” | Lokalt 44×44-mål för nya tryckytor. Enhanced är nivå AAA; ingen full AA-/AAA-garanti. |
+
+Salesforces sida om Account Owner gav vid direkt öppning ingen faktisk artikeltext och räknas inte som öppnad sakartikel. Svenska texter, granskningskrav, konto-ID, rättigheter, audit och CAS/idempotens är Magnussons egna implementationer. Källorna bevisar inga fungerande integrationer eller garantier om produktens rangordning.
+
+## Historik före v62
+
+# CRM-källor för Magnussons byggagent
+
 ## Separat ansvar för aktivitet och förberedelser – offentlig research 2026-10-08
 
 Fem officiella CRM-sidor lästes mellan 07:15:54 och 07:15:55 UTC och tre W3C-sidor 07:16:09 UTC. Webverktyget returnerade text och verifierbara kortcitat men ingen HTTP-status. Kvittot `fresh-official-source-evidence.json` har SHA-256 `04ba877848523f4f835734ea969d430c510071f094e8c0c4cf4c1c46c038934c`.

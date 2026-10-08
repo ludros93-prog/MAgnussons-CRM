@@ -1,5 +1,21 @@
 # Magnussons CRM – designriktning
 
+## Granskning i jobbets sammanhang – v62
+
+Jobbet visar **Produktionsansvar** och **Orderansvar · ligger kvar** bredvid de konkreta handlingarna **Tilldela produktionsansvar** och **Byt produktionsansvar**. Användaren ska förstå vem som håller ihop produktionen och vilket kommersiellt ansvar som följer ordern. Ett konto-ID skiljer verkliga konton med identiskt namn och roll; inga kontaktadresser gissas.
+
+Dialogen går från nuvarande ansvar till nytt konto, skäl, jobbunderlag och en uttrycklig granskningsruta. Valet är tomt från början. **Spara produktionsansvar** beskriver den faktiska handlingen. Mängder och instruktioner visas som registrerat underlag som följer jobbet. Uppdatering av underlag är en separat läsning och ett medvetet nytt val; ett konfliktfel får inte ersätta användarens text eller visa ett påhittat sparresultat.
+
+Designmålet är en kolumn, begripliga hela svenska knapptexter och vertikal scroll på små skärmar, med nya vanliga tryckytor minst 44×44 CSS-pixlar. Långa namn och konto-ID får radbrytas. Dialogrubriken tar initialt fokus; tangentbordsfokus stannar i den aktiva dialogen och återgår till öppnaren eller en logisk efterföljare. Osparade val kräver ett uttryckligt stängningsval.
+
+Utförd verifiering för `d1b47198a3986a20d40006dd249658e302eb5bbf`: Browseragenten öppnade elva skärmbilder och root ytterligare fyra faktiska bildutsnitt. Svenska handlingar, full radbrytning, separata ansvar och synligt fokuserat sparande kontrollerades på smala skärmar. Förstorad text använder vertikal scroll. Detta ersätter inte användartest med personalen. 33/33 browserfall passerade på exakt slutbygge: båda adminingångarna, 320/390/1280px, CSS-text 2×, native tangentbord/fokus, stängningsval, faktisk 403/409, uttrycklig återinläsning, dubbelklick och tappad/felaktig kvittens efter riktig skrivning, kontobyte/arbetsytebyte samt fem andra roller. Syntetiskt underlag skapades med 90 faktiska POST200 och tio kontoavläsningar. Råa 18 tabeller och R2 samt 321 källfiler/97 buildfiler kontrollerades före/efter; egna testprocesser, lagring och portar är stängda. Browserrapport SHA-256 `49647981b62e0ca112309be58d79d749b3c6b515582f216a88af7b258b95cb9f`. Eventuella misslyckade försök och omprov: Den frysta browserkörningen passerade första gången. Förberedelsens egna adress-/kassationsfält och förväntade 400/403/409-statusar rättades till de verkliga API-kontrakten innan körningen; ingen produktkod ändrades för att få ett browserprov grönt.
+
+Färsk officiell inspiration finns i [RESEARCH](agent/RESEARCH.md): Saleshub AI för ansvar i jobbets sammanhang, Lime för särskilt ansvarsfält och handlingsverb, Salesforce för tydligt postansvar, W3C för dialogfokus, omflöde och lokala tryckytor. Detta är Magnussons egna utformningsval. Det innebär inga leverantörsanslutningar, full WCAG-garanti eller godkänd personalpilot.
+
+## Historik före v62
+
+# Magnussons CRM – designriktning
+
 ## Förstå vilken nivå som får nytt ansvar – v61
 
 Kalenderns aktivitet visar **Aktivitetens ansvar** med en egen administratörshandling. Checklistans rader visar sina förberedelseansvar och behåller sina egna handlingar. Parentdialogens rubrik **Byt aktivitetsansvar** eller **Förankra aktivitetens ansvar** och blocket **Förberedelsernas ansvar · ligger kvar** förklarar följden före sparning.
