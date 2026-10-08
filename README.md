@@ -1,5 +1,21 @@
 # Magnussons CRM
 
+## Kvarstående hinder syns i produktionsinventeringen – v69-kod
+
+**Konton & roller → Produktionsarbete per konto** visar även skickade jobb med öppna hinder. **Skickat · öppet hinder** skiljer det aktuella hindret från **Jobbansvar · historiskt**. Historiskt jobbansvar räknas inte som öppet arbete och får ingen överlämningsknapp.
+
+**Öppna jobbet** öppnar jobbets detaljvy direkt; välj där **Lös kvarstående hinder** enligt befintlig behörighet. Ingen extra växling till Avslutat krävs. Aktiva jobb, konto-ID:n, filter och sidning behåller sina befintliga regler.
+
+Kod `c78cd3af87e2290b104a1cf5e88456062f32526b`, träd `4970dbac44a3006e096c20e811f8dcf8e676c2b2`. GitHub app-main `0f72cef714b08cebed2f1c302f0779d529d1d7f3`; exakt-head CI 37853755931 och fem obligatoriska slutkontroller är gröna, kontrollkvitto SHA-256 `e3c10c7313dd997147bed2ba78ef7906fb10c76bb4ee880acc296d992f16e373`. Native browser: 10 godkända fall och 16 sparade bilder, kvitto `b217228e01eba7d20107594d7bc67b5c2ec9ae2c7ad63b0c5d437fc3e03dfe4c`.
+
+**Publicering blockerad:** Sites-instruktionen kräver `site-workflow.mjs` för källöppning och packning. En källskrivcredential har utfärdats, men hjälpskriptet är inte åtkomligt och inget sådant öppnings-/packningsflöde har kunnat köras. Ingen v69-version har sparats eller publicerats. [Samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) ligger kvar på **v68**, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`, med bevarad begränsad delning.
+
+Ingen ändrad lagring, SQL-migration eller backupsemantik. `magnussons-crm-1` och v66-kompatibelt läsar-/skrivargolv efter äldre jobbansvarsrättning består. Granskat hinderansvarsbyte, övriga oklara identiteter/full personalöverlämning, chefsroll, privata backuper, faktisk personalpilot, full hostad återställning och riktiga integrationskonton kvarstår. Codex-referensen är oläst. Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects.
+
+## Historik före v69-koden
+
+# Magnussons CRM
+
 ## Lös ett kvarstående hinder på ett skickat jobb – v68
 
 Ett skickat jobb med ett befintligt öppet hinder erbjuder nu **Lös kvarstående hinder** i produktionsvyerna. Rapportören eller en administratör kan läsa det registrerade underlaget, beskriva den faktiska lösningen och välja **Hindret är löst**. Den befintliga serverbehörigheten gäller fortsatt.

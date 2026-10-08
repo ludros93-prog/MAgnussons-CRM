@@ -1,5 +1,23 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Skickat jobb kan ha ett öppet hinder – v69-kod
+
+**Produktionsarbete per konto** innehåller aktiva lämnade/tryckta jobb samt skickade jobb med öppna hinder. **Alla jobb och öppna hinder** beskriver urvalet. Avbrutna jobb och skickade jobb utan hinder ingår inte. Inventeringens läsrespons får `dispatched` med öppet hinder; det lagrade produktionsformatet är oförändrat.
+
+För ett skickat jobb visar **Jobbansvar · historiskt** vem som höll ihop jobbet; endast det kvarstående hinderansvaret ingår i aktuell ansvarsfilter/-räkning. Historiskt oklart jobbansvar döljer inte ett separat registrerat hinderkonto och erbjuder ingen ny rättning eller överlämning.
+
+**Öppna jobbet** öppnar detaljvyn direkt för den befintliga handlingen **Lös kvarstående hinder**. Skickat status och fysiska/kommersiella uppgifter bevaras; ett verkligt löst hinder försvinner vid aktuell återläsning. Kontoändringens separata aktuella granskning kan fortfarande hitta andra spärrar.
+
+Kod `c78cd3af87e2290b104a1cf5e88456062f32526b`, träd `4970dbac44a3006e096c20e811f8dcf8e676c2b2`. GitHub app-main `0f72cef714b08cebed2f1c302f0779d529d1d7f3`; exakt-head CI 37853755931 och fem obligatoriska slutkontroller är gröna, kontrollkvitto SHA-256 `e3c10c7313dd997147bed2ba78ef7906fb10c76bb4ee880acc296d992f16e373`. Native browser: 10 godkända fall och 16 sparade bilder, kvitto `b217228e01eba7d20107594d7bc67b5c2ec9ae2c7ad63b0c5d437fc3e03dfe4c`.
+
+**Publicering blockerad:** Sites-instruktionen kräver `site-workflow.mjs` för källöppning och packning. En källskrivcredential har utfärdats, men hjälpskriptet är inte åtkomligt och inget sådant öppnings-/packningsflöde har kunnat köras. Ingen v69-version har sparats eller publicerats. [Samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) ligger kvar på **v68**, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`, med bevarad begränsad delning.
+
+Ingen ändrad lagring, SQL-migration eller backupsemantik. `magnussons-crm-1` och v66-kompatibelt läsar-/skrivargolv efter äldre jobbansvarsrättning består. Granskat hinderansvarsbyte, övriga oklara identiteter/full personalöverlämning, chefsroll, privata backuper, faktisk personalpilot, full hostad återställning och riktiga integrationskonton kvarstår. Codex-referensen är oläst. Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmåtten.
+
+## Historik före v69-koden
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Skickat jobb och kvarstående hinder är skilda tillstånd – v68
 
 Ett redan skickat jobb kan ha ett äldre eller återläst öppet hinder. **Lös kvarstående hinder** gör den befintliga lösningshandlingen nåbar i Board **Historik** och Workspace **Avslutat** för registrerad rapportör eller administratör med fortsatt serverrätt.

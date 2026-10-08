@@ -1,5 +1,21 @@
 # Magnussons CRM – order, tryck och lager
 
+## Hitta ett kvarstående hinder inför kontoändring – v69-kod
+
+1. Öppna rätt arbetsyta och **Konton & roller → Produktionsarbete per konto**. Välj verkligt konto eller **Alla jobb och öppna hinder**.
+2. Kontrollera kund, arbetsreferens och **Skickat · öppet hinder**. **Jobbansvar · historiskt** är bevarat sammanhang; **Öppet hinderansvar** är den aktuella ansvarsdelen. Konto-ID skiljer konton med samma namn.
+3. Välj **Öppna jobbet**. Jobbets detaljvy öppnas direkt; välj befintlig **Lös kvarstående hinder** när din serverbehörighet tillåter det. Avslutat är en alternativ väg från produktionsvyn, ingen extra obligatorisk omväg.
+4. Registrera lösning först när hindret verkligen är löst och invänta faktiskt sparbesked. Följ v68:s regler för fryst underlag, felretention och konflikt. Jobbet förblir skickat; historiska personer, mängder och leveranser ligger kvar.
+5. Hämta aktuellt inventeringsunderlag och **Granska kontoändringen** igen. Tomt filtrerat urval eller ett löst hinder innebär ingen fullständig personalavveckling; andra arbetsytor/ansvarsdelar kan fortfarande spärra.
+
+**Publicering blockerad:** Sites-instruktionen kräver `site-workflow.mjs` för källöppning och packning. En källskrivcredential har utfärdats, men hjälpskriptet är inte åtkomligt och inget sådant öppnings-/packningsflöde har kunnat köras. Ingen v69-version har sparats eller publicerats. [Samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) ligger kvar på **v68**, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`, med bevarad begränsad delning.
+
+Kod `c78cd3af87e2290b104a1cf5e88456062f32526b`, app-main `0f72cef714b08cebed2f1c302f0779d529d1d7f3`; [VALIDATION](VALIDATION.md) anger exakt slutprov och kvarstående driftgränser. Ingen ändrad lagring, SQL-migration eller backupsemantik. `magnussons-crm-1` och v66-kompatibelt läsar-/skrivargolv efter äldre jobbansvarsrättning består. Granskat hinderansvarsbyte, övriga oklara identiteter/full personalöverlämning, chefsroll, privata backuper, faktisk personalpilot, full hostad återställning och riktiga integrationskonton kvarstår. Codex-referensen är oläst.
+
+## Historik före v69-koden
+
+# Magnussons CRM – order, tryck och lager
+
 ## Registrera lösning för kvarstående hinder på skickat jobb – v68
 
 1. Öppna rätt arbetsyta. I produktionsboarden välj **Historik**; i **Tryck & leverans** välj **Avslutat** och öppna jobbet. Kontrollera kund, affär, order och arbetsreferens.

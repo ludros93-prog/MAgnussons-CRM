@@ -1,3 +1,33 @@
+# Validering – skickat jobb med öppet hinder i inventeringen, v69-kod
+
+Slutkod `c78cd3af87e2290b104a1cf5e88456062f32526b`, träd `4970dbac44a3006e096c20e811f8dcf8e676c2b2`; GitHub app-main `0f72cef714b08cebed2f1c302f0779d529d1d7f3`. Ingen tidigare kandidats prov räknas som slutkandidatens godkännande.
+
+## Slutkontroller och isolerat underlag
+
+Fem obligatoriska slutkontroller passerade på exakt oförändrad head/träd/källbytes: `node tests/outlook.mjs`, icke-inkrementell TypeScript, `corepack pnpm build`, `node tests/runtime-smoke.mjs` och `git diff --check`. Kvitto SHA-256 `e3c10c7313dd997147bed2ba78ef7906fb10c76bb4ee880acc296d992f16e373`; exakt-head CI 37853755931 är grön.
+
+Inventeringsregressionen använder autentiserade verkliga handlers och migrerad SQLite. Skickat jobb med öppet hinder ingår; skickat utan hinder, avbrutet och endast arkiverat arbete ingår inte. Skilda konton med samma namn, inaktivt konto, äldre/okänd/saknad hinderidentitet, oförändrad historisk attribution och invalidation vid faktisk hinderlösning prövas utan namn→konto-gissning.
+
+Byggd HTTP-Worker och isolerad D1/R2 verifierar samma inventering, fortsatt kontoändringsspärr och befintlig lösning med CAS/idempotens. Alla 18 råtabeller och R2-underlag kontrolleras, med positiva privata utkast-/Outlook-/filsentineler. Befintliga regressioner omfattar 40→45, 50→48 med uttryckligt **syntetiskt** godkännande, kassation, delleverans och dubbelklick; detta är ingen verklig kundacceptans.
+
+Native Chromium: 10 godkända fall, 16 sparade bilder, kvitto `b217228e01eba7d20107594d7bc67b5c2ec9ae2c7ad63b0c5d437fc3e03dfe4c`. Berörda svenska etiketter, historiskt kontra aktuellt ansvar, filter, direkt jobböppning, 320/390/1280 CSS-px, textförstoring och tangentbordsflöde redovisas från slutkörningen. Isolerad browser är ingen personal-, skärmläsar-, fysisk telefon- eller full WCAG-acceptans.
+
+Slutbrowsern gav ett verkligt HTTP 200 från ett POST vid dubbelklick. Lagerkontots hinder minskade 6→5, alla inventeringsrader 13→12 och öppna hinder 11→10; aktuella jobb förblev 4. Alla 18 råtabeller och två R2-objekt återställdes byteexakt efter det egna syntetiska skrivprovet. 20 tangentbordsfokuserade reglage var minst 44 CSS-px och helt synliga; två smala vyer hade uppmätt 200 % textstorlek. Previewprocesser och temporär lagring stängdes och togs bort.
+
+Oberoende slutgranskning PASS utan blockerande fynd, kvitto SHA-256 `df0c1c8e5162359b895d14f39ccaeb449f4519e89e49b9d4fbe61228f8fe80cb`. [Kod-PR #112](https://github.com/ludros93-prog/MAgnussons-CRM/pull/112) slogs samman först efter dessa slutbelägg, gröna kontroller för exakt head och aktuell bas.
+
+Två tidigare partiella browserharnessförsök är tillbakadragna och räknas inte som slutgodkännande. En felaktig navigeringsselector och fixture-/urvalsförväntan rättades i testverktyget; produktreglerna försvagades inte. Standalone-/wrapperberoende preflights för CRM-sviten är inte slutpass; endast den fulla obligatoriska sviten på slutrevisionen används ovan.
+
+Läsresponsens inventeringsschema accepterar nu `dispatched` bara med öppet hinder. Det är en utökad läsrepresentation, inte en ändring av det lagrade produktionsformatet. 24 lagrings-, säkerhets-, mängd- och hostingfiler är byteidentiska med bas `dbd1d4dbdbead222d6107c5cf84dd4c4c8ed423c`; invarianskvitto SHA-256 `6caff2d06fdecc12fb9e2a699bc10ae80be8ef40ff940e827deae54fecd7ee07`. Ingen ändrad lagring, SQL-migration eller backupsemantik. `magnussons-crm-1` och v66-kompatibelt läsar-/skrivargolv efter äldre jobbansvarsrättning består. V68 är formatkompatibelt men saknar inventeringsfixen; en återgång får inte skriva bort äldre v66-historik.
+
+## Källkod och faktisk publicering
+
+**Publicering blockerad:** Sites-instruktionen kräver `site-workflow.mjs` för källöppning och packning. En källskrivcredential har utfärdats, men hjälpskriptet är inte åtkomligt och inget sådant öppnings-/packningsflöde har kunnat köras. Ingen v69-version har sparats eller publicerats. [Samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) ligger kvar på **v68**, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`, med bevarad begränsad delning.
+
+För nästa deploy krävs tillgänglig föreskriven sourcehelper, färsk Site-källa/aktuellt head, verifierad källa och arkiv samt oförändrade D1/R2-bindningar, runtime-miljö och full begränsad åtkomstpolicy. Credential är inget utfört öppnings-, paketerings- eller deploybevis. Granskat hinderansvarsbyte, övriga oklara identiteter/full personalöverlämning, chefsroll, privata backuper, faktisk personalpilot, full hostad återställning och riktiga integrationskonton kvarstår. Codex-referensen är oläst.
+
+## Historik före v69-koden
+
 # Validering – lös kvarstående hinder på skickat jobb v68
 
 Källgranskningen visade att `production_issue_resolve` redan tillåter `dispatched`, medan båda produktionsvyerna saknade ingången där. V68 exponerar endast befintlig lösning för ett redan öppet hinder. Skickat jobb återöppnas inte; beskrivningsändring, ny rapportering och fysiska moment får ingen ny väg.
