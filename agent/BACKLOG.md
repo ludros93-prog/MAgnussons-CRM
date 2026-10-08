@@ -1,5 +1,16 @@
 # Arbetskö för Magnussons CRM
 
+## v57: granskad direkt överlämning av tre kundaktivitetstyper
+
+B01b2 får direkt adminöverföring av öppna `csm`, `csm_need` och `prospecting` utan affärskoppling. Uppgiftens ägare/profil-ID och befintlig överföringshistorik/händelse sparas atomiskt med orsak/granskning. Kundrelationsansvar, kundplan/prospektunderlag, kvalificering, nya affärers kundbaserade ansvar och tidigare resultat bevaras. Befintliga specialuppgifters ansvar överlever vanligt plan-/prospektsparande. Exakt profil-ID för ny nästaaktivitet avgränsas till de tre specialkälltyperna utan affärskoppling; äldre manuella/övriga källregler ändras inte. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering/release.
+
+B01b2 förblir öppet för leverans-/okända uppgifter, event/checklistor, produktionens användaransvar och samordnade konto-/Sites-/flerarbetsytekontroller. Ett konkret nästa avgränsat val är granskad överlämning av kvarvarande sådant arbete efter färsk inventering av kod/drift. Kundärenden/onboarding/årshjul har redan egna överlämningsvägar och ska inte förklaras olösta enbart därför att de saknar denna direkta specialuppgiftsväg. V56:s granskade återöppning av kundrelation finns kvar; generell historisk affärs-/orderredigering är fortfarande separat. Historisk attribution ska inte flyttas för att kringgå äldre formulärregler.
+
+Efter ny direkt specialuppgiftshistorik krävs v57-kompatibel **läsare och skrivare**, utan nya fält/tabeller/SQL. Faktiskt äldre v56-prov visar 21 förväntade avvisningar och fyra kompatibla kontroller; inga tysta v57-historikförluster påstås. B07:s första laddning/mobilmeny och Outlook-läsning före färdig produktionsroll, privata årshjulsserverutkast, B02 chefsroll, B04 privata konto-/utkast-/Outlookbackuper och faktisk hostingåterställning, verkliga integrationer och observerad personalpilot består. Full ansvarsinventering vid senare auditerade skrivningar/kandidatrendering är inte kostnadskvantifierad. Verifierat åtkomst-/data-/orderfel går före normal kö. Scheman, prompter och aktivering ändras inte.
+
+## Historik före v57
+
+
 ## v56: samlad granskad återöppning av kundrelation
 
 B01b2 får **Återöppna kundrelation** på samma avslutade kundkort: aktivt granskad kundrelationsansvarig, uttrycklig relation, orsak och en ny planerad uppföljning sparas atomiskt. En verklig kundansvarsöverföring registreras bara vid profilbyte; historisk försäljning och gamla aktiviteter flyttas inte. Den redan fungerande tvåstegsvägen bevaras. [VALIDATION](../VALIDATION.md) och [LOG](LOG.md) anger faktisk verifiering/release.

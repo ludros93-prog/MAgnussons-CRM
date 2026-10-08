@@ -1,5 +1,18 @@
 # Magnussons CRM
 
+## Överlämna en kundaktivitet med granskning – v57
+
+Administratören kan välja **Byt uppgiftsansvar** för en öppen **Kundavstämning**, **Kommande kundbehov** eller **Prospektkontakt** utan affärskoppling. Välj en tillgänglig aktiv granskad profil, skriv varför och granska innan sparning. En enda skrivning ändrar uppgiftens ansvar och registrerar dess överföring/händelse. **Kundrelationsansvar · ligger kvar** visar vem som fortfarande äger relationen; kundplan, prospektkvalificering och tidigare resultat flyttas inte.
+
+Befintliga kundplan-/prospektuppdateringar bevarar den överlämnade uppgiftens profil-ID. En ny kanonisk uppgift utgår fortfarande från kundrelationsansvarig. Följ upp och prospektkvalificering har kvar sina egna regler; överlämningen registrerar ingen kontakt, kvalificering, affär eller kundacceptans. [OPERATIONS](OPERATIONS.md) beskriver arbetssättet.
+
+Kod `0928c096c2e54c264c1bc75bd7b00f696c6160f6`, app-main `c4a29ae0571b5d311851f1577ba969e9fbf20515`, [app-PR #88](https://github.com/ludros93-prog/MAgnussons-CRM/pull/88). Slutkontroller: 5/5 exit 0 på ren, oförändrad head: CRM/Outlook-regressioner, icke-inkrementell TypeScript, produktionsbygge, isolerad runtime och git diff --check; isolerade browserprov: 24/24 PASS. Samma Site version `57`, source `70ec24a37e0b0c30176c5a440bf9b02fc2e3fd6f`, deploy `appgdep_6ac6deba62088191a4cabc95fdfccbb1`, succeeded `2026-10-08T00:07:48.220332+00:00`. [VALIDATION](VALIDATION.md) skiljer kod-, GitHub- och publiceringsbevis.
+
+Inga nya lagringsfält/tabeller eller SQL-migrationer. Efter direkt överföring av dessa specialuppgifter krävs **v57-kompatibel läsare och skrivare**: äldre oförändrad v56 avvisar den nya historiksemantiken även vid läsning, export och restore. Konto/Sitesåtkomst, privata data och full personalavveckling är separata; se [RUNBOOK](agent/RUNBOOK.md).
+
+## Historik före v57
+
+
 ## Återöppna samma kundrelation med granskning – v56
 
 Administratören kan öppna ett **Avslutat** kundkort och välja **Återöppna kundrelation**. Välj aktiv granskad kundrelationsansvarig, relation, orsak och en ny uppföljning med egen beskrivning och datum. En enda sparning återöppnar samma kund, förankrar kundrelationsansvaret och skapar den planerade uppgiften med en spårbar historikhändelse. Tidigare affärer, order, resultat och aktiviteter behåller sina ansvariga.

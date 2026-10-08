@@ -1,5 +1,20 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Byt uppgiftsansvar, behåll kundrelationsansvaret – v57
+
+Administratören kan överlämna en öppen **Kundavstämning**, **Kommande kundbehov** eller **Prospektkontakt** utan affärskoppling. **Byt uppgiftsansvar** visar uppgiftens nuvarande ansvar och **Kundrelationsansvar · ligger kvar** var för sig. För äldre blank profilkoppling visas **Förankra ansvar** när den verkliga personkopplingen kan granskas; okänd person väljs inte åt användaren.
+
+Läs **Kundplanens underlag · oförändrat vid ansvarsbytet** eller **Prospekteringens underlag · oförändrat vid ansvarsbytet**. Välj **Ansvarig efter ändringen**, skriv **Varför ändras ansvarskopplingen?**, granska och markera **Jag har granskat uppgiftsansvaret**. **Spara nytt uppgiftsansvar** ändrar den befintliga uppgiftens ansvar och registrerar överföringen atomiskt. En förankring har motsvarande uttryckliga spartext. Ingen ny aktivitet skapas av själva överlämningen.
+
+Befintlig uppgift behåller sitt registrerade ansvar när kundplan eller prospektering sparas senare. Ny kanonisk aktivitet använder fortfarande kundrelationsansvarig. Nästaaktivitet från de tre specialkälltyperna utan affärskoppling får källuppgiftens exakt registrerade profil-ID, utan kopierad överföringshistorik. Övriga/manuella Följ upp-källor behåller tidigare beteende; Kommande kundbehov kan fortsatt inte avslutas via Följ upp. Prospektkvalificering och nya affärer använder kundrelationsansvarig.
+
+Kundkontakt, plan/kvalificering, gamla affärer/order/fakturor, mål och historiska resultat flyttas inte. Överlämningen skickar ingen avisering, skapar ingen affär och är inget konto-/Sitesavslut eller full personalavveckling. Försäljning mot månads-/årsmål, marginal och nya prospects består; TB är inget huvudmått.
+
+Orsak/val bevaras vid fel i öppen dialog; hämtning och uttrycklig inläsning av aktuellt underlag skiljs åt och kräver ny granskning. Formuläret har inget privat serverutkast. Minsta kompatibla läsare och skrivare är v57 efter ny direkt specialuppgiftshistorik. [VALIDATION](VALIDATION.md) anger faktiska bevis och gränser.
+
+## Historik före v57
+
+
 ## Återöppna relationen på samma kundkort – v56
 
 Administratören öppnar ett avslutat kundkort och väljer **Återöppna kundrelation**. Dialogen visar kundens tidigare relation och kundrelationsansvarig med profil-ID. Välj en aktiv granskad ansvarig och **Prospekt**, **Aktiv kund** eller **Vilande**, skriv varför relationen återupptas och planera en ny uppföljning med egen beskrivning och datum. Ingen mottagare, relation, aktivitet eller granskning väljs åt användaren.
