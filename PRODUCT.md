@@ -1,5 +1,25 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Ett granskat konto får det äldre jobbansvaret från rättningen – v66
+
+**Rätta äldre jobbansvar** är administratörens avgränsade väg för ett aktuellt lämnat eller tryckt jobb med sparat ansvarigt namn, men utan användar-ID, medlems-ID eller registrerad ansvarshistorik. Handlingen finns på jobbkortet och i **Produktionsarbete per konto** för den berättigade jobbraden. **Sparat äldre underlag**, **Orderansvar · ligger kvar** och granskningen visar vad som ändras och vad som bevaras.
+
+Det äldre namnet och tidsfältet visas som ej verifierade. Administratören väljer ett aktivt anslutet tryck-, lager-, produktions- eller administratörskonto och anger faktiskt underlag och orsak. Samma namn räcker inte för att välja ett konto; konto-ID skiljer alternativen åt. Rättningen registrerar nytt jobbansvar nu och fastställer varken tidigare person eller tidigare starttid.
+
+En atomisk skrivning förankrar det valda jobbansvaret och registrerar första audit-raden med `resolve_legacy`, bevarat äldre namn och `legacyAssignedAt`. Ursprungliga användar-/medlems-ID:n är tomma. Faktisk rättningstid, vald kontoidentitet, administratör och orsak sparas. Tidigare mängder, moment, kundgodkännanden, ansvar för hinder, kommersiella ansvar och privata data bevaras. Fortsatta vanliga ansvarsbyten förlänger historiken.
+
+Ändrat jobb, konto eller granskningsunderlag kräver ny granskning. Orsaken finns kvar i den öppna dialogen; vid inläsning kan ett otillgängligt kontoval tömmas. Om jobbet fortfarande har äldre namn utan identitetskoppling granskas rättningen igen. Om ansvar redan har förankrats visas aktuellt registrerat konto; dialogen stängs och jobbets vanliga ansvarsflöde används för en annan ändring. Formuläret är inget sparat privat utkast. Ett osäkert försök kan återförsökas med samma oförändrade begäran; stängning återställer ingen redan registrerad rättning.
+
+Gränsen omfattar inga avslutade/avbrutna/utkastjobb, redan identifierade ansvar, trasiga medlemskopplingar, motsägande audit eller separata hinderidentiteter. Kontoändringens spärr gäller fortsatt och hämtas på nytt efter hantering. Tomt urval betyder ingen full personalavveckling.
+
+Backupformat `magnussons-crm-1` består; inga SQL-tabeller eller migrationer tillkommer. Den nya audit-handlingen och det äldre tidsfältet kräver **v66-kompatibel läsare och skrivare** när rättningshistorik finns. En skrivande återgång får inte förlora denna historik; använd kompatibel kod eller en faktiskt verifierad full återställning med plan för senare arbete. Faktisk oförändrad v65 avvisade den nya auditen i 12 prov. V66 bevarade hela delade underlaget och ordnad aktuell/arkiverad ansvarshistorik genom autentiserad rättning/återförsök, vanlig orderskrivning, JSON/native NDJSON-export samt full JSON/native NDJSON-återställning med återläsning. Tre syntetiska provfiler, totalt 138 byte, och tre råa privata utkastformat kontrollerades; samtliga 18 råtabeller och positiva privata Outlook-/R2-sentineler jämfördes. Den extra arkiverade rättningsraden är en semantisk fixture, inget prov av dess arkiveringslivscykel. Kompatibilitetskvitto SHA-256 `9033719574abb5b12aeb19bad42a01edc6a673f2c54c6dd6f4f8788956e10168`. Dessa isolerade prov verifierar ingen full hostad återställning eller personalacceptans. [VALIDATION](VALIDATION.md) redovisar slutbeläggen.
+
+Fem obligatoriska slutkontroller passerade på exakt ren och oförändrad kod `36723ebb39b83623b0ddc27733d8b702515aaeec`, träd `11419ea162363bf95b744b7c94d352c68cb8cfbe`: regressioner, TypeScript, bygge, isolerad D1/R2-runtime och diffkontroll. Kontrollkvitto SHA-256 `f69375d58d09b44ac9ba6b44aaf08180297be52b868e5762593882a4db5113e8`.
+
+## Historik före v66
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Begripligt arbete bakom kontoändringens spärr – v65
 
 **Arbete som spärrar ändringen** visas i administratörens kontoformulär när produktionskontrollen spärrar minskad åtkomst. **Visa arbete som spärrar ändringen** hämtar underlaget uttryckligt. Raderna håller ihop arbetsyta, arbetsreferens, order-ID, produktionsstatus, ansvarsdel och orsak. **Visar X av Y ansvarsdelar** anger hur mycket som är hämtat; **Visa fler ansvarsdelar** hämtar nästa 20.

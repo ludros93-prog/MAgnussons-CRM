@@ -1,3 +1,49 @@
+# Validering – granskad rättning av äldre jobbansvar v66
+
+## Slutlig kandidat och kontroller
+
+Endast `36723ebb39b83623b0ddc27733d8b702515aaeec` / tree `11419ea162363bf95b744b7c94d352c68cb8cfbe` kvalificerar denna leverans. Alla 336 spårade bytes, HEAD, tree och clean status förblev oförändrade under fem obligatoriska kontroller:
+
+| Kontroll | Faktiskt resultat |
+| --- | --- |
+| `node tests/outlook.mjs` | exit 0, 72,79 s |
+| `node node_modules/typescript/bin/tsc --noEmit --incremental false` | exit 0, 12,78 s |
+| `corepack pnpm build` | exit 0, 10,09 s |
+| `node tests/runtime-smoke.mjs` | exit 0, 168,20 s |
+| `git diff --check` | exit 0 |
+
+Slutkvitto SHA-256 `f69375d58d09b44ac9ba6b44aaf08180297be52b868e5762593882a4db5113e8`; runtime-logg `1f6404ce40d2c6b486ddaae67683956f54dd8fba0d327fa3720211ab230923d5`. PR #106:s CI `37811925099` är completed/success med samtliga 13 steg på exakt head. Main-CI `37814702689` är completed/success med samtliga 13 steg på exakt app-main `9d239cfaf14a6a14d538833dde44b02f7dce4c9b`. Slutgranskning: oberoende PASS på exakt `36723ebb39b83623b0ddc27733d8b702515aaeec`, tree `11419ea162363bf95b744b7c94d352c68cb8cfbe`, inga blockerande fynd; granskningskvitto SHA-256 `1f25c7edd77ea0843fd5cf9cb2ba3338e80e867a1a29fe33e7bd17d96d2077ed`.
+
+De två tidigare runtimeförsöken stoppade på fel i rotens syntetiska fixture: först referens före initiering, sedan återanvänd audit-/dealidentitet. De kvalificerade ingen leverans. Efter fixturekorrigering var fem kontroller gröna på `f69c4ed9…`, men den kandidaten drogs tillbaka när granskningen upptäckte att en redan rättad post kunde presenteras som äldre underlag efter återinläsning. Slutrevisionen visar korrekt aktuellt registrerat konto och hänvisar till det vanliga ansvarsflödet.
+
+## Säkerhet, konflikter och faktisk runtime
+
+Fokuserade faktiska handlers mot SQLite täcker strikta payload/queryfall, nekade roller, sena ändringar av jobb, mottagare och administratör, CAS, rollback och oberoende rebase. Ett faktiskt sent byte av administratörens medlemsidentitet hittades och rättades: samma rättningsförsök fryser initiala användar-/medlems-ID:n och nekar byte även under CAS-återförsök. Ett enbart nytt administratörsnamn får aktuell återautentiserad auditidentitet.
+
+Byggd HTTP-Worker med lokal D1/R2 verifierar explicit `resolve_legacy`-syfte, skilda verkligt registrerade syntetiska användar-/medlems-ID:n, granskningskonflikt, atomisk rättning samt dubbelklick/förlorad svarskropp med exakt återförsök: en audit, en händelse och en mutationspost. Äldre namn och tidigare lagrat tidsfält bevaras; inga äldre konto-ID:n gissas. Alla övriga orderfält, andra order, positiva privata utkast/Outlook och R2 samt 18 råtabeller jämförs. Faktisk full native NDJSON-återställning omfattar tre syntetiska filer om 13 500 000 bytes. Sex nya rättningsspecifika och åtta befintliga auditkorruptioner med korrekt integritet nekas före D1/R2-skrivning.
+
+Befintliga regressionsfall täcker 40→45, uttryckligt syntetiskt godkänd 50→48, kassation, delleverans och dubbelklick. Den nya rättningsfixturens fysiska underlag är syntetiskt tidigare lagrat arbete; det uppfinner inget verkligt kundgodkännande. 37 native Chromium-fall och 35 originalbilder på samma slutkandidat är godkända. Åtta faktiska egna syntetiska rättningar ger exakt åtta audit/händelse/mutationsposter; 320/390/1280 px, text 2×, tangentbord/fokus, konflikter och båda redan rättade adoptionerna ingår. Alla 18 råtabeller och två R2-filer återställdes exakt, source/dist är oförändrade och egen preview stängd. Browserkvitto SHA-256 d06d31a948bcf4d25b49a15b3900c149424e0a0ac284918c7500fbff2008759b.
+
+## Datakompatibilitet och återställningsväg
+
+Exakt orörd v65-main `f690f9a1c42581e131bb70085c7e0b9676af518b` (335 faktiska Gitblob) och slutlig v66 (336) kopierades byte för byte och 54 moduler per källa kompilerades. Slutaudit SHA-256 `9033719574abb5b12aeb19bad42a01edc6a673f2c54c6dd6f4f8788956e10168` binder kopior, prov och de fem slutliga kontrolloggarna.
+
+V65 klarar positiv kontroll av sitt fulla format och avvisar ny `resolve_legacy`/`legacyAssignedAt` i 12 faktiska schema-, normaliserings-, SQLite-, JSON/native NDJSON-export-, API-, import-, restore- och vanlig skrivprov. Ingen tyst auditförlust eller oavsiktlig skrivning observerades. **Efter rättningshistorik krävs v66-kompatibel läsare och skrivare.**
+
+V66:s sex provkategorier bevarar hela shared state och ordnad aktuell/arkiverad ansvarshistorik genom autentiserad rättning/replay, vanlig orderskrivning/replay, JSON/native NDJSON-export och faktisk full JSON/native NDJSON-restore/readback/replay. Tre verkliga syntetiska provfiler, sammanlagt 138 bytes, jämförs efter befintlig fil-ID-remappning. Tre råa privata utkastformat lagras, återläses och återförsöks och förblir separata vid restore. En extra arkiverad rättningspost är en uttrycklig semantisk fixture; dess faktiska arkiveringslivscykel påstås inte provad. Alla 18 råtabeller, privata/delade Outlook-sentineler, konton, andra arbetsytor och R2 jämförs.
+
+Backupformat `magnussons-crm-1`, sex SQL-migrationer, CAS/write-token, auth, privatlagring, konflikt- och restoremoduler är byteidentiska med v65. Ingen tabell/migration eller maskinframtvingad versionsspärr tillkommer. Använd kompatibel kod för korrigering. En äldre skrivande release över ny historik är ingen säker återgång. En full återställning måste ha faktiskt verifierat underlag och plan för arbete sedan backupen. Full hostad återställning/live-återgång är fortfarande oprövad. Shared backup säkrar inte separat personliga konton, privata utkast eller Outlook.
+
+## Main och publicerad version
+
+`9d239cfaf14a6a14d538833dde44b02f7dce4c9b` via PR #106 har exakt app-tree ovan. Sites-source `9d976e0ac746796977d48ad11d1062adfb12a3e0` är samma 336 bytes/tree; vanlig fast-forward från tidigare remote `9fe2deaf…`, ingen force push. Sites **v66** är publicerad från source `9d976e0ac746796977d48ad11d1062adfb12a3e0`, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_bc068e7250a48191aae8c62728539bab`. Deploy `appgdep_6ac7d0da31708191aeb81131ad613855` gav terminalt `succeeded` direkt, faktisk uppdateringstid `2026-10-08T17:20:37.463233+00:00`. Färsk återläsning bekräftade samma URL, custom-delning revision 2, hela åtkomstpolicyn, runtime-miljö revision 1 och automationer oförändrade. Native arkivmetadata stämmer med lokalt verifierad tarhash, storlek och antal.
+
+Lokalt kanoniskt arkiv innehåller 102 regular mode0644-poster (101 byggfiler plus root hostingmanifest), sorterat och återläst payload för payload. Tar 5 437 440 bytes, SHA-256 `3bcde97d036d39e00d376aecaa8f137e1296e46d4d0994661e9938deb586ffe5`; gzip `fb999b974ef8cf644fc33e552995a5a89bd48c0a7231785fe3d5f044d986ec81`. Native metadata stämmer i tarhash, storlek och antal. Full fjärrarkivåterläsning kunde inte verifieras: faktisk `download_file` för sparad versions sediment-ID avvisades med `file could not be authorized or resolved`. Lokal full payload och native hash/storlek/antal är verifierade; ingen full fjärrpayload påstås läst. Faktisk anonym skrivfri GET till `/api/crm/production-assignment` gav HTTP 401 utan följda redirects. Det provar endast den yttre skyddsgränsen; ingen autentiserad personalinloggning eller verksamhetsskrivning gjordes.
+
+Dokumentationen får separat exakt-head-kontroll/CI och merge; inget senare dokumentationshead påstås ha ingått i apparkivet. Native metadata och anonymt avslag är inget autentiserat personalprov. Syntetisk browser/runtime/CI är inte personalacceptans, verklig kundacceptans, integration eller full hostad återställning.
+
+## Historik före v66
+
 # Magnussons CRM – verifiering av kontoändringens arbetsunderlag, v65
 
 ## Verifieringsunderlag för konkret spärrdiagnos – v65

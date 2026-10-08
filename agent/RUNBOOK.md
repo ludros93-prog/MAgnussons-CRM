@@ -1,5 +1,21 @@
 # Återkommande arbete för CRM-superbyggaren
 
+## Datakompatibilitet för rättat äldre jobbansvar – v66
+
+Detta är en deklarativ uppdatering av dataformatets kompatibilitetsgräns. Uppdragets mandat, prioritering, arbetsprocedur, schema, prompt och aktivering finns kvar oförändrade i de tidigare avsnitten.
+
+Produktionsansvarets befintliga `assignmentHistory` får audit-handlingen `resolve_legacy`. Den gäller endast en första granskad rättning av ett sparat äldre namn utan användar-/medlemskoppling eller ansvarshistorik på ett aktuellt lämnat/tryckt jobb. Första raden bevarar det äldre namnet, tomma ursprungliga användar-/medlems-ID:n och faktiskt tidigare `assignedAt` som `legacyAssignedAt`. Det äldre tidsfältet är inte ett verifierat datum. Registrerad rättningstid, valt anslutet konto, administratör, orsak och revision anger det nya jobbansvaret från rättningen. Inget tidigare konto gissas från namnet.
+
+`legacyAssignedAt` krävs för `resolve_legacy` och är förbjudet på övriga audit-handlingar. Rättningen får endast inleda kedjan; fortsatta vanliga ansvarsbyten bevarar den första raden. Nuvarande produktion och bevarade produktionsrevisioner omfattas av samma historikvalidering. Äldre data utan rättningshistorik följer sina befintliga regler.
+
+När sådan rättningshistorik finns krävs **v66-kompatibel läsare och skrivare** för normalisering, lagring, export och återställning. Backupformatet är fortsatt `magnussons-crm-1`; ingen maskinframtvingad versionsspärr införs i backupmanifestet. Inga SQL-tabeller eller migrationer tillkommer. Gränsen gäller den nya JSON-auditens semantik och fält, inte en ändrad databasstruktur.
+
+Exakt oförändrad v65 `f690f9a1c42581e131bb70085c7e0b9676af518b` avvisade den nya auditen i 12 faktiskt körda schema-/läs-/export-/API-/import-/restore-/skrivprov utan observerad tyst historikförlust. V66 återläste full JSON/native NDJSON med ordnad aktuell/arkiverad historik, tre syntetiska filer om 138 byte och tre privata råformat bevarade; alla 18 råtabeller och positiva privata Outlook-/R2-sentineler jämfördes. Arkiverad rättningshistorik omfattar en uttrycklig semantisk fixture, ingen belagd arkiveringslivscykel. Kompatibilitetskvitto SHA-256 `9033719574abb5b12aeb19bad42a01edc6a673f2c54c6dd6f4f8788956e10168` binder proven till kod `36723ebb39b83623b0ddc27733d8b702515aaeec`, träd `11419ea162363bf95b744b7c94d352c68cb8cfbe` och fem godkända obligatoriska slutkontroller med kvitto `f69375d58d09b44ac9ba6b44aaf08180297be52b868e5762593882a4db5113e8`. [VALIDATION](../VALIDATION.md) redovisar omfattningen. Full hostad återställning eller live-återgång är fortfarande oprövad. Den gemensamma CRM-backupen ersätter fortsatt inte separat säkring av konton, privata utkast och Outlook; återlästa historiska konto-ID:n verifierar ingen inloggning eller behörighet.
+
+## Kompatibilitetsunderlag före v66
+
+# Återkommande arbete för CRM-superbyggaren
+
 ## Datakompatibilitet för produktionsansvar – v62
 
 Detta är ett deklarativt underlag om dataformat och återställning. Bygguppdragets mandat, prioritering, schema, prompt och aktivering ligger kvar i tidigare avsnitt.
