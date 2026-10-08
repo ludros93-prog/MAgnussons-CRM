@@ -1,0 +1,63 @@
+.production-inventory{min-width:0;overflow-wrap:anywhere}
+.production-inventory p,.production-inventory h2,.production-inventory h3,.production-inventory dt,.production-inventory dd{white-space:normal;overflow-wrap:anywhere}
+.production-inventory-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.production-inventory-head>div{min-width:0;flex:1 1 22rem}
+.production-inventory-head h2{display:flex;align-items:flex-start;gap:.6rem;line-height:1.4;scroll-margin:1rem}
+.production-inventory-head h2>span{min-width:0}
+.production-inventory-head h2>svg{margin-top:.2rem}
+.production-inventory svg{flex-shrink:0}
+.production-inventory-space{display:flex;align-items:baseline;gap:.5rem 1rem;flex-wrap:wrap;padding:.75rem 1rem;background:#edf5f7;border:1px solid #c5dfe3;border-radius:12px;margin-block:1rem}
+.production-inventory-space b{color:#163d4a}
+.production-inventory-space span{min-width:0;font-size:.9rem;color:#41586b}
+.production-inventory-space-demo{background:#f4f6fa;border-color:#dce5ef}
+.production-inventory-toolbar{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr);align-items:end;gap:.85rem;margin-block:1rem}
+.production-inventory .biz-field,.production-inventory-toolbar>*{min-width:0}
+.production-inventory button{height:auto;min-height:44px;min-width:0;max-width:100%;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+.production-inventory button>span{min-width:0}
+.production-inventory select{display:block;width:100%;min-width:0;max-width:100%;min-height:44px;height:auto;padding:.65rem .7rem;border:1px solid #cbd6e2;border-radius:8px;background:#fff;color:#183650;font:inherit;font-size:1rem;line-height:1.5;text-overflow:ellipsis}
+.production-inventory select:disabled{color:#667b8b;background:#f5f7fa;cursor:not-allowed}
+.production-inventory select:focus-visible,.production-inventory button:focus-visible,.production-inventory input:focus-visible,.production-inventory h2:focus-visible{outline:3px solid #148a99;outline-offset:3px}
+.production-inventory input{min-width:0;max-width:100%;min-height:44px;font-size:1rem}
+.production-inventory-search{display:flex;align-items:center;gap:.5rem;min-width:0}
+.production-inventory-account{display:flex;align-items:flex-start;gap:.7rem;padding:.9rem 1rem;border:1px solid #dce5ef;border-radius:12px;background:#f7fafc;margin-block:1rem}
+.production-inventory-account>div{min-width:0}
+.production-inventory-account p{margin:.35rem 0}
+.production-inventory-warning{background:#fff8eb;border-color:#e9ca8c}
+.production-inventory-summary{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-block:1.1rem .5rem}
+.production-inventory-summary>div{min-width:0;flex:1 1 17rem}
+.production-inventory-count{font-weight:650;margin-bottom:.3rem}
+.production-inventory-count>span{display:block;margin-top:.25rem}
+.production-inventory-counts{display:flex;gap:.6rem;flex-wrap:wrap;list-style:none;padding:0;margin:.5rem 0 1rem}
+.production-inventory-counts li{display:flex;gap:.75rem;align-items:baseline;min-width:0;padding:.45rem .7rem;border:1px solid #d3e3ea;border-radius:8px;background:#edf4f8;font-size:.9rem}
+.production-inventory-counts li>span{min-width:0}
+.production-inventory-counts b{font-variant-numeric:tabular-nums;flex-shrink:0}
+.production-inventory-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem;list-style:none;padding:0;margin:1rem 0}
+.production-inventory-list>li{display:flex;min-width:0}
+.production-inventory-list article{display:flex;flex:1;flex-direction:column;min-width:0;padding:1rem;border:1px solid #dce5ef;border-radius:12px;background:#fff;box-shadow:0 2px 7px #12334a05}
+.production-inventory-row-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.5rem .75rem}
+.production-inventory-status{border-radius:6px;background:#edf5f7;border:1px solid #cce2e5;padding:.2rem .5rem;color:#194452;font-size:.82rem;font-weight:650}
+.production-inventory-date{min-width:0;font-size:.86rem;color:#4a6075}
+.production-inventory-list h3{font-size:1rem;line-height:1.5;margin:.7rem 0 .4rem;font-weight:650}
+.production-inventory-customer{font-size:.9rem;margin-bottom:.7rem}
+.production-inventory-list dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:0 0 .85rem}
+.production-inventory-list dl>div{min-width:0;padding:.65rem .7rem;background:#f5f8fb;border:1px solid #e3eaf1;border-radius:8px}
+.production-inventory-list dt{font-size:.8rem;color:#486075;margin-bottom:.25rem}
+.production-inventory-list dd{margin:0;font-size:.9rem;font-weight:550}
+.production-inventory-list dd>small{display:block;font-size:.8rem;color:#52697b;margin-top:.25rem}
+.production-inventory-attention{display:block;font-size:.8rem;line-height:1.5;color:#785217;margin-top:.25rem}
+.production-inventory-issue,.production-inventory-blocker{display:flex;align-items:flex-start;gap:.5rem;padding:.7rem .8rem;border:1px solid #ecd5a4;border-radius:8px;background:#fff8eb;font-size:.9rem;margin:0 0 .7rem}
+.production-inventory-issue>span,.production-inventory-blocker>span{min-width:0}
+.production-inventory-issue>svg,.production-inventory-blocker>svg{margin-top:.15rem;color:#8a5b12}
+.production-inventory-reference{font-size:.8rem;color:#52697b;margin-bottom:.7rem}
+.production-inventory-actions{display:flex;align-items:flex-start;flex-wrap:wrap;gap:.6rem;margin-top:auto;padding-top:.2rem}
+.production-inventory-list .biz-hint{margin-top:.7rem}
+.production-inventory-empty{padding:1rem;border:1px dashed #cbd6e2;border-radius:12px;background:#fafcfe;margin-block:1rem}
+.production-inventory-empty p{margin:.4rem 0 0;font-size:.9rem;color:#4c6375}
+.production-inventory-more{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-block:1rem}
+.production-inventory-more p{font-size:.9rem;color:#4c6375}
+.production-inventory-feedback{margin-block:.8rem;font-size:.9rem}
+.production-inventory-boundaries{padding-top:1rem;margin-top:1.2rem;border-top:1px solid #dce5ef;font-size:.9rem;color:#486075}
+.production-inventory-boundaries h3{font-size:.95rem;color:#1b3a50;font-weight:650;margin-bottom:.45rem}
+.production-inventory-boundaries p{margin:.4rem 0}
+@media(max-width:900px){.production-inventory-toolbar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.production-inventory-toolbar>.biz-field:first-child{grid-column:1/-1}}
+@media(max-width:767px){.production-inventory-toolbar,.production-inventory-list{grid-template-columns:minmax(0,1fr)}.production-inventory-toolbar>.biz-field:first-child{grid-column:auto}.production-inventory-head>button{width:100%}.production-inventory-list dl{grid-template-columns:minmax(0,1fr)}.production-inventory-actions>button{width:100%}.production-inventory-more>button{width:100%}}
