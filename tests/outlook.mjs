@@ -1,4 +1,5 @@
 import './crm.mjs';
+await (await import('./company-event-responsibility.mjs')).verifyCompanyEventResponsibility();
 await (await import('./delivery-task-responsibility.mjs')).verifyDeliveryTaskResponsibility();
 import ts from 'typescript';import {readFileSync,writeFileSync} from 'node:fs';import assert from 'node:assert/strict';
 const transpile=(source,target)=>writeFileSync(target,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);

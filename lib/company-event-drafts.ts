@@ -3,10 +3,15 @@ import {CompanyEventSchema,type CompanyEvent} from './operations';
 import {recordBasis} from './record-conflicts';
 import {RuleError} from './crm-errors';
 import {DraftInput,type DraftRecord} from './drafts';
+import {CompanyEventResponsibilityHistorySchema,type CompanyEventResponsibilityHistory} from './company-event-responsibility-schema';
 
 // Unfinished titles, owners and dates belong in the private draft. Validate
 // business fields only when the owner explicitly publishes to the shared CRM.
 // No defaults or trimming may silently change an acknowledged private body.
+const rawResponsibilityHistory=z.custom<CompanyEventResponsibilityHistory>(value=>{
+ const parsed=CompanyEventResponsibilityHistorySchema.safeParse(value);
+ return parsed.success&&recordBasis(parsed.data)===recordBasis(value);
+},'Förberedelsens bevarade ansvarshistorik måste ha exakt registrerat format.');
 export const CompanyEventDraftValuesSchema=z.object({
  id:z.string().max(4000),title:z.string().max(200),date:z.string().max(100),
  endDate:z.string().max(100),owner:z.string().max(4000),
@@ -14,7 +19,11 @@ export const CompanyEventDraftValuesSchema=z.object({
  status:z.enum(['planned','done','cancelled']),
  checklist:z.array(z.object({
   id:z.string().max(4000),title:z.string().max(4000),owner:z.string().max(4000),
-  due:z.string().max(100),done:z.boolean()
+  due:z.string().max(100),done:z.boolean(),
+  // Optional without defaults: an acknowledged pre-v60 private body must
+  // remain byte-exact and recoverable, even after shared responsibility changes.
+  ownerProfileId:z.union([z.literal(''),z.string().uuid()]).optional(),
+  responsibilityTransfers:z.array(rawResponsibilityHistory).max(1000).optional()
  }).strict()).max(50)
 }).strict();
 export type CompanyEventDraftValues=z.infer<typeof CompanyEventDraftValuesSchema>;
@@ -29,11 +38,32 @@ export const CompanyEventDraftEnvelopeSchema=z.object({
  if(envelope.values.id!==envelope.base.id)ctx.addIssue({code:z.ZodIssueCode.custom,path:['values','id'],message:'Utkastet får inte byta företagsaktivitet.'});
  if(envelope.base.id){
   const original=CompanyEventSchema.strict().safeParse(envelope.base);
-  if(!original.success||recordBasis(original.data)!==basis)ctx.addIssue({code:z.ZodIssueCode.custom,path:['base'],message:'Det ursprungliga underlaget ska vara den fullständiga registrerade företagsaktiviteten.'});
+  if(original.success){
+   // Only the newly introduced empty defaults may be absent in a legacy base.
+   // Validate all original business fields; never normalize the private body.
+   const comparable=structuredClone(original.data) as CompanyEventDraftValues;
+   comparable.checklist.forEach((row,index)=>{
+    if(envelope.base.checklist[index].ownerProfileId===undefined)delete row.ownerProfileId;
+    if(envelope.base.checklist[index].responsibilityTransfers===undefined)delete row.responsibilityTransfers;
+   });
+   if(recordBasis(comparable)!==basis)ctx.addIssue({code:z.ZodIssueCode.custom,path:['base'],message:'Det ursprungliga underlaget ska vara den fullständiga registrerade företagsaktiviteten.'});
+  }else ctx.addIssue({code:z.ZodIssueCode.custom,path:['base'],message:'Det ursprungliga underlaget ska vara den fullständiga registrerade företagsaktiviteten.'});
  }
 });
 export type CompanyEventDraftEnvelope=z.infer<typeof CompanyEventDraftEnvelopeSchema>;
 export const isCompanyEventDraft=(kind:string,context:string)=>kind==='form'&&context==='company_event';
+
+// Called only after explicit comparison/adoption in the editor. Preserve all
+// planning text and deliberate owner edits. An unchanged old owner follows the
+// reviewed current row; a deliberate different owner still needs its own review.
+export function adoptCompanyEventDraftResponsibilities(values:CompanyEventDraftValues,base:CompanyEventDraftValues,current:CompanyEvent):CompanyEventDraftValues{
+ return {...structuredClone(values),checklist:values.checklist.map(row=>{
+  const previous=base.checklist.find(value=>value.id===row.id),actual=current.checklist.find(value=>value.id===row.id);
+  if(!previous||!actual)return structuredClone(row);
+  return {...structuredClone(row),owner:row.owner===previous.owner?actual.owner:row.owner,
+   ownerProfileId:actual.ownerProfileId,responsibilityTransfers:structuredClone(actual.responsibilityTransfers)};
+ })};
+}
 
 const ServerCompanyEventDraftSchema=DraftInput.extend({kind:z.literal('form'),context:z.literal('company_event'),revision:z.number().int().positive(),archived:z.boolean(),updatedAt:z.string().min(1).max(100)});
 // Read/copy malformed old records, but never select a normalized, differently

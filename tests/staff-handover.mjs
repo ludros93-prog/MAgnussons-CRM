@@ -93,8 +93,8 @@ export async function verifyStaffHandover({core, business, ops}) {
  ];
  st.meetings = [meeting('planned'), meeting('legacy',{ownerProfileId:''}), meeting('retired',{owner:owners.retired, ownerProfileId:ids.retired}), meeting('done',{status:'done'}), meeting('cancelled',{status:'cancelled'})];
  st.companyEvents = [
-  operations.CompanyEventSchema.parse({id:'planned-event', title:'Syntetisk planerad aktivitet', owner:owners.a, date, checklist:[{id:'b-check', title:'Separat syntetiskt ansvar B', owner:owners.b, due:date}]}),
-  operations.CompanyEventSchema.parse({id:'done-event', title:'Syntetisk avslutad aktivitet', owner:owners.b, date, status:'done', checklist:[{id:'shared-check', title:'Kvarstående syntetisk förberedelse', owner:owners.a, due:date},{id:'done-check', title:'Avslutad förberedelse', owner:owners.a, due:date, done:true}]}),
+  operations.CompanyEventSchema.parse({id:'planned-event', title:'Syntetisk planerad aktivitet', owner:owners.a, date, checklist:[{id:'b-check', title:'Separat syntetiskt ansvar B', owner:owners.b, ownerProfileId:ids.b, due:date},{id:'unresolved-event-check',title:'Syntetisk motstridig profil',owner:owners.a,ownerProfileId:ids.b,due:date}]}),
+  operations.CompanyEventSchema.parse({id:'done-event', title:'Syntetisk avslutad aktivitet', owner:owners.b, date, status:'done', checklist:[{id:'shared-check', title:'Kvarstående syntetisk förberedelse', owner:owners.a, due:date},{id:'done-check', title:'Avslutad förberedelse', owner:owners.a, due:date, done:true},{id:'retired-event-check',title:'Syntetiskt historiskt ansvar',owner:owners.retired,ownerProfileId:ids.retired,due:date}]}),
   operations.CompanyEventSchema.parse({id:'cancelled-event', title:'Syntetisk avbokad aktivitet', owner:owners.b, date, status:'cancelled', checklist:[{id:'shared-check', title:'Separat kvarstående förberedelse', owner:owners.a, due:date}]}),
   operations.CompanyEventSchema.parse({id:'unknown-event', title:'Syntetiskt omappat event', owner:owners.unknown, date})
  ];
@@ -156,10 +156,19 @@ export async function verifyStaffHandover({core, business, ops}) {
  const openTaskRows = rows.filter(item=>item.kind==='task');
  assert.deepEqual(openTaskRows.map(item=>JSON.parse(item.key)[1]).sort(),st.tasks.filter(item=>!item.done).map(item=>item.id).sort(),'Every open task remains visible even if its parent moved, ended or disappeared.');
  assert.equal(row('companyEvent','planned-event').identity,'alias');
- assert.equal(row('companyEventTask','shared-check','').identity,'alias');
+ assert.equal(row('companyEventTask','shared-check','').identity,'legacy');
+ assert.equal(row('companyEventTask','shared-check','').ownerProfileId,'');
+ assert.equal(row('companyEventTask','b-check').identity,'profile');
+ assert.equal(row('companyEventTask','b-check').ownerProfileId,ids.b);
+ assert.equal(row('companyEventTask','unresolved-event-check').identity,'unresolved');
+ assert.equal(row('companyEventTask','unresolved-event-check').action?.kind,'companyEventPreparation');
+ assert.equal(row('companyEventTask','retired-event-check').ownerProfileId,ids.retired);
+ assert.equal(row('companyEventTask','retired-event-check').action?.kind,'companyEventPreparation');
  const leftoverChecks=rows.filter(item=>item.kind==='companyEventTask' && JSON.parse(item.key).includes('shared-check'));
  assert.equal(leftoverChecks.length,2,'Checklist IDs are scoped to their event.');
- assert.ok(leftoverChecks.every(item=>item.hint && item.action?.kind==='companyEvent'),'Open preparations remain visible after the event ended/cancelled.');
+ assert.ok(leftoverChecks.every(item=>item.hint && item.action?.kind==='companyEventPreparation'),'Open preparations keep their reviewed route after the event ended/cancelled.');
+ for(const item of leftoverChecks)assert.deepEqual(item.action,{kind:'companyEventPreparation',id:JSON.parse(item.key)[1],checklistId:'shared-check'});
+ assert.deepEqual(row('companyEventTask','b-check').action,{kind:'companyEventPreparation',id:'planned-event',checklistId:'b-check'});
  assert.equal(row('companyEvent','unknown-event').identity,'unresolved');
  assert.ok(!rows.some(item=>item.kind.startsWith('production')),'Production user IDs never join to a seller-profile UUID, even with matching ID/name strings.');
  const aRows=inventory.staffHandoverForProfile(st,ids.a), bRows=inventory.staffHandoverForProfile(st,ids.b), retiredRows=inventory.staffHandoverForProfile(st,ids.retired);
@@ -168,6 +177,8 @@ export async function verifyStaffHandover({core, business, ops}) {
  assert.ok(keys(aRows).has(row('companyEvent','planned-event').key));
  assert.ok(keys(bRows).has(row('companyEventTask','b-check').key),'Checklist responsibility can differ from event responsibility.');
  assert.ok(keys(retiredRows).has(row('task','retired').key));
+ assert.ok(keys(retiredRows).has(row('companyEventTask','retired-event-check').key));
+ assert.ok(!keys(aRows).has(row('companyEventTask','unresolved-event-check').key),'A conflicting explicit preparation UUID never falls back to its alias.');
  assert.ok(keys(retiredRows).has(row('meeting','retired').key));
  assert.ok(keys(retiredRows).has(row('yearwheel','retired-need').key),'Inactive profiles remain selectable for future open needs.');
  assert.ok(aRows.every(item=>!keys(bRows).has(item.key)),'Identical display names never merge two stable profiles.');

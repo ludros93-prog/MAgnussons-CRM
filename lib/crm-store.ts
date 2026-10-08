@@ -2,7 +2,7 @@ import {database} from './crm-db';
 import {normalizeState,emptyState,seedState,type State,type Actor} from './crm';
 import {ensureReceiptTasks} from './order-work';
 export type MutationResult={customerId?:string;dealId?:string;orderId?:string;taskId?:string;eventId?:string};
-export type MutationMeta={result:MutationResult;userId:string;hash:string;restoreEmpty?:boolean;actorAuthorization?:{memberId:string;userId:string;role:Actor['role'];owner:string};sellerProfileAuthorization?:{actorMemberId:string;actorUserId:string;issueInitialActorRole?:'admin'|'seller';yearwheelInitialActorRole?:'admin'|'seller';links:{id:string;owner:string}[]}};
+export type MutationMeta={result:MutationResult;userId:string;hash:string;restoreEmpty?:boolean;actorAuthorization?:{memberId:string;userId:string;role:Actor['role'];owner:string};sellerProfileAuthorization?:{actorMemberId:string;actorUserId:string;issueInitialActorRole?:'admin'|'seller';yearwheelInitialActorRole?:'admin'|'seller';companyEventInitialActorRole?:'admin'|'seller';links:{id:string;owner:string}[]}};
 export type StoredFile={id:string;customerId:string;objectKey:string;metadata:Record<string,unknown>};
 export const names=['customers','deals','orders','tasks','meetings','events','articles','notices','leads','companyEvents'] as const;
 export const tables={customers:'crm_customers',deals:'crm_deals',orders:'crm_orders',tasks:'crm_tasks',meetings:'crm_meetings',events:'crm_events',articles:'crm_articles',notices:'crm_notices',leads:'crm_leads',companyEvents:'crm_company_events'};
@@ -20,10 +20,10 @@ export async function commit(space:string,prev:State,next:State,requestId:string
  // writes. The same token gates every CRM row, event, draft and receipt below.
  const actorGate=actor?' AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND role=? AND owner=? AND active=1)':'';
  const authorization=mutation.sellerProfileAuthorization;
- // Only validated first issue/yearwheel assignments use the ordinary seller role.
+ // Only validated first issue/yearwheel/event-preparation assignments use the ordinary seller role.
  // Existing responsibility/profile actions retain the default admin gate.
- const initialActorRole=authorization?.issueInitialActorRole||authorization?.yearwheelInitialActorRole,profileActorRole=initialActorRole||'admin';
- if(authorization?.issueInitialActorRole&&authorization?.yearwheelInitialActorRole)return false;
+ const initialActorRole=authorization?.issueInitialActorRole||authorization?.yearwheelInitialActorRole||authorization?.companyEventInitialActorRole,profileActorRole=initialActorRole||'admin';
+ if([authorization?.issueInitialActorRole,authorization?.yearwheelInitialActorRole,authorization?.companyEventInitialActorRole].filter(Boolean).length>1)return false;
  if(initialActorRole&&(!actor||!['admin','seller'].includes(profileActorRole)||actor.role!==profileActorRole||actor.memberId!==authorization.actorMemberId||actor.userId!==authorization.actorUserId))return false;
  const profileGate=authorization?" AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND role=? AND active=1)"+authorization.links.map(()=>" AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND owner=? AND role IN ('admin','seller') AND active=1)").join(''):'';
  const draftGate=draft?' AND EXISTS(SELECT 1 FROM crm_drafts WHERE space=? AND user_id=? AND id=? AND revision=? AND archived=0)':'';const q=[db().prepare('UPDATE crm_spaces SET version=version+1,write_token=?,settings=? WHERE id=? AND version=?'+draftGate+restoreGate+actorGate+profileGate).bind(token,JSON.stringify(next.settings),space,prev.version,...(draft?[space,draft.userId,draft.id,draft.revision]:[]),...(mutation.restoreEmpty?[space,space]:[]),...(actor?[actor.memberId,actor.userId,actor.role,actor.owner]:[]),...(authorization?[authorization.actorMemberId,authorization.actorUserId,profileActorRole,...authorization.links.flatMap(link=>[link.id,link.owner])]:[]))];
