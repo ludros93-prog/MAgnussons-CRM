@@ -119,7 +119,13 @@ export function applyOperations(st:State,action:Action,actor:Actor):State{
   }else{
    must(['submitted','printed'].includes(v.status)||(action.type==='production_issue_resolve'&&v.status==='dispatched'),'Ordern finns inte längre i den aktiva produktionskön.');
    if(action.type==='production_accept'){must(!v.acceptedAt,'Tryckordern är redan mottagen.');v.acceptedAt=now;v.acceptedBy=actor.name;event(o.customerId,o.dealId,'Tryck har tagit emot arbetsordern');}
-   if(action.type==='production_issue'){must(p.expectedProduction===productionBasis(v),'Hindret eller arbetsordern har ändrats. Läs in aktuellt underlag.');must(p.message,'Beskriv hindret. Använd lösningshandlingen med orsak när hindret är löst.');must(!v.issue||v.issueOwnerId===actor.id||actor.role==='admin','Hindret ägs av '+(v.issueOwnerName||'en annan medarbetare')+'. Ägaren eller en administratör behöver ändra det.');v.issue=p.message;v.issueAt=now;v.issueOwnerId=actor.id;v.issueOwnerName=actor.name;v.issueRevision++;event(o.customerId,o.dealId,'Produktionshinder: '+p.message);notify('seller','Åtgärd behövs i order',d.title+': '+p.message,o.customerId,o.id,o.owner);}
+   if(action.type==='production_issue'){
+    must(p.expectedProduction===productionBasis(v),'Hindret eller arbetsordern har ändrats. Läs in aktuellt underlag.');must(p.message,'Beskriv hindret. Använd lösningshandlingen med orsak när hindret är löst.');must(!v.issue||v.issueOwnerId===actor.id||actor.role==='admin','Hindret ägs av '+(v.issueOwnerName||'en annan medarbetare')+'. Ägaren eller en administratör behöver ändra det.');
+    // Editing an open issue changes its description, not its recorded reporter
+    // or responsibility. Legacy empty/unknown identities remain unverified.
+    if(!v.issue){v.issueAt=now;v.issueOwnerId=actor.id;v.issueOwnerName=actor.name;}
+    v.issue=p.message;v.issueRevision++;event(o.customerId,o.dealId,'Produktionshinder: '+p.message);notify('seller','Åtgärd behövs i order',d.title+': '+p.message,o.customerId,o.id,o.owner);
+   }
    if(action.type==='production_issue_resolve'){
     must(v.issue,'Ordern har inget öppet produktionshinder.');must(v.issueOwnerId===actor.id||actor.role==='admin','Bara den som rapporterade hindret eller administratören får lösa det.');
     must(p.expectedProduction===productionBasis(v),'Hindret eller arbetsordern har ändrats. Läs in aktuellt underlag.');must(p.resolution,'Beskriv hur hindret löstes.');must(v.issueResolutions.length<1000,'Ordern har nått gränsen för lösningar.');
