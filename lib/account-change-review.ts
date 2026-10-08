@@ -2,6 +2,7 @@ import {database} from './crm-db';
 import type {Member} from './crm-auth';
 import {recordBasis} from './record-conflicts';
 import {AccountChangeReviewSchema,accountChangeLoss,type AccountChangeRequested,type AccountChangeReview} from './account-change-review-schema';
+import type {AccountChangeWorkReason,AccountChangeWorkRow} from './account-change-work-schema';
 export * from './account-change-review-schema';
 
 export type AccountChangeTarget=Pick<Member,'id'|'email'|'user_id'|'name'|'role'|'owner'|'active'>;
@@ -61,6 +62,35 @@ function resolve(directory:readonly DirectoryMember[],userId:string,memberId='')
  const matches=directory.filter(member=>member.user_id===userId&&identity(member.id)&&identity(member.user_id));
  return matches.length===1&&(!memberId||matches[0].id===memberId)&&directory.filter(member=>member.id===matches[0].id).length===1;
 }
+function unresolvedReason(directory:readonly DirectoryMember[],userId:string,memberId:string,name:string):Exclude<AccountChangeWorkReason,'account_responsibility'>|null{
+ if(!userId)return memberId?'member_without_user':name?'name_only':null;
+ if(resolve(directory,userId,memberId))return null;
+ const linked=directory.filter(account=>account.user_id===userId&&identity(account.id)&&identity(account.user_id));
+ if(linked.length===1&&directory.filter(account=>account.id===linked[0].id).length===1&&memberId&&linked[0].id!==memberId)return 'mismatched_member';
+ return directory.some(account=>account.user_id===userId)?'ambiguous_account':'no_account';
+}
+// Each row locates one CURRENT blocking responsibility. Display names and raw
+// authentication IDs are deliberately absent; historical assignments are not
+// inferred or repaired. A closed job can still carry an unresolved open issue.
+export function buildAccountChangeWork(input:AccountChangeInput,target:AccountChangeTarget,requested:AccountChangeRequested):AccountChangeWorkRow[]{
+ assertAccountChangeTarget(target);
+ const spaces=new Set(input.spaces.map(space=>space.id));if(spaces.size!==input.spaces.length||input.spaces.some(space=>!identity(space.id)))throw Error('Invalid stored workspace directory');
+ const work=input.orders.map(row=>parseWork(row,spaces)),loss=accountChangeLoss(target,requested),findings:AccountChangeWorkRow[]=[];
+ if(!loss.jobs&&!loss.issues)return findings;
+ for(const row of work){
+  const reference={spaceId:row.space,orderId:row.id,workId:row.workId,status:row.status as AccountChangeWorkRow['status']};
+  if(row.status==='submitted'||row.status==='printed'){
+   const reason=unresolvedReason(input.members,row.assigneeId,row.assigneeMemberId,row.assigneeName),belongs=row.assigneeMemberId===target.id||!!target.user_id&&row.assigneeId===target.user_id;
+   if(reason||loss.jobs&&belongs)findings.push({...reference,kind:'job',reason:reason||'account_responsibility'});
+  }
+  if(row.issue){
+   const reason=unresolvedReason(input.members,row.issueOwnerId,'',row.issueOwnerName),belongs=!!target.user_id&&row.issueOwnerId===target.user_id;
+   if(reason||loss.issues&&belongs)findings.push({...reference,kind:'issue',reason:reason||'account_responsibility'});
+  }
+ }
+ const compare=(a:string,b:string)=>a<b?-1:a>b?1:0;
+ return findings.sort((a,b)=>compare(a.spaceId,b.spaceId)||compare(a.orderId,b.orderId)||compare(a.kind,b.kind));
+}
 export async function buildAccountChangeReview(input:AccountChangeInput,target:AccountChangeTarget,requested:AccountChangeRequested):Promise<AccountChangeReview>{
  assertAccountChangeTarget(target);
  const spaces=new Set(input.spaces.map(space=>space.id));if(spaces.size!==input.spaces.length||input.spaces.some(space=>!identity(space.id)))throw Error('Invalid stored workspace directory');
@@ -79,7 +109,10 @@ export async function buildAccountChangeReview(input:AccountChangeInput,target:A
  const workspaces=sorted(Array.from(counts.values())),total=workspaces.reduce((sum,workspace)=>({jobs:sum.jobs+workspace.jobCount,issues:sum.issues+workspace.issueCount,unresolved:sum.unresolved+workspace.unresolvedCount}),{jobs:0,issues:0,unresolved:0});
  const blocked=(loss.jobs||loss.issues)&&(!!total.unresolved||loss.jobs&&!!total.jobs||loss.issues&&!!total.issues);
  const reason=blocked?total.unresolved?'Produktionsunderlaget har '+total.unresolved+' oklar ansvarskoppling'+(total.unresolved===1?'':'ar')+'. Granska dem i samtliga lagrade arbetsytor innan kontots åtkomst minskas.':'Kontot har kvar registrerat produktionsansvar. Granska '+(loss.jobs?total.jobs+' jobb':'')+(loss.jobs&&loss.issues?' och ':'')+(loss.issues?total.issues+' hinderansvar':'')+' innan kontots åtkomst minskas.':loss.jobs||loss.issues?'Inget blockerande registrerat produktionsansvar hittades i de lagrade arbetsytorna. Servern kontrollerar underlaget igen när du sparar.':'Den valda ändringen minskar inte kontots produktionsrättigheter.';
- const expectedContext=await hash({expectedAccount,requested,spaces:sorted(Array.from(spaces)),work:sorted(relevant)});
+ // The same selective basis also binds the displayed diagnostic reason. A
+ // directory change can alter that reason while unresolved remains true.
+ const findings=buildAccountChangeWork(input,target,requested);
+ const expectedContext=await hash({expectedAccount,requested,spaces:sorted(Array.from(spaces)),work:sorted(relevant),findings});
  return AccountChangeReviewSchema.parse({expectedContext,expectedAccount,target:{memberId:target.id,name:target.name,role:target.role,active:target.active===1},requested,workspaces,blocked:!!blocked,reason});
 }
 
