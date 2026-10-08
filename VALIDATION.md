@@ -1,3 +1,57 @@
+# Magnussons CRM – verifiering av aktivitetsansvar, v61
+
+## Verifiering av separat aktivitetsansvar – v61
+
+Slutfakta nedan gäller kandidat `7056a62491eda6782f3758130c42e61745d5e3f3`, trädet `eb83c76449e03518b39ceedff8870507cd1f5f79`. Tidigare avsnitt är historik och deras antal, revisioner eller publiceringskvitton avser inte automatiskt v61.
+
+### Obligatoriska kontroller och kontrakt
+
+Exakt slutkandidat `7056a62491eda6782f3758130c42e61745d5e3f3` / träd `eb83c76449e03518b39ceedff8870507cd1f5f79` är ren och klarade fem obligatoriska kontroller i följd: `node tests/outlook.mjs`, TypeScript utan emit/incremental, `corepack pnpm build`, `node tests/runtime-smoke.mjs` och `git diff --check`. Kvittot `checks-app-3/checks.json` har SHA-256 `db44cd1c072255d7fc695918a034ed1c24abb140b39482d2d1cadbc014e49eb3`; inga spårade källfiler ändrades under kontrollerna.
+
+Första regressionen stoppades av ett äldre inventeringstest som förväntade namnkoppling i stället för uttryckligt legacy-ansvar. Testkontraktet uppdaterades med separata fall för stabil identitet, inaktiv profil och motstridigt/okänt ansvar. Kandidat 2674ab7 klarade därefter alla fem kontroller. Efter ett faktiskt browserfynd rättades resetknapparnas tillgängliga namn i 7056a62 och samtliga fem kontroller kördes på nytt; endast checks-app-3 är slutkandidatens belägg. Ett senare kompatibilitetsförsök stoppades av provskriptets relativa import efter flytt; korrigerat isolerat prov i final-4 kördes med oförändrad produktkod.
+
+Oberoende källgranskning av exakt sluthead gav `PASS_CODE_REVIEW_NO_BLOCKERS` i åtta områden, med alla 23 ändrade filer och åtta relaterade skyddsfiler bytekontrollerade. `scope/final-code-review-3.json` har SHA-256 `e2fac0bf33c2a409f42f64da7f47a0f3c28b6e1b1ff8a39c1c756f41017d8162`. Läsgranskningen påstår inga egna körda tester; körda domän-/API-/lagringsprov finns i den obligatoriska regressionens och runtimens loggar.
+
+De berörda kontrakten ska bedömas som en separat föräldraaktivitet och dess förberedelser: explicit aktiv mottagare, förankring av entydigt äldre ansvar, bevarat historiskt ansvar, serverroller, orsak/granskning, oföränderlig serverhistorik, CAS och idempotens. Antal godkända fall eller mängdfall redovisas endast i det faktiskt körda kvittot ovan.
+
+### Isolerad körning och privata utkast
+
+Slutkandidatens byggda Worker kördes isolerat med faktisk HTTP och syntetisk D1/R2-adapter. Samtliga 15 nya aktivitetsflaggor och 13 befintliga förberedelseflaggor passerade, inklusive verklig roll-/kontospärr, parent-/förberedelse-CAS 409, atomisk rollback vid ledgerfel, dubbelklick och exakt återförsök efter förlorad svarskropp. JSON och NDJSON återlästes med 18 råtabeller, tre filer och 13 500 000 filbyte; ett integritetsgiltigt men felrefererat underlag avvisades atomiskt. Regressionen bevarar mängdfallen 40→45 med förnyad acceptans, 50→48 med granskat godkännande, kassation och delleverans. Inga riktiga order skrevs. `runtime/final-runtime-3.json` och checks-app-3:s faktiska loggar är beläggen; hosted återställning är inte verifierad.
+
+Privat utkast, delad kalender och granskat ansvar har olika sparhandlingar. Eget ändrat ansvar i ett äldre utkast får inte antas vara ett redan granskat kalenderbyte. Ursprungligt underlag finns kvar för jämförelse. Inga skrivtester har gjorts på riktiga kundorder inom denna leverans.
+
+### Browser och design
+
+Slutlig lokal Chromium-körning på exakt 7056a62/träd eb83c76 gav `PASS_FINAL_BROWSER` i 23 skilda fall. Matrisen omfattar 320×360, 390×844 och 1280×900 med normal och exakt CSS 2×-text, tangentbord/fokus, 44px-kontroller, fryst underlag, båda öppningsvägarna, faktisk 403/409, förlorad svarskropp, dubbelklick, explicit legacy-förankring, två äldre privata format och stängd historik. 29 byggda HTTP-anrop konstruerade underlaget; positiva privata/Outlook-/R2-data och 18 råtabellers övriga poster bytekontrollerades före/efter. Alla egna previewprocesser och temporär lagring städades. `browser/final-074521/report.json` har SHA-256 `e904a4aa6077a1a9d01c1467ed18301025b10ba30239f701d0cdbd6d710e7a13`.
+
+Första browserförsöket passerade 17 fall men hittade att ett omgivande label-element gav resetknappen hela sammanfattningen som tillgängligt namn och kunde aktivera knappen genom sammanfattningstexten. Lokal inert div/span samt uttryckliga knappnamn rättade felet utan att ändra privata resetvärden eller anta nytt underlag. Slutkandidatens alla 23 fall passerade; första försöket bevaras som felbelägg och räknas inte som slutprov.
+
+Oberoende browsergranskning läste nio av de 23 faktiska slutbilderna. Root läste dessutom tre slutbilder för smal normal vy, smal CSS 2×-text och bred separat aktivitets-/förberedelsevy. Tydliga svenska rubriker och handlingar, radbrutna knappar och synligt fokus kontrollerades. Rootbelägg: `root-visual.json`; full WCAG-, skärmläsar-, fysisk telefon- eller personalacceptans har inte provats.
+
+Lokala mål är tydliga svenska verb, separata aktivitets-/förberedelserubriker, ingen förvald mottagare, kontroller på minst 44 CSS-pixlar, begränsat textfält, reflow och tangentbordsflöde. 320/390/1280 och CSS 2× är endast verifierade i den omfattning som browserkvittot ovan anger. CSS 2× ersätter inte faktisk browserzoom, fysisk telefon eller skärmläsarprov; full WCAG-överensstämmelse påstås inte.
+
+### Format och äldre läsare/skrivare
+
+Exakt tidigare v60-källa 923c253/träd fd49dc3 kopierades i 51 filer och slutkandidaten i 54 filer till isolerad Node/SQLite-körning. Elva faktiskt körda äldre operationer omfattade en kompatibel kontroll, sju returnerade läs-/exportrepresentationer och tre bestående skrivvägar (JSON-restore, NDJSON-restore och vanlig aktivitetsskrivning). V60 utelämnade/förlorade de nya parentfälten men behöll förberedelsemetadata. Två äldre privata format och sex korrupta referensfall passerade separat. Alla sex SQL-filer är byteidentiska; `compatibility/final-4/independent-source-review.json` binder källhashar, körda prov och begränsningar till exakt sluthead.
+
+Ingen SQL-migrering eller ändring av privat/Outlook-lagring gjordes. Föräldrafälten är additiva JSON. Efter att v61 skapat registrerat aktivitetsansvar är minsta kompatibla läsare och skrivare v61; v60:s läs-/export-/skriv-/restorevägar kan tappa parentmetadata. Återställningsvägen måste därför använda v61-kompatibel kod och kompletta data/filer. Kopierade äldre källprover styrker denna gräns, inte en separat gammal hosted Worker eller genomförd live-rollback.
+
+Kompatibilitetskvittots SHA-256: `1f5b6795430c700707b64ba6fc106b5b5b32e6ad8bb00aaa9b3cf3834fccea72`. Det visar syntetiska prov med kopierad tidigare kod, inte separat gammal hosted drift eller genomförd live-rollback. Delad CRM-backup omfattar inte personliga konton, privata utkast eller Outlook. En faktisk hosted återställning med databas, bilagor, filversioner och kopplingar är inte styrkt av dessa prov.
+
+### Main, Sites och åtkomstgränser
+
+App-PR [#96](https://github.com/ludros93-prog/MAgnussons-CRM/pull/96) slogs samman från exakt grönt head `7056a62491eda6782f3758130c42e61745d5e3f3` på färsk bas 923c253. App-main `b461d8bad953ae8d8a6eb25b1fc938755d9eaa85` har exakt samma produktträd `eb83c76449e03518b39ceedff8870507cd1f5f79`. PR-CI 37745072522 och main-CI 37745786095 avslutade vardera alla 13 steg grönt. Senare dokumentationsrevision redovisas separat; dessa SHA avser produktleveransen.
+
+Samma Sites-projekt appgprj_6aa71b309d90819181a32a9af6e6baf2 publicerades som v61 på https://magnussons-crm.rosen123.chatgpt.site. Sparad version appgver_aa36aa66585c81919ea8fbb7477d65c5 och deployment appgdep_6ac74cf623e88191adef1a3f153dd902 har succeeded. Verifierad källrevision är 061f855b61ad10286b9058ff76d91310f0fb60c5 med exakt slutträd eb83c76449e03518b39ceedff8870507cd1f5f79. Det lokalt återlästa tararkivet har 97 filer/5 212 160 byte och SHA-256 ca4b64e6280b862e71afd0a9bacb55b3e27abb56d648031f9c7fe8fe56802db6, vilket matchar Sites lagrade metadata. Extra nedladdning av native-arkiv misslyckades med “file could not be authorized or resolved”; native payloadbytekontroll påstås inte. Full befintlig custom-policy revision 2, miljörevision 1 och noll automations var oförändrade efter publicering. Anonym startsida och live-API gav båda 401; autentiserat personalprov utfördes inte. Ordinarie källcredential användes utan automatisk publicering vid push.
+
+Codex-task 01a104c7-a5c5-7350-8577-a4f941138061 är oläst: tillgängliga verktyg saknade Codex read_thread. Den uttryckliga briefen och färska repo-underlaget användes.
+
+Källkod, granskade CI-resultat för exakt head, GitHub-main och publicerad källrevision redovisas separat. Inga verkliga integrationer, medarbetarinloggningar eller pilotgodkännanden följer av syntetiska svar.
+
+Officiell research av åtta publika källor lästes 2026-10-08. Kvittot `fresh-official-source-evidence.json` har SHA-256 `04ba877848523f4f835734ea969d430c510071f094e8c0c4cf4c1c46c038934c`; webverktyget returnerade inte HTTP-status. Källornas råd och lokala produktregler skiljs åt i RESEARCH och DESIGN.
+
+## Historik före v61
+
 # Magnussons CRM – verifiering av eventförberedelseansvar, v60
 
 ## Verifierat ansvar för en eventförberedelse – v60

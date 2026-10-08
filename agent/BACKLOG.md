@@ -1,5 +1,23 @@
 # Arbetskö för Magnussons CRM
 
+## Avgränsat steg i B01b2: företagsaktivitetens eget ansvar – v61
+
+Leveransen gör företagsaktivitetens ansvar stabilt och skilt från förberedelserna. Administratören granskar en planerad aktivitet, väljer aktiv mottagare och anger orsak. Äldre entydigt namnansvar kan förankras. Handover-inventeringens aktivitetsrad öppnar samma dialog. Vanlig kalenderredigering och äldre privat utkast kan inte kringgå registrerat ansvar.
+
+crm61 2026-10-08: produktkandidat `7056a62491eda6782f3758130c42e61745d5e3f3`, träd `eb83c76449e03518b39ceedff8870507cd1f5f79`, avgränsad aktivitetshantering med 23 ändrade produkt-/testfiler. Produkt och dokumentation hanterades i separata worktrees; inga främmande filer ändrades. Publicerad produkt, app-main och dokumentationsrevision hålls åtskilda i slutkvittot.
+
+Ingen SQL-migrering eller ändring av privat/Outlook-lagring gjordes. Föräldrafälten är additiva JSON. Efter att v61 skapat registrerat aktivitetsansvar är minsta kompatibla läsare och skrivare v61; v60:s läs-/export-/skriv-/restorevägar kan tappa parentmetadata. Återställningsvägen måste därför använda v61-kompatibel kod och kompletta data/filer. Kopierade äldre källprover styrker denna gräns, inte en separat gammal hosted Worker eller genomförd live-rollback.
+
+B01b2 som helhet är fortsatt större än denna leverans. Att granska en aktivitets ansvar är inte en gemensam automatisk överlämning av allt öppet arbete eller en säker avveckling av en persons konton. Slutlig inventering, kvarvarande posttyper och faktisk pilot måste bedömas mot färsk kod och aktuella rättigheter.
+
+**Nästa genomförbara steg:** Inventera kvarstående tryck- och leveransarbete vid personalbyte och bygg en granskad överlämning med stabila konto-ID:n, samtidigt som kommersiellt orderansvar och historiska resultat ligger kvar.
+
+Kvarvarande externa/personberoende frågor löses med tydliga inställningar och kontrakt medan oberoende förbättringar fortsätter: verkliga användare/roller och pilot; full hosted backup/återställning med filer/versioner/länkar; affärsdefinitioner för mål/marginal; riktiga Fortnox-/Microsoft-konton; produktkälla och granskningsbar AI. Inget av detta markeras genomfört av gröna syntetiska prov. Ingen Veckokollen/TB-funktion eller annat CRM-projekt ingår.
+
+## Historik före v61
+
+# Arbetskö för Magnussons CRM
+
 ## v60: eventförberedelse, avgränsad B01b2-del
 
 Granskad adminöverföring/förankring av en öppen företagsaktivitetsförberedelse är levererad med stabilt profil-ID, atomisk radhistorik och bevarat vanligt redigerings-/privatutkastflöde. [VALIDATION](../VALIDATION.md) anger belägg. Ny förberedelsehistorik kräver v60-läsare/skrivare.

@@ -1,5 +1,25 @@
 # Magnussons CRM – designriktning
 
+## Förstå vilken nivå som får nytt ansvar – v61
+
+Kalenderns aktivitet visar **Aktivitetens ansvar** med en egen administratörshandling. Checklistans rader visar sina förberedelseansvar och behåller sina egna handlingar. Parentdialogens rubrik **Byt aktivitetsansvar** eller **Förankra aktivitetens ansvar** och blocket **Förberedelsernas ansvar · ligger kvar** förklarar följden före sparning.
+
+Den första vyn prioriterar nuvarande ansvar, aktivitetsdatum, status och det tydliga faktumet att förberedelsernas ansvar ligger kvar. Fullständiga förberedelser och aktivitetsdetaljer kan utvecklas för kontroll. Mottagarvalet börjar tomt; orsak och granskningsruta är synliga. Vanliga användare får inga osynliga administrativa genvägar via kalenderredigeringen.
+
+Svenska verb beskriver handlingen. **Läs in** och uttrycklig användning av aktuellt underlag skiljs åt. Sparstatus skiljer på vad som faktiskt är bekräftat och vad som fortfarande är osäkert. Osparad orsak är inte ett serverlagrat privat utkast. Äldre privata aktivitetsutkast visar särskilda rubriker för aktivitet och förberedelse; återställning av registrerat ansvar kräver ett uttryckligt val.
+
+Oberoende browsergranskning läste nio av de 23 faktiska slutbilderna. Root läste dessutom tre slutbilder för smal normal vy, smal CSS 2×-text och bred separat aktivitets-/förberedelsevy. Tydliga svenska rubriker och handlingar, radbrutna knappar och synligt fokus kontrollerades. Rootbelägg: `root-visual.json`; full WCAG-, skärmläsar-, fysisk telefon- eller personalacceptans har inte provats.
+
+Slutlig lokal Chromium-körning på exakt 7056a62/träd eb83c76 gav `PASS_FINAL_BROWSER` i 23 skilda fall. Matrisen omfattar 320×360, 390×844 och 1280×900 med normal och exakt CSS 2×-text, tangentbord/fokus, 44px-kontroller, fryst underlag, båda öppningsvägarna, faktisk 403/409, förlorad svarskropp, dubbelklick, explicit legacy-förankring, två äldre privata format och stängd historik. 29 byggda HTTP-anrop konstruerade underlaget; positiva privata/Outlook-/R2-data och 18 råtabellers övriga poster bytekontrollerades före/efter. Alla egna previewprocesser och temporär lagring städades. `browser/final-074521/report.json` har SHA-256 `e904a4aa6077a1a9d01c1467ed18301025b10ba30239f701d0cdbd6d710e7a13`.
+
+Åtta officiella källor lästes 2026-10-08: Saleshub om synligt ansvar/status, Lime om kontextrelevanta verb och särskild ansvarstilldelning, Salesforce om egen aktivitetsägare skild från relaterad post samt W3C om reflow, 44×44 Enhanced och dialogfokus. Kortcitat, exakta länkar och begränsningar finns i RESEARCH. Research-SHA-256: `04ba877848523f4f835734ea969d430c510071f094e8c0c4cf4c1c46c038934c`.
+
+Stabila UUID, adminroll, CAS, idempotens, fryst granskningsunderlag och privatutkastregler är Magnussons egna implementationer. Källorna styrker inte att vår produkt motsvarar leverantörernas drift, integrationer eller design. 44 CSS-pixlar är ett lokalt kontrollmål med inspiration från Enhanced/AAA; det är inget påstående om full AA-/AAA-efterlevnad. CSS 2×-textprov, syntetisk browser och tidigare v60-bilder är inte ett verkligt telefon-, zoom-, skärmläsar- eller personalprov.
+
+## Historik före v61
+
+# Magnussons CRM – designriktning
+
 ## En förberedelse, två tydliga ansvar – v60
 
 Kalenderns ljusa förberedelserader visar **Förberedelsens ansvar**, **Klart senast** och **Öppen/Klar** med egen administrativ sidohandling. Dialogen skiljer radens ansvar från **Aktivitetens ansvar · ligger kvar** och visar fryst planering i ett expanderbart avsnitt. Svenska verb skiljer hämta, läsa in, granska och spara; känd nekning och tappad bekräftelse ger olika besked med bevarad avsikt.
