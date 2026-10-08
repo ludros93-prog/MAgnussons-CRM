@@ -1,5 +1,23 @@
 # CRM-källor för Magnussons byggagent
 
+## Officiella designprinciper för produktionsinventering – v63
+
+Faktiska `search_service_web_run` sök-, open- och find-svar lästes. Klockan efter läsningen var 2026-10-08 10:31:27 UTC; enskilda webbanrop hade inga egna tidsstämplar. Scratchkvittot har SHA-256 `3dc045879e2d6aef155b287660406f9a39ff0e3476e246321ae2603d953ceef3` och bevarar faktiskt returnerad text, inte påstått komplett HTML eller HTTP-statusar.
+
+| Officiell källa | Belagd princip | Magnussons tillämpning |
+| --- | --- | --- |
+| [Saleshub Funktioner](https://saleshubai.se/funktioner) | ”Projektboard med uppgifter, flera ansvariga och statusrader” | Jobb, ansvar och status i gemensamt sammanhang. |
+| [Lime Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | ”Use verbs in imperative mood”; synliga etiketter stödjer direkt förståelse. | Svenska **Granska jobbansvar** och **Öppna jobbet**. |
+| [Salesforce Task Fields](https://help.salesforce.com/s/articleView?id=sf.task_fields.htm&language=en_US&type=5) | Assigned To anger uppgiftens ägare; Related To anger relaterad post. | Separata jobb-, hinder- och kommersiella ansvar. |
+| [W3C Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) | Icke undantaget innehåll ska flöda om vid motsvarande 320 CSS-pixlar. | Staplade kort och radbrutna namn, ID:n och knappar. |
+| [W3C ARIA22](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22.html) | Status och resultaträkning kan meddelas utan fokusflytt. | Begriplig lässtatus och antal tillsammans med tangentbordsflöde. |
+
+Detta är offentlig inspiration och teknisk vägledning. Magnussons serverroller, identitetsupplösning, inaktuellt underlag och ansvarsflytt är egna kontrakt med egna prov. Ingen autentiserad leverantörsvy, fungerande integration, personalacceptans, full WCAG-bedömning eller världsranking har verifierats. Codex-referensen är oläst.
+
+## Historik före v63
+
+# CRM-källor för Magnussons byggagent
+
 ## Färska officiella källor för produktionsansvar – v62
 
 Läst med faktiska `search_service_web_run` sök-, open-, click- och find-svar 2026-10-08 08:20:42 UTC. Exakt returnerad text sparades i scratch; kvittots SHA-256 är `6b1ee21a9f5cd545351cdbde3a8f4e32cac9e8ad686ef06d23501f07bc2d0db4`. Inga HTTP-statusar eller autentiserade leverantörsvyer har påståtts.
