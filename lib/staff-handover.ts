@@ -79,6 +79,10 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
  }
  function taskDestination(task:Task):Destination{
   if(!customers.has(task.customerId))return customerDestination(task.customerId,'Kundkopplingen saknas. Uppgiften ligger kvar och behöver granskas.');
+  if(taskResponsibilityKind(task)==='delivery_activity'){
+   const candidates=taskResponsibilityCandidates(st,task.id);
+   return destination({kind:'task',id:task.id,customerId:task.customerId},'Granska leveranskontaktens ansvar',candidates.blockedReason,'Leveransuppföljningen har eget uppgiftsansvar. Endast denna uppgift överlämnas; kundrelation, order, mottagande, fakturering och tidigare resultat ligger kvar.');
+  }
   if(task.dealId){
    const deal=deals.get(task.dealId);
    if(!deal||deal.customerId!==task.customerId)return customerDestination(task.customerId,'Affärskopplingen saknas eller hör till en annan kund. Uppgiften behöver granskas separat.');

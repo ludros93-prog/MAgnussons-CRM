@@ -35,7 +35,7 @@ function exclusion(task:Task,target:Deal|Order,type:TargetType){
  if(task.customerId!==target.customerId)return 'Uppgiften har en annan kundkoppling och behöver granskas separat.';
  if(task.done)return 'Avslutad uppgift: historiken behåller sin ansvariga.';
  if(task.owner!==target.owner)return 'En annan ansvarig har uppgiften.';
- if(task.kind==='delivery')return 'Kundvården efter leveransen följer kundens ansvar och överförs inte med ordern.';
+ if(task.kind==='delivery')return 'Kundkontakten efter leveransen har eget uppgiftsansvar och överförs inte med ordern. Granska leveranskontaktens ansvar separat.';
  if(!requiredKinds[type].has(task.kind)&&!optionalKinds.has(task.kind))return 'Uppgiften hör till ett särskilt kundflöde eller har en typ som inte överförs här.';
  return '';
 }

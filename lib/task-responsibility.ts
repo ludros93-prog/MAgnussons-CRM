@@ -4,6 +4,9 @@ import type {Actor,Settings,State,Task} from './crm';
 import {sellerProfileById,sellerProfileForOwner} from './seller-profiles';
 import {recordBasis} from './record-conflicts';
 import {canFollowUp,protectedFollowUp} from './follow-up';
+import {deliveryVerified,latestDispatch} from './direct-delivery';
+import {validDate} from './business';
+import {swedishCalendarDay} from './swedish-calendar';
 
 const profileId=z.string().uuid();
 const required=z.string().trim().min(1).max(4000),recordId=required.max(100),ownerName=required.max(150);
@@ -28,27 +31,65 @@ const commercialKinds={deal:new Set(['discovery','quote','proof_deadline','order
 
 // Delegating an activity changes only its task responsibility. Its customer's
 // relationship, qualification and plan remain independently owned facts.
-export function taskResponsibilityKind(task:Pick<Task,'kind'|'dealId'>):'independent'|'customer_activity'|null{
+export function taskResponsibilityKind(task:Pick<Task,'kind'|'dealId'>):'independent'|'customer_activity'|'delivery_activity'|null{
+ if(task.kind==='delivery'&&task.dealId)return 'delivery_activity';
  if(task.dealId)return null;
  if(independentKinds.has(task.kind))return 'independent';
  return Object.prototype.hasOwnProperty.call(customerActivityLabels,task.kind)?'customer_activity':null;
 }
 
+// A delivery contact has its own task owner. Freeze every matching parent and
+// every dispatch fact read by its eligibility gate, without prices or costs.
+// Including ambiguous links makes a concurrent extra parent require review.
+export function deliveryTaskResponsibilityContext(st:State,task:Pick<Task,'kind'|'dealId'>){
+ if(taskResponsibilityKind(task)!=='delivery_activity')return null;
+ return {
+  deals:st.deals.filter(row=>row.id===task.dealId).map(row=>({id:row.id,customerId:row.customerId,title:row.title,owner:row.owner,ownerProfileId:row.ownerProfileId,stage:row.stage,confirmed:row.confirmed,
+   lines:row.lines.map(line=>({id:line.id,kind:line.kind,quantity:line.quantity}))})),
+  orders:st.orders.filter(row=>row.dealId===task.dealId).sort((a,b)=>a.id.localeCompare(b.id)).map(row=>({id:row.id,customerId:row.customerId,dealId:row.dealId,owner:row.owner,ownerProfileId:row.ownerProfileId,stage:row.stage,
+   deliveredDate:row.deliveredDate,receivedBy:row.receivedBy,receiptNote:row.receiptNote,pendingAmendmentId:row.pendingAmendment?.id||'',
+   shipments:row.directShipments,
+   production:{status:row.production.status,quantityMode:row.production.quantityMode,goodsReceived:row.production.goodsReceived,dispatchedAt:row.production.dispatchedAt,issue:row.production.issue,
+    lines:row.production.lines.map(line=>({id:line.id,quantity:line.quantity})),movements:row.production.movements,quantityAdjustments:row.production.quantityAdjustments}}))
+ };
+}
+
+export function deliveryTaskResponsibilityBlocker(st:State,task:Task){
+ if(taskResponsibilityKind(task)!=='delivery_activity')return 'Välj en leveransuppföljning med registrerad affärs- och orderkoppling.';
+ const deals=st.deals.filter(row=>row.id===task.dealId),orders=st.orders.filter(row=>row.dealId===task.dealId);
+ if(deals.length!==1||deals[0].customerId!==task.customerId)return 'Leveransuppföljningens affärskoppling saknas eller är tvetydig. Granska kundkortet och uppgiften.';
+ if(orders.length!==1||orders[0].customerId!==task.customerId)return 'Leveransuppföljningen behöver en entydig order för samma kund. Granska kundkortet och orderkopplingen.';
+ const deal=deals[0],order=orders[0];
+ if(deal.stage!=='won'||!deal.confirmed)return 'Affären saknar registrerat kundbeslut för ordern. Granska orderunderlaget; ansvarsbytet registrerar ingen accept.';
+ if(!['delivered','followed'].includes(order.stage)||!order.deliveredDate||!order.receivedBy.trim())return 'Kundens mottagande behöver vara registrerat med datum och mottagare eller underlag på ordern före denna överlämning.';
+ const today=swedishCalendarDay(new Date().toISOString(),'Dagens datum kunde inte läsas.');
+ if(!validDate.safeParse(order.deliveredDate).success||order.deliveredDate>today)return 'Det registrerade mottagningsdatumet är ogiltigt eller ligger i framtiden. Granska orderns mottagande.';
+ if(order.pendingAmendment||order.production.issue)return 'Ordern har en öppen ändring eller ett produktionshinder. Granska ordern innan leveranskontakten överlämnas.';
+ if(!deliveryVerified(st,order))return 'Komplett avsändningsunderlag saknas. Granska orderns leveransunderlag innan leveranskontakten överlämnas.';
+ let dispatchedOn='';
+ try{dispatchedOn=latestDispatch(order);}catch{return 'Avsändningsdatumet är ogiltigt. Granska orderns leveransunderlag.';}
+ if(!dispatchedOn||!validDate.safeParse(dispatchedOn).success||order.deliveredDate<dispatchedOn)return 'Det registrerade mottagandet måste ligga efter eller på samma dag som den senaste avsändningen. Granska orderns datum.';
+ return '';
+}
+
 export function taskResponsibilityContext(st:State,task:Task){
- if(taskResponsibilityKind(task)!=='customer_activity')return null;
+ const kind=taskResponsibilityKind(task);
+ if(kind!=='customer_activity'&&kind!=='delivery_activity')return null;
  const customer=st.customers.find(row=>row.id===task.customerId);
  if(!customer)return null;
  return {
-  typeLabel:customerActivityLabels[task.kind],
+  typeLabel:kind==='delivery_activity'?'Leveransuppföljning':customerActivityLabels[task.kind],
   customer:{id:customer.id,name:customer.name,owner:customer.owner,ownerProfileId:customer.ownerProfileId,status:customer.status,
    contact:customer.contact,email:customer.email,phone:customer.phone,decisionMaker:customer.decisionMaker,lastContact:customer.lastContact,
    nextReview:customer.nextReview,expectedOrder:customer.expectedOrder,reviewDays:customer.reviewDays,need:customer.need,riskReason:customer.riskReason},
-  plan:task.kind==='prospecting'?null:customer.plan,
-  prospecting:task.kind==='prospecting'?customer.prospecting:null
+  plan:kind==='delivery_activity'||task.kind==='prospecting'?null:customer.plan,
+  prospecting:task.kind==='prospecting'?customer.prospecting:null,
+  ...(kind==='delivery_activity'?{delivery:deliveryTaskResponsibilityContext(st,task)}:{})
  };
 }
 
 function customerActivityBlocker(st:State,task:Task){
+ if(taskResponsibilityKind(task)==='delivery_activity')return deliveryTaskResponsibilityBlocker(st,task);
  const context=taskResponsibilityContext(st,task);
  if(!context)return '';
  if(task.kind==='prospecting'){
@@ -116,7 +157,7 @@ export function taskResponsibilityCandidates(st:State,taskId:string){
  let blockedReason='';
  if(!task)blockedReason='Uppgiften finns inte.';
  else if(task.done)blockedReason='Avslutad uppgift behåller sitt historiska ansvar.';
- else if(task.dealId)blockedReason='Uppgiften hör till en affär eller order. Granska ansvaret i dess överlämning.';
+ else if(task.dealId&&taskResponsibilityKind(task)!=='delivery_activity')blockedReason='Uppgiften hör till en affär eller order. Granska ansvaret i dess överlämning.';
  else if(!taskResponsibilityKind(task))blockedReason='Uppgiftens ansvar styrs av ett särskilt kund-, affärs- eller orderflöde.';
  else if(!customer)blockedReason='Kundkopplingen saknas. Granska uppgiften innan ansvaret ändras.';
  else if(activityBlocker)blockedReason=activityBlocker;
@@ -135,6 +176,7 @@ export function taskResponsibilityBasis(st:State,taskId:string){
  return recordBasis({
   task:task||null,customer:customer?{id:customer.id,name:customer.name,owner:customer.owner,ownerProfileId:customer.ownerProfileId,status:customer.status}:null,
   ...(context?{activityContext:context}:{}),
+  ...(!context&&task&&taskResponsibilityKind(task)==='delivery_activity'?{deliveryContext:deliveryTaskResponsibilityContext(st,task)}:{}),
   initialized:st.settings.sellerProfilesInitialized,owners:st.settings.owners,
   profiles:st.settings.sellerProfiles.map(profile=>({id:profile.id,displayName:profile.displayName,legacyOwnerName:profile.legacyOwnerName,active:profile.active,memberId:profile.memberId}))
  });
@@ -234,13 +276,14 @@ export function assignTaskResponsibilities(previousState:State,nextState:State,e
   const task=nextState.tasks.find(row=>row.id===taskId),deal=task?nextState.deals.find(row=>row.id===task.dealId&&row.customerId===task.customerId):undefined,yearNeed=deal?nextState.customers.find(row=>row.id===deal.customerId)?.yearNeeds.find(row=>row.dealId===deal.id):undefined;
   need(!previous.has(taskId)&&task&&task.kind==='discovery'&&deal&&yearNeed&&task.owner===yearNeed.owner&&ownerId===yearNeed.ownerProfileId&&deal.ownerProfileId===ownerId&&(ownerId===''||matchingProfileId(nextState.settings,task.owner,ownerId)),'Årshjulets exakta ansvar får bara kopieras till den nya behovsaffärens uppgift.');
  }
- // Customer-activity successors copy the original task's exact recorded
- // identity, including a legacy blank. Other follow-up kinds retain their
- // existing derivation rules. New tasks never copy the original audit.
+ // Customer activities and eligible received-delivery successors copy the
+ // original task's exact recorded identity, including a legacy blank. Other
+ // follow-up sources retain their derivation. New tasks never copy the audit.
  for(const [taskId,entry] of exactNewFollowUpOwners||[]){
   const source=previous.get(entry.sourceTaskId),task=nextState.tasks.find(row=>row.id===taskId);
   const kind=source&&protectedFollowUp(source)&&source.kind!=='csm_issue'?'manual':source?.kind;
-  need(!previous.has(taskId)&&source&&taskResponsibilityKind(source)==='customer_activity'&&canFollowUp(source)&&task&&!task.done&&!task.doneAt&&!task.responsibilityTransfers.length&&task.kind===kind&&task.customerId===source.customerId&&task.dealId===source.dealId&&task.owner===source.owner&&entry.ownerProfileId===(source.ownerProfileId||'')&&(entry.ownerProfileId===''||matchingProfileId(nextState.settings,task.owner,entry.ownerProfileId)),'Uppföljningens exakta uppgiftsansvar får bara kopieras från den ursprungliga aktiviteten till ett nytt nästa steg.');
+  const exactSource=source&&(taskResponsibilityKind(source)==='customer_activity'||taskResponsibilityKind(source)==='delivery_activity'&&!deliveryTaskResponsibilityBlocker(previousState,source));
+  need(!previous.has(taskId)&&source&&exactSource&&canFollowUp(source)&&task&&!task.done&&!task.doneAt&&!task.responsibilityTransfers.length&&task.kind===kind&&task.customerId===source.customerId&&task.dealId===source.dealId&&task.owner===source.owner&&entry.ownerProfileId===(source.ownerProfileId||'')&&(entry.ownerProfileId===''||matchingProfileId(nextState.settings,task.owner,entry.ownerProfileId)),'Uppföljningens exakta uppgiftsansvar får bara kopieras från den ursprungliga aktiviteten till ett nytt nästa steg.');
  }
  for(const task of nextState.tasks){
   const old=previous.get(task.id);
@@ -275,7 +318,12 @@ export function validateTaskResponsibilityReferences(st:State){
    if(row.source==='task'){
     // Current plan/status may legitimately change after delegation. Validate
     // the immutable task chain, never reinterpret its historic eligibility.
-    need(!row.sourceTransferId&&!row.dealId&&taskResponsibilityKind(task),'En uppgiftsöverföring har en felaktig arbetsflödeskoppling.');
+    const directDelivery=taskResponsibilityKind(task)==='delivery_activity';
+    need(!row.sourceTransferId&&(!row.dealId&&taskResponsibilityKind(task)||directDelivery),'En uppgiftsöverföring har en felaktig arbetsflödeskoppling.');
+    if(directDelivery){
+     const deals=st.deals.filter(deal=>deal.id===row.dealId),orders=st.orders.filter(order=>order.dealId===row.dealId);
+     need(deals.length===1&&deals[0].customerId===row.customerId&&orders.length===1&&orders[0].customerId===row.customerId,'Leveransuppgiftens ansvarshistorik har en bruten eller tvetydig affärs- eller orderkoppling.');
+    }
    }else{
     const parent=row.source==='yearwheel'?st.customers.find(customer=>customer.id===row.customerId)?.yearNeeds.flatMap(yearNeed=>yearNeed.responsibilityTransfers).find(history=>history.id===row.sourceTransferId):row.source==='customer_issue'?st.customers.find(customer=>customer.id===row.customerId)?.plan.issueResponsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='onboarding'?st.customers.find(customer=>customer.id===row.customerId)?.onboarding.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):row.source==='customer'?st.customers.find(customer=>customer.id===row.customerId)?.responsibilityTransfers.find(history=>history.id===row.sourceTransferId):(row.source==='deal'?st.deals:st.orders).flatMap(target=>target.responsibilityTransfers).find(history=>history.id===row.sourceTransferId);
     need(parent&&parent.customerId===row.customerId&&parent.selectedTaskIds.includes(row.taskId)&&parent.fromProfileId===row.fromProfileId&&parent.toProfileId===row.toProfileId&&parent.fromOwner===row.fromOwner&&parent.toOwner===row.toOwner&&parent.reason===row.reason&&parent.at===row.at&&parent.byId===row.byId&&parent.byMemberId===row.byMemberId&&parent.byName===row.byName,'Uppgiftshistoriken motsäger den granskade kund-, affärs- eller orderöverlämningen.');
