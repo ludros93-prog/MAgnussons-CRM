@@ -1,0 +1,32 @@
+.account-change-workspace,.account-change-sheet,.account-change-workspace .biz-repeat>div{min-width:0;overflow-wrap:anywhere}
+.account-change-workspace h2,.account-change-sheet h3{scroll-margin:1rem}
+.account-change-workspace button,.account-change-sheet button{min-height:44px;height:auto;min-width:0;max-width:100%;white-space:normal;line-height:1.5;overflow-wrap:anywhere}
+.account-change-workspace input,.account-change-sheet input{min-width:0;max-width:100%;min-height:44px;font-size:1rem}
+.account-change-sheet [data-slot=select-trigger]{min-height:44px;height:auto;max-width:100%;white-space:normal;font-size:1rem;line-height:1.5}
+.account-change-sheet [data-slot=select-value]{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.account-change-sheet .biz-grid,.account-change-sheet .biz-field{min-width:0}
+.account-change-sheet p,.account-change-sheet h3,.account-change-sheet label,.account-change-sheet dt,.account-change-sheet dd{white-space:normal;overflow-wrap:anywhere}
+.account-change-sheet svg{flex-shrink:0}
+.account-change-active,.account-change-confirm{display:flex;align-items:flex-start;gap:.7rem;min-height:44px;padding:.7rem .5rem;line-height:1.6;cursor:pointer}
+.account-change-active>[data-slot=checkbox],.account-change-confirm>[data-slot=checkbox]{margin-top:.3rem;flex-shrink:0}
+.account-change-review,.account-change-readback{min-width:0;padding:1rem;margin-block:1rem;border:1px solid #d4e0ea;border-radius:12px;background:#f7fafc}
+.account-change-review h3,.account-change-readback h3{display:flex;align-items:flex-start;gap:.6rem;font-size:1rem;line-height:1.5;margin-bottom:.6rem;color:#193d50}
+.account-change-review p,.account-change-readback p{font-size:.92rem;line-height:1.65;margin-block:.65rem}
+.account-change-blocker,.account-change-clear{display:flex;align-items:flex-start;gap:.6rem;padding:.85rem;border:1px solid #e4c68d;border-radius:9px;background:#fff8e9;color:#68491b}
+.account-change-blocker>span,.account-change-clear>span{min-width:0}
+.account-change-blocker>span>span,.account-change-clear>span>span{display:block;margin-top:.35rem}
+.account-change-blocker>svg,.account-change-clear>svg{margin-top:.2rem}
+.account-change-clear{border-color:#b8d8d2;background:#edf7f4;color:#245a4f}
+.account-change-counts{display:grid;grid-template-columns:minmax(0,1fr);gap:.7rem;list-style:none;padding:0;margin-block:1rem}
+.account-change-counts li{min-width:0;padding:.85rem;border:1px solid #dae4ed;border-radius:9px;background:#fff}
+.account-change-counts li>b{display:block;font-size:.93rem;line-height:1.5;margin-bottom:.55rem}
+.account-change-counts dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin:0}
+.account-change-counts dl>div{min-width:0}
+.account-change-counts dt{font-size:.82rem;line-height:1.5;color:#476176}
+.account-change-counts dd{margin:0;font-size:1.2rem;font-weight:650;font-variant-numeric:tabular-nums;color:#1e4157}
+.account-change-confirm{padding:.8rem;border:1px solid #bbd5d8;border-radius:9px;background:#edf5f6;font-size:.94rem}
+.account-change-feedback{font-size:.94rem;line-height:1.65;margin-block:1rem}
+.account-change-readback{background:#fff9ed;border-color:#e5cd9a}
+.account-change-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.25rem}
+.account-change-sheet button:focus-visible,.account-change-sheet input:focus-visible,.account-change-sheet [data-slot=select-trigger]:focus-visible,.account-change-sheet [data-slot=checkbox]:focus-visible{outline:3px solid #148a99;outline-offset:3px}
+@media(max-width:767px){.account-change-sheet .biz-grid,.account-change-counts dl{grid-template-columns:minmax(0,1fr)}.account-change-review,.account-change-readback{padding:.85rem}.account-change-counts dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:.65rem}.account-change-actions>button,.account-change-review>button,.account-change-readback>button{width:100%}.account-change-workspace .biz-repeat{flex-wrap:wrap;gap:.7rem}.account-change-workspace .biz-repeat>div{flex-basis:100%}.account-change-workspace .biz-repeat>button{width:100%}}

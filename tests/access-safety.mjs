@@ -2,14 +2,23 @@ import assert from 'node:assert/strict';
 
 export async function verifyAccessSafety(h){
  const {core,sqlite,get,post,roleGet}=h;
- const members=await import('../work/members-api.mjs');
+ const members=await import('../work/members-api.mjs'),accountChanges=await import('../work/account-change-review-api.mjs'),accountDomain=await import('../work/account-change-review.mjs');
  const originalAccounts=sqlite.prepare('SELECT id,role,active FROM crm_members').all();
  const adminIds=['access-admin-a','access-admin-b'];
  const emails=['access-seller-a@example.com','access-seller-b@example.com'];
  const state=await get('live');
  const availableOwner=state.settings.owners.find(owner=>!sqlite.prepare('SELECT id FROM crm_members WHERE owner=? AND active=1').get(owner));
  assert.ok(availableOwner,'The fixture needs one available salesperson profile.');
- const write=(actor,data)=>members.POST(new Request('https://crm.test/api/crm/members',{method:'POST',headers:{'oai-authenticated-user-id':actor,'oai-authenticated-user-email':actor+'@example.com','Content-Type':'application/json',Origin:'https://crm.test'},body:JSON.stringify(data)}));
+ const write=async(actor,data)=>{
+  const headers={'oai-authenticated-user-id':actor,'oai-authenticated-user-email':actor+'@example.com','Content-Type':'application/json',Origin:'https://crm.test'},current=sqlite.prepare('SELECT id,role,active FROM crm_members WHERE email=?').get(data.email);
+  if(current&&accountDomain.accountChangeNeedsReview(current,{role:data.role,active:data.active})){
+   const response=await accountChanges.GET(new Request('https://crm.test/api/crm/account-change-review?'+new URLSearchParams({memberId:current.id,role:data.role,active:String(data.active)}),{headers}));
+   assert.equal(response.status,200);const review=await response.json();assert.equal(review.blocked,false,JSON.stringify(review));
+   assert.ok(review.workspaces.every(workspace=>workspace.jobCount===0&&workspace.issueCount===0&&workspace.unresolvedCount===0));
+   data={...data,accountReview:{memberId:current.id,expectedAccount:review.expectedAccount,expectedContext:review.expectedContext,confirmed:true}};
+  }
+  return members.POST(new Request('https://crm.test/api/crm/members',{method:'POST',headers,body:JSON.stringify(data)}));
+ };
  try{
   for(const id of adminIds)sqlite.prepare('INSERT INTO crm_members(id,email,user_id,name,role,owner,active) VALUES(?,?,?,?,?,?,1)').run(id,id+'@example.com',id,id,'admin','');
   // Both requests pass the preliminary read before either write. The SQL gate

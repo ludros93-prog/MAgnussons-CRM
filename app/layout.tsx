@@ -20,6 +20,7 @@ import "./customer-reopen.css";
 import "./company-event-responsibility.css";
 import "./production-assignment.css";
 import "./production-inventory.css";
+import "./account-change-review.css";
 
 export const metadata: Metadata = {
   title: "Magnussons CRM",
