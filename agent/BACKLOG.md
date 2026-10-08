@@ -1,5 +1,23 @@
 # Arbetskö för Magnussons CRM
 
+## B01b2/T04/T16: kvarstående hinder i kontoinventeringen – v69-kod
+
+Bekräftad läslucka: kontoändringens kontroll kunde räkna ett öppet hinder på skickat jobb medan **Produktionsarbete per konto** dolde jobbet. Inventeringen visar nu detta ansvar, med **Skickat · öppet hinder**, historiskt jobbansvar och direkt **Öppna jobbet**. Historiskt jobbansvar räknas inte som aktivt ansvar och får ingen överlämningshandling.
+
+Kod `c78cd3af87e2290b104a1cf5e88456062f32526b`, träd `4970dbac44a3006e096c20e811f8dcf8e676c2b2`. GitHub app-main `0f72cef714b08cebed2f1c302f0779d529d1d7f3`; exakt-head CI 37853755931 och fem obligatoriska slutkontroller är gröna, kontrollkvitto SHA-256 `e3c10c7313dd997147bed2ba78ef7906fb10c76bb4ee880acc296d992f16e373`. Native browser: 10 godkända fall och 16 sparade bilder, kvitto `b217228e01eba7d20107594d7bc67b5c2ec9ae2c7ad63b0c5d437fc3e03dfe4c`.
+
+**Publicering blockerad:** Sites-instruktionen kräver `site-workflow.mjs` för källöppning och packning. En källskrivcredential har utfärdats, men hjälpskriptet är inte åtkomligt och inget sådant öppnings-/packningsflöde har kunnat köras. Ingen v69-version har sparats eller publicerats. [Samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) ligger kvar på **v68**, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`, med bevarad begränsad delning.
+
+Ingen ändrad lagring, SQL-migration eller backupsemantik. `magnussons-crm-1` och v66-kompatibelt läsar-/skrivargolv efter äldre jobbansvarsrättning består. Kontoändringens alla-arbetsytor-kontroll och befintliga serverroller/CAS/idempotens ligger kvar. Detta slutför v69:s avgränsade diagnosdel, inte hela B01b2 eller T26.
+
+**Nästa:** återfå den föreskrivna Sites-sourcehelpern, hämta färsk Site-källa och paketera/publicera exakt grön kandidat med bevarad identitet, D1/R2-miljö och begränsad delning. Därefter granskat hinderansvarsbyte/oklara kopplingar enligt färsk inventering. Granskat hinderansvarsbyte, övriga oklara identiteter/full personalöverlämning, chefsroll, privata backuper, faktisk personalpilot, full hostad återställning och riktiga integrationskonton kvarstår. Codex-referensen är oläst.
+
+Originalprioritering, mandat, schema, prompt och aktivering ändras inte. Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmåtten.
+
+## Historik före v69-koden
+
+# Arbetskö för Magnussons CRM
+
 ## Avgränsad B01b2/T16-del: nå kvarstående hinder på skickat jobb – v68
 
 Bekräftad åtkomstlucka: servern tillät redan lösning av ett öppet hinder på `dispatched`, men Board och Workspace dolde handlingen. **Lös kvarstående hinder** gör den befintliga lösningen nåbar i **Historik**/**Avslutat**, med registrerad rapportör/adminvillkor, fryst produktionsunderlag, CAS och idempotens.

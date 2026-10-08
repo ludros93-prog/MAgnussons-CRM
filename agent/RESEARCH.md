@@ -1,3 +1,20 @@
+# Källor och tillämpade principer – inventeringsfix för v69-kod
+
+Fem exakta kortcitat verifierades mot faktiskt returnerade officiella webverktygstexter 2026-10-08 22:20:36 UTC. Evidens SHA-256 `973ab1c0afc2c0e1d8b69a2073037f5c7fa8d202060b9cbf2a3286634e9b7002`; ingen komplett HTML/HTTP-status eller autentiserad leverantörsvy påstås.
+
+| Officiell källa | Belagd princip och Magnussons tillämpning |
+| --- | --- |
+| [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | Konkreta verb och kontextrelevanta handlingar. **Öppna jobbet** öppnar direkt rätt detaljvy; historiskt jobb får ingen irrelevant ansvarsändring. |
+| [Saleshub Funktioner](https://saleshubai.se/funktioner) | Uppgifter, ansvariga och statusrader i samma sammanhang. **Skickat · öppet hinder** gör två olika tillstånd begripliga tillsammans med kund-/jobbreferens. |
+| [Salesforce Record-Level Security](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) | Postläsning och redigering har egna rättigheter. Läsande inventering ger ingen ny historisk arbetsfördelning eller behörighet. |
+| [W3C Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) och [ARIA22](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22.html) | Radbrytbara kort i smal vy och begripliga statusmeddelanden. Befintlig resultaträkning/statusregion bevaras; slutbrowserbelägg finns i [VALIDATION](../VALIDATION.md). |
+
+Magnussons konto-ID, läsbasis, kontoändringsspärr, roller och CAS/idempotens är egna kontrakt. Ingen integrations-, konto-, personal- eller full WCAG-acceptans följer av offentlig research. Granskat hinderansvarsbyte, övriga oklara identiteter/full personalöverlämning, chefsroll, privata backuper, faktisk personalpilot, full hostad återställning och riktiga integrationskonton kvarstår. Codex-referensen är oläst.
+
+Sites-SKILL.md kräver sourcehelpern `site-workflow.mjs` för källöppning och packning; den är inte åtkomligt hittad. Två script-resourceförsök misslyckades. Filsökningen hade inga åtkomliga träffar men kunde inte läsa två systemkataloger. Troubleshooting ger ingen alternativ paketeringsväg; ingen helperkörning eller v69-publicering påstås.
+
+## Historik före v69-koden
+
 # Källor och tillämpade principer – v68
 
 ## Begriplig lösning av befintligt hinder på skickat jobb
