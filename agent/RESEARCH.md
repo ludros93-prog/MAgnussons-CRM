@@ -1,5 +1,15 @@
 # CRM-källor för Magnussons byggagent
 
+## v60: individuellt förberedelseansvar och begriplig aktivitet
+
+Fem officiella sidtexter lästes 2026-10-08, med fokuserad textkontroll 05:29:58–05:29:59 UTC. `/workspace/scratch/crm60/research/fresh-official-source-evidence.json`, SHA-256 `3f34d6d4f6d5b0408048866fe491e79d081ee7552964864314d167a1d0fea17f`, verifierar fem korta citat i faktiskt returnerad text; verktyget gav ingen separat HTTP-status.
+
+[Salesforce Task Fields](https://help.salesforce.com/s/articleView?id=sf.task_fields.htm&language=en_US&type=5) och [Assign Tasks and Events](https://help.salesforce.com/s/articleView?id=Can-I-assign-tasks-or-events-to-other-users&language=en_US&type=1) skiljer aktivitetens ägare från relaterad post och beskriver enskilt ansvar. [Lime handlingsdesign](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) stödjer konkreta verb/kontextnära handlingar; [Lime Notifications](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/notifications/) skiljer direkt ansvarstilldelning från information/prenumeration. [Saleshub funktioner](https://saleshubai.se/funktioner) beskriver projektuppgifter med ansvar och status i gemensamt sammanhang.
+
+Magnussons enskilda radhistorik, adminregel, stabila UUID:n, fryst granskning, CAS/idempotens och 44 px är lokala produktval som kräver egna prov. Källorna bevisar ingen notifiering, integration, leverantörsprestanda, WCAG eller personalacceptans. Codex-referensen är oläst; brief/repo används.
+
+## Historik före v60
+
 ## v59: kontextnära ansvar och tydlig granskning
 
 Sex officiella sidtexter lästes 2026-10-08 03:19:36 UTC; `/workspace/scratch/crm59/research/official-sources.json`, SHA-256 `0c528660567afaea6df00c03c93b69b224a361d57786e0c2c295812d035e9d7c`.

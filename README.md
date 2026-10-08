@@ -1,5 +1,13 @@
 # Magnussons CRM
 
+## Eget ansvar för varje eventförberedelse – v60
+
+Administratören kan granska och överlämna en öppen förberedelse i **Företagets aktiviteter**. **Förberedelsens ansvar** och **Aktivitetens ansvar** visas separat. Ett uttryckligt profilval, en orsak och granskning ändrar bara den valda radens ansvar och registrerar historiken atomiskt. Vanlig aktivitetssparning och klarmarkering bevarar historiken.
+
+App-PR #94 är på main och v60 är publicerad på samma begränsat delade Site. De fem slutkontrollerna och 24 isolerade browserfall är gröna; riktiga konto-/integrationsprov och personalpilot återstår. [OPERATIONS](OPERATIONS.md) beskriver stegen; [VALIDATION](VALIDATION.md) anger bevis/gränser. Ny förberedelsehistorik kräver **v60-kompatibel läsare och skrivare**. Aktivitetens övergripande ansvar, full personalavveckling och hostingåterställning återstår.
+
+## Historik före v60
+
 ## Överlämna kundkontakten efter leveransen – v59
 
 Administratören kan granska och byta ansvar för en öppen **Leveransuppföljning** efter registrerat kundmottagande och komplett avsändningsunderlag. Dialogen visar skilda uppgifts-, kundrelations- och orderansvar. Endast uppgiften överlämnas; mottagande, fakturering och tidigare resultat ligger kvar. Orsak/val bevaras vid fel.

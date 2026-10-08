@@ -1,5 +1,13 @@
 # Magnussons CRM – designriktning
 
+## En förberedelse, två tydliga ansvar – v60
+
+Kalenderns ljusa förberedelserader visar **Förberedelsens ansvar**, **Klart senast** och **Öppen/Klar** med egen administrativ sidohandling. Dialogen skiljer radens ansvar från **Aktivitetens ansvar · ligger kvar** och visar fryst planering i ett expanderbart avsnitt. Svenska verb skiljer hämta, läsa in, granska och spara; känd nekning och tappad bekräftelse ger olika besked med bevarad avsikt.
+
+Den slutliga 24-fallsmatrisen verifierade tydligt separata aktivitets-/förberedelseansvar, långa namn/orsaker, explicit jämförelse, känd nekning kontra obekräftad sparning, fokusåtergång och mobil/tangentbord i tre viewportar med normal/CSS 2× text. Faktiska skärmbilder inspekterades. Detta är browser-/geometribelägg för berörda flöden. Lokala 44-px-tryckytor, radbrytning och avgränsad vertikal scroll gäller den berörda dialogen/raderna. Orsakfältet har fast storlek och egen vertikal scroll: ett faktiskt 320×360-prov visade tidigare att lång text växte till 2 643 px och flyttade tangentbordsfokus utanför vyn. Endast dialogens textruteregel rättades; slutprovets resultat anges ovan. [VALIDATION](VALIDATION.md) anger provgränser; [RESEARCH](agent/RESEARCH.md) belagd Saleshub-/Lime-/Salesforce-inspiration. Full tillgänglighetsgranskning och personalpilot återstår.
+
+## Historik före v60
+
 ## Kundkontaktens ansvar med leveransen som underlag – v59
 
 **Leveransuppföljning**, skilda uppgifts-/kundrelations-/orderansvar och expanderbar fryst **Leverans & kontakt** visar ändringens omfattning. Fulla identiteter finns i detaljer. Svenska knappar skiljer hämta, läsa in och granska. Känd servernekning bevarar avsikten; tappad bekräftelse får ärligt besked om möjlig sparning/exakt återförsök.

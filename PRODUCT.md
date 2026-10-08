@@ -1,5 +1,13 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Förberedelsens ansvar är skilt från aktivitetens – v60
+
+En administratör kan förankra äldre ansvar eller överlämna exakt en öppen eventförberedelse till en aktiv granskad profil. Samma rad får stabilt profil-ID och spårbar ansvarsändring. Granskningen slutför inget arbete, återöppnar ingen genomförd/avbokad aktivitet och flyttar inget kund-/affärs-/orderansvar eller historiskt resultat.
+
+Vanlig redigering och klarmarkering bevarar registrerad identitet/historik. En rad med ansvarshistorik kan inte tas bort som vanlig förberedelseredigering. Ett äldre privat aktivitetsutkast bevaras vid konflikt; efter uttrycklig adoption följer oförändrat äldre ansvarsval den aktuella granskade raden, medan eget ändrat ansvarsval behöver separat granskning. Privatutkastets råa text och arkiverade kropp bevaras; kalenderns publicerade text trimmas enligt befintliga regler. Försäljning mot månads-/årsmål, marginal och nya prospects består; TB är inget huvudmått.
+
+## Historik före v60
+
 ## Eget ansvar för kontakten efter leveransen – v59
 
 **Leveransuppföljning** gäller kundkontakt efter registrerat mottagande. Granskat adminbyte omfattar vald öppen uppgift/historik/händelse; kundrelation, affär/order, mottagande, faktura och tidigare resultat ligger kvar. Entydig koppling, registrerat beslut/mottagande och komplett avsändningsunderlag krävs; saknat/motstridigt underlag spärrar byte.
