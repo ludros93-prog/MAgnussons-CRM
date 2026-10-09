@@ -1,7 +1,7 @@
 import type {State,Task} from './crm';
 import {sellerProfileById,sellerProfileForOwner} from './seller-profiles';
-import {customerResponsibilityCandidates} from './customer-responsibility';
-import {commercialResponsibilityCandidates} from './commercial-responsibility';
+import {customerResponsibilityCandidates,customerResponsibilityAnchorReview} from './customer-responsibility';
+import {commercialResponsibilityCandidates,commercialResponsibilityAnchorReview,orderResponsibilityAnchorReview} from './commercial-responsibility';
 import {taskResponsibilityCandidates,taskResponsibilityContext,taskResponsibilityKind,taskResponsibleProfile} from './task-responsibility';
 import {meetingResponsibilityCandidates} from './meeting-responsibility';
 import {onboardingResponsibilityCandidates} from './onboarding-responsibility';
@@ -11,13 +11,14 @@ import {companyEventResponsibilityCandidates} from './company-event-responsibili
 import {companyActivityResponsibilityCandidates} from './company-activity-responsibility';
 
 export type StaffHandoverAction={
- kind:'customer'|'deal'|'order'|'task'|'meeting'|'onboarding'|'issue'|'yearwheel'|'companyEvent'|'companyEventPreparation';
+ kind:'customer'|'deal'|'order'|'task'|'meeting'|'onboarding'|'issue'|'yearwheel'|'companyEvent'|'companyEventPreparation'|'customerAnchor'|'dealAnchor'|'orderAnchor';
  id:string;customerId?:string;needId?:string;checklistId?:string;
 };
 export type StaffHandoverRow={
  key:string;kind:string;typeLabel:string;title:string;customerName:string;customerId:string;
  owner:string;ownerProfileId:string;identity:'profile'|'legacy'|'unresolved'|'alias';
  due:string;dueLabel:string;status:string;hint:string;action:StaffHandoverAction|null;actionLabel:string;
+ anchorAction?:StaffHandoverAction;anchorLabel?:string;anchorHint?:string;
 };
 
 type Destination={action:StaffHandoverAction|null;actionLabel:string;hint:string};
@@ -68,6 +69,18 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
  function destination(action:StaffHandoverAction,label:string,blockedReason:string,hint:string):Destination{
   return blockedReason?customerDestination(action.customerId||'',blockedReason):{action,actionLabel:label,hint};
  }
+ // A neutral link is a separate review of this exact parent record. The
+ // inventory knows the profile link, not whether its account is connected or
+ // still eligible. The existing dialog reads that account before saving.
+ function anchorDestination(kind:'customerAnchor'|'dealAnchor'|'orderAnchor',id:string,customerId:string,blockedReason:string):Pick<StaffHandoverRow,'anchorAction'|'anchorLabel'|'anchorHint'>{
+  if(blockedReason)return {};
+  const labels={customerAnchor:'Koppla kundansvaret',dealAnchor:'Koppla affärsansvaret',orderAnchor:'Koppla orderansvaret'};
+  const subjects={customerAnchor:'kundrelationens ansvar',dealAnchor:'affärens ansvar',orderAnchor:'orderns kommersiella ansvar'};
+  return {
+   anchorAction:{kind,id,customerId},anchorLabel:labels[kind],
+   anchorHint:'Samma person fortsätter. Endast '+subjects[kind]+' kopplas till personens befintliga profil-ID. Övriga ansvar och uppgifter ändras inte. Personens CRM-konto och anslutning granskas i dialogen innan kopplingen kan sparas.'
+  };
+ }
  function add(row:Omit<StaffHandoverRow,'key'|'identity'|'customerName'>,key:string[],aliasOnly=false){
   rows.push({...row,key:JSON.stringify(key),customerName:row.customerId?customers.get(row.customerId)?.name||'Kundkoppling saknas':'',identity:identity(row.owner,row.ownerProfileId,aliasOnly)});
  }
@@ -110,10 +123,11 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
 
  for(const customer of st.customers){
   if(customer.status!=='closed'){
-   const candidates=customerResponsibilityCandidates(st,customer.id);
+   const candidates=customerResponsibilityCandidates(st,customer.id),anchor=customerResponsibilityAnchorReview(st,customer.id);
    add({kind:'customer',typeLabel:'Kundrelation',title:customer.name,customerId:customer.id,owner:customer.owner,ownerProfileId:customer.ownerProfileId,
     due:customer.status==='prospect'?customer.prospecting.nextDate:customer.nextReview,dueLabel:customer.status==='prospect'?'Nästa kontakt':'Nästa avstämning',status:relationStatus[customer.status]||customer.status,
-    ...destination({kind:'customer',id:customer.id,customerId:customer.id},'Granska kundansvar',candidates.blockedReason,'Kundrelation och uttryckligt valda fristående uppgifter granskas på kundkortet. Andra ansvar överlämnas separat.')},['customer',customer.id]);
+    ...destination({kind:'customer',id:customer.id,customerId:customer.id},'Granska kundansvar',candidates.blockedReason,'Kundrelation och uttryckligt valda fristående uppgifter granskas på kundkortet. Andra ansvar överlämnas separat.'),
+    ...anchorDestination('customerAnchor',customer.id,customer.id,anchor.blockedReason)},['customer',customer.id]);
   }
   if(customer.onboarding.startedAt&&!customer.onboarding.completedAt){
    const value=customer.onboarding,candidates=onboarding(customer.id);
@@ -132,7 +146,7 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
   }
  }
  for(const deal of st.deals.filter(value=>!['won','lost'].includes(value.stage))){
-  const candidates=commercial('deal',deal.id);
+  const candidates=commercial('deal',deal.id),anchor=commercialResponsibilityAnchorReview(st,deal.id);
   let next=destination({kind:'deal',id:deal.id,customerId:deal.customerId},'Granska affärsansvar',candidates.blockedReason,'Affär och nödvändiga öppna åtaganden granskas i sin befintliga överlämning. Historiskt resultat ligger kvar.');
   if(candidates.linkedOrder){
    const order=candidates.linkedOrder,orderCandidates=commercial('order',order.id);
@@ -141,12 +155,13 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
    else next=customerDestination(deal.customerId,orderCandidates.blockedReason||(!sameSource?'Den kopplade ordern har ett annat eget ansvar eller en osäker ansvarskoppling. Granska kundkortet; affärens tidigare ansvar flyttas inte.':candidates.blockedReason));
   }
   add({kind:'deal',typeLabel:'Affär',title:deal.title,customerId:deal.customerId,owner:deal.owner,ownerProfileId:deal.ownerProfileId,due:deal.nextDate,dueLabel:'Nästa aktivitet',status:dealStatus[deal.stage]||deal.stage,
-   ...next},['deal',deal.id]);
+   ...next,...anchorDestination('dealAnchor',deal.id,deal.customerId,anchor.blockedReason)},['deal',deal.id]);
  }
  for(const order of st.orders.filter(value=>value.stage!=='followed'||value.invoiceValue===null)){
-  const candidates=commercial('order',order.id);
+  const candidates=commercial('order',order.id),anchor=orderResponsibilityAnchorReview(st,order.id);
   add({kind:'order',typeLabel:'Order',title:deals.get(order.dealId)?.title||'Order '+order.id,customerId:order.customerId,owner:order.owner,ownerProfileId:order.ownerProfileId,due:order.deliveryDate,dueLabel:'Kundens leveransdatum',status:orderStatus[order.stage]||order.stage,
-   ...destination({kind:'order',id:order.id,customerId:order.customerId},'Granska orderansvar',candidates.blockedReason,'Orderns kommersiella ansvar granskas separat. Produktionsjobb, hinder och fakturasäljarens historik ändras inte.')},['order',order.id]);
+   ...destination({kind:'order',id:order.id,customerId:order.customerId},'Granska orderansvar',candidates.blockedReason,'Orderns kommersiella ansvar granskas separat. Produktionsjobb, hinder och fakturasäljarens historik ändras inte.'),
+   ...anchorDestination('orderAnchor',order.id,order.customerId,anchor.blockedReason)},['order',order.id]);
  }
  // Tasks are inventoried independently of parent state/ownership. A handover
  // that left a task with its old owner must not make that task disappear.

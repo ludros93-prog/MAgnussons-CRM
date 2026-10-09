@@ -18,7 +18,7 @@ export async function verifyStaffHandover({core, business, ops}) {
  st.viewer = {id:'synthetic-admin-user', memberId:'synthetic-admin-member', name:'Syntetisk administratör', email:'staff-admin@example.test', role:'admin', owner:''};
  st.settings.owners = [owners.a, owners.b];
  st.settings.sellerProfilesInitialized = true;
- st.settings.sellerProfiles = ['a','b','retired'].map(key => ({id:ids[key], legacyOwnerName:owners[key], displayName:'Samma syntetiska visningsnamn', active:key!=='retired', memberId:'synthetic-member-'+key, linkHistory:[]}));
+ st.settings.sellerProfiles = ['a','b','retired'].map(key => ({id:ids[key], legacyOwnerName:owners[key], displayName:'Samma syntetiska visningsnamn', active:key!=='retired', memberId:'synthetic-member-'+key, linkHistory:[], retirementHistory:[]}));
  const customer = (id, extra={}) => core.CustomerSchema.parse({id, name:'Syntetisk kund '+id, owner:owners.a, ownerProfileId:ids.a, status:'active', ...extra});
  const need = (id, extra={}) => business.NeedSchema.parse({id, title:'Syntetiskt behov '+id, owner:owners.a, ownerProfileId:ids.a, due:date, intervalMonths:12, ...extra});
  const deal = (id, extra={}) => core.DealSchema.parse({id, customerId:'active-a', title:'Syntetisk affär '+id, owner:owners.a, ownerProfileId:ids.a, nextAction:'Granska syntetiskt underlag', nextDate:date, ...extra});
@@ -224,5 +224,96 @@ export async function verifyStaffHandover({core, business, ops}) {
  }
  assert.deepEqual(inventory.staffHandoverRows({...st,viewer:undefined}),[],'No staff inventory without authenticated viewer.');
  assert.deepEqual(st,before,'Inventory leaves all operational records, recurrence, history, invoice ownership, settings and production quantities unchanged.');
+ // A same-person link is a different operation from handing work to another
+ // seller. A one-person team must still be able to find the reviewed link;
+ // inventory itself has no fresh account-directory proof and cannot save it.
+ const anchorState=core.emptyState();
+ anchorState.viewer=structuredClone(st.viewer);
+ anchorState.settings.owners=[owners.a];
+ anchorState.settings.sellerProfilesInitialized=true;
+ anchorState.settings.sellerProfiles=[structuredClone(st.settings.sellerProfiles[0])];
+ anchorState.customers=[customer('anchor-customer',{ownerProfileId:''})];
+ anchorState.deals=[
+  deal('anchor-deal',{customerId:'anchor-customer',ownerProfileId:''}),
+  deal('anchor-parent',{customerId:'anchor-customer',owner:owners.b,ownerProfileId:ids.b,stage:'won',confirmed:true,wonAt:at})
+ ];
+ anchorState.orders=[order('anchor-order','anchor-parent',{customerId:'anchor-customer',ownerProfileId:''})];
+ anchorState.tasks=[task('anchor-child',{customerId:'anchor-customer',dealId:'anchor-deal',kind:'quote',ownerProfileId:''})];
+ const anchorRows=value=>{
+  const unchanged=structuredClone(value);
+  const result=inventory.staffHandoverRows(freeze(value));
+  assert.deepEqual(value,unchanged,'Describing same-person link actions does not mutate input or supply account confirmation.');
+  return result;
+ };
+ const anchorRow=(value,kind,id)=>{
+  const result=anchorRows(value).find(item=>item.kind===kind&&JSON.parse(item.key).includes(id));
+  assert.ok(result,'Visible same-person review row '+kind+' '+id);return result;
+ };
+ const expectedAnchors=[['customer','anchor-customer','customerAnchor','Koppla kundansvaret'],['deal','anchor-deal','dealAnchor','Koppla affärsansvaret'],['order','anchor-order','orderAnchor','Koppla orderansvaret']];
+ for(const [kind,id,actionKind,label] of expectedAnchors){
+  const item=anchorRow(structuredClone(anchorState),kind,id);
+  assert.deepEqual(item.anchorAction,{kind:actionKind,id,customerId:'anchor-customer'},'The direct row exposes its own same-person review.');
+  assert.equal(item.anchorLabel,label);
+  assert.match(item.anchorHint,/Samma person fortsätter/,'Same-person link has its own explanation.');
+  assert.match(item.anchorHint,/konto.*granskas.*innan.*sparas/i,'The inventory does not report an active account or successful save.');
+  assert.deepEqual(item.action,{kind:'customer',id:'anchor-customer',customerId:'anchor-customer'},'The original handover retains its safe customer review route.');
+  assert.equal(item.actionLabel,'Öppna kundkort');
+  assert.match(item.hint,/ingen annan aktiv säljarprofil/i,'The original handover still describes the unavailable target.');
+  assert.deepEqual(Object.keys(item.anchorAction).sort(),['customerId','id','kind'],'Inventory actions contain navigation context, not active-account proof or save payload.');
+ }
+ assert.equal(anchorRow(structuredClone(anchorState),'task','anchor-child').anchorAction,undefined,'A child task never gets a neutral link for its commercial parent.');
+ const noAnchors=(value,label,kinds=['customer','deal','order'])=>{
+  const result=anchorRows(value);
+  for(const kind of kinds)for(const item of result.filter(item=>item.kind===kind)){
+   assert.equal(item.anchorAction,undefined,label+': no unsafe '+kind+' link');
+   assert.equal(item.anchorLabel,undefined,label+': no orphan action label');
+   assert.equal(item.anchorHint,undefined,label+': no orphan action hint');
+  }
+ };
+ for(const [label,edit] of [
+  ['already recorded UUID',value=>{for(const record of [...value.customers,...value.deals,...value.orders])record.ownerProfileId=ids.a;}],
+  ['unknown explicit UUID',value=>{for(const record of [...value.customers,...value.deals,...value.orders])record.ownerProfileId=ids.unknown;}],
+  ['conflicting explicit UUID',value=>{for(const record of [...value.customers,...value.deals,...value.orders])record.ownerProfileId=ids.b;}],
+  ['inactive profile',value=>{value.settings.sellerProfiles[0].active=false;}],
+  ['no current operational owner',value=>{value.settings.owners=[];}],
+  ['missing member link',value=>{value.settings.sellerProfiles[0].memberId='';}],
+  ['ambiguous legacy person',value=>{value.settings.sellerProfiles.push({...structuredClone(value.settings.sellerProfiles[0]),id:ids.b,memberId:'synthetic-duplicate-member'});}],
+  ['unreviewed profile registry',value=>{value.settings.sellerProfilesInitialized=false;value.settings.sellerProfiles=[];}],
+  ['unknown owner',value=>{for(const record of [...value.customers,...value.deals,...value.orders])record.owner=owners.unknown;}],
+  ['retired profile',value=>{value.settings.sellerProfiles[0].retirementHistory=[{id:'20000000-0000-4000-8000-000000000001',profileId:ids.a,owner:owners.a,displayName:'Syntetisk tidigare ägare',reason:'Syntetiskt tidigare avslut',at,byId:st.viewer.id,byMemberId:st.viewer.memberId,byName:st.viewer.name}];}]
+ ]){
+  const value=structuredClone(anchorState);edit(value);noAnchors(value,label);
+ }
+ for(const [label,edit] of [
+  ['missing customer',value=>{value.customers=[];}],
+  ['missing won deal',value=>{value.deals=value.deals.filter(record=>record.id!=='anchor-parent');}],
+  ['parent belongs to another customer',value=>{value.deals.find(record=>record.id==='anchor-parent').customerId='missing-synthetic-customer';}],
+  ['parent is not won',value=>{value.deals.find(record=>record.id==='anchor-parent').stage='quoted';}],
+  ['multiple linked orders',value=>{value.orders.push({...structuredClone(value.orders[0]),id:'second-anchor-order'});}],
+  ['followed historical order',value=>{value.orders[0].stage='followed';}]
+ ]){
+  const value=structuredClone(anchorState);edit(value);noAnchors(value,label,['order']);
+ }
+ const redirected=structuredClone(anchorState);
+ redirected.orders=[order('linked-legacy-order','anchor-deal',{customerId:'anchor-customer',ownerProfileId:''})];
+ assert.equal(anchorRow(redirected,'deal','anchor-deal').anchorAction,undefined,'A deal with an order cannot show an order link through a deal row.');
+ const endedDeal=structuredClone(anchorState);endedDeal.deals[0].stage='lost';endedDeal.deals[0].reason='Syntetiskt tidigare avslut';
+ assert.ok(!anchorRows(endedDeal).some(item=>item.kind==='deal'&&JSON.parse(item.key).includes('anchor-deal')),'Historical deals do not become same-person link targets.');
+ const transfer={id:'30000000-0000-4000-8000-000000000001',customerId:'anchor-customer',fromOwner:owners.b,toOwner:owners.a,fromProfileId:ids.b,toProfileId:ids.a,reason:'Syntetisk tidigare överlämning',at,byId:st.viewer.id,byMemberId:st.viewer.memberId,byName:st.viewer.name,selectedTaskIds:[]};
+ for(const target of ['deals','orders']){
+  const value=structuredClone(anchorState),targetType=target==='deals'?'deal':'order',record=value[target][0];
+  value[target][0]=(target==='deals'?core.DealSchema:core.OrderSchema).parse({...record,responsibilityTransfers:[{...transfer,targetType,targetId:record.id,dealId:target==='deals'?record.id:record.dealId,fromDisplayName:owners.b,toDisplayName:owners.a}]});
+  noAnchors(value,'Existing '+target+' responsibility history',[target==='deals'?'deal':'order']);
+ }
+ const customerHistory=structuredClone(anchorState);customerHistory.customers[0]=customer('anchor-customer',{ownerProfileId:'',responsibilityTransfers:[transfer]});
+ assert.deepEqual(anchorRow(customerHistory,'customer','anchor-customer').anchorAction,{kind:'customerAnchor',id:'anchor-customer',customerId:'anchor-customer'},'Older customer transfer history with a blank ID uses the existing customer review rules.');
+ for(const role of ['seller','reader','print','warehouse','production']){
+  const value=structuredClone(anchorState);value.viewer.role=role;
+  assert.deepEqual(anchorRows(value),[],'Same-person staff review remains admin-only for '+role);
+ }
+ assert.deepEqual(anchorRows({...structuredClone(anchorState),viewer:undefined}),[],'No same-person staff review without authentication.');
+ assert.equal(anchorState.orders[0].owner,owners.a);
+ assert.equal(anchorState.deals[1].owner,owners.b,'Different historical parent ownership is preserved; the direct order review does not rewrite it.');
  console.log('PASS staff handover: pure admin inventory, inactive/legacy/ambiguous identities, duplicate display names, paused and invoice-outstanding work, every open child, exact parent actions, customer-scoped needs/checklists and unchanged historical/production data. Synthetic domain fixtures only.');
+ console.log('PASS staff same-person links: direct customer/deal/order review in a one-person team, account proof withheld, existing transfer paths preserved, known/inactive/retired/unlinked/ambiguous/historical/orphan and multiple-order guards, no child redirects, frozen read-only fixtures.');
 }

@@ -22,7 +22,7 @@ type Draft={identity:string;expectedContext:string;snapshot:Snapshot;reason:stri
 type Payload={targetProfileId:string;reason:string;reviewed:true;expectedContext:string;expectedAccount:string}&({dealId:string}|{orderId:string});
 type Attempt={payload:Payload;editVersion:number;unknown:boolean};
 type Fetched={state:State;snapshot:Snapshot};
-type Props={st:State;targetType:TargetType;record:Deal|Order;space:string;save:FollowUpSaveAction;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void;returnFocus?:()=>HTMLElement|null};
+type Props={st:State;targetType:TargetType;record:Deal|Order;space:string;save:FollowUpSaveAction;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void;returnFocus?:()=>HTMLElement|null;opener?:HTMLElement|null};
 // A role change blocks new work, but must not discard an unconfirmed attempt
 // by this same account. Account/workspace/target changes still isolate it.
 const identityFor=(st:State,space:string,targetType:TargetType,targetId:string)=>JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',targetType,targetId]);
@@ -68,7 +68,7 @@ function payloadFor(draft:Draft):Payload|null{
  return target&&profile&&account?{...(review.targetType==='deal'?{dealId:target.id}:{orderId:target.id}),targetProfileId:profile.id,reason:draft.reason,reviewed:true,expectedContext:draft.expectedContext,expectedAccount:account.expectedAccount}:null;
 }
 
-export function CommercialResponsibilityAnchor({st,targetType,record,space,save,busy,refresh,onClose,returnFocus}:Props){
+export function CommercialResponsibilityAnchor({st,targetType,record,space,save,busy,refresh,onClose,returnFocus,opener:sourceOpener}:Props){
  const targetId=record.id,isOrder=targetType==='order',responsibility=isOrder?'orderansvar':'affärsansvar',responsibilityDefinite=isOrder?'orderansvaret':'affärsansvaret';
  const reasonId=useId(),identity=identityFor(st,space,targetType,targetId),access=accessFor(st,identity),currentIdentity=useRef(identity),currentAccess=useRef(access),previousAccess=useRef(access);currentIdentity.current=identity;currentAccess.current=access;
  const currentBasis=basisFor(st,targetType,targetId),admin=st.viewer?.role==='admin';
@@ -104,7 +104,7 @@ export function CommercialResponsibilityAnchor({st,targetType,record,space,save,
 
  async function open(){
   if(!admin||lock.current)return;
-  opener.current=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  opener.current=sourceOpener||(document.activeElement instanceof HTMLElement?document.activeElement:null);
   const initial=snapshotFor(st,targetType,targetId),startedIdentity=identity,startedAccess=access,startedOperation=++operation.current;
   setDraft({identity,expectedContext:currentBasis,snapshot:initial,reason:'',reviewed:false,editVersion:0});setAttempt(null);setError('');setNotice('');setRemoteConflict(false);setDiscard(false);setFetched(null);
   if(initial.review.blockedReason||!initial.review.sourceProfile?.memberId)return;
