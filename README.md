@@ -343,3 +343,4 @@ GitHub lagrar källkod och granskningshistorik. Kunddata och uppladdade filer li
 - [CLAUDE_REVIEW.md](CLAUDE_REVIEW.md): källhänvisningar och verifieringsunderlag för en oberoende v13-granskning.
 
 Riktiga Outlook-, Fortnox-, AI- och webbshopskopplingar är inte aktiverade av denna GitHub-förberedelse. Godkända kodtester är inte bevis på produktionsberedskap eller på att säljarna klarar arbetsflödet utan hjälp.
+Privata behovsutkast finns i **Årsplanering**, på kundens årshjul och under **Fortsätt där du slutade** i Min dag. Ofärdigt arbete kan sparas privat och återupptas. Dina ändringar sparas i CRM först genom det separata valet **Spara behov och påminnelse**; påminnelsen följer behovets status. [Drift- och återgångsgränser](OPERATIONS.md) samt [faktiskt verifierat main/live-resultat](VALIDATION.md) redovisas separat.

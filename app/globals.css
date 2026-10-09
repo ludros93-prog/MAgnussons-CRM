@@ -200,6 +200,18 @@ body {
 .article-draft-server-choice p,.article-draft-local-close p{font-size:.875rem;line-height:1.6;margin:0 0 10px}
 
 /* Private company planning: visible status, explicit publication and raw recovery. */
+/* Private yearwheel needs share the readable draft workspace layout. */
+.year-need-customer-context{display:grid;gap:5px;min-width:0;margin:0 0 22px;padding:14px 16px;border:1px solid #cbdcf0;border-radius:8px;background:#f3f8ff;overflow-wrap:anywhere}
+.year-need-customer-context span,.year-need-customer-context small{font-size:.8125rem;color:#52617b;line-height:1.5}
+.year-need-customer-context b{font-size:1rem;line-height:1.5}
+.year-need-editor .yearwheel-responsibility{margin:16px 0}
+.year-need-editor[data-draft-flow=true] .event-draft-status,.year-need-editor[data-draft-flow=true] .event-draft-footer{position:static}
+.year-need-editor[data-draft-flow=true]{scroll-padding-block:12px}
+.year-need-draft-list{margin:18px 0;padding:0;border:0}
+.year-need-customer-picker [data-slot=select-trigger],.year-need-customer-picker button{min-height:44px;max-width:100%;height:auto;white-space:normal;overflow-wrap:anywhere}
+.year-need-customer-picker [data-slot=select-trigger]{width:100%;min-width:0;text-align:left}
+.year-need-customer-picker [data-slot=select-value]{min-width:0;flex:1;white-space:normal;overflow-wrap:anywhere}
+.year-need-customer-picker .yearwheel-profile-label{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;min-width:0;width:100%;white-space:normal;overflow-wrap:anywhere}
 .event-draft-editor,.event-draft-list,.event-draft-preview,.event-draft-day-row{min-width:0;overflow-wrap:anywhere}
 .event-draft-editor [data-slot=sheet-description]{font-size:.875rem;letter-spacing:normal;line-height:1.6;color:#52617b;padding-right:18px}
 .event-draft-editor [data-slot=sheet-title]{padding-right:18px;overflow-wrap:anywhere}

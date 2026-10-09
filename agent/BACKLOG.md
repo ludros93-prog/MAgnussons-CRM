@@ -1,5 +1,13 @@
 # Arbetskö för Magnussons CRM
 
+## 2026-10-09 – B05: privat årshjulsarbete, slutkandidat crm73
+
+Skapa och redigera behov kan nu sparas som privata utkast med ofärdiga råfält, fryst kund-/behovs-/profilunderlag och återupptagning i Min dag. Privat tvåenhetskonflikt och ändrat CRM-underlag har separata granskningsval. Inlämning förbrukar exakt bekräftad privat revision tillsammans med behov, statusstyrd påminnelse, händelse och idempotenslogg. Borttagna mål bevarar kopierbar text men kan inte publiceras som ett nytt behov. Ansvarsbyte använder fortsatt den separata granskade överföringen.
+
+Riktade verkliga handler-/SQLite-prov passerar: 30 avvisningar, 12 SQL-racefall, dubbelklick/återspelning och bevarande av 18 tabeller/R2 utanför tillåtna ändringar. Nio React-livscykelprov använder produktionseditorn och DraftProvider; UI-primitiver/HTTP är testadapters. Statisk designgranskning fann och rättade ogiltigt datum, långa kundnamn, fokus och begränsad formulärhöjd. Slutlig fryst regression/TypeScript/bygge/native HTTP, exakt-head CI, main och Sites återstår här; denna kandidattext är inget publiceringsbevis.
+
+Nästa: slutför dessa leveranskontroller till samma begränsade Site. Därefter kvarvarande B05-specialdialoger, privat backup/återgångsstrategi och observerad personalpilot. Browser vid 320 px/text 2×, verkliga personalkonton, allmän acceptans och hostad återställning är inte bevisade av dessa tester. Refererad Codex-task är oläst: motsvarande read_thread saknas. Befintliga agentinstruktioner och scheman är oförändrade.
+
 ## Publiceringsåterhämtning av verifierad main – 2026-10-09
 
 **Faktiskt sparat:** samma Site fick version 69 från verifierad Sites-source `4cde45d4`, byte för byte samma 345 spårade filer som Publicerad GitHub-mainrevision `9cbcdbba` och testad kandidat `75016e0`. Native serverbygge ersatte det otillgängliga lokala packningssteget enligt verktygets specificerade reservväg; helpern återställdes inte och ingen ny appförbättring byggdes.

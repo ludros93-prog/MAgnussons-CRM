@@ -1,5 +1,14 @@
 # Byggagentens verifieringslogg
 
+## 2026-10-09 – crm73-kandidat: återuppta privata behov i årshjulet
+
+- Bas `b23e11df0cdf2fe9b237e907a0fb44112f2b41de`; separat branch/worktree `feat/private-yearwheel-drafts-crm73` och egen reservation. Färsk main, öppna PR:er, publicering och fulla uppdrags-/status-/produkt-/driftunderlag kontrollerade. Befintlig live v69/källa `4cde45d4887efbd348d7193ba3aaf53809eb5070` är inte bevis för denna kandidat.
+- Avgränsad B05-förbättring: strikt privat `form/year_need` för skapa/redigera, exakt råtext och fryst original, kund-/profil-/behovs-CAS, separata privata/CRM-jämförelser, explicit granskad adoption av serverägt ansvar och atomisk utkastförbrukning. Tappad CRM-kvittens återförsöks med samma request-ID och oförändrad payload. Global 100-gräns för nya privata utkast skyddas även vid samtidiga olika typer. Ingen SQL-migration eller förändrad delad Need-modell.
+- Riktade verifieringar: 31 libfall; verkliga handler-/migrerad SQLite-prov med 30 avvisningar och 12 SQL-racefall; nio produktions-React/DraftProvider-livscykler. Design-/servergranskningar är separata read-only kvittenser. Detta är ännu inte de fem obligatoriska frysta slutkontrollerna. Native HTTP-proven mot byggd Worker/D1 är skrivna och återstår att köra.
+- Datagräns: privat backup ingår inte i delad CRM-backup. Återgång till tidigare årshjulseditor kräver bevarade privata utkast och kompatibel läsare/skrivare eller skrivskydd. Tidigare crm71-kompatibilitetsgolv för produktion gäller fortsatt. Inga verkliga kundorder eller kunduppföljningar skrivtestas.
+- Browserverktyg och föreskriven Sites-helper saknas i denna miljö. Komponent-/kodgranskning ersätter inte browsergeometri, personligt konto eller personalpilot. Native Sites dokumenterade serverbygge är reservvägen när lokal paketering inte kan slutföras; inget aktuellt source-push/version/deploy påstås här. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom motsvarande read_thread saknas.
+- Nästa: fryst slutkandidat med regression, TypeScript, bygge, isolerad runtime och diff; grön exakt-head CI och färsk bas före merge; verifierad source och lyckad deploy till samma Site med bevarad begränsad delning. Källkod, main och live redovisas separat efter faktisk leverans. Inga mejl, konton, roller, scheman, prompter eller aktiveringar ändras.
+
 ## 2026-10-09 – befintlig main till samma Site via native serverbygge
 
 - Publiceringsarbete utifrån main `9cbcdbba3f20e7791f8047596abb055e60dd8c37`; exakt main-CI 37882998414 hade 13 completed/success-steg. Tidigare fem slutkontroller på kandidat `75016e0` återanvändes först efter att samma träd och samtliga 345 spårade filbytes hade verifierats.
