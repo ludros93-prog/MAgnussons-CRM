@@ -343,3 +343,29 @@ body {
 .wf-sheet .wf-issue-heading:focus-visible,.wf-issue-list-heading:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
 
 .private-draft-copy-feedback p{margin:8px 0;overflow-wrap:anywhere}
+
+/* Historical commercial text corrections retain the generic save/focus layout. */
+.historical-correction-sheet [data-slot=sheet-header]{padding-right:56px}
+.historical-correction-sheet [data-slot=sheet-description]{font-size:.75rem;letter-spacing:.04em;line-height:1.6;overflow-wrap:anywhere}
+.historical-correction-fields,.historical-correction-context,.historical-correction-recovery{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.historical-correction-context{padding:18px;border:1px solid #d7e2ed;border-radius:10px;background:#f5f8fb}
+.historical-correction-state{display:block;font-size:.875rem;font-weight:600;line-height:1.6;color:#52657b}
+.historical-correction-fields .historical-correction-context h3{font-size:1.125rem;line-height:1.5;margin:10px 0 18px;letter-spacing:0}
+.historical-correction-context dl{display:grid;gap:14px;min-width:0;margin:0}
+.historical-correction-context dl>div{display:grid;gap:4px;min-width:0}
+.historical-correction-context dt{font-size:.8125rem;font-weight:600;line-height:1.6;color:#52657b}
+.historical-correction-context dd{margin:0;font-size:1rem;line-height:1.6;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;color:#20384f}
+.historical-correction-context p,.historical-correction-fields .historical-correction-hint,.historical-correction-recovery p{font-size:.875rem;line-height:1.7;overflow-wrap:anywhere;color:#52657b}
+.historical-correction-context p{margin:16px 0 0}
+.historical-correction-fields .historical-correction-hint{margin:18px 0}
+.historical-correction-fields .field>span,.historical-correction-recovery .field>span{font-size:.9375rem;line-height:1.6}
+.historical-correction-fields .field textarea,.historical-correction-recovery .field textarea{width:100%;min-width:0;max-width:100%;font-size:1rem;line-height:1.65;height:10rem;min-height:6rem;max-height:18rem;overflow:auto;resize:vertical;white-space:pre-wrap;overflow-wrap:anywhere}
+.historical-correction-recovery{padding:18px;border:1px solid #e4c695;border-radius:10px;background:#fff8ed}
+.historical-correction-recovery h3{font-size:1rem;line-height:1.6;margin:0 0 10px;letter-spacing:0}
+.historical-correction-recovery p{margin:10px 0}
+.historical-correction-recovery p:empty{display:none}
+.historical-correction-recovery details{margin:14px 0}
+.historical-correction-recovery summary{min-height:44px;padding:10px 0;font-size:.9375rem;font-weight:600;line-height:1.6;cursor:pointer}
+.historical-correction-recovery summary:focus-visible{outline:2px solid var(--ring);outline-offset:3px}
+.historical-correction-recovery button{width:100%;min-width:0;max-width:100%;min-height:44px;white-space:normal;line-height:1.6}
+@media(max-width:767px){.historical-correction-context,.historical-correction-recovery{padding:14px}}

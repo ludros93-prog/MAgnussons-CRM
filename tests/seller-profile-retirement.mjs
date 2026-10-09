@@ -127,6 +127,7 @@ export async function verifySellerProfileRetirement({core,business,ops}) {
   {type:'plan',data:{customerId:closed.customers[0].id,plan:{...closed.customers[0].plan,issueStatus:'open',issueAction:'Syntetisk återöppning',issueDue:future,nextAction:'Syntetisk kundkontakt'},nextReview:future,expectedOrder:'',reviewDays:90}}
  ])assert.throws(()=>core.applyAction(closed,action,actor),/Öppet arbete/,'Dispatcher protects '+action.type+' from retired unchanged-owner reuse.');
  const correctedTask=core.applyAction(closed,{type:'task',data:{...closed.tasks[0],title:'Syntetisk rättning av avslutad uppgift'}},actor);assert.equal(correctedTask.tasks[0].done,true);assert.deepEqual(correctedTask.settings.sellerProfiles[0].retirementHistory,[audit]);
+ await (await import('./historical-commercial-correction.mjs')).verifyHistoricalCommercialCorrection({core,closed,actor,ids,names});
  // applyAction accepts older JSON by normalizing a single copy first. Its
  // immutable guard snapshot must use those defaults, never the raw source.
  for(const [label,strip] of [
