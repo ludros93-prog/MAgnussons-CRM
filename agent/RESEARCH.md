@@ -1,3 +1,25 @@
+# Källor och tillämpade principer – egna produktionshinder i Min dag, crm72-kod
+
+Sju officiella URL:er omkontrollerades med faktisk returnerad artikeltext 2026-10-09 03:23:54–03:24:04 UTC. Åtta små exakta citat verifierades mot sparad verktygstext. Researchkvitto SHA-256 `dee21b274edf3a978e0d795050eb5dc71953e530ee046c975b6626dc5a16cde0`. Verktyget rapporterade inga HTTP-statusar eller kompletta HTML-svar; hasharna binder de faktiskt returnerade verktygstexterna och citaten.
+
+| Officiell källa och kortcitat | Belagd princip och Magnussons tillämpning |
+| --- | --- |
+| [Saleshub AI Funktioner](https://saleshubai.se/funktioner): “Kundkort med kontakter, filer, mail, samtal och nästa aktivitet” | Kund/jobbsammanhang och nästa handling hör ihop. Den personliga hinderkön visar befintligt jobb, kundreferens och en konkret öppningsväg; offentlig funktionsbeskrivning är inget integrations-/API-bevis. |
+| [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/): “Use verbs in imperative mood” | Få relevanta handlingar med begripliga verb. **Öppna jobbet** går till det befintliga jobbets arbetsvy; inga nya administrativa handlingar eller statusändringar följer av listan. |
+| [Salesforce Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1): “know which task is the highest priority right now” | Personligt öppet arbete behöver vara synligt tillsammans med sitt sammanhang. Salesforces egna antal, aktivitetsmodell och prioritering fastställer inte Magnussons hindervillkor eller köordning. |
+| [Salesforce Record-Level Security](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records): “Record access determines which individual records users can view and edit” | Personligt urval och postbehörighet är skilda saker. Listan använder redan tillåtet CRM-underlag och ger ingen ny rätt, kontoåtkomst eller privat insyn. |
+| [W3C Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html): “reflow when narrowed to a width equivalent to 320 CSS pixels.” | Långa kund-/jobbnamn, ansvar och status ska kunna radbrytas i smal vy utan dold information. Lokala viewportprov är inte genomförd 400-procents browserzoom eller full WCAG-granskning. |
+| [W3C Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html): “up to 200 percent without loss of content or functionality.” | Prova full läsbar text och nåbara handlingar vid exakt dubblerad beräknad CSS-text. Faktiska layout-/tangentbordsprov redovisas separat; dokumentation innebär ingen certifiering. |
+| [W3C Focus Not Obscured](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html): “Ensure when an item gets keyboard focus, it is at least partially visible.” | En fokuserad öppningsknapp måste vara synlig. Full kontrollbox och projektets 44-px-mål är egna starkare lokala designkrav, inte generella AA-minimigränser. |
+
+Magnussons egna läsurval använder befintlig exakt användar-/medlemskoppling för aktuell hinderansvarig och befintliga öppna hinder på inskickat, tryckt eller skickat jobb. Eget hinder kan visas även utan säljarprofil och när orderns kommersiella ansvar tillhör någon annan. Rapportör, jobbansvar, kommersiellt ansvar och aktuell hinderansvarig behåller sina skilda betydelser. Personligt/teamresultat, orderns befintliga hinderöversikt och privata användar-/arbetsyteutkast flyttas inte genom detta läsflöde. Direkt jobböppning, köordning, datumetiketter och kvarvarande serverroller/CAS/idempotens är Magnussons egna kontrakt; ingen lagrings-, server- eller godkännanderegel ska ändras av denna presentation.
+
+Detta är offentlig designresearch, ingen autentiserad leverantörsvy, fungerande anslutning, riktig personal-/kundacceptans, skärmläsar-/telefonkontroll eller full WCAG-bedömning. Försäljning mot månads-/årsmål, marginal och nya prospects består som huvudmått. Refererad Codex-task är oläst. Faktisk slutkod, tester, main och publicerad Site redovisas separat i [VALIDATION](../VALIDATION.md).
+
+Slutlig tillämpning är verifierad på källkod `85ead27eae96f5a9343ee52e8b932955dcecdc24`: 14 native browserfall och två extra historikprov passerade. 320/390/1280 CSS-px normal/text 2× samt faktisk wheel/Tab visade hela texter och nåbar nästa handling. Det befintliga jobbets mobilradbrytning och synliga tangentbordsretur rättades efter observerade äldre fel. GitHub-main innehåller förbättringen via PR118; live är fortsatt v68 och separat verifierad publicering återstår.
+
+## Historik före crm72-koden
+
 # Källor och tillämpade principer – granskat hinderansvar, crm71-kod
 
 Sju exakta kortcitat verifierades 2026-10-09T00:21:48.549004Z mot faktiskt returnerad offentlig officiell verktygstext. Researchkvitto SHA-256 `3261aed016c40c37206ed939b7a29fa03cf4001a25f6a2308569be08801e71cb`. Inga kompletta HTML/HTTP-statusar, autentiserade leverantörsvyer eller fungerande integrationer påstås.

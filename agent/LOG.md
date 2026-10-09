@@ -1,5 +1,20 @@
 # Byggagentens verifieringslogg
 
+## 2026-10-09 – crm72: egna produktionshinder i Min dag
+
+- Färsk main `13d4fdbed7131538018c660b7f95844b1be62d45` och samtliga uppdrags-/produkt-/driftunderlag lästes. Separat branch/worktree och egen reservation användes. 177 främmande worktrees var rena vid start och oförändrade vid mellanavstämningen; ingen främmande branch, prompt eller automation ändrades.
+- Min dag fick en personlig kö för aktuellt eget hinderansvar, även på skickat jobb med annan kommersiell ansvarig och utan säljarprofil. Knappen öppnar rätt produktionsjobb. Faktiska browserprov upptäckte gammal textöverrinning och förlorat fokus i jobbvyn; giltiga långa texter radbryts nu och synligt fokus återställs. Fem UI-filer, 33 tillagda/8 borttagna rader; övriga 340 spårade filer byteoförändrade mot basen.
+- Ren slutkod `85ead27eae96f5a9343ee52e8b932955dcecdc24` / träd `2c03bec23841872e4fd10f2e6f41746d3e221289` passerade regressioner, TypeScript, bygge, isolerad native Worker/D1/R2 och diffkontroll. Exakt-head [CI 37880197869](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37880197869) hade alla 13 steg completed/success; aktuell bas/main kontrollerades igen omedelbart före merge.
+- 14 native browserfall, 39 slutliga skärmbilder och två kompletterande historikprov passerade. Alla 18 råtabeller och två R2-objekt återställdes exakt; egna previewprocesser och portar stoppades. Oberoende domängranskning godkände exakt slutkod. Syntetiska autentiseringsheaders och registrerade testgodkännanden är inte riktig personalinloggning eller kundacceptans.
+- [PR #118](https://github.com/ludros93-prog/MAgnussons-CRM/pull/118) mergeades med låst head. Native mergekvittens, efterföljande API-main/PR och Git bekräftade app-main `975ebc9619f01993c9d98046a2e7540e67496c97`, samma källträd och båda föräldrarna. CLI:s efterföljande API-läsning gav 401; fungerande native GitHub-läsning användes för faktisk återläsning.
+- Live ligger kvar på v68/källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`. Sites lästes 03:53:31 UTC: senaste deploy succeeded, begränsad policyrevision 2, miljörevision 1, noll automationer; full returnerad policy/miljö byteoförändrade mot start. Föreskriven sourcehelper kunde inte hittas i åtkomliga sökrötter; ingen egen paketering, sourcecredential, ny Site-version eller deploy gjordes.
+- Ingen server-/lagringsändring eller ny migration. Tidigare crm71-formatets kompatibla läsare/skrivare behövs fortfarande efter dess nya ansvarsskrivningar. Huvudmåtten är försäljning mot månads-/årsmål, marginal och nya prospects. Inga riktiga kundskrivtester, utskick eller andra CRM-projekt. Refererad Codex-task är oläst eftersom Codex-read_thread saknas.
+- Faktiska kvitton, kvarvarande hinder och återställningsväg: [VALIDATION](../VALIDATION.md), [OPERATIONS](../OPERATIONS.md). Nästa är verifierad publicering med återställd sourcehelper och observerad personalpilot; oberoende B05-utkast kan byggas vidare under hindret.
+
+## Historik före crm72
+
+# Byggagentens verifieringslogg
+
 ## 2026-10-07 – v51: granskat onboardingansvar
 
 - Färsk bas/main `39b5c1c`, inga öppna PR:er och 119 rena worktrees vid start; egen reservation `crm51-20261007`. Befintlig Site och begränsad delning respekterades. Ingen annan körning övertogs.

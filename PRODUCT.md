@@ -1,5 +1,19 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Min dag: se och öppna hinder du ansvarar för – crm72
+
+Min dag har nu en personlig lista **Hinder du ansvarar för**. Den visar öppna produktionshinder som är kopplade till ditt registrerade konto, även när en kollega ansvarar för orderns affär eller jobbet redan har skickats. **Öppna jobbet** öppnar just det jobbet i Tryck & leverans, så att nästa steg och befintligt hinder finns samlade.
+
+Listan visar jobb, kund, hinder, kommersiell orderansvarig och ursprunglig rapportör med sina skilda betydelser. Den finns för administratör/säljare även när säljarprofil saknas; administratörens val **Teamets dag** byter inte denna personliga kö till allas hinder. Skickat jobb med öppet hinder märks **Skickat · öppet hinder**. Ingen deadline, kundacceptans eller löst status hittas på.
+
+Långa jobb-/kund-/hindertexter radbryts i både listan och jobbvyn. När jobbvyn stängs med tangentbord återgår fokus till en synlig jobbingång; när sista egna hindret har lösts finns produktionsfliken som fortsatt ingång. Försäljning mot månads-/årsmål, marginal och nya prospects är fortfarande huvudmåtten. Kommersiellt ansvar, team-/personresultat och privata utkast behåller sina befintliga scope.
+
+Förbättringen finns på GitHub-main via [PR #118](https://github.com/ludros93-prog/MAgnussons-CRM/pull/118), app-main `975ebc9619f01993c9d98046a2e7540e67496c97`. Fem slutkontroller, 13 CI-steg, 14 native browserfall och två historikprov är gröna. Live kör fortfarande v68; publicering inväntar föreskriven Sites-sourcehelper. Syntetiska testkonton visar tekniskt beteende, inte att Sebbe eller övrig personal har loggat in eller godkänt arbetssättet. [VALIDATION](VALIDATION.md) skiljer dessa belägg åt.
+
+## Historik före crm72
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Vem tar nästa steg i ett öppet hinder? – crm71-kod
 
 **Ansvarar för nästa steg** anger det aktuella hinderansvaret. **Rapporterat av** och **Registrerad rapporttid** bevarar rapporteringsursprunget. Rapportören och den som följer upp hindret kan därför vara olika personer utan att historiken skrivs om. Ett beskrivningsbyte flyttar inget ansvar och en överlämning löser inget hinder.

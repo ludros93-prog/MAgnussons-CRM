@@ -1,5 +1,19 @@
 # Arbetskö för Magnussons CRM
 
+## B01b2/T01/T04/T09/T16/T26: eget hinderansvar i Min dag – crm72
+
+**Levererat på GitHub-main:** Min dag visar **Hinder du ansvarar för** för administratör/säljare, även utan säljarprofil, på en kollegas order och på skickat jobb. Listan följer befintlig aktuell användar-/medlemskoppling; originalrapportör och kommersiell orderansvarig behåller sina betydelser. Den är personlig även i administratörens **Teamets dag**. **Öppna jobbet** går direkt till rätt befintlig produktionsvy. Långa texter radbryts och tangentbordsfokus återgår till en synlig jobbingång eller produktionsflik när hindret har lösts.
+
+Avgränsad källkod `85ead27eae96f5a9343ee52e8b932955dcecdc24`, träd `2c03bec23841872e4fd10f2e6f41746d3e221289`; [PR #118](https://github.com/ludros93-prog/MAgnussons-CRM/pull/118) är faktiskt sammanslagen till app-main `975ebc9619f01993c9d98046a2e7540e67496c97`. Fem slutkontroller, exakt-head CI:s 13 steg, 14 native browserfall och två extra historikprov är gröna; oberoende teknisk granskning godkände kandidaten. Bevis och begränsningar finns i [VALIDATION](../VALIDATION.md). Fem UI-filer ändrades; server/lagring/SQL, privata utkast och huvudmått är byteoförändrade.
+
+**Kvar:** Live är fortfarande v68/källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`. Föreskriven Sites-sourcehelper saknas; ingen ny deploy eller användaracceptans påstås. B01b2 är fortsatt partiell för övriga oklara produktionsidentiteter och full personalöverlämning. B02 chefsroll, B04 privat backup/hostad återställning, B05 övriga specialutkast, B07 riktiga konton/observerad personalpilot och faktiska integrationsanslutningar kvarstår.
+
+**Nästa:** Återställ sourcehelpern och publicera verifierad kompatibel main till samma begränsade Site, därefter observerad personalpilot. Nästa oberoende genomförbara produktspår är B05:s privata beständiga utkast för årshjulet; det nuvarande lokala formulärskyddet är inte ett sparat privat utkast. Mandat, schema, prompt och aktivering ändras inte. Codex-referensen är oläst.
+
+## Historik före crm72
+
+# Arbetskö för Magnussons CRM
+
 ## B01b2/T04/T09/T16: granskat aktuellt hinderansvar – crm71-kod
 
 Den färska kön pekar ut ett separat granskat hinderansvarsbyte efter inventeringsfixarna. Rapportörsfälten är historiskt ursprung och används inte som en genväg för att skriva om aktuell ansvarig. Administratören får ett uttryckligt kontoval/skäl/granskning för ett öppet hinder på lämnad, tryckt eller skickad arbetsorder. Överlämningen bevarar originalrapportör/tid, hindertext, jobb-/orderansvar och fysisk historik samt skapar separat serverägd audit.

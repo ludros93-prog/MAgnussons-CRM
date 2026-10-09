@@ -1,3 +1,45 @@
+# Validering – personliga produktionshinder i Min dag, crm72
+
+## Slutkod, main och verifiering
+
+Verifierad fryst källrevision `85ead27eae96f5a9343ee52e8b932955dcecdc24`, träd `2c03bec23841872e4fd10f2e6f41746d3e221289`, bas `13d4fdbed7131538018c660b7f95844b1be62d45`. [PR #118](https://github.com/ludros93-prog/MAgnussons-CRM/pull/118) är faktiskt sammanslagen till `975ebc9619f01993c9d98046a2e7540e67496c97`; native mergekvittens samt färsk API-/Git-återläsning bekräftade samma träd och båda föräldrarna. Fem UI-filer ändrades, 33 tillagda/8 borttagna rader; alla övriga 340 spårade filer är byteoförändrade mot basen.
+
+Alla fem obligatoriska lokala slutkontroller kördes från ren kandidat med Node 24.19 och pnpm 11.25.0. Head, träd och samtliga 345 spårade filers bytes var oförändrade före/efter:
+
+| Kontroll | Resultat | Tid |
+| --- | --- | --- |
+| `node tests/outlook.mjs` | exit 0 | 73,56 s |
+| `node node_modules/typescript/bin/tsc --noEmit --incremental false` | exit 0 | 11,68 s |
+| `corepack pnpm build` | exit 0 | 9,53 s |
+| `node tests/runtime-smoke.mjs` | exit 0 | 208,23 s |
+| `git diff --check` | exit 0 | 0 s |
+
+Kontrollkvitto SHA-256 `0ff7c39d141608420f3b402a8a908270e94e8698ac0e4585f7169b5814a118fb`. Runtime körde faktisk isolerad Worker/D1/R2, inklusive repoets mängd-/revisions-/behörighets-/CAS-/idempotensfall: 40→45, 50→48 med uttryckligt registrerat syntetiskt godkännande, kassation, delleverans och dubbelklick. Det är inget riktigt kundgodkännande. Native backup över 13 MB och 18 tabeller testades; hostad produktionsåterställning är fortfarande inte verifierad.
+
+Exakt-head [CRM checks 37880197869](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37880197869) hade alla 13 steg completed/success på exakt slut-head. Efter ready kontrollerades PR-head, aktuell bas/fjärr-main, green checks/status och Git-ancestry omedelbart före merge; kvitto `b82c541f9650de07cfca0387af3b7752d211f740118924ba9f4e6c3a7eb6a36d`. Oberoende teknisk domängranskning godkände exakt källkod/träd utan kvarvarande observerad defekt; kvitto `0d5f880d252e3bece1c56abe187182a49156d29a8a3735166e82fed618019434`. Det är teknisk granskning, inte personalacceptans.
+
+## Native browser och design
+
+**14/14 slutliga native browserfall** passerade utan mockad CRM-transport, med 39 sparade slutbilder. Slutkvitto `a5698e15589e09ca97056488f1009f87869fe90be1862df6936c5b786d40f740`; rårapport `f19114c3ae12627c86e70fa0414e2eaee0709649d7cfa391f94a443bcd177c99`.
+
+- Sex layouter: 320/390/1280 CSS-px vid normal och exakt dubblerad beräknad CSS-text, giltiga långa/brutna/obrutna jobb-, kund- och hindertexter; nåbara handlingar och radbrytning.
+- Personlig kö även i admin-Teamets dag och utan säljarprofil. Ny aktuell användar-/medlemspair styr urval; reader, annan användare med samma namn och olika historisk medlemspair ger ingen obehörig egen kö. Detta negativa historikprov är ingen aktuell kontokatalogkoppling.
+- Pointer/tangentbord öppnar exakt skickat jobb med främmande kommersiell ansvarig utan CRM-POST. Escape ger synlig jobbingång; den vanliga produktionskortets tangentbordsöppnare bevaras.
+- Faktisk native wheel/Tab på 320 px med CSS-text 2× visar sista orden i jobb, kund, ansvar, hinder och rapportör samt hela nästa-handlingsknappen. Ett scrollbart fast modalfönster bedömdes i sin egen scrollvy; dess dolda bakomliggande sida räknades inte som permanent textklippning.
+- Två adminöverlämningar och två aktuellt ansvariga säljares UI-lösningar, med/utan säljarprofil, tog bort rätt egen köpost efter färsk serverläsning. Totalt åtta verkliga POST: fyra lyckade och fyra förväntade 400 med verifierat serverfel för främmande/upprepad lösning. Samma-namn-fallet gäller en av säljarna. Originalrapportör, kommersiellt scope/KPI och privata data behölls.
+- Två ytterligare native historikprov verifierade att befintlig positiv `issueResolutions`-historik bevaras exakt och utökas med exakt en ny post per lösning; kompletterande råkvitto `cc062e051b09c1184c4a5992f45c0a4603d1b8746087a8cf3b8b0d7fa83b6898`.
+- Alla 18 råtabeller och två R2-objekt återställdes exakt, med native FK-ordning. Källkod, dist och slutkontrolloggar var oförändrade. Egna server/browserprocesser stoppades, temporär lagring togs bort och portar 9562/9563 stängdes.
+
+Misslyckade försök behölls som misslyckade. Den första kandidaten klarade fem kontroller men browsern upptäckte textöverrinning/fokus till BODY; samma fel reproducerades native på tidigare oförändrad produktionsvy. Slutkoden rättar det. Två egna harnessfel och ett felaktigt globalt klippmått gav inga påstådda PASS; faktisk native scroll/textgeometri motbevisade permanent klippning, och slutprovet stärktes med sista-ord- och synlig-fokusprov. Ingen påtvingad kataloginterleaving, verklig personalinloggning, full WCAG-certifiering, browserzoom, skärmläsare eller fysisk telefon påstås.
+
+## Publicering, kompatibilitet och kvarstående hinder
+
+Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2` är fortsatt live **v68**, källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`. Läsning 2026-10-09 03:53:31 UTC: senaste deploy succeeded, policyrevision 2, miljörevision 1 och noll automationer; full returnerad policy och miljö oförändrade mot start. Ingen ny publicering har skett. [Sites-instruktionen](skill://plugin_connector_1p_689987207de08191979cf68eca2941c6/sites/SKILL.md) kräver “package with the source helper”; helpern saknas i åtkomligt sökunderlag. Ingen egen paketering eller ny sourcecredential begärdes.
+
+Denna ändring är endast presentation/navigation: inga nya lagringsfält, SQL-migrationer, serverroller, privata scope, CAS eller idempotens ändras. Tidigare crm71-ansvarsformat behöver fortsatt kompatibla läsare/skrivare efter nya skrivningar; oförändrad äldre kod är inte en säker återgång då. Backupformat `magnussons-crm-1` består. Publicera verifierad kompatibel main, läs tillbaka exakt källa/lyckad deploy och genomför en observerad personalpilot samt den kvarstående hostade återställningen. Refererad Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: ingen Codex-read_thread finns bland tillgängliga verktyg.
+
+## Historik före crm72
+
 # Validering – granskat hinderansvarsbyte, crm71-kod
 
 Färsk bas `020b4a92583dd94f61403c94525c2ba9327bdc93`. Slutkod `92470f29c7b342760fc7d48c4f7369619f657da7`, träd `558fc5134b53edb55769b283981ab5928f6e69f1`; app-main `6d3c5f53ea28078a2c177c078024b6151cba608b`, [PR #116](https://github.com/ludros93-prog/MAgnussons-CRM/pull/116). Ingen tidigare kandidat, pågående prov eller planerad kontroll får användas som slutgodkännande.
