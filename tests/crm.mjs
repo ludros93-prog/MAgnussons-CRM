@@ -29,6 +29,13 @@ const headers={'oai-authenticated-user-id':'test-admin','oai-authenticated-user-
 const get=async(space='demo')=>{const r=await api.GET(new Request('https://crm.test/api/crm?space='+space,{headers}));assert.equal(r.status,200);return r.json()};
 const orderWork=await import('../work/order-work.mjs');
 const conflicts=await import('../work/record-conflicts.mjs'),quantities=await import('../work/production-quantities.mjs'),direct=await import('../work/direct-delivery.mjs');
+if(process.argv.includes('--response-authorization-only')){
+ compileModule('app/api/crm/drafts/route.ts','work/draft-api.mjs');
+ const draftApi=await import('../work/draft-api.mjs'),objects=new Map();
+ globalThis.__crmEnv.BUCKET={put:async(key,stream)=>objects.set(key,new Uint8Array(await new Response(stream).arrayBuffer())),get:async key=>objects.has(key)?{body:objects.get(key),arrayBuffer:async()=>objects.get(key).buffer}:null,delete:async key=>objects.delete(key)};
+ await (await import('./crm-response-authorization.mjs')).verifyCrmResponseAuthorization({core,sqlite,api,draftApi,objects});
+ sqlite.close();process.exit(0);
+}
 // Focused regression uses the same migrated SQLite and real route adapters,
 // without running unrelated order/integration scenarios or a production build.
 if(process.argv.includes('--yearwheel-responsibility-drafts-only')){
@@ -426,6 +433,7 @@ await (await import('./backup-authorization.mjs')).verifyBackupAuthorization({co
 await (await import('./backup-export-authorization.mjs')).verifyBackupExportAuthorization({core});
 await (await import('./private-draft-copy.mjs')).verifyPrivateDraftCopy();
 await (await import('./private-api-authorization.mjs')).verifyPrivateApiAuthorization({core,sqlite,fileApi,draftApi});
+await (await import('./crm-response-authorization.mjs')).verifyCrmResponseAuthorization({core,sqlite,api,draftApi,objects});
 await (await import('./workflow-safety.mjs')).verifyWorkflowSafety({core,sqlite,get,post,headers,api,conflicts});
 await (await import('./access-safety.mjs')).verifyAccessSafety({core,sqlite,objects,headers,get,post,roleGet});
 await (await import('./prospect-suppression.mjs')).verifyProspectSuppression({core,ops,sqlite,get,post,rolePost,roleGet,headers,api,conflicts});
