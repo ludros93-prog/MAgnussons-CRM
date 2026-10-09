@@ -13,7 +13,7 @@ import {historicalCommercialCorrectionEligibility} from './historical-commercial
 import {SellerProfileRetireSchema,retireSellerProfile,protectRetiredSellerResponsibilities,snapshotRetiredSellerResponsibilities} from './seller-profile-retirement';
 import {RuleError} from './crm-errors';
 import {CommercialResponsibilityHistorySchema,CommercialResponsibilityTransferSchema,transferCommercialResponsibility,validateCommercialResponsibilityReferences} from './commercial-responsibility';
-import {CustomerResponsibilityHistorySchema,CustomerResponsibilityTransferSchema,transferCustomerResponsibility,validateCustomerResponsibilityReferences} from './customer-responsibility';
+import {CustomerResponsibilityHistorySchema,CustomerResponsibilityTransferSchema,CustomerResponsibilityAnchorSchema,transferCustomerResponsibility,anchorCustomerResponsibility,validateCustomerResponsibilityReferences,type CustomerResponsibilityAnchorTarget} from './customer-responsibility';
 import {CustomerReopenSchema,reopenCustomer} from './customer-reopen';
 import {TaskResponsibilityHistorySchema,TaskResponsibilityTransferSchema,protectTaskResponsibility,assignTaskResponsibilities,validateTaskResponsibilityReferences,transferTaskResponsibility,recordTaskBundleTransfers,taskResponsibilityKind,deliveryTaskResponsibilityBlocker} from './task-responsibility';
 import {MeetingResponsibilityHistorySchema,MeetingResponsibilityTransferSchema,protectMeetingResponsibility,validateMeetingResponsibilityReferences,transferMeetingResponsibility} from './meeting-responsibility';
@@ -123,7 +123,7 @@ function assignNewResponsibleProfiles(previous:State,next:State,exactNewMeetingO
  }
  validateCustomerResponsibilityReferences(next);validateCommercialResponsibilityReferences(next);validateMeetingResponsibilityReferences(next);validateOnboardingResponsibilityReferences(next);validateIssueResponsibilityReferences(next);validateYearwheelResponsibilityReferences(next);return assignTaskResponsibilities(previous,next,exactNewMeetingOwners,exactNewOnboardingOwners,exactNewNeedDealTaskOwners,exactNewFollowUpOwners);
 }
-export function applyAction(current:State,action:Action,actor?:Actor):State{
+export function applyAction(current:State,action:Action,actor?:Actor,trustedAnchorTarget?:CustomerResponsibilityAnchorTarget):State{
  const st=normalizeState(structuredClone(current)),now=new Date().toISOString(),today=day(),uid=()=>crypto.randomUUID(),exactNewMeetingOwners=new Map<string,string>(),exactNewOnboardingOwners=new Map<string,string>(),exactNewNeedDealOwners=new Map<string,string>(),exactNewNeedDealTaskOwners=new Map<string,string>(),exactNewFollowUpOwners=new Map<string,{sourceTaskId:string;ownerProfileId:string}>();
  // Capture only audited identities and operational keys from the normalized
  // original; raw legacy fields need defaults without a second full data clone.
@@ -162,6 +162,13 @@ export function applyAction(current:State,action:Action,actor?:Actor):State{
  }
  if(action.type==='customer_responsibility_transfer'){
   need(actor,'Logga in för att överföra kundansvar.');const input=CustomerResponsibilityTransferSchema.parse(action.data);transferCustomerResponsibility(st,input,actor!);recordTaskBundleTransfers(current,st,'customer',st.customers.find(row=>row.id===input.customerId)!.responsibilityTransfers.at(-1)!.id);validateCustomerResponsibilityReferences(st);return finish(assignTaskResponsibilities(current,st));
+ }
+ if(action.type==='customer_responsibility_anchor'){
+  need(actor,'Logga in för att koppla kundansvar.');need(trustedAnchorTarget,'Kundansvaret kräver ett separat verifierat anslutet konto.');
+  anchorCustomerResponsibility(st,CustomerResponsibilityAnchorSchema.parse(action.data),actor!,trustedAnchorTarget!);
+  // No task bundle or automatic ID derivation: every existing child retains
+  // precisely its recorded responsibility, status and historical attribution.
+  return finish(st);
  }
  if(action.type==='customer_reopen'){
   need(actor,'Logga in för att återöppna kundrelationen.');const input=CustomerReopenSchema.parse(action.data);reopenCustomer(st,input,actor!);validateCustomerResponsibilityReferences(st);return finish(assignTaskResponsibilities(current,st));
