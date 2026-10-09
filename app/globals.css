@@ -383,3 +383,8 @@ body {
 .order-responsibility-entry .commercial-anchor-actions{margin-top:.75rem;margin-bottom:0}
 .order-responsibility-entry [data-order-responsibility-heading]:focus{outline:3px solid var(--ring);outline-offset:3px;scroll-margin:12px}
 @media(max-width:767px){.commercial-anchor-list-actions{padding:.75rem 1rem}.commercial-anchor-list-actions>button{flex:1 1 100%}}
+
+/* Keep long order titles readable within the card instead of widening the page. */
+.operations .production-grid,.operations .production-card,.operations .production-card>.biz-head,.operations .production-card>.biz-head>div{min-width:0}
+.operations .production-card>.biz-head h3,.operations .production-card>.biz-head p{max-width:100%;overflow-wrap:anywhere;word-break:normal}
+@media(max-width:760px){.operations .production-grid{grid-template-columns:minmax(0,1fr)}}
