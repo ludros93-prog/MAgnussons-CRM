@@ -15,7 +15,7 @@ import {RuleError} from './crm-errors';
 import {CommercialResponsibilityHistorySchema,CommercialResponsibilityTransferSchema,transferCommercialResponsibility,validateCommercialResponsibilityReferences,CommercialResponsibilityAnchorSchema,anchorCommercialResponsibility,OrderResponsibilityAnchorSchema,anchorOrderResponsibility,type CommercialResponsibilityAnchorTarget} from './commercial-responsibility';
 import {CustomerResponsibilityHistorySchema,CustomerResponsibilityTransferSchema,CustomerResponsibilityAnchorSchema,transferCustomerResponsibility,anchorCustomerResponsibility,validateCustomerResponsibilityReferences,type CustomerResponsibilityAnchorTarget} from './customer-responsibility';
 import {CustomerReopenSchema,reopenCustomer} from './customer-reopen';
-import {TaskResponsibilityHistorySchema,TaskResponsibilityTransferSchema,protectTaskResponsibility,assignTaskResponsibilities,validateTaskResponsibilityReferences,transferTaskResponsibility,recordTaskBundleTransfers,taskResponsibilityKind,deliveryTaskResponsibilityBlocker} from './task-responsibility';
+import {TaskResponsibilityHistorySchema,TaskResponsibilityTransferSchema,CommercialTaskResponsibilityAnchorSchema,anchorCommercialTaskResponsibility,protectTaskResponsibility,assignTaskResponsibilities,validateTaskResponsibilityReferences,transferTaskResponsibility,recordTaskBundleTransfers,taskResponsibilityKind,deliveryTaskResponsibilityBlocker} from './task-responsibility';
 import {MeetingResponsibilityHistorySchema,MeetingResponsibilityTransferSchema,protectMeetingResponsibility,validateMeetingResponsibilityReferences,transferMeetingResponsibility} from './meeting-responsibility';
 import {OnboardingResponsibilityHistorySchema,OnboardingResponsibilityTransferSchema,protectOnboardingResponsibility,validateOnboardingResponsibilityReferences,transferOnboardingResponsibility} from './onboarding-responsibility';
 import {IssueResponsibilityHistorySchema,IssueResponsibilityTransferSchema,protectIssueResponsibility,validateIssueResponsibilityReferences,transferIssueResponsibility} from './issue-responsibility';
@@ -164,6 +164,11 @@ export function applyAction(current:State,action:Action,actor?:Actor,trustedAnch
   need(actor,'Logga in för att koppla affärsansvar.');need(trustedAnchorTarget,'Affärsansvaret kräver ett separat verifierat anslutet konto.');
   anchorCommercialResponsibility(st,CommercialResponsibilityAnchorSchema.parse(action.data),actor!,trustedAnchorTarget!);
   // Link only the parent: no task bundle, automatic IDs or historical attribution.
+  return finish(st);
+ }
+ if(action.type==='commercial_task_responsibility_anchor'){
+  need(actor,'Logga in för att koppla uppgiftsansvar.');need(trustedAnchorTarget,'Uppgiftsansvaret kräver ett separat verifierat anslutet konto.');
+  anchorCommercialTaskResponsibility(st,CommercialTaskResponsibilityAnchorSchema.parse(action.data),actor!,trustedAnchorTarget!);
   return finish(st);
  }
  if(action.type==='order_responsibility_anchor'){

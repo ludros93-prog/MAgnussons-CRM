@@ -1,7 +1,8 @@
 import {z} from 'zod';
 import {RuleError} from './crm-errors';
 import type {Actor,Settings,State,Task} from './crm';
-import {sellerProfileById,sellerProfileForOwner} from './seller-profiles';
+import {sellerProfileById,sellerProfileForOwner,validateSellerProfileReferences} from './seller-profiles';
+import {CommercialResponsibilityAnchorTargetSchema,validateCommercialResponsibilityReferences,type CommercialResponsibilityAnchorTarget} from './commercial-responsibility';
 import {recordBasis} from './record-conflicts';
 import {canFollowUp,protectedFollowUp} from './follow-up';
 import {deliveryVerified,latestDispatch} from './direct-delivery';
@@ -11,13 +12,27 @@ import {swedishCalendarDay} from './swedish-calendar';
 const profileId=z.string().uuid();
 const required=z.string().trim().min(1).max(4000),recordId=required.max(100),ownerName=required.max(150);
 const recordedProfileId=z.union([z.literal(''),profileId]);
-export const TaskResponsibilityHistorySchema=z.object({
+const TaskResponsibilityTransferHistorySchema=z.object({
  id:profileId,taskId:recordId,customerId:recordId,dealId:z.string().trim().max(100),
  source:z.enum(['task','customer','deal','order','onboarding','customer_issue','yearwheel']),sourceTransferId:recordedProfileId,action:z.enum(['anchor','transfer']),
  fromRecordedProfileId:recordedProfileId,fromProfileId:profileId,toProfileId:profileId,
  fromOwner:ownerName,toOwner:ownerName,fromDisplayName:ownerName,toDisplayName:ownerName,
  reason:required,at:z.string().datetime(),byId:required,byMemberId:required,byName:required
 }).strict();
+const exactIdentity=(max:number)=>z.string().min(1).max(max).refine(value=>value===value.trim()&&!value.includes('\0'),'Ansvarskopplingen kräver en exakt registrerad identitet.');
+// Preserve the shipped task audit contract. A commercial task gets a separate
+// strict evidence variant, never a fabricated parent transfer or past account.
+export const CommercialTaskResponsibilityAnchorHistorySchema=TaskResponsibilityTransferHistorySchema.extend({
+ source:z.literal('commercial_task'),sourceTransferId:z.literal(''),action:z.literal('anchor'),fromRecordedProfileId:z.literal(''),
+ dealId:recordId,parentType:z.enum(['deal','order']),parentId:recordId,
+ fromDisplayName:exactIdentity(150),toDisplayName:exactIdentity(150),
+ targetMemberId:exactIdentity(150),targetUserId:exactIdentity(4000),targetName:exactIdentity(150),targetRole:z.enum(['admin','seller'])
+}).strict();
+export const TaskResponsibilityHistorySchema=z.union([TaskResponsibilityTransferHistorySchema,CommercialTaskResponsibilityAnchorHistorySchema]);
+export const CommercialTaskResponsibilityAnchorSchema=z.object({
+ taskId:recordId,reason:required,reviewed:z.literal(true),expectedContext:z.string().min(1).max(3000000),expectedAccount:z.string().regex(/^[a-f0-9]{64}$/)
+}).strict();
+export type CommercialTaskResponsibilityAnchor=z.infer<typeof CommercialTaskResponsibilityAnchorSchema>;
 export const TaskResponsibilityTransferSchema=z.object({
  taskId:recordId,targetProfileId:profileId,reason:required,reviewed:z.literal(true),expectedContext:z.string().min(1).max(3000000)
 }).strict();
@@ -28,6 +43,10 @@ type Responsibility=Pick<Task,'owner'|'ownerProfileId'>;
 const independentKinds=new Set(['manual','care','meeting_followup']);
 const customerActivityLabels:Record<string,string>={csm:'Kundavstämning',csm_need:'Kommande kundbehov',prospecting:'Prospektkontakt'};
 const commercialKinds={deal:new Set(['discovery','quote','proof_deadline','order_deadline',...independentKinds]),order:new Set(['handover','proof_deadline','order_deadline','receipt','invoice_ready',...independentKinds])};
+// Canonical receipt work can be a read-only projection without a stored task.
+// Its existing order workflow stays authoritative; this operation never turns
+// that projection into a saved task as a side effect of responsibility review.
+const commercialAnchorKinds={deal:commercialKinds.deal,order:new Set(['handover','proof_deadline','order_deadline','invoice_ready',...independentKinds])};
 
 // Delegating an activity changes only its task responsibility. Its customer's
 // relationship, qualification and plan remain independently owned facts.
@@ -122,6 +141,63 @@ export function taskOwnerLabel(st:State,task:Responsibility){
  const profile=taskResponsibleProfile(st,task);
  if(!profile)return task.owner;
  return st.settings.sellerProfiles.some(other=>other.id!==profile.id&&other.displayName===profile.displayName)?profile.displayName+' · '+profile.legacyOwnerName:profile.displayName;
+}
+
+// An older commercial task can be linked only to its already anchored parent
+// owner. This is neither a transfer nor a way to anchor the parent by an alias.
+export function commercialTaskResponsibilityAnchorReview(st:State,taskId:string){
+ const tasks=st.tasks.filter(row=>row.id===taskId),task=tasks.length===1?tasks[0]:undefined;
+ const customers=task?st.customers.filter(row=>row.id===task.customerId):[],customer=customers.length===1?customers[0]:undefined;
+ const deals=task?.dealId?st.deals.filter(row=>row.id===task.dealId):[],deal=deals.length===1?deals[0]:undefined;
+ const orders=task?.dealId?st.orders.filter(row=>row.dealId===task.dealId):[],order=orders.length===1?orders[0]:undefined;
+ const parentType: 'deal'|'order'|undefined=orders.length?'order':deal?'deal':undefined,parent=parentType==='order'?order:deal;
+ const source=parent?.ownerProfileId?sellerProfileById(st.settings,parent.ownerProfileId):undefined;
+ let blockedReason='';
+ if(!tasks.length)blockedReason='Uppgiften finns inte.';
+ else if(!task)blockedReason='Uppgiftskopplingen är tvetydig. Granska uppgiften först.';
+ else if(task.done||task.doneAt)blockedReason='Avslutad uppgift behåller sitt historiska ansvar.';
+ else if(!task.dealId)blockedReason='Välj en uppgift med en registrerad affärs- eller orderkoppling.';
+ else if(!customer||!deal||deal.customerId!==task.customerId)blockedReason='Uppgiften behöver en entydig affär och kund som hör ihop. Granska kund- och affärskopplingen först.';
+ else if(customer.status==='closed')blockedReason='Kunden är avslutad. Granska kvarvarande arbete i kundens befintliga arbetsflöde.';
+ else if(orders.length>1||order&&order.customerId!==task.customerId||order&&st.orders.filter(row=>row.id===order.id).length!==1)blockedReason='Orderkopplingen saknas eller är tvetydig för samma kund. Granska orderunderlaget först.';
+ else if(parentType==='deal'&&['won','lost'].includes(deal.stage))blockedReason='Vunnen eller förlorad affär behåller sitt historiska ansvar. Granska öppet arbete i orderns arbetsflöde.';
+ else if(parentType==='order'&&(deal.stage!=='won'||!deal.confirmed))blockedReason='Orderuppgiften behöver en entydig vunnen affär med registrerat kundbeslut för samma kund. Ansvarskopplingen registrerar ingen accept.';
+ else if(order?.stage==='followed')blockedReason='En uppföljd order behåller sitt historiska ansvar.';
+ else if(!parentType||!commercialAnchorKinds[parentType].has(task.kind))blockedReason=task.kind==='receipt'?'Leveransbevakningen följer orderns arbetsflöde. En visad bevakning är inte bevis för en sparad uppgift.':'Uppgiften hör till ett annat arbetsflöde. Granska ansvaret där.';
+ else if(task.ownerProfileId)blockedReason='Uppgiftsansvaret har redan en registrerad ansvarskoppling.';
+ else if(task.responsibilityTransfers.length)blockedReason='Uppgiften har registrerad ansvarshistorik. Granska den i dess befintliga överlämning.';
+ else if(!st.settings.sellerProfilesInitialized)blockedReason='Skapa och granska de stabila säljarprofilerna innan uppgiftsansvaret kopplas.';
+ else if(!parent?.ownerProfileId)blockedReason='Koppla först affärs- eller orderansvaret till dess granskade person. Uppgiften får inte koppla överordnat ansvar automatiskt.';
+ else if(parent.owner!==task.owner||!source||source.legacyOwnerName!==task.owner||st.settings.sellerProfiles.filter(profile=>profile.legacyOwnerName===task.owner).length!==1||st.settings.sellerProfiles.filter(profile=>profile.id===source.id).length!==1)blockedReason='Uppgiften och dess affär eller order behöver samma entydiga granskade ansvariga person.';
+ else if(!source.active||source.retirementHistory.length||!st.settings.owners.includes(source.legacyOwnerName))blockedReason='Uppgiftsansvaret behöver en aktiv, granskad säljarprofil bland teamets ansvariga.';
+ else if(!source.memberId||source.memberId!==source.memberId.trim()||source.memberId.includes('\0')||st.settings.sellerProfiles.filter(profile=>profile.memberId===source.memberId).length!==1)blockedReason='Säljarprofilen saknar en entydig registrerad kontokoppling. Granska personens profil och anslutna konto först.';
+ return {task,customer,deal,order,parentType,parent,parentId:parent?.id||'',sourceProfile:source,blockedReason};
+}
+export function commercialTaskResponsibilityAnchorBasis(st:State,taskId:string){
+ const matches=st.tasks.filter(row=>row.id===taskId),customerIds=new Set(matches.map(row=>row.customerId)),dealIds=new Set(matches.map(row=>row.dealId).filter(Boolean));
+ return recordBasis({purpose:'commercial_task_responsibility_anchor',taskId,tasks:matches,
+  customers:st.customers.filter(row=>customerIds.has(row.id)),deals:st.deals.filter(row=>dealIds.has(row.id)),orders:st.orders.filter(row=>dealIds.has(row.dealId)),
+  initialized:st.settings.sellerProfilesInitialized,owners:st.settings.owners,profiles:st.settings.sellerProfiles
+ });
+}
+export function anchorCommercialTaskResponsibility(st:State,input:CommercialTaskResponsibilityAnchor,actor:Actor,target:CommercialResponsibilityAnchorTarget){
+ const parsed=CommercialTaskResponsibilityAnchorSchema.parse(input),account=CommercialResponsibilityAnchorTargetSchema.parse(target);
+ need(actor.role==='admin'&&actor.memberId&&actor.memberId===actor.memberId.trim()&&!actor.memberId.includes('\0')&&actor.id.trim()&&actor.id===actor.id.trim()&&!actor.id.includes('\0')&&actor.name.trim()&&actor.name===actor.name.trim()&&!actor.name.includes('\0'),'Uppgiftsansvar kopplas av en inloggad administratör.');
+ need(parsed.expectedContext===commercialTaskResponsibilityAnchorBasis(st,parsed.taskId),'Uppgiften eller granskningsunderlaget har ändrats. Läs in och granska aktuellt underlag innan ansvaret kopplas.');
+ validateSellerProfileReferences(st);validateCommercialResponsibilityReferences(st);validateTaskResponsibilityReferences(st);
+ const review=commercialTaskResponsibilityAnchorReview(st,parsed.taskId);need(!review.blockedReason,review.blockedReason);
+ const task=review.task!,profile=review.sourceProfile!;
+ need(account.memberId===profile.memberId&&account.owner===profile.legacyOwnerName&&account.owner===task.owner,'Det anslutna kontot motsäger uppgiftens granskade personkoppling. Läs in och granska profilen och kontot igen.');
+ need(parsed.expectedAccount===account.expectedAccount,'Det anslutna kontot har ändrats. Läs in och granska kontot igen innan ansvaret kopplas.');
+ const at=new Date().toISOString(),row=CommercialTaskResponsibilityAnchorHistorySchema.parse({
+  id:crypto.randomUUID(),taskId:task.id,customerId:task.customerId,dealId:task.dealId,source:'commercial_task',sourceTransferId:'',action:'anchor',fromRecordedProfileId:'',
+  parentType:review.parentType,parentId:review.parentId,fromProfileId:profile.id,toProfileId:profile.id,fromOwner:task.owner,toOwner:task.owner,fromDisplayName:profile.displayName,toDisplayName:profile.displayName,
+  targetMemberId:account.memberId,targetUserId:account.userId,targetName:account.name,targetRole:account.role,reason:parsed.reason,at,byId:actor.id,byMemberId:actor.memberId,byName:actor.name
+ });
+ task.ownerProfileId=profile.id;task.responsibilityTransfers.push(row);
+ st.events.unshift({id:crypto.randomUUID(),customerId:task.customerId,dealId:task.dealId,kind:'commercial_task_responsibility_anchor',at,actor:{id:actor.id,name:actor.name},text:'Uppgiftsansvar kopplat: '+profile.displayName+' · '+task.owner+'\nUppgift: '+task.title+'\nSamma ansvariga person fortsätter. Affär, order och andra uppgifter behåller sitt ansvar. Kontokopplingen granskades vid denna registrering; ingen tidigare kontoidentitet rekonstrueras.\nUnderlag: '+parsed.reason});
+ validateTaskResponsibilityReferences(st);
+ return st;
 }
 
 // A new generic form can choose an owner, but cannot supply stable IDs or audit.
@@ -313,9 +389,16 @@ export function validateTaskResponsibilityReferences(st:State){
    // An onboarding anchor can review a task whose matching ID was already
    // recorded. Its unchanged recorded ID remains explicit in the audit; the
    // ordinary standalone-task anchor still requires a previously blank ID.
-   need(row.action==='anchor'?(row.source==='task'&&!row.fromRecordedProfileId||row.source==='onboarding'||row.source==='customer_issue'||row.source==='yearwheel')&&row.fromProfileId===row.toProfileId:row.fromProfileId!==row.toProfileId,'Uppgiftshistoriken har en ogiltig förankring eller överföring.');
+   need(row.action==='anchor'?((row.source==='task'||row.source==='commercial_task')&&!row.fromRecordedProfileId||row.source==='onboarding'||row.source==='customer_issue'||row.source==='yearwheel')&&row.fromProfileId===row.toProfileId:row.fromProfileId!==row.toProfileId,'Uppgiftshistoriken har en ogiltig förankring eller överföring.');
    need(!previous||previous.toProfileId===row.fromProfileId&&previous.toProfileId===row.fromRecordedProfileId&&previous.toOwner===row.fromOwner,'Uppgiftens överföringar bildar inte en sammanhängande ansvarskedja.');
-   if(row.source==='task'){
+   if(row.source==='commercial_task'){
+    // Only the immutable parent identity is checked after the saved review.
+    // Its stage, owner and account can legitimately change in later workflows.
+    need(row.fromDisplayName===row.toDisplayName,'Samma persons uppgiftsförankring måste bevara den granskade namnbilden.');
+    const deals=st.deals.filter(deal=>deal.id===row.dealId),parents=row.parentType==='deal'?deals:st.orders.filter(order=>order.id===row.parentId);
+    need(!previous&&deals.length===1&&deals[0].customerId===row.customerId&&parents.length===1&&parents[0].id===row.parentId&&parents[0].customerId===row.customerId&&commercialAnchorKinds[row.parentType].has(task.kind),'Uppgiftsförankringen har en bruten eller tvetydig kommersiell koppling.');
+    need(row.parentType==='deal'?row.parentId===row.dealId:(parents[0] as State['orders'][number]).dealId===row.dealId,'Uppgiftsförankringen hör inte till sin registrerade affär eller order.');
+   }else if(row.source==='task'){
     // Current plan/status may legitimately change after delegation. Validate
     // the immutable task chain, never reinterpret its historic eligibility.
     const directDelivery=taskResponsibilityKind(task)==='delivery_activity';

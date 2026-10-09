@@ -1,5 +1,6 @@
 import './account-change-review.mjs';
 import './crm.mjs';
+await (await import('./commercial-task-responsibility-anchor.mjs')).verifyCommercialTaskResponsibilityAnchor();
 await (await import('./company-event-responsibility.mjs')).verifyCompanyEventResponsibility();
 await (await import('./company-activity-responsibility.mjs')).verifyCompanyActivityResponsibility();
 await (await import('./delivery-task-responsibility.mjs')).verifyDeliveryTaskResponsibility();
