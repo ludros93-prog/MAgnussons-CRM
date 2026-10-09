@@ -1,3 +1,21 @@
+# Validering – publiceringsåterhämtning av verifierad main, 2026-10-09
+
+## Kod, källa och faktiskt publiceringsresultat
+
+- Publicerad GitHub-mainrevision `9cbcdbba3f20e7791f8047596abb055e60dd8c37`: [CI 37882998414](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/37882998414), alla 13 steg completed/success på exakt main. CI-kvitto SHA256 `1be867b4eff8045836adc1d44684a4b40f4193c2245bd1d459b8073e2565b44c`.
+- Sites-source `4cde45d4887efbd348d7193ba3aaf53809eb5070` / träd `3f97ea2beea1c9fff2a969ff2b4f0d7e48596f5f`, vanlig fast-forward push 05:26:07 UTC med föräldrar `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e` och main `9cbc`. Fjärrrevision, träd och föräldrar återlästes; pushkvitto `e306fae761693a2f8fece9db2986ef1ca02a3b52f527b435781962e403ed4e2b`.
+- Samtliga 345 spårade filer och hela trädet är byte för byte samma som main `9cbc` och testad kandidat `75016e036cde4d8d5bb36e4c6e9ea1452cac87ca`; fem oförändrade godkända kontroller återanvändes, kvitto `eba480c3c908acf8ca09913ae60adc65f5865d1dd431cd49fed6be567f8539c5`. Källbindningskvitto `8b1328220f0fe5f23329bd0d10dce333b7af10938fcd802f02c73c5e9fcad865`. Detta är ingen påstådd ny testkörning på källsynkens mergecommit.
+- Samma Site `appgprj_6aa71b309d90819181a32a9af6e6baf2`; version 69 `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_a9ec0dcc42b48191af303ce34455e1b3` sparad 05:26:47 UTC från exakt source `4cde45d4`. Deploy `appgdep_6ac87b2de1dc8191aca6c9ab9d29bc1d`: succeeded, native uppdatering 2026-10-09 05:30:57.436424 UTC (terminalt återläst 05:34:06 UTC); URL https://magnussons-crm.rosen123.chatgpt.site. Slutkvitto 37b2961a6b4350410c55b782842a5105a6626fbffc0f2cc6acaaa7be87d3d66c.
+- Återläsning 2026-10-09 05:34:20.404 UTC: exakt samma Site, version 69, source `4cde45d4887efbd348d7193ba3aaf53809eb5070` och lyckad deploy `appgdep_6ac87b2de1dc8191aca6c9ab9d29bc1d`; full returnerad begränsad åtkomstpolicy (custom, revision 2), miljö (revision 1, en post) och automationer oförändrade; bindings oförändrade. Kvitto 53df887596c610737e56849485730ef255f6d41bf72a12f9d88124e14ef58f0b.
+
+## Publiceringsväg och provgränser
+
+Lokal sourcehelper saknas i kontrollerade läsbara rötter/resurser; ingen total frånvaro i otillgängliga kataloger antas. Native `save_site_version` specificerar: “Include the archive whenever it can be packaged locally; omit it only when local packaging cannot complete and remote build fallback is required.” Detta specifika undantag användes utan lokalt arkiv eller egen packare. Skillens generella “source-only versions still need their matching archive” är en dokumenterad skillnad mellan instruktionerna, inte ett påstående om återställd helper. Vid den initiala sparningen var `archive_storage` null; inga lokala arkivhashar eller lokalt paketerings-PASS uppfinns.
+
+Publiceringsarbetet tillför ingen appkod eller migration. Version 69 för fram redan verifierad main, inklusive crm71-formatstöd och crm72-design. Kompatibelt crm71-läsar-/skrivargolv behövs efter dess nya ansvarsskrivningar; oförändrad v68 är ingen antagen säker skrivande återgång. Backupformat `magnussons-crm-1` består. Verklig personalinloggning/pilot, autentiserad live-UI, privata driftbackuper och full hostad återställning är fortfarande oprövade. Tidigare isolerade browser-/CAS-/idempotens-/mängdprov gäller sitt dokumenterade scope; publicering är inget nytt kundgodkännande eller integrationsprov.
+
+## Historik före publiceringsåterhämtningen 2026-10-09
+
 # Validering – personliga produktionshinder i Min dag, crm72
 
 ## Slutkod, main och verifiering

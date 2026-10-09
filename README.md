@@ -1,3 +1,13 @@
+# Magnussons CRM – verifierad main och publiceringsåterhämtning
+
+På samma [CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) har version **69** status **succeeded**, native uppdatering 2026-10-09 05:30:57.436424 UTC (terminalt återläst 05:34:06 UTC). Den för fram befintlig main: inventering av produktionsansvar, granskat byte av hinderansvar och **Hinder du ansvarar för** i Min dag med **Öppna jobbet**. Inget nytt verksamhetsbeslut eller ny appkod ingår i publiceringsarbetet.
+
+Publicerad GitHub-mainrevision `9cbcdbba3f20e7791f8047596abb055e60dd8c37` och Sites-source `4cde45d4887efbd348d7193ba3aaf53809eb5070` har samma träd `3f97ea2beea1c9fff2a969ff2b4f0d7e48596f5f` och samtliga 345 spårade filer motsvarar den verifierade kandidaten byte för byte. [VALIDATION](VALIDATION.md) skiljer appkod, tester, main och publicerad källa. Återläsning 2026-10-09 05:34:20.404 UTC verifierar full returnerad begränsad åtkomstpolicy (custom, revision 2), miljö (revision 1, en post) och automationer oförändrade; bindings oförändrade.
+
+Sourcehelpern saknas fortfarande. Det tidigare publiceringshindret hanterades med nativeverktygets uttryckliga reservväg för serverbygge när lokal paketering inte kan slutföras; ingen egen packare användes. [OPERATIONS](OPERATIONS.md) beskriver undantaget och återgångsgränsen. Verklig personalinloggning/pilot och full hostad återställning är fortfarande oprövade. Efter nya crm71-ansvarsskrivningar krävs kompatibel läsare/skrivare; oförändrad v68 ska inte antas vara säker skrivande återgång.
+
+## Historik före publiceringsåterhämtningen 2026-10-09
+
 # Magnussons CRM – granskat hinderansvar, crm71-kod
 
 **Byt hinderansvar** låter administratören välja vem som ska hålla ihop nästa steg i ett öppet produktionshinder. Aktuell ansvarig visas separat från **Rapporterat av** och **Registrerad rapporttid**. Överlämningen bevarar rapportör, rapporttid, hindertext, jobbansvar, orderansvar och registrerat arbete; den löser inte hindret.
