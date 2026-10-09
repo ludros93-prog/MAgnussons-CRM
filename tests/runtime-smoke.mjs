@@ -14,6 +14,8 @@ import {assertParentTaskTransfer} from './task-responsibility-transfer.mjs';
 // Run after tests/outlook.mjs and pnpm build. No production bindings or data.
 const responseAuthorizationNativeEvidence=await (await import('./runtime-response-authorization.mjs')).assertNativeResponseAuthorization();
 console.log('PASS native response authorization: '+JSON.stringify(responseAuthorizationNativeEvidence));
+const customerAnchorNativeEvidence=await (await import('./runtime-customer-anchor.mjs')).assertNativeCustomerAnchor();
+console.log('PASS native customer responsibility anchor: '+JSON.stringify(customerAnchorNativeEvidence));
 const accountIssueGuardNativeEvidence=await (await import('./runtime-account-issue-guard.mjs')).assertNativeAccountIssueGuard();
 console.log('PASS native account issue guard: '+JSON.stringify(accountIssueGuardNativeEvidence));
 const root = fileURLToPath(new URL('../',import.meta.url)), statePath = mkdtempSync(join(tmpdir(),'magnussons-runtime-'));
