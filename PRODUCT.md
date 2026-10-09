@@ -1,3 +1,15 @@
+# Produktkvittens – egen privat utkastkopia
+
+**Kopia av mina utkast** finns i **Min dag → Fortsätt där du slutade** och Inställningar. Säljare/admin får bara sin egen senaste serverkvitterade råtext, inklusive arkiv, från den valda arbetsytan. En fil kan sedan läsas lokalt: vanlig text först, tekniska uppgifter vid behov, kopieringsbesked vid knappen och synligt tangentbordsfokus. Ingen fil laddas upp, importeras eller skriver i CRM.
+
+Kopian är fullständig inom säkra gränser, annars skapas ingen fil. Endast serverkvitterade utkast ingår; invänta sparbesked om lokala ändringar väntar. Konto/arbetsyta och innehållskontrollsumma kontrolleras vid lokal läsning. Arkiverade utkast läses utan att återaktiveras. Texten kan kopieras manuellt vid clipboardfel.
+
+Kodkandidat `1d2e559f803546c380f6ebb971a2c8090a7c71c6`, träd `d8bf3d78b4ef6980ad3ba1064bfa4134d8634bab`. App-main `10458af94ad84c1a2b51da56fd6d0724f7ae4ef4` efter [PR #123](https://github.com/ludros93-prog/MAgnussons-CRM/pull/123). Sites-source `b13a6791f7390ca01643ec183ac4b4071b96a861` har exakt samma 356 spårade filer. **Live v71**, deploy `succeeded` 2026-10-09T10:17:05.910541+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site).
+
+Detta är tekniska prov med syntetiska identiteter och data. Personlig inloggning/CRM-roll, observerad personalpilot, full hostad återställning och verkliga Fortnox-/Outlook-konton är inte verifierade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant read_thread saknas.
+
+## Historik före crm74-leveranskvittot
+
 # Produktkomplettering – personlig utkastkopia
 
 **Kopia av mina utkast** finns intill det privata arbetet i Min dag och i Mål & inställningar, även för säljare. Två konkreta handlingar: **Hämta mina sparade utkast** och **Öppna en utkastkopia**. Nedladdningen tar aktuella serversparade aktiva och arkiverade poster i den valda arbetsytan. Innehåll som ännu inte fått privat sparbesked ingår inte.
