@@ -1,3 +1,23 @@
+# Källor och tillämpning – crm74 personlig utkastkopia
+
+Nio officiella URL:er återlästa 2026-10-09 09:25:35–09:25:36 UTC. Exakt extraherad verktygstext och kortcitat är verifierade; inga HTTP-statusar eller kompletta HTML-svar antas. Receipt `/tmp/crm74-research/receipt.json`, SHA256 `8e1d91f043d8cf7fcc2f42d87f09330148ecbce5bdce140190e9eef47a357a56`; findings `1da54c67279548eaa44d66042d38baa886f8e3a38d50e8880b450d63d2e0918f`.
+
+| Officiell källa | Verifierad princip och avgränsad tillämpning |
+| --- | --- |
+| [Saleshub AI](https://saleshubai.se/funktioner): ”Kundkort med kontakter, filer, mail, samtal och nästa aktivitet” | Behåll befintligt utkast-/kundsammanhang; hittas från det privata arbetet i Min dag. |
+| [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/): ”Use verbs in imperative mood” | Hämta kopia, öppna kopia och kopiera text har konkreta svenska etiketter. |
+| [Lime Object Access](https://platform.docs.lime-crm.com/en/latest/configuration/object-access/): ”restrict access to a specific object” | Servern skyddar varje eget användar-/arbetsytescope, även för admin. Limes egna rättighetsmodell ersätter inte Magnussons privata kontrakt. |
+| [Salesforce Export](https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management/lex_implementation_data_export): ”The data is exported as a set of comma-separated values (CSV) files.” | Export är en kopia, inte samma sak som import eller full återställning. Salesforce CSV/editioner/scheman används inte här. |
+| [D1 Prepared Statements](https://developers.cloudflare.com/d1/worker-api/prepared-statements/): ”Binds a parameter to the prepared statement.” | Privatscope binds; ingen interpolation av identitet. |
+| [D1 Sessions](https://developers.cloudflare.com/d1/worker-api/d1-database/): ”sequential consistency among queries” | Sekventiell konsistens bevisar ingen fryst flerfrågesnapshot. Alla egna poster och budget tas i samma SQL-läsning. |
+| [D1 Limits](https://developers.cloudflare.com/d1/platform/limits/): ”Maximum string, `BLOB` or table row size” | Officiell tabell anger 2 000 000 byte. Ingen stor JSON-aggregatcell; konservativ skyddad radmängd och avslag vid övergräns. |
+| [SQLite JSON](https://www.sqlite.org/json1.html): ”returns a JSON array comprised of all X values in the aggregation.” | Råtext och JSON-värde skiljs åt. Den valda implementationen aggregerar inte utkastdata till en SQL-JSON-cell. |
+| [SQLite ordering](https://www.sqlite.org/lang_aggfunc.html): ”that clause determines the order” | Exporten har explicit `updated_at DESC,id ASC`; innehållets ordning och kontrollsumma är reproducerbara. |
+
+Publicvendorbeskrivningar bevisar inte privata CAS-rättigheter, verkliga konton, automatisk backup, hostad återställning eller personalacceptans. Kontrollsumma över råposter är integritet, inte signatur. Inga nya integrations-/kommersiella definitioner införs.
+
+## Historik före crm74-källändringen
+
 # Källor och tillämpning – crm73 privata årshjulsutkast
 
 Officiella offentliga texter återlästa 2026-10-09 07:28 UTC. Käll-/läsreceipt `ad944628d8378eaab329fa0d90be374d0c7286a4b8c6a44490136ad64afbbfd7`; findings `d3dacb6be82859eca3344c3569f6277f3e5bcc920f183619bb7aafab62cd03eb`. Inga HTTP-statuskoder antas när läsverktyget bara gav extraherad text.

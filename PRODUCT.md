@@ -1,3 +1,13 @@
+# Produktkomplettering – personlig utkastkopia
+
+**Kopia av mina utkast** finns intill det privata arbetet i Min dag och i Mål & inställningar, även för säljare. Två konkreta handlingar: **Hämta mina sparade utkast** och **Öppna en utkastkopia**. Nedladdningen tar aktuella serversparade aktiva och arkiverade poster i den valda arbetsytan. Innehåll som ännu inte fått privat sparbesked ingår inte.
+
+Lokal läsning ger titel, status och sparad tid, följt av igenkännbara textfält när formatet medger det. Det är endast presentation; originaltext och ofärdiga råfält förändras inte. Tekniska ID:n och hela JSON-texten ligger under separata detaljer. Text kan kopieras; nekad clipboard lämnar markerbar text. Okända eller skadade inre format finns kvar som råtext. En ny fil, stängning eller byte av konto/arbetsyta ogiltigförklarar sena svar.
+
+Säljar-/adminrollen ger endast den egna kopian, inte andras privata utkast. Arkiverat betyder avslutat privat arbete, utan slutsats om CRM-inlämning. Ingen import, reaktivering, CRM-sparning eller ändring av kundacceptans sker. Årshjulets ansvaröverlämningsutkast och andra specialdialoger är fortfarande separata B05-delar. Huvudmåtten är oförändrade: försäljning mot månads-/årsmål, marginal och nya prospects.
+
+## Historik före crm74-källändringen
+
 # Produktkomplettering – privat årshjulsarbete, live v70
 
 Påbörja eller redigera ett behov på samma kund, spara privat och fortsätt efter återläsning från Årsplanering, kundens årshjul eller Min dag. Ofärdiga fält och råtext bevaras. **Spara utkast & stäng** väntar på privat kvittens; CRM-inlämning har ett eget besked och skapar/uppdaterar påminnelsen enligt behovets status.
