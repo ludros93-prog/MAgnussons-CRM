@@ -138,7 +138,13 @@ export function PrivateDraftCopyTools({space,userId,enabled,identityKey,pendingC
   <Sheet open={scope.active&&shown.open} onOpenChange={value=>{if(!value)close()}}>
    <SheetContent className="crm-sheet private-draft-copy-sheet" onOpenAutoFocus={event=>{event.preventDefault();heading.current?.focus({preventScroll:true});}} onCloseAutoFocus={event=>{event.preventDefault();const origin=opener.current;if(origin&&origin.scope===lifecycle.current&&origin.scope.active&&origin.element.isConnected)origin.element.focus({preventScroll:true});}}>
     <SheetHeader><SheetTitle ref={heading} tabIndex={-1}>Kopia av mina utkast</SheetTitle><SheetDescription>Din egen filkopia, utanför CRM.</SheetDescription></SheetHeader>
-    <div className="sheet-body private-draft-copy-body">
+    <div className="sheet-body private-draft-copy-body" onFocusCapture={event=>{
+     const target=event.target as HTMLElement,epoch=openRef.current?.generation;
+     if(!target.matches('button,input,textarea,select,summary,a[href]'))return;
+     // The Sheet focus trap prevents native scrolling when Tab wraps. Reveal
+     // the focused control within this pane without moving keyboard focus.
+     requestAnimationFrame(()=>{if(epoch!==undefined&&current(scope,epoch)&&target.isConnected&&document.activeElement===target)target.scrollIntoView({block:'nearest',inline:'nearest'});});
+    }}>
      <p className="private-draft-copy-scope">{space==='demo'?'Demoytan':'Teamets arbetsyta'} · bara dina utkast</p>
      <section className="private-draft-copy-card" aria-label="Hämta en egen filkopia">
       <h3>Behåll en egen filkopia</h3>
