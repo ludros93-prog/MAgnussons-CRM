@@ -1,3 +1,19 @@
+# Produktkvittens – rätta en historisk text efter profilavslut
+
+Efter ett granskat profilavslut kan en historisk **förlorad affär få rättad förlustorsak**, och en **uppföljd order med registrerat fakturabelopp, referens och datum få rättad anteckning**. Profilens exakta sparade UUID används när det finns. Ett äldre tomt UUID kräver en entydig redan granskad ansvarskoppling och förblir tomt; ingen identitet förankras eller flyttas av textändringen.
+
+Dialogrubriken är **Rätta förlustorsak** eller **Rätta anteckning**. Textsektionens aria-etikett behåller den fulla formen **Rätta historisk förlustorsak** respektive **Rätta historisk orderanteckning**. Kunden, den historiska ansvariga och postens avslutade läge följer med. Ett textfält och en konkret sparhandling visar vad användaren kan ändra; historiska priser, ansvar, faktura, datum och produktion förblir samma underlag.
+
+Äldre privata formulär med ändringar utanför det tillåtna textfältet kan läsas och kopieras men kan inte lämnas in som en delvis bortkastad ändring. **Läs in aktuell version** är ett uttryckligt val. Hela tidigare formuläret, med egna värden, ursprungsunderlag och sparmetadata, bevaras då i läsande och kopierbart återhämtningsunderlag. Sparning använder hela formuläret; dolda ändringar projekteras inte bort. Omläsning gör inte ett äldre granskningsunderlag aktuellt automatiskt.
+
+Nytt, återöppnat eller flyttat ansvar ingår inte. Vunnen affär behåller sin befintliga låsning. En uppföljd order med saknad fakturareferens, datum eller belopp omfattas inte. Registrerad faktura betyder inte betald faktura eller verifierad kundkontakt. Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects.
+
+Kodkandidat `87d282c200193ba22ad2f20d9e15f5d994d45777`, träd `bbc70214fd3ce5d0306092578a621af636919c52`. **GitHub app-main** `347cc26333605a5bd23f0327b33ce66ec245d7bf` efter [PR #127](https://github.com/ludros93-prog/MAgnussons-CRM/pull/127). **Sites-source** `fe6702c662ac599fed9ff57cecaba71d1b395b8a` motsvarar slutkandidatens 365 spårade filer. **Live v73**, deploy `appgdep_6ac8fb6c6f048191ad45188558594def`, status `succeeded` 2026-10-09T14:38:54.326227+00:00, på [befintliga Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site). Kod, GitHub-main och publicerad Site redovisas separat; merge publicerar inte appen.
+
+[VALIDATION](VALIDATION.md) redovisar de faktiska slutproven och gränserna. Alla skrivprov använder syntetiska identiteter och isolerad lagring. Personlig inloggning/CRM-roll, observerad personalpilot, verkliga Fortnox-/Outlook-konton och full hostad backup/återställning eller live-rollback är inte verifierade. Grön CI och browserprov bevisar ingen personalacceptans. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas. Konton, roller, verkliga kund-/orderdata, utskick, schema, prompt och aktivering har inte ändrats genom denna leverans.
+
+## Historik före crm76-leveranskvittot
+
 # Produktkvittens – privat och återupptagbar behovsöverlämning
 
 Administratören kan spara en påbörjad **Byt behovsansvar**-överlämning privat, stänga och fortsätta från **Min dag → Fortsätt där du slutade**. Rå orsak, val av målprofil/uppgifter och hela det frysta kund-, behovs-, profil- och uppgiftsunderlaget följer utkastet. Privat sparning ändrar inget behovsansvar. Efter återupptagning krävs ny granskning; **Spara nytt behovsansvar** använder exakt egen kvitterad utkastrevision och sparar behov, valda uppgifter, deras ansvarshistorik, händelse, mutationskvittens och privat arkiv i en atomisk skrivning.
