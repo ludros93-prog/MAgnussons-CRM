@@ -1,3 +1,16 @@
+# Bygglogg – crm74 personlig utkastkopia, källändring
+
+- Färsk main `63dd3b6c03a1e729e31ac87b8123a2c1df39ec0d`, inga öppna PR:er, samma begränsade Site v70/source `f847d0192ba05478738fd1c6a2394958cbf42f4c`. 183 främmande registrerade worktrees var rena vid start. Egen atomisk reservation `crm74-20261009` och separat branch/worktree `feat/crm74-private-recovery`/`/tmp/magnussons-crm74`.
+- Avgränsad B04-kod: helt läsande egen råexport + lokal läsning/kopiering. Samma SQL-snapshot tar alla aktiva/arkiverade egna rader och konservativ D1-säker budget; format/integritet och konto/arbetsyta kontrolleras. Sen behörighetsförlust och ofullständig läsning nekas utan privat fil. Inga konton binds eller skapas av exporten.
+- Design: Min dag-/inställningsingång, serverkvittens skiljs från lokalt väntande arbete, vanlig text visas först, tekniska detaljer vid behov och markerbar text kvarstår vid clipboardfel. Arkiverat är inget CRM-publiceringsbevis. Ingen import, reaktivering eller kund-/orderändring ingår.
+- Officiella källor återlästa 2026-10-09 09:25:35–09:25:36 UTC; RESEARCH anger precisa belägg. D1:s 2 MB-cellgräns styrde bort från stor JSON-aggregation till skyddad rå radmängd. Befintliga SQL, beroenden, CI, identitet/bindningar och agentinstruktioner ändras inte.
+- Granskningen hittade en krasch för giltig råtyp `__proto__` och browsermätning vid 320/390 px visade kopieringsfel långt ovanför den synliga knappen. Egen-nyckeluppslag och lokalt status-/felbesked direkt vid respektive kopieringsknapp rättades före den slutliga kandidaten. Första kontrollomgången används inte som slutkvittens efter dessa ändringar.
+- Senare native browserprov vid 320 px/text 2× hittade att Sheetens tangentbordsfokus kunde omsluta till en knapp utanför den synliga scrollpanelen. Kontroller i utkastkopiepanelen visar nu fokuserad kontroll via scope-/epoch-skyddad scrollning utan att byta fokus. Ny slutkandidat och nya slutprov krävs efter denna rättning.
+- De obligatoriska frysta slutkontrollerna och livekvittot är separata nästa leveranssteg; ingen körd kontroll eller publicering påstås i förväg. Browser är tillgänglig lokalt med befintlig Chromium/Playwright i portabel profil, för syntetiska isolerade prov. Personlig användning och full hostad återställning förblir oprövade. Codex-tasken är oläst eftersom relevant read_thread saknas.
+- Ingen kunddata/backup/hemlighet skrivs i Git, inga mejl skickas och inga schema-/prompt-/aktiveringsverktyg används. Återhämtningsväg och kvarstående B04/B05 finns i OPERATIONS/BACKLOG.
+
+## Historik före crm74-källändringen
+
 # Byggagentens verifieringslogg – crm73 faktiskt levererad
 
 - Kodkandidat `aa57965cd45dbec9eb42cc3679524c99b87ba7ae`; app-main `31c38d103062bf88520f2062d0d2c604e7b44cbf` efter [PR #121](https://github.com/ludros93-prog/MAgnussons-CRM/pull/121). Sites-source `f847d0192ba05478738fd1c6a2394958cbf42f4c`, träd `5702706f2fb784227054eb5e48dabf57593c6b79`, exakt samma 351 spårade filer som den frysta testkandidaten. **Live v70**, deploy `succeeded` 2026-10-09T08:02:11.980430+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site).

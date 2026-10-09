@@ -4,6 +4,7 @@ import {Button} from '@/components/ui/button';
 import type {DraftRecord} from '@/lib/drafts';
 import {validDate} from '@/lib/business';
 import {isArticleDraft} from '@/lib/article-drafts';
+import {PrivateDraftCopyTools} from '@/components/private-draft-copy-tools';
 type LocalDraft=DraftRecord&{status:'saved'|'pending'|'saving'|'error'|'conflict';error?:string;server?:DraftRecord|null;generation:number;posted?:boolean};
 type Workspace={ready:boolean;error:string;records:LocalDraft[];get:(id:string)=>LocalDraft|undefined;create:(kind:DraftRecord['kind'],context:string,data:Record<string,any>,title:string,id?:string)=>string;update:(id:string,data:Record<string,any>,title?:string)=>void;flush:(id:string)=>Promise<{id:string;revision:number}|null>;reconcile:(id:string,reviewServer?:boolean)=>Promise<boolean>;hasLocalCopy:(id:string)=>boolean;consume:(id:string)=>void;resolve:(id:string,useServer:boolean)=>void;archive:(id:string)=>Promise<boolean>;retry:()=>void};
 type Scope={key:string;epoch:number;active:boolean;controllers:Set<AbortController>};
@@ -191,7 +192,7 @@ export function DraftProvider({space,userId,enabled,canEditArticles,children}:{s
   },false);
  }
  function retry(){const session=begin();if(!active(session))return;if(!isReady(session)){void load();return;}for(const d of entries.current)if(d.status==='error')void flush(d.id);}
- return <Context.Provider value={{ready:visibleReady,error:enabled&&active(begin())?error:'',records:enabled&&isReady(begin())?records.filter(d=>!d.archived):[],get,create,update,flush,reconcile,hasLocalCopy,consume,resolve,archive,retry}}>{children}</Context.Provider>
+ return <Context.Provider value={{ready:visibleReady,error:enabled&&active(begin())?error:'',records:enabled&&isReady(begin())?records.filter(d=>!d.archived):[],get,create,update,flush,reconcile,hasLocalCopy,consume,resolve,archive,retry}}><PrivateDraftCopyTools space={space} userId={userId} enabled={enabled} identityKey={JSON.stringify([space,userId,enabled,canEditArticles])} pendingCount={enabled&&isReady(begin())?records.filter(d=>!d.archived&&d.status!=='saved').length:0}>{children}</PrivateDraftCopyTools></Context.Provider>
 }
 export function DraftStatus({id,onClosed,onResolved,disabled=false,announce=false,allowActions=true}:{id:string;onClosed?:()=>void;onResolved?:(data:Record<string,any>)=>void;disabled?:boolean;announce?:boolean;allowActions?:boolean}){
  const w=useDrafts(),d=w.records.find(d=>d.id===id);

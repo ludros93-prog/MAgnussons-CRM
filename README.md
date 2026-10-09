@@ -1,3 +1,13 @@
+# Magnussons CRM – egen kopia av privata utkast
+
+Från **Min dag → Fortsätt där du slutade → Kopia av mina utkast**, eller **Mål & inställningar**, kan säljare och administratörer hämta sina egna serversparade aktiva och arkiverade utkast. **Öppna en utkastkopia** läser filen lokalt: vanlig text visas först, tekniska uppgifter och exakt råtext kan öppnas vid behov. Filen skickas inte tillbaka till CRM och inga kunduppgifter eller utkast ändras genom läsaren.
+
+Detta är en avgränsad B04-kopia för läsning och manuell textåterhämtning, ingen automatisk import eller full driftbackup. Endast bekräftat serversparat innehåll ingår; väntande lokala ändringar måste först kvitteras. Kundfiler, Outlook och inloggningar ingår inte. Arkivering är inte bevis på att texten har registrerats i CRM. [Innehåll, gränser och återhämtningsväg](OPERATIONS.md).
+
+Denna källbeskrivning föregriper inte merge, CI eller publicering. Senast verifierad liveversion är v70; exakt slutkandidat och publiceringskvittens redovisas efter körda kontroller i VALIDATION och aktuell status.
+
+## Historik före crm74-källändringen
+
 # Magnussons CRM – privata behovsutkast finns live
 
 Påbörjade behov i Årsplanering och kundens årshjul kan sparas privat och fortsättas från **Fortsätt där du slutade** i Min dag. Ofärdiga fält och text finns kvar efter återläsning. Privat sparning och sparning av ändringar i CRM har separata besked; påminnelsen följer behovets status. Vid konflikt granskas aktuell version innan den används.

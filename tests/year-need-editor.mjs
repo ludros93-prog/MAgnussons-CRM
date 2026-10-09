@@ -15,9 +15,12 @@ export const Sheet=host('sheet'),SheetContent=host('sheet-content'),SheetHeader=
 export const Select=host('select-control'),SelectContent=host('select-content'),SelectItem=host('select-item'),SelectTrigger=host('select-trigger'),SelectValue=host('select-value');
 export const BusinessField=({label,children})=>React.createElement('field',{label},children);
 export const Pick=host('pick');export const displayDate=value=>value;export const restoreHandoverFocus=()=>{};
+// This editor lifecycle suite isolates its unrelated closed copy-tool wrapper;
+// the actual copy UI is exercised separately against built HTTP in browser QA.
+export const PrivateDraftCopyTools=({children})=>children;
 `);
 const libs=[['@/lib/crm','./core.mjs'],['@/lib/business','./business.mjs'],['@/lib/record-conflicts','./record-conflicts.mjs'],['@/lib/yearwheel-responsibility','./yearwheel-responsibility.mjs'],['@/lib/year-need-drafts','./year-need-drafts.mjs'],['@/lib/article-drafts','./article-drafts.mjs']];
-compile('components/draft-workspace.tsx','work/year-draft-workspace-test.mjs',[...libs,['@/components/ui/button','./year-ui-primitives.mjs']]);
+compile('components/draft-workspace.tsx','work/year-draft-workspace-test.mjs',[...libs,['@/components/ui/button','./year-ui-primitives.mjs'],['@/components/private-draft-copy-tools','./year-ui-primitives.mjs']]);
 compile('components/year-need-draft-preview.tsx','work/year-draft-preview-test.mjs',libs);
 compile('components/year-need-editor.tsx','work/year-editor-test.mjs',[...libs,...['button','input','textarea','checkbox','select','sheet'].map(name=>['@/components/ui/'+name,'./year-ui-primitives.mjs']),['./business-ui','./year-ui-primitives.mjs'],['./handover-focus','./year-ui-primitives.mjs'],['./draft-workspace','./year-draft-workspace-test.mjs'],['./year-need-draft-preview','./year-draft-preview-test.mjs']]);
 const {YearNeedEditor}=await import('../work/year-editor-test.mjs'),{DraftProvider,useDrafts}=await import('../work/year-draft-workspace-test.mjs');
