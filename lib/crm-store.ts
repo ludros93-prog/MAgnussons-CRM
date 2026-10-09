@@ -3,7 +3,8 @@ import {normalizeState,emptyState,seedState,type State,type Actor} from './crm';
 import {ensureReceiptTasks} from './order-work';
 export type MutationResult={customerId?:string;dealId?:string;orderId?:string;taskId?:string;eventId?:string};
 export type CustomerAnchorAuthorization={actorMemberId:string;actorUserId:string;actorName:string;targetMemberId:string;targetUserId:string;targetEmail:string;targetName:string;targetOwner:string;targetRole:'admin'|'seller'};
-export type MutationMeta={result:MutationResult;userId:string;hash:string;restoreEmpty?:boolean;actorAuthorization?:{memberId:string;userId:string;role:Actor['role'];owner:string};customerAnchorAuthorization?:CustomerAnchorAuthorization;productionAssignmentAuthorization?:{actorMemberId:string;actorUserId:string;actorName:string;targetMemberId:string;targetUserId:string;targetName:string;targetRole:'admin'|'seller'|'production'|'print'|'warehouse'};sellerProfileAuthorization?:{actorMemberId:string;actorUserId:string;issueInitialActorRole?:'admin'|'seller';yearwheelInitialActorRole?:'admin'|'seller';companyEventInitialActorRole?:'admin'|'seller';links:{id:string;owner:string}[]}};
+export type CommercialAnchorAuthorization=CustomerAnchorAuthorization;
+export type MutationMeta={result:MutationResult;userId:string;hash:string;restoreEmpty?:boolean;actorAuthorization?:{memberId:string;userId:string;role:Actor['role'];owner:string};customerAnchorAuthorization?:CustomerAnchorAuthorization;commercialAnchorAuthorization?:CommercialAnchorAuthorization;productionAssignmentAuthorization?:{actorMemberId:string;actorUserId:string;actorName:string;targetMemberId:string;targetUserId:string;targetName:string;targetRole:'admin'|'seller'|'production'|'print'|'warehouse'};sellerProfileAuthorization?:{actorMemberId:string;actorUserId:string;issueInitialActorRole?:'admin'|'seller';yearwheelInitialActorRole?:'admin'|'seller';companyEventInitialActorRole?:'admin'|'seller';links:{id:string;owner:string}[]}};
 export type StoredFile={id:string;customerId:string;objectKey:string;metadata:Record<string,unknown>};
 export const names=['customers','deals','orders','tasks','meetings','events','articles','notices','leads','companyEvents'] as const;
 export const tables={customers:'crm_customers',deals:'crm_deals',orders:'crm_orders',tasks:'crm_tasks',meetings:'crm_meetings',events:'crm_events',articles:'crm_articles',notices:'crm_notices',leads:'crm_leads',companyEvents:'crm_company_events'};
@@ -32,9 +33,10 @@ export async function commit(space:string,prev:State,next:State,requestId:string
  // The reviewed target and the audit actor must still be the exact accounts
  // at the atomic write. No competing member may carry the same target user ID.
  const productionGate=productionAuthorization?" AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND name=? AND role='admin' AND active=1) AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND name=? AND role=? AND active=1) AND NOT EXISTS(SELECT 1 FROM crm_members WHERE user_id=? AND id<>?)":'';
- const anchor=mutation.customerAnchorAuthorization;
+ if(mutation.customerAnchorAuthorization&&mutation.commercialAnchorAuthorization)return false;
+ const anchor=mutation.customerAnchorAuthorization||mutation.commercialAnchorAuthorization;
  if(anchor&&(!actor||actor.role!=='admin'||actor.memberId!==anchor.actorMemberId||actor.userId!==anchor.actorUserId))return false;
- // The account reviewed for a neutral customer anchor includes its private
+ // The account reviewed for a neutral customer or deal anchor includes its private
  // user binding. All audit snapshots and uniqueness must hold in this CAS,
  // rather than a weaker profile-name lookup performed before the write.
  const anchorGate=anchor?" AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND name=? AND role='admin' AND active=1) AND NOT EXISTS(SELECT 1 FROM crm_members WHERE user_id=? AND id<>?) AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND email=? AND name=? AND owner=? AND role=? AND active=1) AND NOT EXISTS(SELECT 1 FROM crm_members WHERE user_id=? AND id<>?)":'';

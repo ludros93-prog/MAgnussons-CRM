@@ -370,3 +370,13 @@ body {
 .historical-correction-recovery summary:focus-visible{outline:2px solid var(--ring);outline-offset:3px}
 .historical-correction-recovery button{width:100%;min-width:0;max-width:100%;min-height:44px;white-space:normal;line-height:1.6}
 @media(max-width:767px){.historical-correction-context,.historical-correction-recovery{padding:14px}}
+
+/* Keep linking the same person distinct from an actual handover. */
+.commercial-anchor-actions{display:flex;flex-wrap:wrap;gap:.5rem;min-width:0;margin-bottom:.75rem}
+.commercial-anchor-actions>button{flex:1 1 11rem;min-width:0;max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:anywhere;line-height:1.5;font-size:.8125rem}
+.commercial-anchor-actions>.commercial-anchor-trigger{border-color:#bad2cd;background:#f3faf7;color:#1d665d}
+.commercial-anchor-actions>button:focus-visible{outline:3px solid var(--ring);outline-offset:3px;scroll-margin:12px}
+.commercial-anchor-list-actions{padding:.75rem 1.5rem;margin-bottom:0;border-top:1px solid #edf0f3}
+.commercial-anchor-dialog .commercial-anchor-scope h3{font-size:1.125rem;line-height:1.5;letter-spacing:0}
+.commercial-anchor-dialog .customer-anchor-review{background:#fff;border-left:3px solid #29877b}
+@media(max-width:767px){.commercial-anchor-list-actions{padding:.75rem 1rem}.commercial-anchor-list-actions>button{flex:1 1 100%}}

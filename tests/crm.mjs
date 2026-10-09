@@ -29,6 +29,13 @@ const headers={'oai-authenticated-user-id':'test-admin','oai-authenticated-user-
 const get=async(space='demo')=>{const r=await api.GET(new Request('https://crm.test/api/crm?space='+space,{headers}));assert.equal(r.status,200);return r.json()};
 const orderWork=await import('../work/order-work.mjs');
 const conflicts=await import('../work/record-conflicts.mjs'),quantities=await import('../work/production-quantities.mjs'),direct=await import('../work/direct-delivery.mjs');
+if(process.argv.includes('--commercial-anchor-only')){
+ compileModule('app/api/crm/members/route.ts','work/members-api.mjs');
+ const objects=new Map(),ops=await import('../work/operations.mjs');
+ globalThis.__crmEnv.BUCKET={put:async(key,stream)=>objects.set(key,new Uint8Array(await new Response(stream).arrayBuffer())),get:async key=>objects.has(key)?{body:objects.get(key),arrayBuffer:async()=>objects.get(key).buffer}:null,delete:async key=>objects.delete(key)};
+ await (await import('./commercial-anchor.mjs')).verifyCommercialAnchor({core,ops,sqlite,objects,api});
+ sqlite.close();process.exit(0);
+}
 if(process.argv.includes('--customer-anchor-only')){
  compileModule('app/api/crm/members/route.ts','work/members-api.mjs');
  const objects=new Map(),ops=await import('../work/operations.mjs');
@@ -189,6 +196,7 @@ console.log('PASS: real upload handler and binary round-trip with mocked object 
 // Department workflows use the same persistent API and optimistic revision gate.
 const ops=await import('../work/operations.mjs');
 await (await import('./crm-customer-anchor.mjs')).verifyCustomerAnchor({core,ops,sqlite,objects,api});
+await (await import('./commercial-anchor.mjs')).verifyCommercialAnchor({core,ops,sqlite,objects,api});
 for(const role of ['print','warehouse','seller'])await globalThis.__crmEnv.DB.prepare('INSERT INTO crm_members(id,email,user_id,name,role,owner,active) VALUES(?,?,?,?,?,?,1)').bind('ops-'+role,role+'@example.com','ops-'+role,role,role,role==='seller'?cust.owner:'').run();
 const roleHeaders=role=>({...headers,'oai-authenticated-user-id':'ops-'+role,'oai-authenticated-user-email':role+'@example.com'});
 const roleGet=async role=>{const r=await api.GET(new Request('https://crm.test/api/crm?space=live',{headers:roleHeaders(role)}));assert.equal(r.status,200);return r.json()};
