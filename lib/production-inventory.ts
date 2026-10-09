@@ -1,3 +1,4 @@
+import {productionIssueResponsibility} from './production-issue-responsibility';
 import {z} from 'zod';
 import type {State} from './crm';
 import {RoleSchema,type Role} from './operations';
@@ -27,7 +28,7 @@ const canonicalRows=<T,>(rows:T[])=>rows.map(value=>({value,basis:recordBasis(va
 export function productionInventoryInput(st:State):string{
  const orders=st.orders.filter(inventoryWork),orderIds=new Set(orders.map(order=>order.id)),customerIds=new Set(orders.map(order=>order.customerId)),dealIds=new Set(orders.map(order=>order.dealId));
  return recordBasis({
-  orders:canonicalRows(orders.map(order=>{const p=order.production;return {id:order.id,customerId:order.customerId,dealId:order.dealId,production:{status:p.status,workId:p.workId,assigneeId:p.assigneeId,assigneeMemberId:p.assigneeMemberId,assigneeName:p.assigneeName,assignmentRevision:p.assignmentRevision,assignmentHistoryLength:p.assignmentHistory.length,issue:p.issue,issueOwnerId:p.issueOwnerId,issueOwnerName:p.issueOwnerName,issueRevision:p.issueRevision,printDeadline:p.printDeadline,dispatchDeadline:p.dispatchDeadline,deliveryDate:p.deliveryDate}}})),
+  orders:canonicalRows(orders.map(order=>{const p=order.production;return {id:order.id,customerId:order.customerId,dealId:order.dealId,production:{status:p.status,workId:p.workId,assigneeId:p.assigneeId,assigneeMemberId:p.assigneeMemberId,assigneeName:p.assigneeName,assignmentRevision:p.assignmentRevision,assignmentHistoryLength:p.assignmentHistory.length,issue:p.issue,issueOwnerId:p.issueOwnerId,issueOwnerName:p.issueOwnerName,issueRevision:p.issueRevision,...(p.issueResponsibility?{issueResponsibility:p.issueResponsibility}:{}),printDeadline:p.printDeadline,dispatchDeadline:p.dispatchDeadline,deliveryDate:p.deliveryDate}}})),
   // Inactive duplicate records also prevent safe navigation/transfer of a job.
   orderIdentities:canonicalRows(st.orders.filter(order=>orderIds.has(order.id)).map(order=>({id:order.id}))),
   customers:canonicalRows(st.customers.filter(customer=>customerIds.has(customer.id)).map(customer=>({id:customer.id,name:customer.name}))),
@@ -56,7 +57,7 @@ export function buildProductionInventory(st:State,members:readonly ProductionInv
   return {memberId:account.id,name:account.name,state:'assigned'};
  };
  const rows:ProductionInventoryRow[]=st.orders.filter(inventoryWork).map(order=>{
-  const p=order.production,assignee=resolve(p.assigneeId,p.assigneeName,p.assigneeMemberId),issueOwner=p.issue?resolve(p.issueOwnerId,p.issueOwnerName):{memberId:'',name:'',state:'none' as const};
+  const p=order.production,assignee=resolve(p.assigneeId,p.assigneeName,p.assigneeMemberId),currentIssue=productionIssueResponsibility(p),issueOwner=p.issue?resolve(currentIssue.userId,currentIssue.name,currentIssue.memberId):{memberId:'',name:'',state:'none' as const};
   const customers=st.customers.filter(customer=>customer.id===order.customerId),deals=st.deals.filter(deal=>deal.id===order.dealId&&deal.customerId===order.customerId);
   return {orderId:order.id,workId:p.workId,customerName:customers.length===1?customers[0].name:'Kundkoppling behöver granskas',title:deals.length===1?deals[0].title:'Arbetsorder',dueAt:(p.status==='submitted'?p.printDeadline:p.dispatchDeadline)||p.deliveryDate,status:p.status as ProductionInventoryRow['status'],assigneeMemberId:assignee.memberId,assigneeName:assignee.name,assignmentState:assignee.state,issueOwnerMemberId:issueOwner.memberId,issueOwnerName:issueOwner.name,issueOwnerState:issueOwner.state,issue:p.issue,blockedReason:activeJob(order)?productionAssignmentBlockedReason(st,order.id,p.workId):''};
  });

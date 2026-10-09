@@ -7,8 +7,9 @@ import {Input} from '@/components/ui/input';
 import type {Order,State} from '@/lib/crm';
 import {productionInventoryBasis,productionInventoryInput,ProductionInventoryReviewSchema,type ProductionInventoryAccount,type ProductionInventoryReview,type ProductionInventoryRow} from '@/lib/production-inventory';
 import {isLegacyProductionAssignment,productionAssignmentBlockedReason} from '@/lib/production-assignment';
+import {productionIssueResponsibilityBlockedReason} from '@/lib/production-issue-responsibility';
 
-type Props={st:State;space:'demo'|'live';onProductionAssignment:(order:Order)=>void;onOpenJob:(orderId:string)=>void;refresh:()=>Promise<State>};
+type Props={st:State;space:'demo'|'live';onProductionAssignment:(order:Order)=>void;onProductionIssueResponsibility:(order:Order)=>void;onOpenJob:(orderId:string)=>void;refresh:()=>Promise<State>};
 type Inventory={identity:string;input:string;review:ProductionInventoryReview};
 const pageSize=20;
 const accountPrefix='account:';
@@ -32,7 +33,7 @@ async function readInventory(space:string,signal:AbortSignal){
  return parsed.data;
 }
 
-export function ProductionAccountInventory({st,space,onProductionAssignment,onOpenJob,refresh}:Props){
+export function ProductionAccountInventory({st,space,onProductionAssignment,onProductionIssueResponsibility,onOpenJob,refresh}:Props){
  const headingId='production-inventory-heading',accountDescriptionId=useId(),rowId=useId();
  const identity=identityFor(st,space),input=productionInventoryInput(st),admin=st.viewer?.role==='admin';
  const current=useRef({identity,input,admin});current.current={identity,input,admin};
@@ -105,6 +106,11 @@ export function ProductionAccountInventory({st,space,onProductionAssignment,onOp
   const orders=st.orders.filter(order=>order.id===row.orderId);
   if(orders.length===1&&orders[0].production.workId===row.workId)onProductionAssignment(orders[0]);
  }
+ function openIssueResponsibility(row:ProductionInventoryRow){
+  if(lock.current||!stillCurrent()||!row.issue||!belongs(row,'issue')||productionIssueResponsibilityBlockedReason(st,row.orderId,row.workId))return;
+  const orders=st.orders.filter(order=>order.id===row.orderId);
+  if(orders.length===1&&orders[0].production.workId===row.workId)onProductionIssueResponsibility(orders[0]);
+ }
  function openJob(row:ProductionInventoryRow){if(!lock.current&&stillCurrent()&&st.orders.filter(order=>order.id===row.orderId).length===1)onOpenJob(row.orderId);}
  function dueLabel(row:ProductionInventoryRow){
   const orders=st.orders.filter(order=>order.id===row.orderId),production=orders.length===1?orders[0].production:null;
@@ -131,11 +137,11 @@ export function ProductionAccountInventory({st,space,onProductionAssignment,onOp
     <div className="production-inventory-row-head"><span className="production-inventory-status">{row.status==='submitted'?'Lämnad till produktion':row.status==='dispatched'?'Skickat · öppet hinder':'Tryckt'}</span><span className="production-inventory-date">{dueLabel(row)}: {displayDate(row.dueAt)}</span></div>
     <h3 id={rowId+'-'+index}>{row.title}</h3><p className="production-inventory-customer"><b>Kund:</b> {row.customerName||'Kundkoppling behöver granskas'}</p>
     <dl><div><dt>{row.status==='dispatched'?'Jobbansvar · historiskt':'Jobbansvar'}{ownsJob?' · ingår i urvalet':''}</dt><dd>{row.assignmentState==='unassigned'?'Ingen ansvarig':row.assigneeName||'Ansvarig saknas i underlaget'}{row.assignmentState==='assigned'&&<small>Konto-ID: {row.assigneeMemberId}.</small>}{row.assignmentState==='unresolved'&&<span className="production-inventory-attention">Kontokopplingen behöver granskas</span>}</dd></div><div><dt>Öppet hinderansvar{ownsIssue?' · ingår i urvalet':''}</dt><dd>{!row.issue?'Inget öppet hinder':row.issueOwnerState==='unassigned'?'Ingen ansvarig':row.issueOwnerName||'Ansvarig saknas i underlaget'}{row.issueOwnerState==='assigned'&&<small>Konto-ID: {row.issueOwnerMemberId}.</small>}{row.issueOwnerState==='unresolved'&&<span className="production-inventory-attention">Kontokopplingen behöver granskas</span>}</dd></div></dl>
-    {row.issue&&<p className="production-inventory-issue"><AlertTriangle size={17} aria-hidden="true"/><span><b>Öppet hinder:</b> {row.issue}</span></p>}
+    {row.issue&&<h3 tabIndex={-1} data-production-issue-responsibility-heading={row.orderId} className="min-w-0 break-words">Öppet hinder</h3>}{row.issue&&<p className="production-inventory-issue"><AlertTriangle size={17} aria-hidden="true"/><span><b>Öppet hinder:</b> {row.issue}</span></p>}
     <p className="production-inventory-reference">Arbetsreferens: {row.workId||'saknas'}.</p>
     {row.status!=='dispatched'&&row.blockedReason&&<p className="production-inventory-blocker"><AlertTriangle size={17} aria-hidden="true"/><span>{row.blockedReason}</span></p>}
-    <div className="production-inventory-actions">{ownsJob&&assignment&&<Button type="button" variant="outline" onClick={()=>openAssignment(row)} aria-describedby={rowId+'-'+index}><ArrowRightLeft size={17} aria-hidden="true"/><span>{assignment==='resolve_legacy'?'Rätta äldre jobbansvar':'Granska jobbansvar'}</span></Button>}<Button type="button" variant="outline" disabled={st.orders.filter(order=>order.id===row.orderId).length!==1} onClick={()=>openJob(row)} aria-describedby={rowId+'-'+index}>Öppna jobbet</Button></div>
-    {ownsIssue&&<p className="biz-hint">{row.status==='dispatched'?'Jobbet är skickat. Öppna jobbet för att hantera det kvarstående hindret. Jobbansvaret ligger kvar i historiken.':'Öppna jobbet för att granska hindret. Ett byte av jobbansvar flyttar inte hindrets ansvar.'}</p>}
+    <div className="production-inventory-actions">{ownsJob&&assignment&&<Button type="button" variant="outline" onClick={()=>openAssignment(row)} aria-describedby={rowId+'-'+index}><ArrowRightLeft size={17} aria-hidden="true"/><span>{assignment==='resolve_legacy'?'Rätta äldre jobbansvar':'Granska jobbansvar'}</span></Button>}{ownsIssue&&row.issue&&!productionIssueResponsibilityBlockedReason(st,row.orderId,row.workId)&&<Button type="button" variant="outline" onClick={()=>openIssueResponsibility(row)} aria-describedby={rowId+'-'+index}><ArrowRightLeft size={17} aria-hidden="true"/><span>Byt hinderansvar</span></Button>}<Button type="button" variant="outline" disabled={st.orders.filter(order=>order.id===row.orderId).length!==1} onClick={()=>openJob(row)} aria-describedby={rowId+'-'+index}>Öppna jobbet</Button></div>
+    {ownsIssue&&<><p className="biz-hint">{row.status==='dispatched'?'Jobbet är skickat. Hinderansvaret kan granskas separat; jobbansvaret ligger kvar i historiken.':'Hinderansvaret granskas separat. Ett byte av jobbansvar flyttar inte hindrets ansvar.'} Öppna jobbet för att läsa originalrapporteringen och hantera hindret.</p>{productionIssueResponsibilityBlockedReason(st,row.orderId,row.workId)&&<p className="production-inventory-blocker">{productionIssueResponsibilityBlockedReason(st,row.orderId,row.workId)}</p>}</>}
    </article></li>;})}</ol>
    {!matches.length&&<div className="production-inventory-empty"><b>{filtered?'Inga jobb matchar dina filter.':'Inga öppna jobb eller hinder finns i det här urvalet.'}</b><p>{filtered?'Återställ filter för att granska allt arbete i urvalet.':'Det här gäller aktuella produktionsjobb i vald arbetsyta. Ett tomt urval bekräftar inte en fullständig personalavveckling eller att kontot kan stängas.'}</p></div>}
    {shown.length<matches.length&&<div className="production-inventory-more"><Button type="button" variant="outline" onClick={()=>setVisibleCount(value=>value+pageSize)}>Visa fler produktionsjobb</Button><p>{matches.length-shown.length} ytterligare jobb matchar urvalet.</p></div>}
@@ -144,6 +150,6 @@ export function ProductionAccountInventory({st,space,onProductionAssignment,onOp
   {loading&&<p className="production-inventory-feedback" role="status" aria-atomic="true">Hämtar produktionsjobb och kontokopplingar. Arbete visas när underlaget har kontrollerats.</p>}
   {!loading&&(notice||stale)&&<p className="production-inventory-feedback" role="status">{notice||'CRM-underlaget har ändrats. Hämta aktuellt underlag för att granska arbetet igen.'}</p>}
   {error&&<p className="error production-inventory-feedback" role="alert">{error} Tidigare produktionsjobb visas inte.</p>}
-  <aside className="production-inventory-boundaries" aria-label="Inventeringens omfattning"><h3>En översikt inför nästa överlämning</h3><p>Granska ett jobb i taget. Hinderansvar och orderns kommersiella ansvar har egna arbetsflöden. Den här översikten stänger inget konto och flyttar inget arbete.</p><p>Privata utkast, personliga mejl och tillgång till sidan ingår inte i inventeringen. Kontokopplingar visar registrerat CRM-underlag; de är inget prov av personens aktuella inloggning.</p></aside>
+  <aside className="production-inventory-boundaries" aria-label="Inventeringens omfattning"><h3>En översikt inför nästa överlämning</h3><p>Granska ett jobb i taget. Granska hinderansvar separat med Byt hinderansvar. Orderns kommersiella ansvar har eget arbetsflöde. Översikten stänger inget konto; ansvar ändras först när en separat granskad ändring sparas.</p><p>Privata utkast, personliga mejl och tillgång till sidan ingår inte i inventeringen. Kontokopplingar visar registrerat CRM-underlag; de är inget prov av personens aktuella inloggning.</p></aside>
  </section>;
 }

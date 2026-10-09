@@ -23,7 +23,7 @@ export function productionProgress(p:Production){
     return {line,ordered:line.quantity,target,reduction,received,printed,dispatched,scrapUnprinted,scrapPrinted,usableReceived,usablePrinted,toReceive:quantity(target-usableReceived),toPrint:quantity(received-scrapUnprinted-printed),toDispatch:quantity(usablePrinted-dispatched),remaining:quantity(target-dispatched)};
   });
 }
-export function productionBasis(p:Production){return recordBasis([p.workId,p.submittedAt,p.status,p.goodsReceived,p.quantityMode,p.lines.map(l=>[l.id,l.quantity]),p.movements.map(m=>m.id),p.quantityAdjustments.map(a=>a.id),p.issue,p.issueRevision,p.issueAt,p.issueOwnerId,p.deliveryAddress]);}
+export function productionBasis(p:Production){return recordBasis([p.workId,p.submittedAt,p.status,p.goodsReceived,p.quantityMode,p.lines.map(l=>[l.id,l.quantity]),p.movements.map(m=>m.id),p.quantityAdjustments.map(a=>a.id),p.issue,p.issueRevision,p.issueAt,p.issueOwnerId,p.deliveryAddress,...(p.issueResponsibility?[{userId:p.issueResponsibility.userId,memberId:p.issueResponsibility.memberId,name:p.issueResponsibility.name,historyLength:p.issueResponsibility.history.length,lastHistoryId:p.issueResponsibility.history.at(-1)!.id}]:[])]);}
 export function hasPhysicalWork(p:Production){return p.movements.length>0||!!(p.goodsReceived||p.goodsReceivedAt||p.printedAt||p.dispatchedAt)||productionProgress(p).some(r=>r.received>0||r.printed>0||r.dispatched>0);}
 export function materializeLegacy(p:Production){
   if(p.quantityMode!=='legacy')return;
