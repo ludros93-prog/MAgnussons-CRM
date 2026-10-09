@@ -79,3 +79,16 @@
 .yearwheel .need-card>.biz-head>div{flex:1 1 12rem}
 .yearwheel .need-card>.biz-head>.pill{flex:0 0 auto;white-space:nowrap;overflow-wrap:normal;word-break:normal}
 .yearwheel-heading,.yearwheel button{scroll-margin:12px}
+
+.yearwheel-handover-draft-preview{min-width:0;overflow-wrap:anywhere}
+.yearwheel-handover-reason-summary{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;white-space:pre-wrap}
+.yearwheel-handover-snapshot pre{min-width:0;max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.875rem;line-height:1.6;padding:.75rem;border:1px solid #dce5ef;border-radius:8px;background:#f7fafc}
+.yearwheel-handover-snapshot .revision-card{min-width:0;overflow-wrap:anywhere}
+.yearwheel-handover-editor{scroll-padding-block:12px calc(var(--yearwheel-handover-footer-height,0px) + 12px)}
+.yearwheel-handover-editor .event-draft-status{margin-inline:-24px;padding-inline:24px}
+.yearwheel-handover-editor .event-draft-footer{bottom:-24px;align-items:stretch}
+.yearwheel-handover-editor .event-draft-footer>button{flex:1 1 13rem}
+.yearwheel-handover-editor[data-draft-flow=true]{scroll-padding-bottom:12px}
+.yearwheel-handover-editor[data-draft-flow=true] .event-draft-status,.yearwheel-handover-editor[data-draft-flow=true] .event-draft-footer{position:static}
+.yearwheel-handover-editor .event-draft-comparison>section{min-width:0;overflow-wrap:anywhere}
+.yearwheel-handover-editor [role=checkbox]{flex-shrink:0}

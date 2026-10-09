@@ -4,12 +4,14 @@ import {Button} from '@/components/ui/button';
 import type {DraftRecord} from '@/lib/drafts';
 import {validDate} from '@/lib/business';
 import {isArticleDraft} from '@/lib/article-drafts';
+import {isYearwheelResponsibilityDraft} from '@/lib/yearwheel-responsibility-drafts';
 import {PrivateDraftCopyTools} from '@/components/private-draft-copy-tools';
 type LocalDraft=DraftRecord&{status:'saved'|'pending'|'saving'|'error'|'conflict';error?:string;server?:DraftRecord|null;generation:number;posted?:boolean};
 type Workspace={ready:boolean;error:string;records:LocalDraft[];get:(id:string)=>LocalDraft|undefined;create:(kind:DraftRecord['kind'],context:string,data:Record<string,any>,title:string,id?:string)=>string;update:(id:string,data:Record<string,any>,title?:string)=>void;flush:(id:string)=>Promise<{id:string;revision:number}|null>;reconcile:(id:string,reviewServer?:boolean)=>Promise<boolean>;hasLocalCopy:(id:string)=>boolean;consume:(id:string)=>void;resolve:(id:string,useServer:boolean)=>void;archive:(id:string)=>Promise<boolean>;retry:()=>void};
 type Scope={key:string;epoch:number;active:boolean;controllers:Set<AbortController>};
 type Session={scope:Scope;epoch:number};
 const draftKinds=['catalog','production','note','followup','form','plan','prospecting','onboarding','receipt'];
+const administrativeDraft=(kind:string,context:string)=>isArticleDraft(kind,context)||isYearwheelResponsibilityDraft(kind,context);
 const Context=createContext<Workspace|null>(null);
 export const useDrafts=()=>{const ctx=useContext(Context);if(!ctx)throw Error('Draft workspace missing');return ctx;};
 export function DraftProvider({space,userId,enabled,canEditArticles,children}:{space:string;userId:string;enabled:boolean;canEditArticles:boolean;children:ReactNode}){
@@ -95,7 +97,7 @@ export function DraftProvider({space,userId,enabled,canEditArticles,children}:{s
    const current=entries.current.find(d=>d.id===id);
    if(!current||current.archived||current.status==='conflict')return null;
    if(current.status==='saved')return {id,revision:current.revision};
-   if(isArticleDraft(current.kind,current.context)&&!articleEditing.current){patch(id,d=>({...d,status:'error',error:'Ditt konto kan läsa det egna artikelutkastet men inte spara artikeländringar. Granska den sparade serverversionen eller behåll underlaget lokalt.'}),session);return null;}
+   if(administrativeDraft(current.kind,current.context)&&!articleEditing.current){patch(id,d=>({...d,status:'error',error:isArticleDraft(current.kind,current.context)?'Ditt konto kan läsa det egna artikelutkastet men inte spara artikeländringar. Granska den sparade serverversionen eller behåll underlaget lokalt.':'Ditt konto kan läsa det egna överlämningsutkastet men inte spara ändringar. Granska den sparade serverversionen eller behåll underlaget lokalt.'}),session);return null;}
    let request=requests.current.get(id);
    if(!request){request={generation:current.generation,body:{space,id,kind:current.kind,context:current.context,revision:current.revision,requestId:crypto.randomUUID(),title:current.title,data:structuredClone(current.data),archived:false}};requests.current.set(id,request);}
    const c=controller(session);patch(id,d=>({...d,status:'saving',error:'',posted:true}),session);
@@ -120,7 +122,7 @@ export function DraftProvider({space,userId,enabled,canEditArticles,children}:{s
   const session=begin();
   return serial(id,session,async()=>{
    const original=entries.current.find(d=>d.id===id),instance=instances.current.get(id);if(!original||original.archived||!instance)return false;
-   if(reviewServer&&!isArticleDraft(original.kind,original.context))return false;
+   if(reviewServer&&!administrativeDraft(original.kind,original.context))return false;
    const c=controller(session);
    try{
     if(!active(session)||instances.current.get(id)!==instance)return false;
@@ -148,17 +150,17 @@ export function DraftProvider({space,userId,enabled,canEditArticles,children}:{s
  const visibleReady=!enabled||ready&&isReady(begin());
  useEffect(()=>{
   const session=begin();if(!visibleReady||!isReady(session))return;
-  const timer=setInterval(()=>{if(!isReady(session))return;for(const d of entries.current)if(!d.archived&&d.status==='pending'&&!jobs.current.has(d.id)&&(!isArticleDraft(d.kind,d.context)||articleEditing.current))void flush(d.id);},700);
+  const timer=setInterval(()=>{if(!isReady(session))return;for(const d of entries.current)if(!d.archived&&d.status==='pending'&&!jobs.current.has(d.id)&&(!administrativeDraft(d.kind,d.context)||articleEditing.current))void flush(d.id);},700);
   const guard=(e:BeforeUnloadEvent)=>{if(isReady(session)&&entries.current.some(d=>!d.archived&&d.status!=='saved')){e.preventDefault();e.returnValue='';}};
   window.addEventListener('beforeunload',guard);return()=>{clearInterval(timer);window.removeEventListener('beforeunload',guard);};
  },[visibleReady,space,userId,enabled]);
  function create(kind:DraftRecord['kind'],context:string,data:Record<string,any>,title:string,id=crypto.randomUUID()){
-  const session=begin();if(!isReady(session)||isArticleDraft(kind,context)&&!articleEditing.current)return '';
+  const session=begin();if(!isReady(session)||administrativeDraft(kind,context)&&!articleEditing.current)return '';
   const existing=entries.current.find(d=>d.id===id);if(existing)return existing.archived?'':id;
   instances.current.set(id,Symbol(id));
   put([...entries.current,{id,kind,context,data:structuredClone(data),title,revision:0,requestId:'',archived:false,updatedAt:new Date().toISOString(),status:'pending',generation:1,posted:false}],session);return id;
  }
- function update(id:string,data:Record<string,any>,title?:string){const session=begin();if(!isReady(session))return;const d=get(id);if(d&&isArticleDraft(d.kind,d.context)&&!articleEditing.current)return;patch(id,d=>({...d,data:structuredClone(data),title:title||d.title,generation:d.generation+1,status:d.status==='conflict'?'conflict':'pending',updatedAt:new Date().toISOString()}),session);}
+ function update(id:string,data:Record<string,any>,title?:string){const session=begin();if(!isReady(session))return;const d=get(id);if(d&&administrativeDraft(d.kind,d.context)&&!articleEditing.current)return;patch(id,d=>({...d,data:structuredClone(data),title:title||d.title,generation:d.generation+1,status:d.status==='conflict'?'conflict':'pending',updatedAt:new Date().toISOString()}),session);}
  function hasLocalCopy(id:string){
   const current=get(id);if(!current)return false;
   try{const stored=JSON.parse(localStorage.getItem(storageKey)||'[]');const copy=Array.isArray(stored)?stored.find(d=>d?.id===id):null;return !!copy&&!copy.archived&&copy.kind===current.kind&&copy.context===current.context&&copy.revision===current.revision&&copy.requestId===current.requestId&&copy.title===current.title&&copy.generation===current.generation&&JSON.stringify(copy.data)===JSON.stringify(current.data);}catch{return false;}
@@ -167,7 +169,7 @@ export function DraftProvider({space,userId,enabled,canEditArticles,children}:{s
  function resolve(id:string,useServer:boolean){
   const session=begin();if(!isReady(session))return;
   const current=entries.current.find(d=>d.id===id);if(!current||current.status!=='conflict')return;
-  if(!useServer&&isArticleDraft(current.kind,current.context)&&!articleEditing.current)return;
+  if(!useServer&&administrativeDraft(current.kind,current.context)&&!articleEditing.current)return;
   requests.current.delete(id);
   patch(id,d=>useServer?d.server?{...d.server,generation:d.generation+1,status:'saved',posted:true}:{...d,archived:true,status:'saved'}:{...d,revision:d.server?.revision||0,requestId:d.server?.requestId||'',status:d.server?.archived?'conflict':'pending',error:d.server?.archived?'Utkastet är redan avslutat på en annan enhet. Öppna det sparade arbetet.':'',generation:d.generation+1,posted:!!d.server},session);
  }

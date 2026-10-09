@@ -19,7 +19,7 @@ export const Pick=host('pick');export const displayDate=value=>value;export cons
 // the actual copy UI is exercised separately against built HTTP in browser QA.
 export const PrivateDraftCopyTools=({children})=>children;
 `);
-const libs=[['@/lib/crm','./core.mjs'],['@/lib/business','./business.mjs'],['@/lib/record-conflicts','./record-conflicts.mjs'],['@/lib/yearwheel-responsibility','./yearwheel-responsibility.mjs'],['@/lib/year-need-drafts','./year-need-drafts.mjs'],['@/lib/article-drafts','./article-drafts.mjs']];
+const libs=[['@/lib/yearwheel-responsibility-drafts','./yearwheel-responsibility-drafts.mjs'],['@/lib/crm','./core.mjs'],['@/lib/business','./business.mjs'],['@/lib/record-conflicts','./record-conflicts.mjs'],['@/lib/yearwheel-responsibility','./yearwheel-responsibility.mjs'],['@/lib/year-need-drafts','./year-need-drafts.mjs'],['@/lib/article-drafts','./article-drafts.mjs']];
 compile('components/draft-workspace.tsx','work/year-draft-workspace-test.mjs',[...libs,['@/components/ui/button','./year-ui-primitives.mjs'],['@/components/private-draft-copy-tools','./year-ui-primitives.mjs']]);
 compile('components/year-need-draft-preview.tsx','work/year-draft-preview-test.mjs',libs);
 compile('components/year-need-editor.tsx','work/year-editor-test.mjs',[...libs,...['button','input','textarea','checkbox','select','sheet'].map(name=>['@/components/ui/'+name,'./year-ui-primitives.mjs']),['./business-ui','./year-ui-primitives.mjs'],['./handover-focus','./year-ui-primitives.mjs'],['./draft-workspace','./year-draft-workspace-test.mjs'],['./year-need-draft-preview','./year-draft-preview-test.mjs']]);

@@ -1,3 +1,23 @@
+# Källor och tillämpning – crm75 privat behovsöverlämning
+
+Officiella texter återlästa 2026-10-09 omkring 11:31–11:32 UTC; extraherad verktygstext sparad privat i /tmp/crm75-evidence/research-raw.json. Saleshub AI:s kundsammanhang, Lime konkreta verb och Salesforce pausat arbete knutet till rätt post tillämpas; leverantörernas egna delningsmodeller är inte Magnussons privata behörighetskontrakt. W3C:s dialogfokus styr tangentbordsprov. Cloudflare D1 beskriver batch som SQL-transaktioner; befintlig atomisk commit används och måste provas med faktisk rollback, inte bara dokumentcitat.
+
+
+| Officiell källa | Kort verifierat citat och tillämpning |
+| --- | --- |
+| [Saleshub AI](https://saleshubai.se/funktioner) | ”Kundkort med kontakter, filer, mail, samtal och nästa aktivitet”; behåll kund/arbetsmoment vid återupptagning. |
+| [Lime Actions](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | ”Use verbs in imperative mood”; Spara utkast & stäng, Granska utkastversioner och Granska aktuellt behovsansvar. |
+| [Salesforce Pause](https://help.salesforce.com/s/articleView?id=platform.flow_pause.htm&language=en_US&type=5) | ”give them the option to pause it for later”; ofärdigt arbete med kvarvarande postkoppling. |
+| [D1 Database batch](https://developers.cloudflare.com/d1/worker-api/d1-database/) | ”Batched statements are SQL transactions”; befintlig batch förbrukar utkast tillsammans med CRM, verkligt nativeprov återstår för kandidaten. |
+| [W3C Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) | ”When a dialog opens, focus moves to an element inside the dialog”; synlig inledande läsning/fokus och logisk retur. |
+
+
+CAS, exact raw-body comparison, adminrätt, kvitterad privat revision och idempotens är Magnussons egna kontrakt. Research bevisar inga faktiska konton, integrationer eller personalacceptans. Ingen saknad säljarprofil eller affärsdefinition antas.
+
+Teknisk kandidat under verifiering. GitHub-main är vid start d06bcd3b10e100f6fc0afa7b2b9e848d7015cf7e; publicerad Site är fortfarande v71/source b13a6791f7390ca01643ec183ac4b4071b96a861. Ingen merge/deploy eller slutlig testkvittens påstås här. Personlig inloggning/CRM-roll, personalpilot, full hostad backup/restore och verkliga integrationer återstår. Codex-task 01a104c7-a5c5-7350-8577-a4f941138061 är oläst eftersom relevant read_thread saknas.
+
+## Historik före crm75-kandidaten
+
 # Principerna använda i crm74:s verifierade design
 
 Saleshubs kundkontext, Limes konkreta handlingar/rollstyrda synlighet och Salesforces skillnad mellan export och full återställning har omsatts i en personlig textläsare med tydliga handlingar. Vanlig text ligger före tekniska uppgifter; faktiskt mobil-/tangentbordsprov styrde feedback- och fokusändringarna. Officiella källor med exakta korta citat och åtkomsttid finns bevarade direkt nedan.

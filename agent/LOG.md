@@ -1,3 +1,20 @@
+# Bygglogg – crm75 arbete på separat kandidat
+
+Färsk main d06bcd3, inga öppna PR:er eller pågående publiceringar, live v71 bekräftad vid start. 184 främmande registrerade worktrees var rena; ny egen worktree /tmp/magnussons-crm75 och branch feat/crm75-reviewed-owner-draft under egen reservation. Agentpaketet finns på main; dokument/relevanta tester lästa.
+
+Administratörens årshjulsöverlämning får ett eget privat utkast med rå orsak, uttryckliga mål-/uppgiftsval och fullständigt fryst kund-, behovs-, profil- och uppgiftsunderlag. Återupptagning från Min dag kräver ny granskning. Privat sparning ändrar inget behovsansvar; CRM-inlämning binds till exakt egen kvitterad revision och förbrukas atomiskt med behov, valda uppgifter, historik, händelse och mutationskvittens.
+
+Officiella texter återlästa 2026-10-09 omkring 11:31–11:32 UTC; extraherad verktygstext sparad privat i /tmp/crm75-evidence/research-raw.json. Saleshub AI:s kundsammanhang, Lime konkreta verb och Salesforce pausat arbete knutet till rätt post tillämpas; leverantörernas egna delningsmodeller är inte Magnussons privata behörighetskontrakt. W3C:s dialogfokus styr tangentbordsprov. Cloudflare D1 beskriver batch som SQL-transaktioner; befintlig atomisk commit används och måste provas med faktisk rollback, inte bara dokumentcitat.
+
+Teknisk kandidat under verifiering. GitHub-main är vid start d06bcd3b10e100f6fc0afa7b2b9e848d7015cf7e; publicerad Site är fortfarande v71/source b13a6791f7390ca01643ec183ac4b4071b96a861. Ingen merge/deploy eller slutlig testkvittens påstås här. Personlig inloggning/CRM-roll, personalpilot, full hostad backup/restore och verkliga integrationer återstår. Codex-task 01a104c7-a5c5-7350-8577-a4f941138061 är oläst eftersom relevant read_thread saknas.
+
+Riktat autentiserat handler-/SQLite-prov `node tests/crm.mjs --yearwheel-responsibility-drafts-only` PASS 1,894 s: 42 avslag, 19 injicerade SQL-racer, privat CAS, två dubbelklickspar, förlorad commitkvittens/exakt replay, råkopieprov och bevarande av alla 18 tabeller/R2. Sex relevanta källfilers byte var oförändrade under provet. Kvitto SHA256 `f39a7ea5074ee19b539fb5f11047bc671b34f8040addc724952be3e04c5f2718`. Detta använder verkliga handlers med adapter och SQLite; det är inte native Worker- eller personalprov.
+
+
+Riktat React/DraftProvider-prov PASS: åtta livscykelfall, exit 0 på byteoförändrade källor, 1,414 s. Ofärdiga råval, återupptagning/ny granskning, privat/CRM-konflikt, sen identitetsläsning, admin→seller, stängningsrace och obekräftad CRM-sparning med exakt retry/tillfällig stängnings-/arkivspärr provas. Arkivprovet använder en ännu aktiv privat rad och fångad äldre knappcallback innan sen commit/replay. Kvittots SHA256 a31417640b76d5b34b3ad293734f075376dcb5554bad0fdb737f32ed9552a8fc. HTTP/fokus/UI-primitiver är testadapters; inga autosaveticks, native browser, personliga konton eller personalacceptans påstås. Slutkandidatens fem obligatoriska kontroller återstår.
+
+## Historik före crm75-kandidaten
+
 # Bygglogg – crm74 faktiskt levererad
 
 - Kodkandidat `1d2e559f803546c380f6ebb971a2c8090a7c71c6`, träd `d8bf3d78b4ef6980ad3ba1064bfa4134d8634bab`. App-main `10458af94ad84c1a2b51da56fd6d0724f7ae4ef4` efter [PR #123](https://github.com/ludros93-prog/MAgnussons-CRM/pull/123). Sites-source `b13a6791f7390ca01643ec183ac4b4071b96a861` har exakt samma 356 spårade filer. **Live v71**, deploy `succeeded` 2026-10-09T10:17:05.910541+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site).

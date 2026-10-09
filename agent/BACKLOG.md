@@ -1,3 +1,15 @@
+# Arbetskö – crm75 avgränsad B05-kandidat
+
+Administratörens årshjulsöverlämning får ett eget privat utkast med rå orsak, uttryckliga mål-/uppgiftsval och fullständigt fryst kund-, behovs-, profil- och uppgiftsunderlag. Återupptagning från Min dag kräver ny granskning. Privat sparning ändrar inget behovsansvar; CRM-inlämning binds till exakt egen kvitterad revision och förbrukas atomiskt med behov, valda uppgifter, historik, händelse och mutationskvittens.
+
+B01/B04 står kvar före B05 i den ursprungliga prioriteringen; isolerat kontraktarbete är fortfarande möjligt där. Den här körningen väljer det direkt bekräftade lokala gapet: dagens överlämningsdialog tappar orsak/val vid stängning eller omladdning.
+
+B05:s årshjulsöverlämning avgränsas nu; övriga överlämnings-/specialutkast kvarstår. B01:s oklara identiteter/full personalöverlämning, B02 chefsroll, B04 privata driftbackuper/full hostad återställning och B07 faktiska konton/pilot består. Ingen ändring av agentinstruktioner, scheman, kontoåtkomst eller riktiga kund-/orderdata.
+
+Teknisk kandidat under verifiering. GitHub-main är vid start d06bcd3b10e100f6fc0afa7b2b9e848d7015cf7e; publicerad Site är fortfarande v71/source b13a6791f7390ca01643ec183ac4b4071b96a861. Ingen merge/deploy eller slutlig testkvittens påstås här. Personlig inloggning/CRM-roll, personalpilot, full hostad backup/restore och verkliga integrationer återstår. Codex-task 01a104c7-a5c5-7350-8577-a4f941138061 är oläst eftersom relevant read_thread saknas.
+
+## Historik före crm75-kandidaten
+
 # Arbetskö – crm74 avgränsad B04 levererad
 
 **Kopia av mina utkast** finns i **Min dag → Fortsätt där du slutade** och Inställningar. Säljare/admin får bara sin egen senaste serverkvitterade råtext, inklusive arkiv, från den valda arbetsytan. En fil kan sedan läsas lokalt: vanlig text först, tekniska uppgifter vid behov, kopieringsbesked vid knappen och synligt tangentbordsfokus. Ingen fil laddas upp, importeras eller skriver i CRM.

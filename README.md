@@ -1,3 +1,11 @@
+# Magnussons CRM – kandidat: privat behovsöverlämning
+
+Administratörens årshjulsöverlämning får ett eget privat utkast med rå orsak, uttryckliga mål-/uppgiftsval och fullständigt fryst kund-, behovs-, profil- och uppgiftsunderlag. Återupptagning från Min dag kräver ny granskning. Privat sparning ändrar inget behovsansvar; CRM-inlämning binds till exakt egen kvitterad revision och förbrukas atomiskt med behov, valda uppgifter, historik, händelse och mutationskvittens.
+
+Teknisk kandidat under verifiering. GitHub-main är vid start d06bcd3b10e100f6fc0afa7b2b9e848d7015cf7e; publicerad Site är fortfarande v71/source b13a6791f7390ca01643ec183ac4b4071b96a861. Ingen merge/deploy eller slutlig testkvittens påstås här. Personlig inloggning/CRM-roll, personalpilot, full hostad backup/restore och verkliga integrationer återstår. Codex-task 01a104c7-a5c5-7350-8577-a4f941138061 är oläst eftersom relevant read_thread saknas.
+
+## Historik före crm75-kandidaten
+
 # Magnussons CRM – egen utkastkopia finns live
 
 **Kopia av mina utkast** finns i **Min dag → Fortsätt där du slutade** och Inställningar. Säljare/admin får bara sin egen senaste serverkvitterade råtext, inklusive arkiv, från den valda arbetsytan. En fil kan sedan läsas lokalt: vanlig text först, tekniska uppgifter vid behov, kopieringsbesked vid knappen och synligt tangentbordsfokus. Ingen fil laddas upp, importeras eller skriver i CRM.
