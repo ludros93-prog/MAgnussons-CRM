@@ -345,7 +345,8 @@ body {
 .private-draft-copy-feedback p{margin:8px 0;overflow-wrap:anywhere}
 
 /* Historical commercial text corrections retain the generic save/focus layout. */
-.historical-correction-sheet [data-slot=sheet-header]{padding-right:56px}
+.historical-correction-sheet [data-slot=sheet-header]{padding-right:72px}
+.historical-correction-sheet>.historical-correction-close{position:absolute;top:16px;right:16px;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;min-width:44px;min-height:44px;max-width:44px;padding:0;border-radius:8px;color:#52657b}
 .historical-correction-sheet [data-slot=sheet-description]{font-size:.75rem;letter-spacing:.04em;line-height:1.6;overflow-wrap:anywhere}
 .historical-correction-fields,.historical-correction-context,.historical-correction-recovery{min-width:0;max-width:100%;overflow-wrap:anywhere}
 .historical-correction-context{padding:18px;border:1px solid #d7e2ed;border-radius:10px;background:#f5f8fb}
