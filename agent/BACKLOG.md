@@ -1,5 +1,17 @@
 # Arbetskö för Magnussons CRM
 
+## Publiceringsåterhämtning av verifierad main – 2026-10-09
+
+**Faktiskt sparat:** samma Site fick version 69 från verifierad Sites-source `4cde45d4`, byte för byte samma 345 spårade filer som Publicerad GitHub-mainrevision `9cbcdbba` och testad kandidat `75016e0`. Native serverbygge ersatte det otillgängliga lokala packningssteget enligt verktygets specificerade reservväg; helpern återställdes inte och ingen ny appförbättring byggdes.
+
+**Live:** succeeded, native uppdatering 2026-10-09 05:30:57.436424 UTC (terminalt återläst 05:34:06 UTC); full returnerad begränsad åtkomstpolicy (custom, revision 2), miljö (revision 1, en post) och automationer oförändrade; bindings oförändrade. Det tidigare absoluta helperhindret ersätts av denna faktiskt verifierade native publiceringsväg. Detaljer och separat version-/source-/deploybelägg: [VALIDATION](../VALIDATION.md).
+
+**Kvar/nästa:** observerad inloggning och personalpilot på den faktiska liveversionen, privata driftbackuper och full hostad återställning; B01b2:s övriga oklara kopplingar/full personalöverlämning samt B02/B04/B05/B07 kvarstår. Nästa oberoende produktspår är fortsatt privata beständiga årshjulsutkast. Ingen personalacceptans eller fungerande anslutning antas.
+
+## Historik före publiceringsåterhämtningen 2026-10-09
+
+# Arbetskö för Magnussons CRM
+
 ## B01b2/T01/T04/T09/T16/T26: eget hinderansvar i Min dag – crm72
 
 **Levererat på GitHub-main:** Min dag visar **Hinder du ansvarar för** för administratör/säljare, även utan säljarprofil, på en kollegas order och på skickat jobb. Listan följer befintlig aktuell användar-/medlemskoppling; originalrapportör och kommersiell orderansvarig behåller sina betydelser. Den är personlig även i administratörens **Teamets dag**. **Öppna jobbet** går direkt till rätt befintlig produktionsvy. Långa texter radbryts och tangentbordsfokus återgår till en synlig jobbingång eller produktionsflik när hindret har lösts.

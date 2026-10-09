@@ -1,3 +1,15 @@
+# Magnussons CRM – drift efter publiceringsåterhämtning
+
+## Samma Site med native serverbygge – 2026-10-09
+
+Verifierad Publicerad GitHub-mainrevision `9cbcdbba` fördes till befintlig Sites-källgren genom vanlig fast-forward synk. Source `4cde45d4887efbd348d7193ba3aaf53809eb5070` bevarar både tidigare Site- och GitHub-historik; samtliga 345 spårade filer motsvarar verifierad main byte för byte. Samma Siteversion 69 och deploy `6ac87b2d`: succeeded, native uppdatering 2026-10-09 05:30:57.436424 UTC (terminalt återläst 05:34:06 UTC). Återläsning 2026-10-09 05:34:20.404 UTC: full returnerad begränsad åtkomstpolicy (custom, revision 2), miljö (revision 1, en post) och automationer oförändrade; bindings oförändrade. [VALIDATION](VALIDATION.md) binder exakta revisioner och kvitton.
+
+Föreskriven sourcehelper kunde inte återställas med tillgänglig executor-/skill-/plugininfrastruktur. [Sites-instruktionen](skill://plugin_connector_1p_689987207de08191979cf68eca2941c6/sites/SKILL.md) anger normalt helperpaketering och att source-only behöver motsvarande arkiv. Native `save_site_version` anger det specifika undantaget “omit it only when local packaging cannot complete and remote build fallback is required”. Detta undantag användes efter faktisk källpush/återläsning; serverbygget hanterar källversionen. Ingen egen lokal packare, låtsashelper, force-push, credentialfil eller delningsändring ingår. Skillens generella formulering och verktygets specifika undantag dokumenteras öppet; allmän möjlighet att utelämna fungerande lokal paketering antas inte.
+
+**Återgång:** publiceringens versionsnummer 69 är skilt från crm71-kodens formatstöd. Efter nya crm71-ansvars-/historikskrivningar krävs kompatibel läsare och skrivare. Oförändrad v68 ska inte antas säker för skrivande återgång; behåll kompatibel korrigering eller genomför faktiskt verifierad full återställning med plan för senare arbete. `magnussons-crm-1` och de sex SQL-migrationerna består. Full hostad återställning, privata driftbackuper och verklig personalpilot återstår; grön deploy bevisar inte dessa.
+
+## Historik före publiceringsåterhämtningen 2026-10-09
+
 # Magnussons CRM – order, tryck och lager
 
 ## crm72: läsflöde i Min dag och blockerad publicering

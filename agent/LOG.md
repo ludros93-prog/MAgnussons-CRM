@@ -1,5 +1,19 @@
 # Byggagentens verifieringslogg
 
+## 2026-10-09 – befintlig main till samma Site via native serverbygge
+
+- Publiceringsarbete utifrån main `9cbcdbba3f20e7791f8047596abb055e60dd8c37`; exakt main-CI 37882998414 hade 13 completed/success-steg. Tidigare fem slutkontroller på kandidat `75016e0` återanvändes först efter att samma träd och samtliga 345 spårade filbytes hade verifierats.
+- Färsk executor-/skill-/pluginundersökning kunde inte återfå sourcehelpern. Native `save_site_version` tillåter uttryckligen att `archive` utelämnas när lokal paketering inte kan slutföras och serverbyggets reservväg krävs. Skillens generella regel för källversioner utan arkiv är en dokumenterad skillnad mellan instruktionerna; ingen egen packare eller påhittad helper användes.
+- Vanlig fast-forward push 05:26:07 UTC till befintlig Sites-källgren: `4cde45d4887efbd348d7193ba3aaf53809eb5070`, träd `3f97ea2beea1c9fff2a969ff2b4f0d7e48596f5f`, föräldrar tidigare Site-source `cea57b7` och publicerad GitHub-mainrevision `9cbcdbba`. Fjärrrevision, träd och föräldrar återlästes; ingen force-push, automatisk privatpublicering eller credentialfil.
+- Version 69 sparades 05:26:47 UTC; deploy `appgdep_6ac87b2de1dc8191aca6c9ab9d29bc1d`: succeeded, 2026-10-09 05:30:57.436424 UTC, https://magnussons-crm.rosen123.chatgpt.site. Återläsning 2026-10-09 05:34:20.404 UTC: full returnerad begränsad åtkomstpolicy (custom, revision 2), miljö (revision 1, en post) och automationer oförändrade; bindings oförändrade.
+- Ingen ny appkod, migration, schema/prompt/aktivering eller nytt verksamhetsbeslut ingick. Inga kundskrivtester eller utskick. Personalinloggning/pilot och full hostad återställning återstår; v68 är ingen antagen säker skrivande återgång efter crm71-fält. Faktiska bevis och gränser: [VALIDATION](../VALIDATION.md), [OPERATIONS](../OPERATIONS.md).
+
+Codex-referensen `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst eftersom inget Codex `read_thread` finns; uppdragets dokumenterade brief och repo användes.
+
+## Historik före publiceringsåterhämtningen 2026-10-09
+
+# Byggagentens verifieringslogg
+
 ## 2026-10-09 – crm72: egna produktionshinder i Min dag
 
 - Färsk main `13d4fdbed7131538018c660b7f95844b1be62d45` och samtliga uppdrags-/produkt-/driftunderlag lästes. Separat branch/worktree och egen reservation användes. 177 främmande worktrees var rena vid start och oförändrade vid mellanavstämningen; ingen främmande branch, prompt eller automation ändrades.

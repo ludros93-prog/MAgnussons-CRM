@@ -1,3 +1,13 @@
+# Källor och tillämpade principer – publiceringsväg, 2026-10-09
+
+Publiceringsåterhämtningen använde native `save_site_version`-verktygets faktiskt tillgängliga kontrakt: “Include the archive whenever it can be packaged locally; omit it only when local packaging cannot complete and remote build fallback is required.” Samma Sites-källgren hade först pushats och återlästs till verifierad source `4cde45d4`/main `9cbc` med 345 byteidentiska spårade filer. Ingen tredjepartspackare eller genererad helper användes.
+
+[Sites-instruktionen](skill://plugin_connector_1p_689987207de08191979cf68eca2941c6/sites/SKILL.md) anger normalt sourcehelper och “source-only versions still need their matching archive”. Den generella formuleringen och det specifika native reservvillkoret är en dokumenterad skillnad mellan instruktionerna. Reservvägen gav lyckad publicering (`succeeded`); den återställer inte det saknade lokala pluginpaketet och tillåter inte godtyckligt utelämnande av fungerande lokal paketering.
+
+Tidigare verifierade designprinciper från Saleshub AI, Lime, Salesforce och W3C ändrades inte och ingen ny produktdesignresearch görs anspråk på. Lyckad publicering, källa och driftpolicy redovisas separat i [VALIDATION](../VALIDATION.md); verklig personalinloggning/pilot, full hostad återställning och faktiska anslutningar återstår.
+
+## Historik före publiceringsåterhämtningen 2026-10-09
+
 # Källor och tillämpade principer – egna produktionshinder i Min dag, crm72-kod
 
 Sju officiella URL:er omkontrollerades med faktisk returnerad artikeltext 2026-10-09 03:23:54–03:24:04 UTC. Åtta små exakta citat verifierades mot sparad verktygstext. Researchkvitto SHA-256 `dee21b274edf3a978e0d795050eb5dc71953e530ee046c975b6626dc5a16cde0`. Verktyget rapporterade inga HTTP-statusar eller kompletta HTML-svar; hasharna binder de faktiskt returnerade verktygstexterna och citaten.

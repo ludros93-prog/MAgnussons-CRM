@@ -1,3 +1,15 @@
+# Magnussons CRM – verifierad main och publicerad arbetsvy
+
+## Samlad produktionsförbättring på samma Site – 2026-10-09
+
+Version 69 på [samma CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) har status succeeded, native uppdatering 2026-10-09 05:30:57.436424 UTC (terminalt återläst 05:34:06 UTC). Den för fram befintlig main med granskat hinderansvar och **Hinder du ansvarar för** i Min dag. **Öppna jobbet** går direkt till rätt produktionsjobb; personlig kö, separat kommersiellt ansvar och bevarad rapportör/historik följer befintliga regler. Publiceringsarbetet ändrar ingen appfunktion eller affärsdefinition.
+
+Publicerad GitHub-mainrevision `9cbcdbba` och Sites-source `4cde45d4` innehåller exakt samma verifierade kodbytes. Den specifika native reservvägen för serverbygge hanterade tidigare publiceringshinder utan egen packare. Åtkomst/miljö återlästa 2026-10-09 05:34:20.404 UTC: full returnerad begränsad åtkomstpolicy (custom, revision 2), miljö (revision 1, en post) och automationer oförändrade; bindings oförändrade. [VALIDATION](VALIDATION.md) skiljer publicering från provbelägg.
+
+Personalen behöver fortfarande observerat prova verklig inloggning och sitt vardagsarbete på liveversionen. Publicering bekräftar inte att Sebbe har loggat in eller accepterat arbetssättet. Försäljning mot månads-/årsmål, marginal och nya prospects behåller sina betydelser; inget nytt kundgodkännande eller extern anslutning antas.
+
+## Historik före publiceringsåterhämtningen 2026-10-09
+
 # Magnussons CRM – aktuellt produktunderlag
 
 ## Min dag: se och öppna hinder du ansvarar för – crm72
