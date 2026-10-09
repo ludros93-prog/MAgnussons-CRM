@@ -1,3 +1,17 @@
+# Arbetskö – crm74 avgränsad B04 levererad
+
+**Kopia av mina utkast** finns i **Min dag → Fortsätt där du slutade** och Inställningar. Säljare/admin får bara sin egen senaste serverkvitterade råtext, inklusive arkiv, från den valda arbetsytan. En fil kan sedan läsas lokalt: vanlig text först, tekniska uppgifter vid behov, kopieringsbesked vid knappen och synligt tangentbordsfokus. Ingen fil laddas upp, importeras eller skriver i CRM.
+
+Kodkandidat `1d2e559f803546c380f6ebb971a2c8090a7c71c6`, träd `d8bf3d78b4ef6980ad3ba1064bfa4134d8634bab`. App-main `10458af94ad84c1a2b51da56fd6d0724f7ae4ef4` efter [PR #123](https://github.com/ludros93-prog/MAgnussons-CRM/pull/123). Sites-source `b13a6791f7390ca01643ec183ac4b4071b96a861` har exakt samma 356 spårade filer. **Live v71**, deploy `succeeded` 2026-10-09T10:17:05.910541+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site).
+
+**Verifierat:** fem frysta kontroller och exakt-head CI; 28 huvudfall PASS (21 utan browsermetodoverride, 7 kontrollerade fel/timing) samt 1 extra kontrollerat clipboardavslag PASS. Sex layouter 320/390/1280 px med normal/2× text, native tangentbordsfokus, lokal råtextläsning/kopiering och fokusretur; 21 PNG. Vid 320 px/2× syns första manuella kopieringsinstruktionen direkt och hela långa felbeskedet efter lokal scroll. Alla 356 spårade filer och 103 distfiler bevarade; inga CRM-skrivningar eller externa requests; egen preview avslutad och eget testlager borttaget.; 35/31/35 riktade domän-/API-/behörighetsfall samt native råexport/gränser; kopieanropet gör inga SQL/R2-skrivningar. Min dag-återupptagning och huvudmåtten försäljning mot månad/år, marginal och nya prospects bevaras.
+
+**B04 kvar:** privata driftbackuper för alla tillåtna data/binärer, full hostad återställning/live-rollback och eventuell säkert granskad utkastimport. Den nya personliga råkopian/läsaren är inte generell restore eller driftacceptans. **B05 kvar:** övriga överlämnings-/specialdialoger. Nästa: observerad personalpilot i rätt arbetsvy, privata driftbackuper/full hostad återställning och B05:s kvarvarande överlämnings-/specialutkast. B01b2:s oklara identiteter/full personalöverlämning, B02 chefsroll och B07 verkliga konton/pilot kvarstår.
+
+Detta är tekniska prov med syntetiska identiteter och data. Personlig inloggning/CRM-roll, observerad personalpilot, full hostad återställning och verkliga Fortnox-/Outlook-konton är inte verifierade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant read_thread saknas.
+
+## Historik före crm74-leveranskvittot
+
 # Arbetskö – crm74 avgränsad personlig utkastkopia
 
 B04-källändring: egen läsande serversnapshot av aktiva/arkiverade råutkast och lokal läsning/kopiering. Alla egna poster eller avslag; direkt medlemskontroll, oförändrade revisions-ID:n och ingen import/CRM-skrivning. Min dag och inställningar ger tydliga ingångar; vanlig text går före tekniska uppgifter.

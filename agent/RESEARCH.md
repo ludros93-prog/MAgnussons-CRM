@@ -1,3 +1,11 @@
+# Principerna använda i crm74:s verifierade design
+
+Saleshubs kundkontext, Limes konkreta handlingar/rollstyrda synlighet och Salesforces skillnad mellan export och full återställning har omsatts i en personlig textläsare med tydliga handlingar. Vanlig text ligger före tekniska uppgifter; faktiskt mobil-/tangentbordsprov styrde feedback- och fokusändringarna. Officiella källor med exakta korta citat och åtkomsttid finns bevarade direkt nedan.
+
+D1:s officiella 2 MB-cellgräns styrde mot radmängd i stället för stor JSON-aggregation. En enda SQL-snapshot och skyddade konservativa gränser är provade lokalt; D1-sessioner utges inte för allmän transaktionssnapshot. 28 huvudfall PASS (21 utan browsermetodoverride, 7 kontrollerade fel/timing) samt 1 extra kontrollerat clipboardavslag PASS. Sex layouter 320/390/1280 px med normal/2× text, native tangentbordsfokus, lokal råtextläsning/kopiering och fokusretur; 21 PNG. Vid 320 px/2× syns första manuella kopieringsinstruktionen direkt och hela långa felbeskedet efter lokal scroll. Alla 356 spårade filer och 103 distfiler bevarade; inga CRM-skrivningar eller externa requests; egen preview avslutad och eget testlager borttaget. Detta är tekniska prov med syntetiska identiteter och data. Personlig inloggning/CRM-roll, observerad personalpilot, full hostad återställning och verkliga Fortnox-/Outlook-konton är inte verifierade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant read_thread saknas.
+
+## Historik före crm74-leveranskvittot
+
 # Källor och tillämpning – crm74 personlig utkastkopia
 
 Nio officiella URL:er återlästa 2026-10-09 09:25:35–09:25:36 UTC. Exakt extraherad verktygstext och kortcitat är verifierade; inga HTTP-statusar eller kompletta HTML-svar antas. Receipt `/tmp/crm74-research/receipt.json`, SHA256 `8e1d91f043d8cf7fcc2f42d87f09330148ecbce5bdce140190e9eef47a357a56`; findings `1da54c67279548eaa44d66042d38baa886f8e3a38d50e8880b450d63d2e0918f`.

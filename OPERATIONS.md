@@ -1,3 +1,17 @@
+# Driftkvittens – crm74 kopia och lokal textåterhämtning
+
+Kodkandidat `1d2e559f803546c380f6ebb971a2c8090a7c71c6`, träd `d8bf3d78b4ef6980ad3ba1064bfa4134d8634bab`. App-main `10458af94ad84c1a2b51da56fd6d0724f7ae4ef4` efter [PR #123](https://github.com/ludros93-prog/MAgnussons-CRM/pull/123). Sites-source `b13a6791f7390ca01643ec183ac4b4071b96a861` har exakt samma 356 spårade filer. **Live v71**, deploy `succeeded` 2026-10-09T10:17:05.910541+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site).
+
+Personlig **Kopia av mina utkast** är helt läsande: en enda SQL-snapshot av egna aktiva/arkiverade råposter, konto-/rollkontroll utan bootstrap och slutkontroll efter digest. Inga ändrade tabeller, utkastformat, konton, original-ID:n, revisioner eller request-ID:n. Gränser: 1000 poster, konservativ 8 MB SQL-budget, exakt 8 MB records-JSON och 32 MB lokal fil. Övergräns ger 413 utan delkopiering.
+
+En sparad fil återhämtar text via lokal läsare; den är inte ett automatiskt restorepaket. Förvara den privat, välj samma konto/arbetsyta och kopiera behövd text till ett granskat arbetsmoment. Ingen automatisk återaktivering, kundacceptans, orderbokföring eller versionsreset. SHA-256 är korruptionskontroll av records, ingen signatur eller tillstånd att skriva. Saknade binärer/kundfiler/Outlook kan inte återställas ur denna fil.
+
+Återgång av denna läsfunktion behöver ingen SQL-restore: behåll råutkasten och en formatkompatibel lokal läsare för befintliga kopior. Äldre app saknar den nya kopieingången. Tidigare crm71:s delade historikgolv och crm73:s privata årshjulsformat gäller fortsatt; återgång får inte släppa deras skydd. Full hostad backup/restore/live-rollback återstår. Föreskriven lokal helper saknas; verifierat native serverbygge är använd reservväg, ingen egen packager eller ny Site.
+
+Detta är tekniska prov med syntetiska identiteter och data. Personlig inloggning/CRM-roll, observerad personalpilot, full hostad återställning och verkliga Fortnox-/Outlook-konton är inte verifierade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant read_thread saknas.
+
+## Historik före crm74-leveranskvittot
+
 # Driftkomplettering – personlig råkopia och lokal textåterhämtning
 
 `GET /api/crm/drafts/copy?space=demo|live` hämtar endast autentiserad användares egna rader, aktiva och arkiverade. Initial medlemsläsning och senare kontroller är helt läsande: ingen bootstrap, kontokoppling, CRM-version, ledger, CAS-revision eller R2-data skrivs. Originalmedlem måste fortsatt ha exakt aktiv flagga 1, ID, användar-ID, e-post, roll och ansvar. Rollförlust eller ändrad koppling innan svar ger avslag utan privata poster.
