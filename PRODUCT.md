@@ -1,5 +1,26 @@
 # Magnussons CRM – aktuellt produktunderlag
 
+## Vem tar nästa steg i ett öppet hinder? – crm71-kod
+
+**Ansvarar för nästa steg** anger det aktuella hinderansvaret. **Rapporterat av** och **Registrerad rapporttid** bevarar rapporteringsursprunget. Rapportören och den som följer upp hindret kan därför vara olika personer utan att historiken skrivs om. Ett beskrivningsbyte flyttar inget ansvar och en överlämning löser inget hinder.
+
+Administratören väljer **Byt hinderansvar** på produktionskortet, i jobbdetaljerna eller i **Inställningar → Konton & roller → Produktionsarbete per konto**. Dialogen visar fryst kund-/jobb-/arbetsreferens, aktuell ansvarig, originalrapportering och orderansvar. Mottagaren väljs uttryckligen bland aktiva anslutna konton som får hantera hinder; roll och konto-ID hjälper vid lika namn. Skäl och granskning krävs före **Spara nytt hinderansvar**.
+
+Öppet hinder kan lämnas över på lämnad, tryckt eller skickad arbetsorder. Skickat jobbs jobbansvar ligger kvar i historiken. För säljare finns produktionen via **Offerter & order → Tryck & leverans → Min produktion**. Antal, tryck, kassation, leveranser, datum, kommersiellt ansvar och kundgodkännanden ändras inte. Kontoändringens kontroll måste hämtas om efter faktisk överlämning; andra ansvar och oklara kopplingar kan fortsätta spärra. Ingen kontoavveckling, inbjudan eller kommunikation sker genom ansvarsbytet.
+
+Orsaken valideras före sparning. För lång text får beskedet **Orsaken är för lång. Korta texten.**; ogiltig text får **Orsaken innehåller ogiltig text. Skriv om texten.**
+Vid fel ligger skäl och val kvar i den öppna dialogen. **Hämta aktuellt underlag** hämtar nya uppgifter; **Läs in nytt granskningsunderlag** kräver ett uttryckligt val och ny granskning. Dialogens lokala retention är inget varaktigt privat utkast. Ett obekräftat sparförsök kan redan ha lyckats; oförändrad retry använder samma begäran. Stängning med ändrade val kräver ett synligt kassering-/fortsättningsval.
+
+**Mitt arbete** visar den aktuella användarens öppna hinder även på skickade jobb. Märkningen **Ditt hinder** anger varför jobbet finns i listan; inget nytt uppföljningsdatum skapas. Arkiverade arbetsavsnitt visar bevarad överlämningshistorik efter lösning.
+
+Vid faktisk lösning bevaras överlämningskedjan i lösningshistoriken. Nästa rapportering börjar en ny aktuell ansvarscykel. Nytt överlämnat öppet hinder måste lösas innan avbrytning/återinlämning; äldre avbrutet underlag rättas inte genom denna väg.
+
+Kod `92470f29c7b342760fc7d48c4f7369619f657da7`, app-main `6d3c5f53ea28078a2c177c078024b6151cba608b`; verifiering: PASS på ren och byteoförändrad slutkandidat: regression 75,22 s, TypeScript utan incremental 11,54 s, bygge 9,89 s, native Worker/D1/R2 205,12 s och diffkontroll 0 s; alla fem exit 0, PASS 18/18 på samma frysta slutkod: 13 native fall och fem separat märkta transportfall (tre mock409, en mock503, en faktisk native200 med tappad klientkvittens). Alla sex layouter vid 320/390/1280 px med normal/exakt dubblerad CSS-text, 54 verkliga skärmbilder och 28 journalförda browser/APIRequest-POST. Tre ingångar, aktuell ansvarigs redigering/lösning, personlig kö även på skickat främmande kommersiellt jobb, verklig HTTP409 mellan kompletta requests, rollavslag, dubbelklick och exakt återförsök passerade; ingen påtvingad directory-read-interleaving i browsern eller personalacceptans påstås. Kvitto `aad94f247250eef8790354c2739ef6850c907d19e1ad4cebce55aaf306580b96`. Publicering: Ej publicerad: [Sites-instruktionen](skill://plugin_connector_1p_689987207de08191979cf68eca2941c6/sites/SKILL.md) kräver “package with the source helper”; föreskriven helper saknas. Ingen egen paketering eller begäran om ny sourcecredential; ingen source-push via Sites-helpern, ny Site-version, deploy eller delnings-/miljöändring har gjorts. Samma begränsade Site ligger kvar på v68/källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`. Nya JSON-fält behöver v71-kompatibel läsare/skrivare efter skrivning; [VALIDATION](VALIDATION.md) anger faktiskt kompatibilitetsunderlag och begränsningar. Personalpilot, full hostad återställning och verkliga integrationer återstår; Codex-referensen är oläst. Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmåtten.
+
+## Historik före crm71-koden
+
+# Magnussons CRM – aktuellt produktunderlag
+
 ## Granska kontot mot aktuellt läst underlag – crm70-kod
 
 Produktionsinventeringen jämför nu två ordningsoberoende läsningar av den registrerade kontokatalogen, inklusive medlems-ID, användarkoppling, namn, roll och aktivitet. Ändrad katalog ger 409 utan kontolista eller arbetsrader efter förnyad adminautentisering. Befintlig dubbelläsning av relevant produktionsunderlag består. Detta är en upptäckt ändring mellan kontrollerade läspunkter, ingen allmän databastransaktion, kontinuerlig uppdatering eller garanti mot ändringar efter slutkontrollen.
