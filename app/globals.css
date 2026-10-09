@@ -388,3 +388,8 @@ body {
 .operations .production-grid,.operations .production-card,.operations .production-card>.biz-head,.operations .production-card>.biz-head>div{min-width:0}
 .operations .production-card>.biz-head h3,.operations .production-card>.biz-head p{max-width:100%;overflow-wrap:anywhere;word-break:normal}
 @media(max-width:760px){.operations .production-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Let order queues wrap into readable rows when the text size grows. */
+.operations>[data-slot=tabs]{min-width:0;max-width:100%}
+.operations>[data-slot=tabs]>[data-slot=tabs-list]{width:100%;min-width:0;max-width:100%;height:auto;flex-wrap:wrap;gap:.25rem;justify-content:flex-start}
+.operations>[data-slot=tabs]>[data-slot=tabs-list]>[data-slot=tabs-trigger]{flex:1 1 max-content;min-width:0;max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:normal;word-break:normal;line-height:1.5;padding:8px}
