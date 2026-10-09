@@ -1,5 +1,25 @@
 # Återkommande arbete för CRM-superbyggaren
 
+## Datakompatibilitet för separat aktuellt hinderansvar – crm71-kod
+
+Detta är en deklarativ uppdatering av dataformatets kompatibilitetsgräns. Uppdragets mandat, originalprioritering, arbetsprocedur, schema, prompt och aktivering ligger kvar oförändrade i tidigare avsnitt.
+
+Produktionsunderlaget får valfri `issueResponsibility` med stabila user-/member-ID:n, snapshotnamn och ordnad överlämningshistorik. Saknat fält behåller äldre rapportörsbaserat aktuellt ansvar, utan namngissning eller påstådd historisk medlemskoppling. Originalrapportörens `issueOwnerId`, `issueOwnerName` och `issueAt` ligger kvar när nytt aktuellt ansvar registreras. Vid faktisk lösning bevaras hela ansvarskopplingen och historiken i lösningspostens `responsibility`, och separat aktuellt ansvar tas bort. Nästa rapport börjar en ny aktuell ansvarscykel. Aktuell och bevarad produktionshistorik följer samma semantiska kedjekontroll. Äldre okänd/enbart namngiven rapportering bevaras; första auditpostens `fromMemberId` är tom och `assign`/`transfer` följer sparat från-user-ID. Det är ingen rekonstruktion av historisk kontoanslutning.
+
+Nya ansvarstexter har högst 4 000 UTF-16-kodenheter och högst 4 000 UTF-8-byte utan NUL; historikens `at` kräver datetime och högst 4 000 kodenheter. Zod och atomisk SQL-kontroll måste tolka de nya fälten konsekvent. Äldre originalrapportörstext har oförändrat format och förkortas inte automatiskt.
+
+Efter första nya ansvarsskrivningen krävs **v71-kompatibel läsare och skrivare** för normalisering, API-skrivning, lagring, export och återställning. Backupformatet är fortsatt `magnussons-crm-1`; inga SQL-tabeller/migrationer tillkommer och inget automatiskt versionsgolv framtvingas av manifestet. V66-golvet för äldre jobbansvarsrättning finns kvar som tidigare formatkrav.
+
+Faktiskt oförändrad main020 som äldre kod: Faktiskt körd oförändrad `020b4a92583dd94f61403c94525c2ba9327bdc93`: 13 observerade metadataförluster i äldre normalisering/vanliga skrivningar/JSON-NDJSON-restore. Kvitto `7fe30a05f78f3dccd566203d9afd354bc18c17e3a34cf5d2508130c0c9219afc`; detta är äldre main020-underlag, inget påstått faktiskt v68-parserprov. Kandidatens läs-/vanliga skriv-/JSON-/native NDJSON-/återställningsprov: PASS: aktuell kandidat bevarar originalrapportör/tid, aktuell user-/member-koppling, löst och arkiverad audit, vanliga skrivningar med utelämnade äldre fält samt JSON och native NDJSON-återläsning. Alla sex SQL-migrationer är byteoförändrade. Oförändrad main020 tappade nya fält i 13 faktiska isolerade äldre skriv-/restoreoperationer; efter nya skrivningar krävs kompatibel läsare/skrivare. Kompatibel avser crm71-kodens formatstöd, oberoende av Sites versionsnummer. Ordning, originalrapportering, löst/nytt hinder, aktuell/arkiverad audit och fil-/privat-/Outlook-bevarande: PASS: JSON och faktisk native NDJSON återläser aktuellt, löst och lagrat arkiverat hinderansvar med fil-ID-/URL-omkoppling samt 13,5 MB R2. Råa 18 tabeller och privata/Outlook-sentineler bevaras vid nekad återställning; giltigt omberäknat SHA-256-integritetsmanifest med tvärjobbskorruption avvisas före filstaging. Native arkiv-fixturen är lagrat/återläst bevarande; faktisk handler-arkiveringslivscykel bevisas separat i det isolerade slutprovet. Full hostad återställning/live-rollback är oprövade. Kvitto `b3ee18c9116a9e2462548b2f375c5b0f5f104d95df514b9454e73b65a55cef7a`, bundet till kod `92470f29c7b342760fc7d48c4f7369619f657da7`, träd `558fc5134b53edb55769b283981ab5928f6e69f1` och slutkontroller PASS på ren och byteoförändrad slutkandidat: regression 75,22 s, TypeScript utan incremental 11,54 s, bygge 9,89 s, native Worker/D1/R2 205,12 s och diffkontroll 0 s; alla fem exit 0.
+
+Efter nya data är en framåtriktad rättning med kompatibel parser/skrivare den normala återgången. Publicera inte gamla v68/main020 enbart för att UI startar; äldre normalisering kan tappa de nya fälten och återföra aktuellt ansvar till rapportören. Återställning från före ändringen behöver faktiskt verifierad full databas-/fil-/versions-/länkbackup och plan för senare arbete. Full hostad återställning och live-rollback är oprövade.
+
+Gemensam CRM-backup ersätter fortsatt inte separat backup av konton, privata utkast eller Outlook. Återlästa historiska konto-ID:n verifierar ingen inloggning, återanslutning eller behörighet. Granskade kedjor är inget kryptografiskt manipulationsskydd. Ingen automatisk massöverlämning, kontoavveckling, ny delning, kundkommunikation eller schema-/prompt-/aktiveringsändring ingår.
+
+## Kompatibilitetsunderlag före crm71-koden
+
+# Återkommande arbete för CRM-superbyggaren
+
 ## Datakompatibilitet för rättat äldre jobbansvar – v66
 
 Detta är en deklarativ uppdatering av dataformatets kompatibilitetsgräns. Uppdragets mandat, prioritering, arbetsprocedur, schema, prompt och aktivering finns kvar oförändrade i de tidigare avsnitten.
