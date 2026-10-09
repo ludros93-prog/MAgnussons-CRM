@@ -218,7 +218,7 @@ export function CommercialTaskResponsibilityAnchor({st,taskId,space,save,busy,re
     <details className="biz-details customer-anchor-technical"><summary>Visa kopplingens identifierare</summary><p><b>Uppgift:</b> {task?.id||'Saknas'}.<br/>{parentIsOrder&&<><b>Order:</b> {snapshot.review.order?.id||'Saknas'}.<br/></>}<b>Affär:</b> {deal?.id||'Saknas'}.<br/><b>Kund:</b> {customer?.id||'Saknas'}.<br/><b>Resultatprofil:</b> {profile?.id||'Saknas'}.<br/><b>CRM-konto:</b> {account?.id||profile?.memberId||'Saknas'}.</p></details>
     {notice&&<p className="biz-hint" role="status">{notice}</p>}{error&&<p className="error" role="alert">{error}</p>}
     <p className="biz-hint">Formuläret sparas inte som privat utkast. Din text finns kvar medan dialogen är öppen; den försvinner om du stänger utan att spara eller laddar om sidan.</p>
-    <div className="biz-buttons customer-anchor-footer"><Button type="button" variant="outline" onClick={close}>Stäng</Button><Button type="submit" disabled={!canSave||locked||discard}>{submitting?'Sparar…':sameAttempt?'Försök samma sparning igen':'Spara uppgiftskoppling'}</Button></div>
+    <div className="biz-buttons customer-anchor-footer"><Button type="button" variant="outline" onClick={close}>Stäng</Button><Button type="submit" disabled={!canSave||locked||discard}>{submitting?'Sparar…':sameAttempt?'Försök samma sparning igen':<>Spara uppgifts<wbr/>koppling</>}</Button></div>
    </fieldset></form>}
    {locked&&<p role="status">{refreshing?'Hämtar aktuellt underlag…':'Sparar kopplingen…'} Vänta innan du stänger.</p>}
   </DialogContent></Dialog>
