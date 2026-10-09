@@ -9,10 +9,11 @@ import {PRIVATE_DRAFT_COPY_MAX_FILE_BYTES,parsePrivateDraftCopy,type PrivateDraf
 
 type Scope={key:string;active:boolean;controllers:Set<AbortController>};
 type LocalCopy={copy:PrivateDraftCopy;raw:string;name:string};
-type Presentation={key:string;scope:Scope;open:boolean;fetching:boolean;reading:boolean;message:string;error:string;local:LocalCopy|null;archived:boolean;selected:number;limit:number;showFile:boolean;showRaw:boolean};
+type ClipboardFeedback={target:string;message:string;error:string};
+type Presentation={clipboard:ClipboardFeedback|null;key:string;scope:Scope;open:boolean;fetching:boolean;reading:boolean;message:string;error:string;local:LocalCopy|null;archived:boolean;selected:number;limit:number;showFile:boolean;showRaw:boolean};
 type CopyWorkspace={enabled:boolean;open:(event:MouseEvent<HTMLButtonElement>)=>void};
 const Context=createContext<CopyWorkspace|null>(null);
-const initial=(key:string,scope:Scope):Presentation=>({key,scope,open:false,fetching:false,reading:false,message:'',error:'',local:null,archived:false,selected:-1,limit:20,showFile:false,showRaw:false});
+const initial=(key:string,scope:Scope):Presentation=>({clipboard:null,key,scope,open:false,fetching:false,reading:false,message:'',error:'',local:null,archived:false,selected:-1,limit:20,showFile:false,showRaw:false});
 const kindLabels:Record<string,string>={catalog:'Offert-/orderutkast',production:'Tryckunderlag',note:'Anteckning',followup:'Kunduppföljning',form:'Påbörjade uppgifter',plan:'Kundplan',prospecting:'Nykundsbearbetning',onboarding:'Onboarding',receipt:'Leveransbesked'};
 const readableLabels:Record<string,string>={text:'Text',notes:'Anteckningar',note:'Anteckning',message:'Meddelande',reason:'Orsak',goal:'Mål',nextAction:'Nästa steg',title:'Rubrik',name:'Namn',need:'Behov',receivedBy:'Mottagningsunderlag',description:'Beskrivning'};
 const plainObject=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
@@ -106,7 +107,7 @@ export function PrivateDraftCopyTools({space,userId,enabled,identityKey,pendingC
   const session=scope,epoch=openRef.current?.generation,attempt=++fileAttempt.current;
   if(epoch===undefined||!current(session,epoch)||(space!=='demo'&&space!=='live'))return;
   clipboardAttempt.current++;
-  patch(session,epoch,{reading:true,error:'',message:'',local:null,selected:-1,showFile:false,showRaw:false,limit:20});
+  patch(session,epoch,{clipboard:null,reading:true,error:'',message:'',local:null,selected:-1,showFile:false,showRaw:false,limit:20});
   const same=()=>current(session,epoch)&&fileAttempt.current===attempt;
   try{
    if(file.size>PRIVATE_DRAFT_COPY_MAX_FILE_BYTES)throw Error('Välj en utkastkopia på högst 32 MB.');
@@ -117,20 +118,21 @@ export function PrivateDraftCopyTools({space,userId,enabled,identityKey,pendingC
   }catch(error){if(same())patch(session,epoch,{error:error instanceof Error?error.message:'Kopian kunde inte öppnas. Välj en hel utkastkopia från samma konto och arbetsyta.'});}
   finally{if(same())patch(session,epoch,{reading:false});}
  }
- async function copyText(text:string){
+ async function copyText(text:string,target:string){
   const session=scope,epoch=openRef.current?.generation;if(epoch===undefined||!current(session,epoch))return;
   const attempt=++clipboardAttempt.current,same=()=>current(session,epoch)&&clipboardAttempt.current===attempt;
-  patch(session,epoch,{error:'',message:''});
-  try{await navigator.clipboard.writeText(text);if(same())patch(session,epoch,{message:'Texten är kopierad.'});}
-  catch{if(same())patch(session,epoch,{error:'Webbläsaren kunde inte kopiera. Markera texten i läsfältet och kopiera den själv.'});}
+  patch(session,epoch,{clipboard:{target,message:'',error:''}});
+  try{await navigator.clipboard.writeText(text);if(same())patch(session,epoch,{clipboard:{target,message:'Texten är kopierad.',error:''}});}
+  catch{if(same())patch(session,epoch,{clipboard:{target,message:'',error:'Webbläsaren kunde inte kopiera. Markera texten i läsfältet och kopiera den själv.'}});}
  }
+ function copyFeedback(target:string){const feedback=shown.clipboard?.target===target?shown.clipboard:null;return <div className="private-draft-copy-feedback" aria-live="polite" aria-atomic="true">{feedback?.message&&<p role="status">{feedback.message}</p>}{feedback?.error&&<p className="error" role="alert">{feedback.error}</p>}</div>;}
  const local=shown.local,records=local?.copy.records||[],selected=records[shown.selected];
  const readable=useMemo(()=>selected?readableText(selected.dataRaw):[],[selected?.dataRaw]);
  const visible=records.map((row,index)=>({row,index})).filter(({row})=>row.archived===shown.archived);
  function chooseArchived(archived:boolean){
   const epoch=openRef.current?.generation;if(epoch===undefined)return;
   clipboardAttempt.current++;
-  patch(scope,epoch,{archived,selected:records.findIndex(row=>row.archived===archived),limit:20,showRaw:false,message:'',error:''});
+  patch(scope,epoch,{clipboard:null,archived,selected:records.findIndex(row=>row.archived===archived),limit:20,showRaw:false,message:'',error:''});
  }
  return <Context.Provider value={{enabled:scope.active,open}}>{children}
   <Sheet open={scope.active&&shown.open} onOpenChange={value=>{if(!value)close()}}>
@@ -161,18 +163,18 @@ export function PrivateDraftCopyTools({space,userId,enabled,identityKey,pendingC
       <dl className="private-draft-copy-metadata"><div><dt>Skapad</dt><dd>{displayTime(local.copy.exportedAt)}</dd></div><div><dt>Antal sparade poster</dt><dd>{records.length}</dd></div></dl>
       <div className="private-draft-copy-filters" aria-label="Visa utkast i filkopian"><Button type="button" variant={shown.archived?'outline':'default'} aria-pressed={!shown.archived} onClick={()=>chooseArchived(false)}>Aktiva ({records.filter(row=>!row.archived).length})</Button><Button type="button" variant={shown.archived?'default':'outline'} aria-pressed={shown.archived} onClick={()=>chooseArchived(true)}>Arkiverade ({records.filter(row=>row.archived).length})</Button></div>
       {shown.archived&&<p className="private-draft-copy-note">Arkiverade utkast är avslutade eller borttagna. Här kan du läsa och kopiera texten. De öppnas inte på nytt i CRM.</p>}
-      <ul className="private-draft-copy-records">{visible.slice(0,shown.limit).map(({row,index})=><li key={index}><button type="button" aria-pressed={shown.selected===index} onClick={()=>{const epoch=openRef.current?.generation;if(epoch!==undefined){clipboardAttempt.current++;patch(scope,epoch,{selected:index,showRaw:false,message:'',error:''});}}}><b>{row.title||'Utkast utan titel'}</b><span>{kindLabels[row.kind]||'Sparat utkast'}</span></button></li>)}</ul>
+      <ul className="private-draft-copy-records">{visible.slice(0,shown.limit).map(({row,index})=><li key={index}><button type="button" aria-pressed={shown.selected===index} onClick={()=>{const epoch=openRef.current?.generation;if(epoch!==undefined){clipboardAttempt.current++;patch(scope,epoch,{clipboard:null,selected:index,showRaw:false,message:'',error:''});}}}><b>{row.title||'Utkast utan titel'}</b><span>{Object.hasOwn(kindLabels,row.kind)?kindLabels[row.kind]:'Sparat utkast'}</span></button></li>)}</ul>
       {!visible.length&&<p>Inga {shown.archived?'arkiverade':'aktiva'} utkast i kopian.</p>}
       {visible.length>shown.limit&&<Button type="button" variant="outline" onClick={()=>{const epoch=openRef.current?.generation;if(epoch!==undefined)patch(scope,epoch,{limit:shown.limit+20});}}>Visa 20 till</Button>}
       {selected&&<div className="private-draft-copy-record">
        <h4>{selected.title||'Utkast utan titel'}</h4>
        <dl className="private-draft-copy-metadata"><div><dt>Status i kopian</dt><dd>{selected.archived?'Arkiverat utkast':'Aktivt utkast'}</dd></div><div><dt>Senast sparat</dt><dd>{displayTime(selected.updatedAt)}</dd></div></dl>
-       {readable.length>0?<div className="private-draft-copy-readable"><h4>Din sparade text</h4><p>Textfälten nedan går att markera och kopiera. Resten av innehållet finns i råtexten.</p>{readable.map((field,index)=><div className="private-draft-copy-text-field" key={index}><label htmlFor={rawLabel+'-readable-'+index}>{field.label} · endast läsning</label><Textarea id={rawLabel+'-readable-'+index} className="private-draft-copy-readable-text" readOnly spellCheck={false} value={field.value}/><Button type="button" variant="outline" onClick={()=>copyText(field.value)}>Kopiera {field.label.toLocaleLowerCase('sv-SE')}</Button></div>)}</div>:<p>Ingen vanlig textvy finns för det här innehållet. Du kan läsa och kopiera den ursprungliga råtexten nedan.</p>}
+       {readable.length>0?<div className="private-draft-copy-readable"><h4>Din sparade text</h4><p>Textfälten nedan går att markera och kopiera. Resten av innehållet finns i råtexten.</p>{readable.map((field,index)=><div className="private-draft-copy-text-field" key={index}><label htmlFor={rawLabel+'-readable-'+index}>{field.label} · endast läsning</label><Textarea id={rawLabel+'-readable-'+index} className="private-draft-copy-readable-text" readOnly spellCheck={false} value={field.value}/><Button type="button" variant="outline" onClick={()=>copyText(field.value,'readable-'+index)}>Kopiera {field.label.toLocaleLowerCase('sv-SE')}</Button>{copyFeedback('readable-'+index)}</div>)}</div>:<p>Ingen vanlig textvy finns för det här innehållet. Du kan läsa och kopiera den ursprungliga råtexten nedan.</p>}
        <details className="private-draft-copy-technical" key={'metadata-'+shown.selected}><summary>Tekniska uppgifter</summary><dl className="private-draft-copy-metadata"><div><dt>Utkastets ID</dt><dd>{selected.id}</dd></div><div><dt>Typ</dt><dd>{selected.kind}</dd></div><div><dt>Sammanhang</dt><dd>{selected.context||'Tomt'}</dd></div><div><dt>Revision</dt><dd>{selected.revision}</dd></div><div><dt>Sparförsökets ID</dt><dd>{selected.requestId}</dd></div></dl></details>
        <Button type="button" variant="ghost" aria-expanded={shown.showRaw} aria-controls={rawLabel+'-section'} onClick={()=>{const epoch=openRef.current?.generation;if(epoch!==undefined)patch(scope,epoch,{showRaw:!shown.showRaw});}}>{shown.showRaw?'Dölj råtext':'Visa råtext'}</Button>
-       {shown.showRaw&&<div id={rawLabel+'-section'}><label htmlFor={rawLabel}>Utkastets råtext · endast läsning</label><Textarea id={rawLabel} className="private-draft-copy-raw" readOnly spellCheck={false} value={selected.dataRaw}/><Button type="button" variant="outline" onClick={()=>copyText(selected.dataRaw)}>Kopiera råtext</Button></div>}
+       {shown.showRaw&&<div id={rawLabel+'-section'}><label htmlFor={rawLabel}>Utkastets råtext · endast läsning</label><Textarea id={rawLabel} className="private-draft-copy-raw" readOnly spellCheck={false} value={selected.dataRaw}/><Button type="button" variant="outline" onClick={()=>copyText(selected.dataRaw,'raw')}>Kopiera råtext</Button>{copyFeedback('raw')}</div>}
       </div>}
-      <div className="private-draft-copy-file-actions"><Button type="button" variant="ghost" aria-expanded={shown.showFile} aria-controls={fileRawLabel} onClick={()=>{const epoch=openRef.current?.generation;if(epoch!==undefined)patch(scope,epoch,{showFile:!shown.showFile});}}>{shown.showFile?'Dölj hela filtexten':'Visa hela kopians JSON-text'}</Button><Button type="button" variant="outline" onClick={()=>copyText(local.raw)}>Kopiera hela filtexten</Button></div>
+      <div className="private-draft-copy-file-actions"><Button type="button" variant="ghost" aria-expanded={shown.showFile} aria-controls={fileRawLabel} onClick={()=>{const epoch=openRef.current?.generation;if(epoch!==undefined)patch(scope,epoch,{showFile:!shown.showFile});}}>{shown.showFile?'Dölj hela filtexten':'Visa hela kopians JSON-text'}</Button><Button type="button" variant="outline" onClick={()=>copyText(local.raw,'file')}>Kopiera hela filtexten</Button></div>{copyFeedback('file')}
       {shown.showFile&&<div id={fileRawLabel}><label htmlFor={fileRawLabel+'-text'}>Filens ursprungliga JSON-text · endast läsning</label><Textarea id={fileRawLabel+'-text'} className="private-draft-copy-raw" readOnly spellCheck={false} value={local.raw}/></div>}
       <p className="private-draft-copy-boundary">Texten visas som den sparats. Ingen import eller ändring av kunder, utkast eller CRM-underlag görs här.</p>
      </section>}

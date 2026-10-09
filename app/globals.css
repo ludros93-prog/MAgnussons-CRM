@@ -341,3 +341,5 @@ body {
 
 .wf-sheet .wf-issue-heading{scroll-margin-block:12px;outline-offset:3px}
 .wf-sheet .wf-issue-heading:focus-visible,.wf-issue-list-heading:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
+
+.private-draft-copy-feedback p{margin:8px 0;overflow-wrap:anywhere}
