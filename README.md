@@ -1,3 +1,16 @@
+# Magnussons CRM – CRM-svar och uppföljningsfält, crm77 faktiskt levererad och publicerad
+
+Om kontots identitet, roll eller säljaranknytning ändras medan CRM hämtar eller förbereder ett svar får användaren ett behörighetsfel och behöver läsa in arbetsytan igen. Det nekade svaret innehåller inga CRM-uppgifter eller mutationskvittens. Öppna råa formulär och privata utkast bevaras vid felet. Sparandet kan redan ha lyckats innan svarskontrollen; oförändrat återförsök behåller samma request-ID, medan ändrad avsikt får nytt ID. Uppföljningens anteckningsfält får dessutom en höjdgräns som följer fönstret och egen scrollning; det faktiska slutliga layoututfallet redovisas i verifieringen.
+
+Kodkandidat `f22539e0e315a142954702e06d3f9b33ca238c47`, träd `4ce81511f0495400f56b17275193625810bfd23b`. **GitHub app-main** `e52b93542e27d3d75099a4f7e8b0b0a3e5d2471e`, [app-PR #129](https://github.com/ludros93-prog/MAgnussons-CRM/pull/129). **Sites-source** `7fcb9b08641502105e2ec91aa4a4752232e48b96`: samma träd 4ce81511f0495400f56b17275193625810bfd23b och exakt samma 367 spårade filbytes som slutkandidaten; 0 appändringar i tvåförälders källbrygga; vanlig fast-forward-push återläst. **Live v74**, deploy `appgdep_6ac913cb2f6481919ba7099c9bfea1ed`: succeeded 2026-10-09T16:22:44.733278+00:00, på [befintliga Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site). Kod, main och faktiskt publicerad Site är separata kvittenser; merge publicerar inte appen.
+
+[Verifiering](VALIDATION.md), [produktbeteende](PRODUCT.md), [status](STATUS-2026-10-05.md) och [driftgränser](OPERATIONS.md) redovisar resultat och kvarvarande arbete.
+
+Skrivprov använder syntetiska identiteter och isolerad lagring. Personlig inloggning/CRM-roll, observerad personalpilot, verkliga Fortnox-/Outlook-konton, full hostad backup/återställning och live-rollback är inte verifierade. Grön CI och browserprov bevisar ingen personalacceptans. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas. Konton, roller, verkliga kund-/orderdata, mejl, scheman, prompter och aktivering ändras inte genom denna rättning.
+
+
+## Historik före crm77-leveranskvittot
+
 # Magnussons CRM – rätta historisk text med bevarat ansvar
 
 Efter ett granskat profilavslut kan en historisk **förlorad affär få rättad förlustorsak**, och en **uppföljd order med registrerat fakturabelopp, referens och datum få rättad anteckning**. Profilens exakta sparade UUID används när det finns. Ett äldre tomt UUID kräver en entydig redan granskad ansvarskoppling och förblir tomt; ingen identitet förankras eller flyttas av textändringen.
