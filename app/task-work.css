@@ -39,6 +39,7 @@
 .follow-dialog [data-slot=select-trigger],
 .follow-dialog .draft-status,
 .follow-dialog .draft-status > span { min-width: 0; max-width: 100%; }
+.follow-dialog textarea { min-height: min(4rem, 40dvh); max-height: min(20rem, 40dvh); overflow-y: auto; }
 .follow-dialog .draft-status,
 .follow-dialog .draft-status > span { white-space: normal; overflow-wrap: anywhere; }
 .follow-dialog button:not([role=checkbox]) { min-width: 0; max-width: 100%; height: auto; white-space: normal; overflow-wrap: anywhere; }
