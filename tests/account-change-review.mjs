@@ -6,7 +6,7 @@ import ts from 'typescript';
 // Compile this new dependency before crm.mjs compiles the existing members
 // handler. The real tests below use only isolated, synthetic SQLite/R2 data.
 mkdirSync('work',{recursive:true});
-const modules={crm:'core','crm-auth':'auth','crm-db':'db','crm-store':'crm-store','production-assignment':'production-assignment','account-change-review':'account-change-review','account-change-work-schema':'account-change-work-schema','account-change-review-schema':'account-change-review-schema','record-conflicts':'record-conflicts',operations:'operations'};
+const modules={crm:'core','crm-auth':'auth','crm-db':'db','crm-store':'crm-store','production-assignment':'production-assignment','production-issue-responsibility':'production-issue-responsibility','account-change-review':'account-change-review','account-change-work-schema':'account-change-work-schema','account-change-review-schema':'account-change-review-schema','record-conflicts':'record-conflicts',operations:'operations'};
 function compile(file,target){let source=readFileSync(file,'utf8');for(const [from,to] of Object.entries(modules))source=source.replaceAll("'./"+from+"'","'./"+to+".mjs'").replaceAll("'@/lib/"+from+"'","'./"+to+".mjs'");writeFileSync(target,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);}
 compile('lib/account-change-work-schema.ts','work/account-change-work-schema.mjs');
 compile('lib/account-change-review-schema.ts','work/account-change-review-schema.mjs');
