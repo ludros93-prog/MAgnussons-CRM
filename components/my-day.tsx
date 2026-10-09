@@ -10,6 +10,7 @@ import {canFollowUp} from '@/lib/follow-up';
 import {personalOwner,personalResultScope,salesMetrics} from '@/lib/sales-dashboard';
 import {taskOwnerLabel,taskResponsibilityKind,taskResponsibilityContext} from '@/lib/task-responsibility';
 import {meetingOwnerLabel} from '@/lib/meeting-responsibility';
+import {ownsProductionIssue} from '@/lib/production-issue-responsibility';
 import {day,plusDays,concerns,type State,type Order,type Task,type Meeting} from '@/lib/crm';
 import {useDrafts,DraftStatus} from './draft-workspace';
 import {ReceiptQueue} from './receipt-queue';
@@ -25,8 +26,9 @@ import {money,displayDate,type SaveAction} from './business-ui';
 const taskLabel=(t:Task)=>t.kind==='quote'?'Följ upp offerten':t.kind==='invoice_ready'?'Registrera faktura':['handover','proof_deadline','order_deadline'].includes(t.kind)?'Färdigställ underlag':canFollowUp(t)?'Följ upp':'Hantera aktivitet';
 function openSection(id:string){const section=document.getElementById(id);if(section){section.focus({preventScroll:true});section.scrollIntoView({block:'start',behavior:'smooth'})}}
 
-export function MyDay({st,space,save,saveResponsibility,busy,refreshResponsibility,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder,onMeeting,onReceipt,onView,onDraft}:{st:State;space:string;save:SaveAction;saveResponsibility:TaskResponsibilitySaveAction;busy:boolean;refreshResponsibility:()=>Promise<State>;owner:string;onOwnerChange:(owner:string)=>void;onCustomer:(id:string)=>void;onTask:(t:Task)=>void;onCreate:(type:string)=>void;onOrder:(o:Order)=>void;onMeeting:(m:Meeting)=>void;onReceipt:(id:string)=>void;onView:(view:string)=>void;onDraft:(draft:DraftRecord)=>void}){
+export function MyDay({st,space,save,saveResponsibility,busy,refreshResponsibility,owner,onOwnerChange,onCustomer,onTask,onCreate,onOrder,onProductionOrder,onMeeting,onReceipt,onView,onDraft}:{st:State;space:string;save:SaveAction;saveResponsibility:TaskResponsibilitySaveAction;busy:boolean;refreshResponsibility:()=>Promise<State>;owner:string;onOwnerChange:(owner:string)=>void;onCustomer:(id:string)=>void;onTask:(t:Task)=>void;onCreate:(type:string)=>void;onOrder:(o:Order)=>void;onProductionOrder:(o:Order)=>void;onMeeting:(m:Meeting)=>void;onReceipt:(id:string)=>void;onView:(view:string)=>void;onDraft:(draft:DraftRecord)=>void}){
  const draftListId=useId();
+ const myIssuesId=useId();
  const [showAllDrafts,setShowAllDrafts]=useState(false),[discardDraft,setDiscardDraft]=useState('');
  const [responsibilityTaskId,setResponsibilityTaskId]=useState(''),closeResponsibility=useCallback(()=>setResponsibilityTaskId(''),[]);
  const [responsibilityMeetingId,setResponsibilityMeetingId]=useState(''),closeMeetingResponsibility=useCallback(()=>setResponsibilityMeetingId(''),[]);
@@ -42,6 +44,7 @@ export function MyDay({st,space,save,saveResponsibility,busy,refreshResponsibili
  const tasks=st.tasks.filter(t=>matchTask(t)&&!t.done&&t.kind!=='receipt').sort((a,b)=>a.due.localeCompare(b.due)),now=tasks.filter(t=>t.due<=today),late=now.filter(t=>t.due<today),todayTasks=now.filter(t=>t.due===today),later=tasks.filter(t=>t.due>today&&t.due<=plusDays(today,7)),future=tasks.filter(t=>t.due>plusDays(today,7));
  const meetings=st.meetings.filter(m=>matchMeeting(m)&&m.status==='planned'&&m.date>=today&&m.date<=plusDays(today,7)).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
  const issues=st.orders.filter(o=>match(o)&&['submitted','printed'].includes(o.production.status)&&o.production.issue),customers=st.customers.filter(c=>match(c)&&concerns(c,today,st).length);
+ const myIssues=['admin','seller'].includes(st.viewer?.role||'')?st.orders.filter(o=>['submitted','printed','dispatched'].includes(o.production.status)&&o.production.issue&&ownsProductionIssue(o.production,{id:st.viewer?.id||'',memberId:st.viewer?.memberId})):[];
  const receipts=st.orders.filter(o=>match(o)&&awaitingReceipt(o)).sort((a,b)=>(a.deliveryNextCheck||a.deliveryDate).localeCompare(b.deliveryNextCheck||b.deliveryDate));
  const signals=workSignals(st).filter(s=>{if(!s.taskId)return match(s);const t=tasksById.get(s.taskId);return !!t&&matchTask(t)}),cname=(id:string)=>st.customers.find(c=>c.id===id)?.name||'Kund';
  const signalResponsibility=(s:typeof signals[number])=>{const t=s.taskId?tasksById.get(s.taskId):undefined;return t?taskResponsibility(t):s.owner};
@@ -78,6 +81,17 @@ export function MyDay({st,space,save,saveResponsibility,busy,refreshResponsibili
    <button data-urgent={late.length>0} onClick={()=>openSection('daily-tasks')}><Clock3 size={18}/><span>Försenat</span><b>{late.length}</b></button>
    <button data-urgent={issues.length>0} onClick={()=>issues.length?openSection('daily-blocked'):onView('orders')}><Package size={18}/><span>Orderhinder</span><b>{issues.length}</b></button>
   </div>}
+  {myIssues.length>0&&<section className="panel day-blocked day-my-issues" aria-labelledby={myIssuesId}>
+   <div className="panel-head"><div><span className="day-section-label">DITT KONTO · NÄSTA STEG I PRODUKTIONEN</span><h2 id={myIssuesId}><AlertTriangle size={20} aria-hidden="true"/>Hinder du ansvarar för <span className="count">{myIssues.length}</span></h2></div></div>
+   <p className="day-quiet-empty">Ditt registrerade hinderansvar visas här även om ordern tillhör en kollega eller jobbet är skickat. Orderansvar och försäljningsresultat ligger kvar hos respektive ansvarig.</p>
+   {myIssues.map((o,index)=><div className="daily-row" key={o.id} data-production-issue-order={o.id}><div>
+    <span className="day-row-kind">{o.production.status==='dispatched'?'Skickat · öppet hinder':'Öppet produktionshinder'}</span>
+    <b id={myIssuesId+'-'+index}>{st.deals.find(d=>d.id===o.dealId)?.title||'Arbetsorder'}</b>
+    <p className="whitespace-pre-wrap">{o.production.issue}</p>
+    <small>{cname(o.customerId)} · orderansvar: {o.owner}</small>
+    <small>Rapporterat av: {o.production.issueOwnerName||'Rapportör saknas i underlaget'}.</small>
+   </div><Button type="button" variant="outline" aria-describedby={myIssuesId+'-'+index} onClick={()=>onProductionOrder(o)}>Öppna jobbet</Button></div>)}
+  </section>}
   <div className="daily-columns">
    <div className="day-primary">
     {hasScope&&<section className="panel day-task-panel" id="daily-tasks" tabIndex={-1}><div className="panel-head"><div><span className="day-section-label">KUNDKONTAKT & UPPFÖLJNING</span><h2>{team?'Teamets uppgifter idag':'Att göra idag'} <span className="count">{now.length}</span></h2></div>{!readonly&&<Button variant="ghost" size="sm" onClick={()=>onCreate('task')}><Plus size={16}/>Planera aktivitet</Button>}</div>{taskRows(now)}{!now.length&&<div className="day-empty"><CheckCircle2 size={21}/><div><b>Inget planerat till idag</b><p>{later.length?later.length+' aktiviteter finns under kommande sju dagar.':future.length?future.length+' aktiviteter finns under senare planerade uppgifter.':'Nya aktiviteter visas här när de planeras.'}</p></div></div>}{later.length>0&&<details className="day-upcoming"><summary>Kommande sju dagar <span>{later.length}</span></summary>{taskRows(later)}</details>}{future.length>0&&<details className="day-upcoming"><summary>Senare planerade uppgifter <span>{future.length}</span></summary>{taskRows(future)}</details>}</section>}

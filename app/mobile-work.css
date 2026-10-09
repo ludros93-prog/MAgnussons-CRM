@@ -172,3 +172,5 @@
  .crm-form-sheet { scroll-padding-bottom: 24px; }
  .crm-form-sheet .form-footer { position: static; }
 }
+
+.production-workspace .work-card { min-width: 0; overflow-wrap: anywhere; }
