@@ -1,3 +1,15 @@
+# Produktkvittens – privat och återupptagbar behovsöverlämning
+
+Administratören kan spara en påbörjad **Byt behovsansvar**-överlämning privat, stänga och fortsätta från **Min dag → Fortsätt där du slutade**. Rå orsak, val av målprofil/uppgifter och hela det frysta kund-, behovs-, profil- och uppgiftsunderlaget följer utkastet. Privat sparning ändrar inget behovsansvar. Efter återupptagning krävs ny granskning; **Spara nytt behovsansvar** använder exakt egen kvitterad utkastrevision och sparar behov, valda uppgifter, deras ansvarshistorik, händelse, mutationskvittens och privat arkiv i en atomisk skrivning.
+
+Två privata versioner jämförs separat från förändrat CRM-underlag. Hämtning av aktuellt CRM antar inget nytt granskningsunderlag. Uttrycklig adoption bevarar rå orsak och fortfarande giltiga val, visar borttagna val och kräver ny granskning. Ursprunglig kund/behovskoppling får inte bytas. Efter rollbyte till säljare kan eget sparat underlag läsas/kopieras och en identisk kvitterad version arkiveras; skapande, redigering och ansvarsbyte kräver admin. Borttaget behov behåller återhämtningstext. Obekräftad CRM-kvittens behåller exakt återförsök och spärrar stängning/arkivering tills resultatet är känt. Arkiverat privat utkast är i sig inget bevis på lyckad CRM-inlämning.
+
+Kodkandidat `64967f94c4fc1b4703682b1e2536774908249fad`, träd `843b011fff454229145e0a3f196f010657cf08a1`. **GitHub app-main** `8f4e3351a4407dce35ea54cbe4436921dc2cc6b9` efter [PR #125](https://github.com/ludros93-prog/MAgnussons-CRM/pull/125). **Sites-source** `7b4d84685a4c569adeaa72298bea3b87423f4657` har samma 361 spårade filer byte för byte. **Live v72**, deploy `succeeded` 2026-10-09T12:11:43.512594+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site). Appkod, GitHub-main och publicerad Site är separata kvittenser; merge är inte publicering.
+
+Samtliga skrivprov använder syntetiska identiteter och data i isolerade testmiljöer. Personlig inloggning/CRM-roll, observerad personalpilot, full hostad backup/restore/live-rollback och verkliga Fortnox-/Outlook-konton eller andra integrationer är inte verifierade. Grön CI och browser bevisar ingen personalacceptans. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas. Inga schema-/prompt-/aktiveringsändringar, mejl eller riktiga kund-/order-/kontoskrivningar ingår i körningen.
+
+## Historik före crm75-leveranskvittot
+
 # Produktändring – återupptagbar behovsöverlämning
 
 Administratörens årshjulsöverlämning får ett eget privat utkast med rå orsak, uttryckliga mål-/uppgiftsval och fullständigt fryst kund-, behovs-, profil- och uppgiftsunderlag. Återupptagning från Min dag kräver ny granskning. Privat sparning ändrar inget behovsansvar; CRM-inlämning binds till exakt egen kvitterad revision och förbrukas atomiskt med behov, valda uppgifter, historik, händelse och mutationskvittens.

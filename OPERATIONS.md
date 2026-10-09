@@ -1,3 +1,19 @@
+# Driftkvittens – crm75 privat behovsöverlämning
+
+Kodkandidat `64967f94c4fc1b4703682b1e2536774908249fad`, träd `843b011fff454229145e0a3f196f010657cf08a1`. **GitHub app-main** `8f4e3351a4407dce35ea54cbe4436921dc2cc6b9` efter [PR #125](https://github.com/ludros93-prog/MAgnussons-CRM/pull/125). **Sites-source** `7b4d84685a4c569adeaa72298bea3b87423f4657` har samma 361 spårade filer byte för byte. **Live v72**, deploy `succeeded` 2026-10-09T12:11:43.512594+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site). Appkod, GitHub-main och publicerad Site är separata kvittenser; merge är inte publicering.
+
+Befintlig privat `form`-rad får det särskilda sammanhanget `yearwheel_responsibility_transfer` och ett strikt kuvert. Inga SQL-migrationer, nya tabeller eller ändrade delade behov-/uppgiftsscheman tillkommer. Kuvertet bevarar råtext, val, hela ursprungsunderlaget och exakt privat revision; granskningsrätten sparas inte i kuvertet. Personlig råkopia bevarar även okända sammanhang utan normalisering. Gemensam CRM-backup omfattar inte privata utkast, konton eller Outlook. Lokal fullfilåterställning bevarar separata privata råposter; den är ingen hostad driftåterställning. Äldre oförändrad `d06bcd3`/live v71 saknar kompatibel editor/consumer för det nya privata sammanhanget och kan välja generisk form-fallback. Använd kompatibel framåträttning, eller behåll rå privata rader och en kompatibel kopieläsare med äldre överlämningsredigering spärrad. En återgång får inte låta äldre editor skriva bort nytt underlag. Tidigare delade ansvarshistorikers formatgränser består. Ingen automatisk import, återaktivering, allmän utkastrestore eller ny kundacceptans införs.
+
+Förvara den egna råkopian privat utanför Git. Välj samma eget konto/arbetsyta vid lokal textåterhämtning och granska aktuell CRM-post innan vanlig sparning. Kopian skapar inte kontoanslutning, import eller ny kundacceptans.
+
+Samma Site/URL, begränsad åtkomstpolicy revision 2, miljörevision 1, auth-klient, bindings och automationer är oförändrade enligt publiceringskvittot. Anonym HTTPS: /: HTTP401, /api/crm?space=live: HTTP401, /api/crm/drafts?space=live: HTTP401; utan authheaders/cookies, redirectföljning eller svarskroppar. Detta är anonym ingress, ingen personlig inloggning.
+
+Föreskriven lokal helper/paketering är fortfarande otillgänglig; faktiskt native serverbygge används enligt publiceringsverktygets reservväg. Ingen egen packager eller ny Site.
+
+Samtliga skrivprov använder syntetiska identiteter och data i isolerade testmiljöer. Personlig inloggning/CRM-roll, observerad personalpilot, full hostad backup/restore/live-rollback och verkliga Fortnox-/Outlook-konton eller andra integrationer är inte verifierade. Grön CI och browser bevisar ingen personalacceptans. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas. Inga schema-/prompt-/aktiveringsändringar, mejl eller riktiga kund-/order-/kontoskrivningar ingår i körningen.
+
+## Historik före crm75-leveranskvittot
+
 # Driftgräns – privat behovsöverlämning
 
 Lagringen använder befintlig privat form-rad/context yearwheel_responsibility_transfer; inga SQL-migrationer eller ändrade delade behov-/uppgiftsscheman. Rå utkastkopia bevarar nya context utan formatändring. Äldre d06/v71 saknar kompatibel editor/consumer och har en generisk form-fallback: använd inte dess redigering som säker återgång efter nya utkast. Behåll rå privata rader och kompatibel kopieläsare; korrigera framåt eller spärra äldre överlämningsredigering. Arkiverat utkast bevisar inte att CRM-inlämning lyckats. Automatisk import eller generell hostad restore införs inte.
