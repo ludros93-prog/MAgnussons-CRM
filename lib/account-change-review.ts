@@ -134,6 +134,13 @@ export async function buildAccountChangeReview(input:AccountChangeInput,target:A
 export function accountChangeWriteGuard(target:AccountChangeTarget,requested:AccountChangeRequested):{sql:string;values:unknown[]}{
  assertAccountChangeTarget(target);
  const loss=accountChangeLoss(target,requested);if(!loss.jobs&&!loss.issues)return {sql:'',values:[]};
+ // D1 limits expression depth to 100. Balance Boolean trees rather than
+ // dropping guards: flat SQL OR chains otherwise grow one level per check.
+ const any=(checks:readonly string[]):string=>{
+  if(checks.length===1)return checks[0];
+  const middle=Math.ceil(checks.length/2);
+  return `(${any(checks.slice(0,middle))} OR ${any(checks.slice(middle))})`;
+ };
  const value=(key:string,fallback="''")=>sqlTrim(`COALESCE(json_extract(work.data,'$.production.${key}'),${fallback})`);
  const hasIssueResponsibility="json_type(work.data,'$.production.issueResponsibility') IS NOT NULL";
  const user=value('assigneeId'),memberId=value('assigneeMemberId'),name=value('assigneeName'),issue=value('issue'),issueOwner=`CASE WHEN ${hasIssueResponsibility} THEN ${value('issueResponsibility.userId')} ELSE ${value('issueOwnerId')} END`,issueMember=`CASE WHEN ${hasIssueResponsibility} THEN ${value('issueResponsibility.memberId')} ELSE '' END`,issueName=`CASE WHEN ${hasIssueResponsibility} THEN ${value('issueResponsibility.name')} ELSE ${value('issueOwnerName')} END`,status="COALESCE(json_extract(work.data,'$.production.status'),'draft')",activeJob=`${status} IN ('submitted','printed')`;
@@ -156,12 +163,14 @@ export function accountChangeWriteGuard(target:AccountChangeTarget,requested:Acc
  // UUID and UTC datetime schemas do not trim. SQLite datetime() accepts impossible
  // calendar dates and length(text) truncates NUL, so validate exact raw syntax,
  // decimal components and leap years independently, preserving Zod's optional
- // seconds and arbitrary nonempty fractional precision.
+ // seconds and arbitrary nonempty fractional precision. Keep each GLOB pattern
+ // short as D1 also limits pattern complexity.
  const auditRaw=(key:string)=>`COALESCE(json_extract(entry.value,'$.${key}'),'')`,auditId=auditRaw('id'),auditAt=auditRaw('at');
  const year=`CAST(substr(${auditAt},1,4) AS INTEGER)`,month=`CAST(substr(${auditAt},6,2) AS INTEGER)`,day=`CAST(substr(${auditAt},9,2) AS INTEGER)`;
  const lastDay=`CASE WHEN ${month}=2 THEN CASE WHEN ${year}%400=0 OR (${year}%4=0 AND ${year}%100<>0) THEN 29 ELSE 28 END WHEN ${month} IN (4,6,9,11) THEN 30 ELSE 31 END`;
  const dateTimeInvalid=[
-  `${auditAt} NOT GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]T[0-9][0-9]:[0-9][0-9]*Z'`,
+  `${auditAt} NOT GLOB '????-??-??T??:??*Z'`,
+  `(substr(${auditAt},1,4)||substr(${auditAt},6,2)||substr(${auditAt},9,2)||substr(${auditAt},12,2)||substr(${auditAt},15,2)) GLOB '*[^0-9]*'`,
   `${month} NOT BETWEEN 1 AND 12`,`${day} NOT BETWEEN 1 AND ${lastDay}`,
   `CAST(substr(${auditAt},12,2) AS INTEGER) NOT BETWEEN 0 AND 23`,`CAST(substr(${auditAt},15,2) AS INTEGER) NOT BETWEEN 0 AND 59`,
   `NOT (length(${auditAt})=17 OR (length(${auditAt})=20 AND substr(${auditAt},17,3) GLOB ':[0-9][0-9]') OR (length(${auditAt})>=22 AND substr(${auditAt},17,4) GLOB ':[0-9][0-9].' AND substr(${auditAt},21,length(${auditAt})-21) NOT GLOB '*[^0-9]*'))`,
@@ -187,12 +196,17 @@ export function accountChangeWriteGuard(target:AccountChangeTarget,requested:Acc
   ...['userId','memberId','name'].map(key=>typedText('work.data',currentPath+'.'+key,true)),
   `EXISTS(SELECT 1 FROM json_each(work.data,'${currentPath}') WHERE key NOT IN ('userId','memberId','name','history'))`,
   `EXISTS(SELECT 1 FROM json_each(work.data,'${currentPath}') GROUP BY key HAVING COUNT(*)>1)`,
-  `CASE WHEN json_type(work.data,'${historyPath}') IS NOT 'array' THEN 1 ELSE (json_array_length(work.data,'${historyPath}') NOT BETWEEN 1 AND 1000 OR EXISTS(SELECT 1 FROM json_each(work.data,'${historyPath}') AS entry WHERE CASE WHEN entry.type<>'object' THEN 1 ELSE (${auditInvalid.join(' OR ')}) END)) END`,
+  `CASE WHEN json_type(work.data,'${historyPath}') IS NOT 'array' THEN 1 ELSE (json_array_length(work.data,'${historyPath}') NOT BETWEEN 1 AND 1000 OR EXISTS(SELECT 1 FROM json_each(work.data,'${historyPath}') AS entry WHERE CASE WHEN entry.type<>'object' THEN 1 ELSE (${any(auditInvalid)}) END)) END`,
   ...[['userId','toUserId'],['memberId','toMemberId'],['name','toName']].map(([current,last])=>`${currentValue(current)}<>${lastValue(last)}`)
  ];
- invalid.push(`(${hasIssueResponsibility} AND (${responsibilityInvalid.join(' OR ')}))`);
+ // Keep strict audit validation in a sibling subquery: nesting it under the
+ // general order predicate exceeds D1's depth limit even with balanced OR.
+ // Both predicates still run inside the same account write and fail closed.
+ const invalidResponsibility=`CASE WHEN json_valid(work.data)=0 THEN 1 ELSE CASE WHEN ${hasIssueResponsibility} THEN ${any(responsibilityInvalid)} ELSE 0 END END`;
  const unresolvedJob=`(${activeJob} AND ((${user}='' AND (${memberId}<>'' OR ${name}<>'')) OR (${user}<>'' AND NOT ${validMember(user,memberId)})))`,unresolvedIssue=`(${issue}<>'' AND ((${issueOwner}='' AND (${issueMember}<>'' OR ${issueName}<>'')) OR (${issueOwner}<>'' AND NOT ${validMember(issueOwner,issueMember)})))`;
  const blockedJob=loss.jobs?`(${activeJob} AND (${memberId}=target.id OR (target.user_id IS NOT NULL AND target.user_id<>'' AND ${user}=target.user_id)))`:'0',blockedIssue=loss.issues?`(${issue}<>'' AND (${issueMember}=target.id OR (target.user_id IS NOT NULL AND target.user_id<>'' AND ${issueOwner}=target.user_id)))`:'0';
- const sql=` AND NOT EXISTS(SELECT 1 FROM crm_spaces WHERE id='' OR id<>${sqlTrim('id')}) AND NOT EXISTS(SELECT 1 FROM crm_orders AS work LEFT JOIN crm_spaces AS scope ON scope.id=work.space JOIN crm_members AS target ON target.id=? WHERE scope.id IS NULL OR work.space='' OR work.space<>${sqlTrim('work.space')} OR work.id='' OR work.id<>${sqlTrim('work.id')} OR CASE WHEN json_valid(work.data)=0 THEN 1 ELSE (${invalid.join(' OR ')} OR ${unresolvedJob} OR ${unresolvedIssue} OR ${blockedJob} OR ${blockedIssue}) END)`;
+ const invalidOrder=`CASE WHEN json_valid(work.data)=0 THEN 1 ELSE ${any([...invalid,unresolvedJob,unresolvedIssue,blockedJob,blockedIssue])} END`;
+ const invalidScope=any(['scope.id IS NULL',"work.space=''",`work.space<>${sqlTrim('work.space')}`,"work.id=''",`work.id<>${sqlTrim('work.id')}`,invalidOrder]);
+ const sql=` AND NOT EXISTS(SELECT 1 FROM crm_spaces WHERE id='' OR id<>${sqlTrim('id')}) AND NOT EXISTS(SELECT 1 FROM crm_orders AS work LEFT JOIN crm_spaces AS scope ON scope.id=work.space JOIN crm_members AS target ON target.id=? WHERE ${invalidScope}) AND NOT EXISTS(SELECT 1 FROM crm_orders AS work WHERE ${invalidResponsibility})`;
  return {sql,values:[target.id]};
 }
