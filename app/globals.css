@@ -379,4 +379,17 @@ body {
 .commercial-anchor-list-actions{padding:.75rem 1.5rem;margin-bottom:0;border-top:1px solid #edf0f3}
 .commercial-anchor-dialog .commercial-anchor-scope h3{font-size:1.125rem;line-height:1.5;letter-spacing:0}
 .commercial-anchor-dialog .customer-anchor-review{background:#fff;border-left:3px solid #29877b}
+.commercial-anchor-dialog .customer-anchor-head [data-slot=dialog-title] span{overflow-wrap:normal;word-break:normal;hyphens:manual}
+.order-responsibility-entry .commercial-anchor-actions{margin-top:.75rem;margin-bottom:0}
+.order-responsibility-entry [data-order-responsibility-heading]:focus{outline:3px solid var(--ring);outline-offset:3px;scroll-margin:12px}
 @media(max-width:767px){.commercial-anchor-list-actions{padding:.75rem 1rem}.commercial-anchor-list-actions>button{flex:1 1 100%}}
+
+/* Keep long order titles readable within the card instead of widening the page. */
+.operations .production-grid,.operations .production-card,.operations .production-card>.biz-head,.operations .production-card>.biz-head>div{min-width:0}
+.operations .production-card>.biz-head h3,.operations .production-card>.biz-head p{max-width:100%;overflow-wrap:anywhere;word-break:normal}
+@media(max-width:760px){.operations .production-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Let order queues wrap into readable rows when the text size grows. */
+.operations>[data-slot=tabs]{min-width:0;max-width:100%}
+.operations>[data-slot=tabs]>[data-slot=tabs-list]{width:100%;min-width:0;max-width:100%;height:auto;flex-wrap:wrap;gap:.25rem;justify-content:flex-start}
+.operations>[data-slot=tabs]>[data-slot=tabs-list]>[data-slot=tabs-trigger]{flex:1 1 max-content;min-width:0;max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:normal;word-break:normal;line-height:1.5;padding:8px}

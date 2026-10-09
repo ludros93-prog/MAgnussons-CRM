@@ -12,7 +12,7 @@ import {recordBasis,sellerProfilesBasis} from './record-conflicts';
 import {historicalCommercialCorrectionEligibility} from './historical-commercial-correction';
 import {SellerProfileRetireSchema,retireSellerProfile,protectRetiredSellerResponsibilities,snapshotRetiredSellerResponsibilities} from './seller-profile-retirement';
 import {RuleError} from './crm-errors';
-import {CommercialResponsibilityHistorySchema,CommercialResponsibilityTransferSchema,transferCommercialResponsibility,validateCommercialResponsibilityReferences,CommercialResponsibilityAnchorSchema,anchorCommercialResponsibility,type CommercialResponsibilityAnchorTarget} from './commercial-responsibility';
+import {CommercialResponsibilityHistorySchema,CommercialResponsibilityTransferSchema,transferCommercialResponsibility,validateCommercialResponsibilityReferences,CommercialResponsibilityAnchorSchema,anchorCommercialResponsibility,OrderResponsibilityAnchorSchema,anchorOrderResponsibility,type CommercialResponsibilityAnchorTarget} from './commercial-responsibility';
 import {CustomerResponsibilityHistorySchema,CustomerResponsibilityTransferSchema,CustomerResponsibilityAnchorSchema,transferCustomerResponsibility,anchorCustomerResponsibility,validateCustomerResponsibilityReferences,type CustomerResponsibilityAnchorTarget} from './customer-responsibility';
 import {CustomerReopenSchema,reopenCustomer} from './customer-reopen';
 import {TaskResponsibilityHistorySchema,TaskResponsibilityTransferSchema,protectTaskResponsibility,assignTaskResponsibilities,validateTaskResponsibilityReferences,transferTaskResponsibility,recordTaskBundleTransfers,taskResponsibilityKind,deliveryTaskResponsibilityBlocker} from './task-responsibility';
@@ -164,6 +164,11 @@ export function applyAction(current:State,action:Action,actor?:Actor,trustedAnch
   need(actor,'Logga in för att koppla affärsansvar.');need(trustedAnchorTarget,'Affärsansvaret kräver ett separat verifierat anslutet konto.');
   anchorCommercialResponsibility(st,CommercialResponsibilityAnchorSchema.parse(action.data),actor!,trustedAnchorTarget!);
   // Link only the parent: no task bundle, automatic IDs or historical attribution.
+  return finish(st);
+ }
+ if(action.type==='order_responsibility_anchor'){
+  need(actor,'Logga in för att koppla orderansvar.');need(trustedAnchorTarget,'Orderansvaret kräver ett separat verifierat anslutet konto.');
+  anchorOrderResponsibility(st,OrderResponsibilityAnchorSchema.parse(action.data),actor!,trustedAnchorTarget!);
   return finish(st);
  }
  if(action.type==='customer_responsibility_transfer'){

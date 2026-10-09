@@ -1,6 +1,7 @@
 import {type Order,type State,TaskSchema,day} from './crm';
 import {recordBasis} from './record-conflicts';
 import {directRows} from './direct-delivery';
+import {isCommercialResponsibilityAnchorHistory} from './commercial-responsibility';
 // Receipt work can replace delivery tracking or close it. Keep the context
 // opened by the user, including every affected task and the dispatch evidence,
 // while unrelated invoices, notes and other orders remain independent.
@@ -17,4 +18,14 @@ export function receiptBasis(st:State,orderId:string):string {
 }
 export function orderBasis(o:Order){return JSON.stringify([o.id,o.owner,o.stage,o.deliveryDate,o.shippingAddress,o.proofRequired,o.proofApproved,o.proofFileId,o.proofVersion,o.approvedBy,o.approvedDate,o.supplierConfirmed,o.production.status,o.production.submittedAt,o.productionHistory.length,o.commercialVersion,o.pendingAmendment?.id||'']);}
 export function awaitingReceipt(o:Order){return (o.stage==='shipping'||o.production.status==='dispatched')&&!['delivered','followed'].includes(o.stage)&&!o.deliveredDate;}
-export function ensureReceiptTasks(st:State){for(const o of st.orders){if(!awaitingReceipt(o))continue;const old=st.tasks.find(t=>t.dealId===o.dealId&&t.kind==='receipt');if(old)continue;const title=st.deals.find(d=>d.id===o.dealId)?.title||'Order';st.tasks.push(TaskSchema.parse({id:'receipt-'+o.id,customerId:o.customerId,dealId:o.dealId,owner:o.owner,ownerProfileId:o.ownerProfileId,title:('Bekräfta kundens mottagande: '+title).slice(0,240),due:o.deliveryNextCheck||o.deliveryDate||day(),kind:'receipt'}));}return st;}
+export function ensureReceiptTasks(st:State){for(const o of st.orders){
+ if(!awaitingReceipt(o))continue;
+ const old=st.tasks.find(t=>t.dealId===o.dealId&&t.kind==='receipt');if(old)continue;
+ const title=st.deals.find(d=>d.id===o.dealId)?.title||'Order',taskId='receipt-'+o.id,history=o.responsibilityTransfers,anchor=history.length===1?history[0]:undefined;
+ // A neutral order link must not give an already visible receipt projection
+ // a new identity. An anchor before dispatch has no such snapshot, so its
+ // genuinely new receipt still starts with the order's stable profile.
+ const frozen=anchor&&isCommercialResponsibilityAnchorHistory(anchor)&&anchor.targetType==='order'?anchor.receiptProjection:null;
+ const ownerProfileId=frozen?.taskId===taskId?frozen.ownerProfileId:o.ownerProfileId;
+ st.tasks.push(TaskSchema.parse({id:taskId,customerId:o.customerId,dealId:o.dealId,owner:o.owner,ownerProfileId,title:('Bekräfta kundens mottagande: '+title).slice(0,240),due:o.deliveryNextCheck||o.deliveryDate||day(),kind:'receipt'}));
+ }return st;}
