@@ -7,7 +7,7 @@ import ts from 'typescript';
 // Compile and exercise the real read handler against an independent synthetic
 // SQLite/R2 fixture. No real account, order, file or external service is used.
 export async function verifyProductionInventory(){
- const replacements={crm:'core','crm-auth':'auth','crm-db':'db','crm-store':'crm-store','production-assignment':'production-assignment','production-inventory':'production-inventory','record-conflicts':'record-conflicts','operations':'operations'};
+ const replacements={crm:'core','crm-auth':'auth','crm-db':'db','crm-store':'crm-store','production-assignment':'production-assignment','production-inventory':'production-inventory','production-issue-responsibility':'production-issue-responsibility','record-conflicts':'record-conflicts','operations':'operations'};
  function compile(file,target){let source=readFileSync(file,'utf8');for(const [from,to] of Object.entries(replacements))source=source.replaceAll("'./"+from+"'","'./"+to+".mjs'").replaceAll("'@/lib/"+from+"'","'./"+to+".mjs'");writeFileSync(target,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);}
  compile('lib/production-inventory.ts','work/production-inventory.mjs');
  compile('app/api/crm/production-inventory/route.ts','work/production-inventory-api.mjs');
