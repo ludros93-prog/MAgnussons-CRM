@@ -8,6 +8,7 @@ await (await import('./production-assignment-legacy.mjs')).verifyProductionAssig
 await (await import('./production-issue-edit.mjs')).verifyProductionIssueEdit();
 await (await import('./production-dispatched-issue.mjs')).verifyProductionDispatchedIssue();
 await (await import('./production-inventory.mjs')).verifyProductionInventory();
+await (await import('./production-issue-responsibility.mjs')).verifyProductionIssueResponsibility();
 await (await import('./account-change-review.mjs')).verifyAccountChangeReview();
 await (await import('./account-change-work.mjs')).verifyAccountChangeWork();
 import ts from 'typescript';import {readFileSync,writeFileSync} from 'node:fs';import assert from 'node:assert/strict';

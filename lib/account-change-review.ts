@@ -1,3 +1,4 @@
+import {ProductionIssueResponsibilitySchema,validateProductionIssueResponsibility} from './production-issue-responsibility';
 import {database} from './crm-db';
 import type {Member} from './crm-auth';
 import {recordBasis} from './record-conflicts';
@@ -32,7 +33,7 @@ export function assertAccountChangeTarget(target:AccountChangeTarget){
 const whitespace=' \t\n\v\f\r\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000\ufeff';
 const sqlTrim=(expression:string)=>`trim(${expression},'${whitespace}')`;
 const sorted=<T,>(rows:T[])=>rows.map(value=>({value,basis:recordBasis(value)})).sort((a,b)=>a.basis<b.basis?-1:a.basis>b.basis?1:0).map(row=>row.value);
-const relevantKeys=new Set(['status','workId','assigneeId','assigneeMemberId','assigneeName','issue','issueOwnerId','issueOwnerName']);
+const relevantKeys=new Set(['status','workId','assigneeId','assigneeMemberId','assigneeName','issue','issueOwnerId','issueOwnerName','issueResponsibility']);
 // JSON.parse chooses the last duplicate key; SQLite JSON chooses the first.
 // Reject ambiguous decision fields before either representation can authorize
 // a reduction. Other order fields are outside this selective review context.
@@ -44,7 +45,7 @@ function rejectAmbiguousKeys(source:string){
   if(depth>100)throw Error('Invalid stored order nesting');space();
   if(source[offset]==='{'){
    offset++;space();const seen=new Set<string>();if(source[offset]==='}'){offset++;return;}
-   while(offset<source.length){space();const key=string(),decision=path.length===0&&(key==='id'||key==='production')||path.length===1&&path[0]==='production'&&relevantKeys.has(key);if(decision&&seen.has(key))throw Error('Ambiguous stored production fields');seen.add(key);space();offset++;walk([...path,key],depth+1);space();if(source[offset++]==='}')return;}
+   while(offset<source.length){space();const key=string(),decision=path.length===0&&(key==='id'||key==='production')||path.length===1&&path[0]==='production'&&relevantKeys.has(key)||path[0]==='production'&&path[1]==='issueResponsibility';if(decision&&seen.has(key))throw Error('Ambiguous stored production fields');seen.add(key);space();offset++;walk([...path,key],depth+1);space();if(source[offset++]==='}')return;}
   }else if(source[offset]==='['){offset++;space();if(source[offset]===']'){offset++;return;}while(offset<source.length){walk([...path,'[]'],depth+1);space();if(source[offset++]===']')return;}}
   else if(source[offset]==='"'){string();}
   else{while(offset<source.length&&!/[\s,\]}]/.test(source[offset]))offset++;}
@@ -56,7 +57,17 @@ function parseWork(row:StoredOrder,spaces:Set<string>){
  let raw:unknown;try{raw=JSON.parse(row.data);}catch{throw Error('Invalid stored order JSON');}rejectAmbiguousKeys(row.data);if(!object(raw)||typeof raw.id!=='string'||raw.id!==row.id)throw Error('Invalid stored order identity');
  const production=raw.production===undefined?{}:raw.production;if(!object(production))throw Error('Invalid stored production');
  const status=production.status===undefined?'draft':production.status;if(typeof status!=='string'||!statuses.includes(status))throw Error('Invalid stored production status');
- return {space:row.space,id:row.id,status,workId:field(production,'workId'),assigneeId:field(production,'assigneeId'),assigneeMemberId:field(production,'assigneeMemberId'),assigneeName:field(production,'assigneeName'),issue:field(production,'issue'),issueOwnerId:field(production,'issueOwnerId'),issueOwnerName:field(production,'issueOwnerName')};
+ const issue=field(production,'issue'),workId=field(production,'workId'),reportedId=field(production,'issueOwnerId'),reportedName=field(production,'issueOwnerName');
+ let issueOwnerId=reportedId,issueOwnerMemberId='',issueOwnerName=reportedName;
+ if(Object.prototype.hasOwnProperty.call(production,'issueResponsibility')){
+  const parsed=ProductionIssueResponsibilitySchema.safeParse(production.issueResponsibility);
+  if(!parsed.success)throw Error('Invalid stored current issue responsibility');
+  const current=parsed.data;
+  if(!issue)throw Error('Current issue responsibility requires an open issue');
+  try{validateProductionIssueResponsibility(row.id,workId,{id:reportedId,name:reportedName},current);}catch{throw Error('Invalid stored current issue responsibility chain');}
+  issueOwnerId=current.userId;issueOwnerMemberId=current.memberId;issueOwnerName=current.name;
+ }
+ return {space:row.space,id:row.id,status,workId,assigneeId:field(production,'assigneeId'),assigneeMemberId:field(production,'assigneeMemberId'),assigneeName:field(production,'assigneeName'),issue,issueOwnerId,issueOwnerMemberId,issueOwnerName};
 }
 function resolve(directory:readonly DirectoryMember[],userId:string,memberId=''){
  const matches=directory.filter(member=>member.user_id===userId&&identity(member.id)&&identity(member.user_id));
@@ -84,7 +95,7 @@ export function buildAccountChangeWork(input:AccountChangeInput,target:AccountCh
    if(reason||loss.jobs&&belongs)findings.push({...reference,kind:'job',reason:reason||'account_responsibility'});
   }
   if(row.issue){
-   const reason=unresolvedReason(input.members,row.issueOwnerId,'',row.issueOwnerName),belongs=!!target.user_id&&row.issueOwnerId===target.user_id;
+   const reason=unresolvedReason(input.members,row.issueOwnerId,row.issueOwnerMemberId,row.issueOwnerName),belongs=row.issueOwnerMemberId===target.id||!!target.user_id&&row.issueOwnerId===target.user_id;
    if(reason||loss.issues&&belongs)findings.push({...reference,kind:'issue',reason:reason||'account_responsibility'});
   }
  }
@@ -97,14 +108,14 @@ export async function buildAccountChangeReview(input:AccountChangeInput,target:A
  const expectedAccount=await accountExpectedBasis(target),loss=accountChangeLoss(target,requested),counts=new Map(Array.from(spaces,id=>[id,{id,jobCount:0,issueCount:0,unresolvedCount:0}]));
  const work=input.orders.map(row=>parseWork(row,spaces)),relevant=[];
  for(const row of work){
-  const activeJob=row.status==='submitted'||row.status==='printed',hasIssue=!!row.issue,jobUnresolved=activeJob&&(row.assigneeId?!resolve(input.members,row.assigneeId,row.assigneeMemberId):!!(row.assigneeMemberId||row.assigneeName)),issueUnresolved=hasIssue&&(row.issueOwnerId?!resolve(input.members,row.issueOwnerId):!!row.issueOwnerName);
+  const activeJob=row.status==='submitted'||row.status==='printed',hasIssue=!!row.issue,jobUnresolved=activeJob&&(row.assigneeId?!resolve(input.members,row.assigneeId,row.assigneeMemberId):!!(row.assigneeMemberId||row.assigneeName)),issueUnresolved=hasIssue&&(row.issueOwnerId?!resolve(input.members,row.issueOwnerId,row.issueOwnerMemberId):!!(row.issueOwnerMemberId||row.issueOwnerName));
   const group=counts.get(row.space)!;
   if(activeJob&&(row.assigneeMemberId===target.id||!!target.user_id&&row.assigneeId===target.user_id))group.jobCount++;
-  if(hasIssue&&!!target.user_id&&row.issueOwnerId===target.user_id)group.issueCount++;
+  if(hasIssue&&(row.issueOwnerMemberId===target.id||!!target.user_id&&row.issueOwnerId===target.user_id))group.issueCount++;
   // An ambiguous historical identity cannot be cleared by matching a name.
   // The administrator must investigate it before reducing anyone's access.
   group.unresolvedCount+=Number(jobUnresolved)+Number(issueUnresolved);
-  if(activeJob||hasIssue)relevant.push({space:row.space,id:row.id,status:row.status,workId:row.workId,job:activeJob?{assigneeId:row.assigneeId,assigneeMemberId:row.assigneeMemberId,nameWithoutId:row.assigneeId?'':row.assigneeName,unresolved:jobUnresolved}:null,issue:hasIssue?{text:row.issue,ownerId:row.issueOwnerId,nameWithoutId:row.issueOwnerId?'':row.issueOwnerName,unresolved:issueUnresolved}:null});
+  if(activeJob||hasIssue)relevant.push({space:row.space,id:row.id,status:row.status,workId:row.workId,job:activeJob?{assigneeId:row.assigneeId,assigneeMemberId:row.assigneeMemberId,nameWithoutId:row.assigneeId?'':row.assigneeName,unresolved:jobUnresolved}:null,issue:hasIssue?{text:row.issue,ownerId:row.issueOwnerId,...(row.issueOwnerMemberId?{ownerMemberId:row.issueOwnerMemberId}:{}),nameWithoutId:row.issueOwnerId?'':row.issueOwnerName,unresolved:issueUnresolved}:null});
  }
  const workspaces=sorted(Array.from(counts.values())),total=workspaces.reduce((sum,workspace)=>({jobs:sum.jobs+workspace.jobCount,issues:sum.issues+workspace.issueCount,unresolved:sum.unresolved+workspace.unresolvedCount}),{jobs:0,issues:0,unresolved:0});
  const blocked=(loss.jobs||loss.issues)&&(!!total.unresolved||loss.jobs&&!!total.jobs||loss.issues&&!!total.issues);
@@ -124,11 +135,64 @@ export function accountChangeWriteGuard(target:AccountChangeTarget,requested:Acc
  assertAccountChangeTarget(target);
  const loss=accountChangeLoss(target,requested);if(!loss.jobs&&!loss.issues)return {sql:'',values:[]};
  const value=(key:string,fallback="''")=>sqlTrim(`COALESCE(json_extract(work.data,'$.production.${key}'),${fallback})`);
- const user=value('assigneeId'),memberId=value('assigneeMemberId'),name=value('assigneeName'),issue=value('issue'),issueOwner=value('issueOwnerId'),issueName=value('issueOwnerName'),status="COALESCE(json_extract(work.data,'$.production.status'),'draft')",activeJob=`${status} IN ('submitted','printed')`;
+ const hasIssueResponsibility="json_type(work.data,'$.production.issueResponsibility') IS NOT NULL";
+ const user=value('assigneeId'),memberId=value('assigneeMemberId'),name=value('assigneeName'),issue=value('issue'),issueOwner=`CASE WHEN ${hasIssueResponsibility} THEN ${value('issueResponsibility.userId')} ELSE ${value('issueOwnerId')} END`,issueMember=`CASE WHEN ${hasIssueResponsibility} THEN ${value('issueResponsibility.memberId')} ELSE '' END`,issueName=`CASE WHEN ${hasIssueResponsibility} THEN ${value('issueResponsibility.name')} ELSE ${value('issueOwnerName')} END`,status="COALESCE(json_extract(work.data,'$.production.status'),'draft')",activeJob=`${status} IN ('submitted','printed')`;
  const validMember=(userId:string,registeredId?:string)=>`EXISTS(SELECT 1 FROM crm_members AS linked WHERE linked.user_id=${userId} AND linked.user_id<>'' AND linked.user_id=${sqlTrim('linked.user_id')} AND linked.id<>'' AND linked.id=${sqlTrim('linked.id')}${registeredId?` AND (${registeredId}='' OR linked.id=${registeredId})`:''} AND NOT EXISTS(SELECT 1 FROM crm_members AS duplicate WHERE duplicate.user_id=linked.user_id AND duplicate.id<>linked.id))`;
- const invalid=["json_type(work.data)<>'object'","json_type(work.data,'$.id') IS NOT 'text'","json_extract(work.data,'$.id')<>work.id","EXISTS(SELECT 1 FROM json_each(work.data) WHERE key IN ('id','production') GROUP BY key HAVING COUNT(*)>1)","EXISTS(SELECT 1 FROM json_each(work.data,'$.production') WHERE key IN ('status','workId','assigneeId','assigneeMemberId','assigneeName','issue','issueOwnerId','issueOwnerName') GROUP BY key HAVING COUNT(*)>1)","(json_type(work.data,'$.production') IS NOT NULL AND json_type(work.data,'$.production')<>'object')","(json_type(work.data,'$.production.status') IS NOT NULL AND json_type(work.data,'$.production.status')<>'text')",`${status} NOT IN ('draft','submitted','printed','dispatched','cancelled')`,...['workId','assigneeId','assigneeMemberId','assigneeName','issue','issueOwnerId','issueOwnerName'].map(key=>`(json_type(work.data,'$.production.${key}') IS NOT NULL AND json_type(work.data,'$.production.${key}')<>'text')`)];
- const unresolvedJob=`(${activeJob} AND ((${user}='' AND (${memberId}<>'' OR ${name}<>'')) OR (${user}<>'' AND NOT ${validMember(user,memberId)})))`,unresolvedIssue=`(${issue}<>'' AND ((${issueOwner}='' AND ${issueName}<>'') OR (${issueOwner}<>'' AND NOT ${validMember(issueOwner)})))`;
- const blockedJob=loss.jobs?`(${activeJob} AND (${memberId}=target.id OR (target.user_id IS NOT NULL AND target.user_id<>'' AND ${user}=target.user_id)))`:'0',blockedIssue=loss.issues?`(${issue}<>'' AND target.user_id IS NOT NULL AND target.user_id<>'' AND ${issueOwner}=target.user_id)`:'0';
+ const invalid=["json_type(work.data)<>'object'","json_type(work.data,'$.id') IS NOT 'text'","json_extract(work.data,'$.id')<>work.id","EXISTS(SELECT 1 FROM json_each(work.data) WHERE key IN ('id','production') GROUP BY key HAVING COUNT(*)>1)","EXISTS(SELECT 1 FROM json_each(work.data,'$.production') WHERE key IN ('status','workId','assigneeId','assigneeMemberId','assigneeName','issue','issueOwnerId','issueOwnerName','issueResponsibility') GROUP BY key HAVING COUNT(*)>1)","(json_type(work.data,'$.production') IS NOT NULL AND json_type(work.data,'$.production')<>'object')","(json_type(work.data,'$.production.status') IS NOT NULL AND json_type(work.data,'$.production.status')<>'text')",`${status} NOT IN ('draft','submitted','printed','dispatched','cancelled')`,...['workId','assigneeId','assigneeMemberId','assigneeName','issue','issueOwnerId','issueOwnerName'].map(key=>`(json_type(work.data,'$.production.${key}') IS NOT NULL AND json_type(work.data,'$.production.${key}')<>'text')`)];
+ // A registered object is authoritative only when its strict audit chain
+ // matches the current identity and original report. These checks are inside
+ // the account UPDATE itself, so a late malformed peer cannot fall back to
+ // the reporter and authorize a reduction after the JavaScript review.
+ const currentPath='$.production.issueResponsibility',historyPath=currentPath+'.history';
+ const currentValue=(key:string)=>value('issueResponsibility.'+key);
+ const auditFields=['id','orderId','workId','revision','action','fromUserId','fromMemberId','fromName','toUserId','toMemberId','toName','reason','at','byId','byMemberId','byName'];
+ const auditValue=(key:string)=>sqlTrim(`COALESCE(json_extract(entry.value,'$.${key}'),'')`);
+ const priorValue=(key:string)=>`CASE WHEN CAST(entry.key AS INTEGER)>0 THEN ${sqlTrim(`COALESCE(json_extract(work.data,'${historyPath}['||(CAST(entry.key AS INTEGER)-1)||'].${key}'),'')`)} ELSE '' END`;
+ const lastValue=(key:string)=>value('issueResponsibility.history[#-1].'+key);
+ const typedText=(json:string,path:string,nonempty:boolean)=>{
+  const raw=`COALESCE(json_extract(${json},'${path}'),'')`,trimmed=sqlTrim(raw);
+  return `(json_type(${json},'${path}') IS NOT 'text' OR instr(${raw},char(0))>0 OR length(CAST(${trimmed} AS BLOB))>4000${nonempty?` OR ${trimmed}=''`:''})`;
+ };
+ // UUID and UTC datetime schemas do not trim. SQLite datetime() accepts impossible
+ // calendar dates and length(text) truncates NUL, so validate exact raw syntax,
+ // decimal components and leap years independently, preserving Zod's optional
+ // seconds and arbitrary nonempty fractional precision.
+ const auditRaw=(key:string)=>`COALESCE(json_extract(entry.value,'$.${key}'),'')`,auditId=auditRaw('id'),auditAt=auditRaw('at');
+ const year=`CAST(substr(${auditAt},1,4) AS INTEGER)`,month=`CAST(substr(${auditAt},6,2) AS INTEGER)`,day=`CAST(substr(${auditAt},9,2) AS INTEGER)`;
+ const lastDay=`CASE WHEN ${month}=2 THEN CASE WHEN ${year}%400=0 OR (${year}%4=0 AND ${year}%100<>0) THEN 29 ELSE 28 END WHEN ${month} IN (4,6,9,11) THEN 30 ELSE 31 END`;
+ const dateTimeInvalid=[
+  `${auditAt} NOT GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]T[0-9][0-9]:[0-9][0-9]*Z'`,
+  `${month} NOT BETWEEN 1 AND 12`,`${day} NOT BETWEEN 1 AND ${lastDay}`,
+  `CAST(substr(${auditAt},12,2) AS INTEGER) NOT BETWEEN 0 AND 23`,`CAST(substr(${auditAt},15,2) AS INTEGER) NOT BETWEEN 0 AND 59`,
+  `NOT (length(${auditAt})=17 OR (length(${auditAt})=20 AND substr(${auditAt},17,3) GLOB ':[0-9][0-9]') OR (length(${auditAt})>=22 AND substr(${auditAt},17,4) GLOB ':[0-9][0-9].' AND substr(${auditAt},21,length(${auditAt})-21) NOT GLOB '*[^0-9]*'))`,
+  `(length(${auditAt})>17 AND CAST(substr(${auditAt},18,2) AS INTEGER) NOT BETWEEN 0 AND 59)`
+ ];
+ const auditInvalid=[
+  ...auditFields.filter(key=>key!=='revision').map(key=>typedText('entry.value','$.'+key,!['fromUserId','fromMemberId','fromName'].includes(key))),
+  `${auditRaw('action')} NOT IN ('assign','transfer')`,
+  "json_type(entry.value,'$.revision') IS NOT 'integer'",`json_extract(entry.value,'$.revision')<>CAST(entry.key AS INTEGER)+1`,
+  `EXISTS(SELECT 1 FROM json_each(entry.value) WHERE key NOT IN (${auditFields.map(key=>"'"+key+"'").join(',')}))`,
+  'EXISTS(SELECT 1 FROM json_each(entry.value) GROUP BY key HAVING COUNT(*)>1)',
+  `${auditValue('orderId')}<>${sqlTrim('work.id')}`,`${auditValue('workId')}<>${value('workId')}`,`${value('workId')}=''`,
+  `(${auditValue('fromUserId')}='' AND (${auditValue('action')}<>'assign' OR ${auditValue('fromMemberId')}<>''))`,
+  `(${auditValue('fromUserId')}<>'' AND (${auditValue('action')}<>'transfer' OR ${auditValue('fromUserId')}=${auditValue('toUserId')}))`,
+  `(CAST(entry.key AS INTEGER)=0 AND (${auditValue('fromUserId')}<>${value('issueOwnerId')} OR ${auditValue('fromName')}<>${value('issueOwnerName')} OR ${auditValue('fromMemberId')}<>''))`,
+  `(CAST(entry.key AS INTEGER)>0 AND (${auditValue('fromUserId')}<>${priorValue('toUserId')} OR ${auditValue('fromMemberId')}<>${priorValue('toMemberId')} OR ${auditValue('fromName')}<>${priorValue('toName')}))`,
+  `length(${auditId})<>36`,...[[9],[14],[19],[24]].map(([index])=>`substr(${auditId},${index},1)<>'-'`),`length(replace(${auditId},'-',''))<>32`,`replace(${auditId},'-','') GLOB '*[^0-9a-fA-F]*'`,
+  ...dateTimeInvalid,
+  `EXISTS(SELECT 1 FROM json_each(work.data,'${historyPath}') AS duplicate WHERE CAST(duplicate.key AS INTEGER)<CAST(entry.key AS INTEGER) AND CASE WHEN duplicate.type='object' THEN ${sqlTrim("COALESCE(json_extract(duplicate.value,'$.id'),'')") }=${auditValue('id')} ELSE 0 END)`
+ ];
+ const responsibilityInvalid=[
+  `json_type(work.data,'${currentPath}') IS NOT 'object'`,`${issue}=''`,
+  ...['userId','memberId','name'].map(key=>typedText('work.data',currentPath+'.'+key,true)),
+  `EXISTS(SELECT 1 FROM json_each(work.data,'${currentPath}') WHERE key NOT IN ('userId','memberId','name','history'))`,
+  `EXISTS(SELECT 1 FROM json_each(work.data,'${currentPath}') GROUP BY key HAVING COUNT(*)>1)`,
+  `CASE WHEN json_type(work.data,'${historyPath}') IS NOT 'array' THEN 1 ELSE (json_array_length(work.data,'${historyPath}') NOT BETWEEN 1 AND 1000 OR EXISTS(SELECT 1 FROM json_each(work.data,'${historyPath}') AS entry WHERE CASE WHEN entry.type<>'object' THEN 1 ELSE (${auditInvalid.join(' OR ')}) END)) END`,
+  ...[['userId','toUserId'],['memberId','toMemberId'],['name','toName']].map(([current,last])=>`${currentValue(current)}<>${lastValue(last)}`)
+ ];
+ invalid.push(`(${hasIssueResponsibility} AND (${responsibilityInvalid.join(' OR ')}))`);
+ const unresolvedJob=`(${activeJob} AND ((${user}='' AND (${memberId}<>'' OR ${name}<>'')) OR (${user}<>'' AND NOT ${validMember(user,memberId)})))`,unresolvedIssue=`(${issue}<>'' AND ((${issueOwner}='' AND (${issueMember}<>'' OR ${issueName}<>'')) OR (${issueOwner}<>'' AND NOT ${validMember(issueOwner,issueMember)})))`;
+ const blockedJob=loss.jobs?`(${activeJob} AND (${memberId}=target.id OR (target.user_id IS NOT NULL AND target.user_id<>'' AND ${user}=target.user_id)))`:'0',blockedIssue=loss.issues?`(${issue}<>'' AND (${issueMember}=target.id OR (target.user_id IS NOT NULL AND target.user_id<>'' AND ${issueOwner}=target.user_id)))`:'0';
  const sql=` AND NOT EXISTS(SELECT 1 FROM crm_spaces WHERE id='' OR id<>${sqlTrim('id')}) AND NOT EXISTS(SELECT 1 FROM crm_orders AS work LEFT JOIN crm_spaces AS scope ON scope.id=work.space JOIN crm_members AS target ON target.id=? WHERE scope.id IS NULL OR work.space='' OR work.space<>${sqlTrim('work.space')} OR work.id='' OR work.id<>${sqlTrim('work.id')} OR CASE WHEN json_valid(work.data)=0 THEN 1 ELSE (${invalid.join(' OR ')} OR ${unresolvedJob} OR ${unresolvedIssue} OR ${blockedJob} OR ${blockedIssue}) END)`;
  return {sql,values:[target.id]};
 }
