@@ -1,3 +1,15 @@
+# Produktkomplettering – privat årshjulsarbete, live v70
+
+Påbörja eller redigera ett behov på samma kund, spara privat och fortsätt efter återläsning från Årsplanering, kundens årshjul eller Min dag. Ofärdiga fält och råtext bevaras. **Spara utkast & stäng** väntar på privat kvittens; CRM-inlämning har ett eget besked och skapar/uppdaterar påminnelsen enligt behovets status.
+
+Privat tvåenhetskonflikt och ändrat gemensamt kund-/behovs-/profilunderlag har separata jämförelser. Läsa nytt underlag och välja det är separata handlingar; ändrad text kräver ny granskning. Ansvarsbyte görs genom befintlig granskad överföring. Borttaget mål lämnar kopierbar text och kan inte registreras som ett nytt behov av misstag.
+
+Kodkandidat `aa57965cd45dbec9eb42cc3679524c99b87ba7ae`; app-main `31c38d103062bf88520f2062d0d2c604e7b44cbf` efter [PR #121](https://github.com/ludros93-prog/MAgnussons-CRM/pull/121). Sites-source `f847d0192ba05478738fd1c6a2394958cbf42f4c`, träd `5702706f2fb784227054eb5e48dabf57593c6b79`, exakt samma 351 spårade filer som den frysta testkandidaten. **Live v70**, deploy `succeeded` 2026-10-09T08:02:11.980430+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site). [Verifiering](VALIDATION.md). Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects.
+
+Denna avgränsning gäller privata innehållsutkast; årshjulets administrativa ansvaröverlämning och övriga specialdialogers privata utkast är inte slutförda. Browser vid 320 px/text 2×, native tangentbord, personlig CRM-roll/inloggning och observerad personalpilot är inte verifierade här. Gröna tester är ingen personalacceptans eller fungerande Fortnox-/Outlook-anslutning. Full hostad återställning/live-rollback är oprövad.
+
+## Historik före crm73-leveransen
+
 # Magnussons CRM – verifierad main och publicerad arbetsvy
 
 ## Samlad produktionsförbättring på samma Site – 2026-10-09
