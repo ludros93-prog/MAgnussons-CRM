@@ -1,5 +1,21 @@
 # Magnussons CRM – order, tryck och lager
 
+## crm72: läsflöde i Min dag och blockerad publicering
+
+App-main `975ebc9619f01993c9d98046a2e7540e67496c97` via [PR #118](https://github.com/ludros93-prog/MAgnussons-CRM/pull/118) innehåller verifierad UI-kod `85ead27eae96f5a9343ee52e8b932955dcecdc24`. Min dag återanvänder befintligt `ownsProductionIssue` för aktuell egen hinderidentitet och öppnar befintlig produktionsvy. Inga nya fält, SQL-migrationer, behörigheter, privata scope eller skrivoperationer införs. Ny exakt user-/member-pair och befintlig äldre user-ID-regel bevaras; namn används inte för att härleda en ny identitet.
+
+Återgång för just dessa fem UI-filer förändrar inte lagringsformatet. Tidigare crm71-skrivningar kräver däremot fortsatt crm71-kompatibel läsare/skrivare för registrerat hinderansvar och historik; äldre oförändrad serverkod är inte säker återgång efter sådana skrivningar. Backupformatet är `magnussons-crm-1`, de sex SQL-migrationerna består. Lokala restoreprov använder isolerat syntetiskt underlag. Full hostad produktionsåterställning, privat driftbackup och faktisk personalöverlämning kvarstår.
+
+**Publiceringshinder:** [Sites-instruktionen](skill://plugin_connector_1p_689987207de08191979cf68eca2941c6/sites/SKILL.md) säger: “For hosted work, package with the source helper using remaining checks/builds as ordered argument arrays and an absolute `archivePath`.” Föreskriven `site-workflow.mjs` hittades inte i läsbara delar av /workspace, /tmp, /opt, /usr/local, /usr/share, /home, /mnt och /root; /opt/containerd och /root gav uttryckliga permission-denied. Två refererade skill-scriptresurser kunde inte läsas. Ingen total frånvaro i otillgängliga kataloger påstås. Aktuell Sites Linux-/plugin-/pnpm-helpermiljö är inte konfigurerad. Executor och native GitHub/Sites-läsning fungerar, men detta ersätter inte helpern.
+
+Ingen egen arkivpaketering, ny sourcecredential, source-push via helper, Site-version, deploy, delnings- eller miljöändring gjordes. Läsning 2026-10-09 03:53:31 UTC bekräftade samma projekt `appgprj_6aa71b309d90819181a32a9af6e6baf2`, live v68/källa `cea57b7f66c5dce49f65e61cc74fc8f54a450d2e`, deploy `appgdep_6ac8032156cc8191b491fe39f44c6650` succeeded (senast uppdaterad 2026-10-08 20:56:03 UTC), custom begränsad policyrevision 2, miljörevision 1 och noll automationer. Full returnerad policy/miljö är exakt oförändrade mot start. Kund-/konto-/miljövärden lagras inte i det publika repot.
+
+**Nästa driftsteg:** Återställ föreskriven helper, paketera verifierad kompatibel main enligt Sites-instruktionen, publicera till samma Site med begränsad delning och läs tillbaka exakt källrevision/lyckad deploy. Bekräfta därefter med riktiga avsedda användare att inloggning, egen dag och överlämning fungerar; gröna native testheaders är inget personalprov. Inga meddelanden skickades som del av bygguppdraget. Refererad Codex-task är oläst.
+
+## Historik före crm72
+
+# Magnussons CRM – order, tryck och lager
+
 ## Lämna över nästa steg i ett öppet hinder – crm71-kod
 
 1. Öppna rätt arbetsyta och jobb som administratör. **Byt hinderansvar** finns på produktionskortet, i jobbdetaljerna och i **Inställningar → Konton & roller → Produktionsarbete per konto**. Kontrollera kund, jobb, orderreferens och arbetsreferens. För säljare finns produktionen via **Offerter & order → Tryck & leverans → Min produktion**.
