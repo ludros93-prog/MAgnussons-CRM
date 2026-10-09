@@ -7,28 +7,34 @@ import {Checkbox} from '@/components/ui/checkbox';
 import {Textarea} from '@/components/ui/textarea';
 import {Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {AlertDialog,AlertDialogContent,AlertDialogHeader,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogCancel,AlertDialogAction} from '@/components/ui/alert-dialog';
-import {label,PIPELINE,OUTCOMES,type State,type Deal} from '@/lib/crm';
-import {commercialResponsibilityAnchorBasis,commercialResponsibilityAnchorReview} from '@/lib/commercial-responsibility';
+import {label,PIPELINE,OUTCOMES,DELIVERY,type State,type Deal,type Order} from '@/lib/crm';
+import {commercialResponsibilityAnchorBasis,commercialResponsibilityAnchorReview,orderResponsibilityAnchorBasis,orderResponsibilityAnchorReview} from '@/lib/commercial-responsibility';
 import {BusinessField as F} from './business-ui';
 import {restoreHandoverFocus} from './handover-focus';
 import type {FollowUpSaveAction} from './follow-up-dialog';
 
-type Review=ReturnType<typeof commercialResponsibilityAnchorReview>;
+type TargetType='deal'|'order';
+type DealReview=ReturnType<typeof commercialResponsibilityAnchorReview>;
+type Review={targetType:TargetType;target:Deal|Order|undefined;deal:Deal|undefined;customer:DealReview['customer'];sourceProfile:DealReview['sourceProfile'];blockedReason:string};
 type Account={id:string;name:string;email:string;role:string;owner:string;active:0|1;connected:0|1;expectedAccount:string};
 type Snapshot={review:Review;account:Account|null;accountError:string};
 type Draft={identity:string;expectedContext:string;snapshot:Snapshot;reason:string;reviewed:boolean;editVersion:number};
-type Payload={dealId:string;targetProfileId:string;reason:string;reviewed:true;expectedContext:string;expectedAccount:string};
+type Payload={targetProfileId:string;reason:string;reviewed:true;expectedContext:string;expectedAccount:string}&({dealId:string}|{orderId:string});
 type Attempt={payload:Payload;editVersion:number;unknown:boolean};
 type Fetched={state:State;snapshot:Snapshot};
-type Props={st:State;d:Deal;space:string;save:FollowUpSaveAction;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void;returnFocus?:()=>HTMLElement|null};
+type Props={st:State;targetType:TargetType;record:Deal|Order;space:string;save:FollowUpSaveAction;busy:boolean;refresh:()=>Promise<State>;onClose:()=>void;returnFocus?:()=>HTMLElement|null};
 // A role change blocks new work, but must not discard an unconfirmed attempt
-// by this same account. Account/workspace/deal changes still isolate it.
-const identityFor=(st:State,space:string,dealId:string)=>JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',dealId]);
+// by this same account. Account/workspace/target changes still isolate it.
+const identityFor=(st:State,space:string,targetType:TargetType,targetId:string)=>JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',targetType,targetId]);
 const accessFor=(st:State,identity:string)=>JSON.stringify([identity,st.viewer?.role||'',st.viewer?.owner||'']);
 const workspaceLabel=(space:string)=>space==='live'?'Magnussons':space==='demo'?'Demo':space;
 const roleLabels:Record<string,string>={admin:'Administratör',seller:'Säljare',reader:'Läsare',production:'Produktion',print:'Tryck',warehouse:'Lager'};
 const roleLabel=(role:string)=>roleLabels[role]||role;
-const snapshotFor=(st:State,dealId:string):Snapshot=>({review:structuredClone(commercialResponsibilityAnchorReview(st,dealId)),account:null,accountError:''});
+const basisFor=(st:State,targetType:TargetType,targetId:string)=>targetType==='deal'?commercialResponsibilityAnchorBasis(st,targetId):orderResponsibilityAnchorBasis(st,targetId);
+function snapshotFor(st:State,targetType:TargetType,targetId:string):Snapshot{
+ const review=targetType==='deal'?commercialResponsibilityAnchorReview(st,targetId):orderResponsibilityAnchorReview(st,targetId);
+ return {review:structuredClone({targetType,target:'order' in review?review.order:review.deal,deal:'linkedDeal' in review?review.linkedDeal:review.deal,customer:review.customer,sourceProfile:review.sourceProfile,blockedReason:review.blockedReason}),account:null,accountError:''};
+}
 const object=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
 function accountRow(value:unknown):Account{
  if(!object(value)||!['id','name','email','role','owner','expectedAccount'].every(key=>typeof value[key]==='string')||!(value.active===0||value.active===1||value.active===false||value.active===true)||!(value.connected===0||value.connected===1||value.connected===false||value.connected===true)||!/^[a-f0-9]{64}$/.test(value.expectedAccount as string))throw Error('Kontolistan saknar ett verifierbart kontounderlag. Hämta kontona igen.');
@@ -39,10 +45,10 @@ function accountRow(value:unknown):Account{
 function accountBlocker(snapshot:Snapshot){
  if(snapshot.accountError)return snapshot.accountError;
  const profile=snapshot.review.sourceProfile,account=snapshot.account;
- if(!profile?.memberId)return 'Resultatprofilen saknar ett anslutet personligt CRM-konto. Administratören behöver granska kontolänken under Mål & inställningar.';
+ if(!profile?.memberId)return 'Den ansvarigas personprofil saknar ett anslutet personligt CRM-konto. Administratören behöver granska kontolänken under Mål & inställningar.';
  if(!account)return 'Kontot har ännu inte kunnat läsas. Hämta aktuellt underlag innan du granskar kopplingen.';
- if(account.id!==profile.memberId||account.owner!==profile.legacyOwnerName)return 'Det anslutna kontots affärsansvar stämmer inte med resultatprofilen. Administratören behöver granska kontolänken.';
- if(!account.active)return 'Det anslutna CRM-kontot är inaktivt. Administratören behöver granska kontot innan affärsansvaret kan kopplas.';
+ if(account.id!==profile.memberId||account.owner!==profile.legacyOwnerName)return 'Det anslutna kontots ansvarskoppling stämmer inte med den ansvarigas personprofil. Administratören behöver granska kontolänken.';
+ if(!account.active)return 'Det anslutna CRM-kontot är inaktivt. Administratören behöver granska kontot innan ansvaret kan kopplas.';
  if(!account.connected)return 'CRM-kontot har ingen ansluten användaridentitet. Administratören behöver först klarlägga kontoanslutningen.';
  if(!['admin','seller'].includes(account.role))return 'Det anslutna kontot behöver en aktuell säljar- eller administratörsroll. Administratören behöver granska kontot.';
  return '';
@@ -55,16 +61,17 @@ async function readAccount(space:string,review:Review):Promise<Pick<Snapshot,'ac
  const accounts=data.map(accountRow),ids=new Set(accounts.map(account=>account.id));
  if(ids.size!==accounts.length)throw Error('Kontolistan innehåller oklara konto-ID:n. Administratören behöver granska kontona.');
  const matching=accounts.filter(account=>account.id===review.sourceProfile!.memberId);
- return matching.length===1?{account:matching[0],accountError:''}:{account:null,accountError:'Resultatprofilens personliga CRM-konto finns inte i den lästa kontolistan. Administratören behöver granska kontolänken.'};
+ return matching.length===1?{account:matching[0],accountError:''}:{account:null,accountError:'Den ansvarigas personliga CRM-konto finns inte i den lästa kontolistan. Administratören behöver granska personprofilens kontolänk.'};
 }
 function payloadFor(draft:Draft):Payload|null{
- const deal=draft.snapshot.review.deal,profile=draft.snapshot.review.sourceProfile,account=draft.snapshot.account;
- return deal&&profile&&account?{dealId:deal.id,targetProfileId:profile.id,reason:draft.reason,reviewed:true,expectedContext:draft.expectedContext,expectedAccount:account.expectedAccount}:null;
+ const review=draft.snapshot.review,target=review.target,profile=review.sourceProfile,account=draft.snapshot.account;
+ return target&&profile&&account?{...(review.targetType==='deal'?{dealId:target.id}:{orderId:target.id}),targetProfileId:profile.id,reason:draft.reason,reviewed:true,expectedContext:draft.expectedContext,expectedAccount:account.expectedAccount}:null;
 }
 
-export function CommercialResponsibilityAnchor({st,d,space,save,busy,refresh,onClose,returnFocus}:Props){
- const reasonId=useId(),identity=identityFor(st,space,d.id),access=accessFor(st,identity),currentIdentity=useRef(identity),currentAccess=useRef(access),previousAccess=useRef(access);currentIdentity.current=identity;currentAccess.current=access;
- const currentBasis=commercialResponsibilityAnchorBasis(st,d.id),admin=st.viewer?.role==='admin';
+export function CommercialResponsibilityAnchor({st,targetType,record,space,save,busy,refresh,onClose,returnFocus}:Props){
+ const targetId=record.id,isOrder=targetType==='order',responsibility=isOrder?'orderansvar':'affärsansvar',responsibilityDefinite=isOrder?'orderansvaret':'affärsansvaret';
+ const reasonId=useId(),identity=identityFor(st,space,targetType,targetId),access=accessFor(st,identity),currentIdentity=useRef(identity),currentAccess=useRef(access),previousAccess=useRef(access);currentIdentity.current=identity;currentAccess.current=access;
+ const currentBasis=basisFor(st,targetType,targetId),admin=st.viewer?.role==='admin';
  const [draft,setDraft]=useState<Draft|null>(null),[attempt,setAttempt]=useState<Attempt|null>(null),[error,setError]=useState(''),[notice,setNotice]=useState(''),[remoteConflict,setRemoteConflict]=useState(false),[submitting,setSubmitting]=useState(false),[refreshing,setRefreshing]=useState(false),[discard,setDiscard]=useState(false),[fetched,setFetched]=useState<Fetched|null>(null);
  const lock=useRef(false),operation=useRef(0),alive=useRef(true),dialogHeading=useRef<HTMLHeadingElement|null>(null),opener=useRef<HTMLElement|null>(null);
  const visible=!!draft&&draft.identity===identity,locked=busy||submitting||refreshing,conflict=!!draft&&(remoteConflict||draft.expectedContext!==currentBasis),dirty=!!draft&&(draft.reason!==''||draft.reviewed||!!attempt);
@@ -86,7 +93,7 @@ export function CommercialResponsibilityAnchor({st,d,space,save,busy,refresh,onC
   previousAccess.current=access;operation.current++;lock.current=false;setSubmitting(false);setRefreshing(false);setFetched(null);
   setDraft(previous=>previous?{...previous,reviewed:false}:previous);
   setAttempt(previous=>previous?{...previous,unknown:true}:previous);
-  setError(admin?'Kontots uppgifter och administratörsroll har återlästs. Ditt formulär och ett eventuellt obekräftat försök finns kvar. Oförändrat försök kan återförsökas; en ny ändring kräver ny granskning.':'Kontots roll eller affärsansvar har ändrats. Ditt formulär och ett eventuellt obekräftat försök finns kvar. Administratörsrollen behövs för att granska eller spara kopplingen.');
+  setError(admin?'Kontots uppgifter och administratörsroll har återlästs. Ditt formulär och ett eventuellt obekräftat försök finns kvar. Oförändrat försök kan återförsökas; en ny ändring kräver ny granskning.':'Kontots roll eller ansvarskoppling har ändrats. Ditt formulär och ett eventuellt obekräftat försök finns kvar. Administratörsrollen behövs för att granska eller spara kopplingen.');
  },[access]);
  useEffect(()=>{if(conflict)setDraft(previous=>previous?.reviewed?{...previous,reviewed:false}:previous);},[conflict,currentBasis]);
  useEffect(()=>{
@@ -98,7 +105,7 @@ export function CommercialResponsibilityAnchor({st,d,space,save,busy,refresh,onC
  async function open(){
   if(!admin||lock.current)return;
   opener.current=document.activeElement instanceof HTMLElement?document.activeElement:null;
-  const initial=snapshotFor(st,d.id),startedIdentity=identity,startedAccess=access,startedOperation=++operation.current;
+  const initial=snapshotFor(st,targetType,targetId),startedIdentity=identity,startedAccess=access,startedOperation=++operation.current;
   setDraft({identity,expectedContext:currentBasis,snapshot:initial,reason:'',reviewed:false,editVersion:0});setAttempt(null);setError('');setNotice('');setRemoteConflict(false);setDiscard(false);setFetched(null);
   if(initial.review.blockedReason||!initial.review.sourceProfile?.memberId)return;
   lock.current=true;setRefreshing(true);
@@ -124,7 +131,7 @@ export function CommercialResponsibilityAnchor({st,d,space,save,busy,refresh,onC
    // It may restore the admin view, but never reads accounts or adopts basis.
    const next=await refresh();
    if(!alive.current||currentIdentity.current!==startedIdentity||operation.current!==startedOperation)return;
-   if(identityFor(next,space,d.id)!==startedIdentity)throw Error('Kontot eller arbetsytan har ändrats.');
+   if(identityFor(next,space,targetType,targetId)!==startedIdentity)throw Error('Kontot eller arbetsytan har ändrats.');
    setNotice('Din roll har lästs från CRM: '+roleLabel(next.viewer?.role||'saknas')+'. Din orsak och det tidigare granskningsunderlaget finns kvar.');
   }catch(e){if(alive.current&&currentIdentity.current===startedIdentity&&operation.current===startedOperation)setError(((e as Error).message||'Din behörighet kunde inte läsas.')+' Din orsak och det tidigare underlaget finns kvar.');}
   finally{if(alive.current&&currentIdentity.current===startedIdentity&&operation.current===startedOperation){lock.current=false;setRefreshing(false);}}
@@ -136,24 +143,24 @@ export function CommercialResponsibilityAnchor({st,d,space,save,busy,refresh,onC
   try{
    const next=await refresh();
    if(!alive.current||currentIdentity.current!==startedIdentity||currentAccess.current!==startedAccess||operation.current!==startedOperation)return;
-   if(identityFor(next,space,d.id)!==startedIdentity||next.viewer?.role!=='admin')throw Error('Kontot eller arbetsytan har ändrats. Det tidigare formuläret finns kvar.');
-   const latest=snapshotFor(next,d.id);
+   if(identityFor(next,space,targetType,targetId)!==startedIdentity||next.viewer?.role!=='admin')throw Error('Kontot eller arbetsytan har ändrats. Det tidigare formuläret finns kvar.');
+   const latest=snapshotFor(next,targetType,targetId);
    if(!latest.review.blockedReason&&latest.review.sourceProfile?.memberId){
     try{Object.assign(latest,await readAccount(space,latest.review));}catch(e){latest.accountError=(e as Error).message||'CRM-kontot kunde inte hämtas.';}
    }
    if(!alive.current||currentIdentity.current!==startedIdentity||currentAccess.current!==startedAccess||operation.current!==startedOperation)return;
    setFetched({state:structuredClone(next),snapshot:latest});
-   setNotice('Aktuellt affärs- och kontounderlag har hämtats. Formuläret behåller din orsak och sitt tidigare granskningsunderlag. Välj Läs in nytt granskningsunderlag för en ny granskning.');
+   setNotice('Aktuellt '+(isOrder?'order':'affärs')+'- och kontounderlag har hämtats. Formuläret behåller din orsak och sitt tidigare granskningsunderlag. Välj Läs in nytt granskningsunderlag för en ny granskning.');
   }catch(e){if(alive.current&&currentIdentity.current===startedIdentity&&currentAccess.current===startedAccess&&operation.current===startedOperation)setError(((e as Error).message||'Aktuellt underlag kunde inte hämtas.')+' Din orsak och det tidigare underlaget finns kvar.');}
   finally{if(alive.current&&currentIdentity.current===startedIdentity&&currentAccess.current===startedAccess&&operation.current===startedOperation){lock.current=false;setRefreshing(false);}}
  }
  function adopt(){
   if(!draft||!fetched||!visible||!admin||locked||lock.current||discard)return;
-  if(identityFor(fetched.state,space,d.id)!==identity){setError('Kontot eller arbetsytan har ändrats. Det tidigare formuläret finns kvar.');return;}
+  if(identityFor(fetched.state,space,targetType,targetId)!==identity){setError('Kontot eller arbetsytan har ändrats. Det tidigare formuläret finns kvar.');return;}
   // Adopting a newly fetched basis is an explicit new intent. Never turn an
   // earlier unconfirmed write into a replay with silently replaced data.
-  setDraft({...draft,expectedContext:commercialResponsibilityAnchorBasis(fetched.state,d.id),snapshot:structuredClone(fetched.snapshot),reviewed:false,editVersion:draft.editVersion+1});setRemoteConflict(false);setError('');
-  setNotice('Det hämtade affärs- och kontounderlaget är nu valt. Din orsak finns kvar. Granska personen, kontot och kopplingen igen innan du sparar.');
+  setDraft({...draft,expectedContext:basisFor(fetched.state,targetType,targetId),snapshot:structuredClone(fetched.snapshot),reviewed:false,editVersion:draft.editVersion+1});setRemoteConflict(false);setError('');
+  setNotice('Det hämtade '+(isOrder?'order':'affärs')+'- och kontounderlaget är nu valt. Din orsak finns kvar. Granska personen, kontot och kopplingen igen innan du sparar.');
  }
  async function submit(){
   if(!draft||!payload||!canSave||lock.current)return;
@@ -161,7 +168,7 @@ export function CommercialResponsibilityAnchor({st,d,space,save,busy,refresh,onC
   lock.current=true;setSubmitting(true);setError('');setNotice('');setAttempt({payload:structuredClone(submitted),editVersion:draft.editVersion,unknown:true});
   try{
    let failureStatus=0,failureMessage='';
-   const saved=await save('commercial_responsibility_anchor',submitted,false,(status,message)=>{failureStatus=status;failureMessage=message||'';});
+   const saved=await save(isOrder?'order_responsibility_anchor':'commercial_responsibility_anchor',submitted,false,(status,message)=>{failureStatus=status;failureMessage=message||'';});
    if(!alive.current||currentIdentity.current!==startedIdentity||currentAccess.current!==startedAccess||operation.current!==startedOperation)return;
    if(saved)finishClose();
    else{
@@ -189,24 +196,24 @@ export function CommercialResponsibilityAnchor({st,d,space,save,busy,refresh,onC
   });
  }
 
- const deal=snapshot?.review.deal,customer=snapshot?.review.customer;
+ const deal=snapshot?.review.deal,target=snapshot?.review.target,customer=snapshot?.review.customer,recordTitle=deal?.title||(isOrder?'Order '+targetId:'title' in record?record.title:'Affären');
  return <>
   <Dialog open={visible} onOpenChange={value=>{if(!value)close();}}><DialogContent className="business-ui customer-anchor-dialog commercial-anchor-dialog" showCloseButton={false} onFocusCapture={revealFocusedControl} onOpenAutoFocus={event=>{event.preventDefault();dialogHeading.current?.focus({preventScroll:true});}} onEscapeKeyDown={event=>{if(locked||lock.current||discard)event.preventDefault();}} onInteractOutside={event=>{if(locked||lock.current||discard)event.preventDefault();}} onCloseAutoFocus={event=>restoreHandoverFocus(event,opener.current,focusFallback)}>
-   <DialogHeader><div className="customer-anchor-head"><DialogTitle ref={dialogHeading} tabIndex={-1}><Link2 size={20} aria-hidden="true"/><span>Koppla affärsansvaret</span></DialogTitle><Button type="button" variant="outline" disabled={locked||discard} onClick={close}>Stäng</Button></div><DialogDescription>Granska affärsansvaret och samma ansvariga persons CRM-konto i {workspaceLabel(space)}.</DialogDescription></DialogHeader>
+   <DialogHeader><div className="customer-anchor-head"><DialogTitle ref={dialogHeading} tabIndex={-1}><Link2 size={20} aria-hidden="true"/><span lang="sv">Koppla {isOrder?<>order<wbr/>ansvaret</>:<>affärs<wbr/>ansvaret</>}</span></DialogTitle><Button type="button" variant="outline" disabled={locked||discard} onClick={close}>Stäng</Button></div><DialogDescription>Granska {responsibilityDefinite} och samma ansvariga persons CRM-konto i {workspaceLabel(space)}.</DialogDescription></DialogHeader>
    {draft&&snapshot&&<form onSubmit={event=>{event.preventDefault();event.stopPropagation();void submit();}}><fieldset disabled={locked||discard}>
-    <section className="customer-anchor-card commercial-anchor-scope" aria-label="Affären i granskningsunderlaget"><h3>{deal?.title||'Affären saknas i granskningsunderlaget'}</h3><p><b>Kund:</b> {customer?.name||'Kundkopplingen saknas'}.</p><p><b>Registrerad affärsansvarig:</b> {deal?.owner||'Saknas'}.</p><p><b>Affärssteg:</b> {deal?.stage?label([...PIPELINE,...OUTCOMES],deal.stage):'Saknas'}.</p><p className="biz-hint">Affären har en äldre namnkoppling. Granska kopplingen till samma ansvariga person.</p></section>
-    <section className="customer-anchor-card customer-anchor-person" aria-label="Personen och kontot i granskningsunderlaget"><h3><UserRound size={18} aria-hidden="true"/>Personen som kopplas</h3>{profile?<><p><b>{profile.displayName}</b><br/>Registrerat affärsansvar: {profile.legacyOwnerName}.</p><p><b>Resultatprofil:</b> {profile.active?'Aktuell':'Historisk'}.</p></>:<p>Ingen entydig granskad resultatprofil finns i underlaget.</p>}{account?<div className="customer-anchor-account"><p><b>CRM-konto:</b> {account.name}<br/>{account.email}</p><p><b>Roll i läst underlag:</b> {roleLabel(account.role)}. <b>Konto:</b> {account.active?'Aktivt':'Inaktivt'}. <b>Användaridentitet:</b> {account.connected?'Ansluten':'Inte ansluten'}.</p></div>:<p className="biz-hint">{refreshing?'Hämtar CRM-kontot…':'Ingen kontoanslutning har kunnat verifieras i detta granskningsunderlag.'}</p>}<p className="biz-hint">Den lästa kontoanslutningen är inget besked om personens egen lyckade inloggning.</p></section>
+    <section className="customer-anchor-card commercial-anchor-scope" aria-label={(isOrder?'Ordern':'Affären')+' i granskningsunderlaget'}><h3>{target?recordTitle:(isOrder?'Ordern':'Affären')+' saknas i granskningsunderlaget'}</h3><p><b>Kund:</b> {customer?.name||'Kundkopplingen saknas'}.</p><p><b>Registrerad {isOrder?'orderansvarig':'affärsansvarig'}:</b> {target?.owner||'Saknas'}.</p><p><b>{isOrder?'Ordersteg':'Affärssteg'}:</b> {target?.stage?label(isOrder?DELIVERY:[...PIPELINE,...OUTCOMES],target.stage):'Saknas'}.</p><p className="biz-hint">{isOrder?'Ordern':'Affären'} har en äldre namnkoppling. Granska kopplingen till samma ansvariga person.</p>{isOrder&&<p className="biz-hint">Affärens registrerade ansvar och tidigare resultat ligger kvar. Kopplingen gäller orderns fortsatta ansvar.</p>}</section>
+    <section className="customer-anchor-card customer-anchor-person" aria-label="Personen och kontot i granskningsunderlaget"><h3><UserRound size={18} aria-hidden="true"/>Personen som kopplas</h3>{profile?<><p><b>{profile.displayName}</b><br/>Registrerat {responsibility}: {profile.legacyOwnerName}.</p><p><b>Personprofil:</b> {profile.active?'Aktuell':'Historisk'}.</p></>:<p>Ingen entydig granskad personprofil finns i underlaget.</p>}{account?<div className="customer-anchor-account"><p><b>CRM-konto:</b> {account.name}<br/>{account.email}</p><p><b>Roll i läst underlag:</b> {roleLabel(account.role)}. <b>Konto:</b> {account.active?'Aktivt':'Inaktivt'}. <b>Användaridentitet:</b> {account.connected?'Ansluten':'Inte ansluten'}.</p></div>:<p className="biz-hint">{refreshing?'Hämtar CRM-kontot…':'Ingen kontoanslutning har kunnat verifieras i detta granskningsunderlag.'}</p>}<p className="biz-hint">Den lästa kontoanslutningen är inget besked om personens egen lyckade inloggning.</p></section>
     {blocked&&!refreshing&&<p className="customer-anchor-warning" role="alert"><AlertTriangle size={18} aria-hidden="true"/><span>{blocked}</span></p>}
     {!admin&&<div className="customer-anchor-warning" role="alert"><div><p>Administratörsrollen behövs för att granska eller spara kopplingen. Din tidigare text och ditt underlag finns kvar att läsa.</p><Button type="button" variant="outline" onClick={()=>void checkAccess()}>Kontrollera min behörighet</Button></div></div>}
-    <F label="Varför är det här rätt person? *"><Textarea id={reasonId} required rows={3} maxLength={4000} readOnly={!admin} value={draft.reason} aria-describedby={reasonId+'-hint'} placeholder="Beskriv underlaget för att det är samma affärsansvariga person." onChange={event=>changeReason(event.target.value)}/></F><p id={reasonId+'-hint'} className="biz-hint">Orsaken sparas i affärens ansvarshistorik.</p>
-    <section className="customer-anchor-review" aria-label="Granska affärsansvarskopplingen"><h3>Det här sparas</h3><p><b>{deal?.title||d.title}</b> får en stabil koppling till samma affärsansvariga person: <b>{profile?.displayName||'profil saknas'}</b>.</p><p><b>Orsak:</b> <span className="customer-anchor-reason">{draft.reason||'Ange en orsak.'}</span></p><p>Kopplingen och den granskade personen registreras i affärens ansvarshistorik. Affärens värde, nästa steg, befintliga uppgifter och kundens ansvar fortsätter som förut.</p><label className="check-field"><Checkbox aria-label="Jag har granskat affärsansvarskopplingen" disabled={!canReview} checked={draft.reviewed&&!conflict} onCheckedChange={value=>{if(canReview&&!lock.current)setDraft(previous=>previous?.identity===identity?{...previous,reviewed:value===true,editVersion:previous.editVersion+1}:previous);}}/><span>Jag har granskat affärsansvaret, personen, kontot och orsaken.</span></label></section>
+    <F label="Varför är det här rätt person? *"><Textarea id={reasonId} required rows={3} maxLength={4000} readOnly={!admin} value={draft.reason} aria-describedby={reasonId+'-hint'} placeholder={'Beskriv underlaget för att det är samma '+(isOrder?'orderansvariga':'affärsansvariga')+' person.'} onChange={event=>changeReason(event.target.value)}/></F><p id={reasonId+'-hint'} className="biz-hint">Orsaken sparas i {isOrder?'orderns':'affärens'} ansvarshistorik.</p>
+    <section className="customer-anchor-review" aria-label={'Granska '+responsibility+'skopplingen'}><h3>Det här sparas</h3><p><b>{recordTitle}</b> får en stabil koppling till samma {isOrder?'orderansvariga':'affärsansvariga'} person: <b>{profile?.displayName||'profil saknas'}</b>.</p><p><b>Orsak:</b> <span className="customer-anchor-reason">{draft.reason||'Ange en orsak.'}</span></p>{isOrder?<><p>Kopplingen och den granskade personen registreras i orderns ansvarshistorik. Befintliga uppgifter och kundens ansvar fortsätter som förut.</p><p>Artikelantal, godkännanden, tryck och lager, registrerade leveranser, fakturaansvar och tidigare försäljningsresultat ligger kvar.</p></>:<p>Kopplingen och den granskade personen registreras i affärens ansvarshistorik. Affärens värde, nästa steg, befintliga uppgifter och kundens ansvar fortsätter som förut.</p>}<label className="check-field"><Checkbox aria-label={'Jag har granskat '+responsibility+'skopplingen'} disabled={!canReview} checked={draft.reviewed&&!conflict} onCheckedChange={value=>{if(canReview&&!lock.current)setDraft(previous=>previous?.identity===identity?{...previous,reviewed:value===true,editVersion:previous.editVersion+1}:previous);}}/><span>Jag har granskat {responsibilityDefinite}, personen, kontot och orsaken.</span></label></section>
     {attempt?.unknown&&<div className="customer-anchor-pending" role="status"><b>Sparandet saknar kvittens</b><p>Försöket kan redan ha lyckats. {sameAttempt?'Du kan återförsöka samma sparning med det tidigare granskade underlaget.':'Du har ändrat formulärets avsikt. Ett nytt försök kräver aktuell granskning och ersätter inte kvittot från det tidigare försöket.'}</p></div>}
     {conflict&&<div className="record-conflict" role="alert"><b>Granskningsunderlaget har ändrats</b><p>Din orsak och det tidigare underlaget finns kvar. {sameAttempt?'Ett obekräftat, oförändrat försök kan fortfarande återförsökas. För en ny ändring behöver du hämta och läsa in aktuellt underlag.':'Hämta aktuellt underlag, läs in det och granska igen innan en ny sparning.'}</p></div>}
-    <details className="biz-details customer-anchor-refresh"><summary>Hämta och granska aktuellt underlag</summary><p>Hämtning behåller formulärets tidigare underlag. Inläsning väljer det hämtade affärs- och kontounderlaget, behåller din orsak och kräver en ny granskning.</p><div className="biz-buttons"><Button type="button" variant="outline" disabled={!admin} onClick={()=>void fetchCurrent()}>Hämta aktuellt underlag</Button><Button type="button" variant="outline" disabled={!admin||!fetched} onClick={adopt}>Läs in nytt granskningsunderlag</Button></div>{fetched&&<div className="customer-anchor-fetched"><p><b>Senast hämtat affärsansvar:</b> {fetched.snapshot.review.deal?.owner||'Saknas'}. <b>Profil:</b> {fetched.snapshot.review.sourceProfile?.displayName||'Saknas'}.</p><p><b>Senast hämtat konto:</b> {fetched.snapshot.account?fetched.snapshot.account.name+' · '+fetched.snapshot.account.email+' · '+roleLabel(fetched.snapshot.account.role):'Kontoanslutningen kunde inte verifieras.'}</p>{(fetched.snapshot.review.blockedReason||accountBlocker(fetched.snapshot))&&<p className="customer-anchor-warning">{fetched.snapshot.review.blockedReason||accountBlocker(fetched.snapshot)}</p>}</div>}</details>
-    <details className="biz-details customer-anchor-technical"><summary>Visa kopplingens identifierare</summary><p><b>Affär:</b> {deal?.id||'Saknas'}.<br/><b>Kund:</b> {customer?.id||'Saknas'}.<br/><b>Resultatprofil:</b> {profile?.id||'Saknas'}.<br/><b>CRM-konto:</b> {account?.id||profile?.memberId||'Saknas'}.</p></details>
+    <details className="biz-details customer-anchor-refresh"><summary>Hämta och granska aktuellt underlag</summary><p>Hämtning behåller formulärets tidigare underlag. Inläsning väljer det hämtade {isOrder?'order':'affärs'}- och kontounderlaget, behåller din orsak och kräver en ny granskning.</p><div className="biz-buttons"><Button type="button" variant="outline" disabled={!admin} onClick={()=>void fetchCurrent()}>Hämta aktuellt underlag</Button><Button type="button" variant="outline" disabled={!admin||!fetched} onClick={adopt}>Läs in nytt granskningsunderlag</Button></div>{fetched&&<div className="customer-anchor-fetched"><p><b>Senast hämtat {responsibility}:</b> {fetched.snapshot.review.target?.owner||'Saknas'}. <b>Profil:</b> {fetched.snapshot.review.sourceProfile?.displayName||'Saknas'}.</p><p><b>Senast hämtat konto:</b> {fetched.snapshot.account?fetched.snapshot.account.name+' · '+fetched.snapshot.account.email+' · '+roleLabel(fetched.snapshot.account.role):'Kontoanslutningen kunde inte verifieras.'}</p>{(fetched.snapshot.review.blockedReason||accountBlocker(fetched.snapshot))&&<p className="customer-anchor-warning">{fetched.snapshot.review.blockedReason||accountBlocker(fetched.snapshot)}</p>}</div>}</details>
+    <details className="biz-details customer-anchor-technical"><summary>Visa kopplingens identifierare</summary><p>{isOrder&&<><b>Order:</b> {target?.id||'Saknas'}.<br/></>}<b>Affär:</b> {deal?.id||'Saknas'}.<br/><b>Kund:</b> {customer?.id||'Saknas'}.<br/><b>Resultatprofil:</b> {profile?.id||'Saknas'}.<br/><b>CRM-konto:</b> {account?.id||profile?.memberId||'Saknas'}.</p></details>
     {notice&&<p className="biz-hint" role="status">{notice}</p>}{error&&<p className="error" role="alert">{error}</p>}
     <p className="biz-hint">Formuläret sparas inte som privat utkast. Din text finns kvar medan dialogen är öppen; den försvinner om du stänger utan att spara eller laddar om sidan.</p>
-    <div className="biz-buttons customer-anchor-footer"><Button type="button" variant="outline" onClick={close}>Stäng</Button><Button type="submit" disabled={!canSave||locked||discard}>{submitting?'Sparar…':sameAttempt?'Försök samma sparning igen':'Spara affärsansvarskoppling'}</Button></div>
+    <div className="biz-buttons customer-anchor-footer"><Button type="button" variant="outline" onClick={close}>Stäng</Button><Button type="submit" disabled={!canSave||locked||discard}>{submitting?'Sparar…':sameAttempt?'Försök samma sparning igen':'Spara '+responsibility+'skoppling'}</Button></div>
    </fieldset></form>}
    {locked&&<p role="status">{refreshing?'Hämtar aktuellt underlag…':'Sparar kopplingen…'} Vänta innan du stänger.</p>}
   </DialogContent></Dialog>

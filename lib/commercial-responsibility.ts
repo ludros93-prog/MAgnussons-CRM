@@ -3,6 +3,7 @@ import {RuleError} from './crm-errors';
 import type {Actor,Deal,Order,State,Task} from './crm';
 import {sellerProfileById,sellerProfileForOwner,validateSellerProfileReferences} from './seller-profiles';
 import {recordBasis} from './record-conflicts';
+import {awaitingReceipt} from './order-work';
 
 const required=z.string().trim().min(1).max(4000),recordId=required.max(100),ownerName=required.max(150);
 const exactText=(max:number)=>z.string().min(1).max(max).refine(value=>value===value.trim()&&!value.includes('\0'),'Ansvarskopplingen kräver en exakt registrerad identitet.');
@@ -20,7 +21,15 @@ export const CommercialResponsibilityAnchorHistorySchema=CommercialResponsibilit
  selectedTaskIds:z.array(recordId).max(0),fromDisplayName:exactText(150),toDisplayName:exactText(150),
  targetMemberId:exactText(150),targetUserId:exactText(4000),targetName:exactText(150),targetRole:z.enum(['admin','seller'])
 }).strict();
-export const CommercialResponsibilityHistorySchema=z.union([CommercialResponsibilityTransferHistorySchema,CommercialResponsibilityAnchorHistorySchema]);
+// Keep the shipped deal-only variant unchanged. An order link records a
+// separate strict variant rather than weakening an earlier audit contract.
+export const OrderResponsibilityAnchorHistorySchema=CommercialResponsibilityAnchorHistorySchema.extend({
+ targetType:z.literal('order'),
+ // This is a snapshot of the already visible canonical receipt profile,
+ // not a claim that the activity was (or was not) stored in a SQL row.
+ receiptProjection:z.object({taskId:exactText(108),ownerProfileId:z.literal('')}).strict().nullable()
+}).strict();
+export const CommercialResponsibilityHistorySchema=z.union([CommercialResponsibilityTransferHistorySchema,CommercialResponsibilityAnchorHistorySchema,OrderResponsibilityAnchorHistorySchema]);
 export const CommercialResponsibilityTransferSchema=z.object({
  targetType:z.enum(['deal','order']),targetId:recordId,targetProfileId:z.string().uuid(),
  selectedTaskIds:z.array(recordId).max(500).default([]),reason:required,reviewed:z.literal(true),
@@ -32,13 +41,19 @@ export const CommercialResponsibilityAnchorSchema=z.object({
  expectedContext:z.string().min(1).max(3000000),expectedAccount:accountDigest
 }).strict();
 export type CommercialResponsibilityAnchor=z.infer<typeof CommercialResponsibilityAnchorSchema>;
+export const OrderResponsibilityAnchorSchema=z.object({
+ orderId:recordId,targetProfileId:z.string().uuid(),reason:required,reviewed:z.literal(true),
+ expectedContext:z.string().min(1).max(3000000),expectedAccount:accountDigest
+}).strict();
+export type OrderResponsibilityAnchor=z.infer<typeof OrderResponsibilityAnchorSchema>;
 export const CommercialResponsibilityAnchorTargetSchema=z.object({
  memberId:exactText(150),userId:exactText(4000),name:exactText(150),email:z.string().email().refine(value=>value===value.trim()),
  role:z.enum(['admin','seller']),owner:exactText(150),active:z.literal(1),expectedAccount:accountDigest
 }).strict();
 export type CommercialResponsibilityAnchorTarget=z.infer<typeof CommercialResponsibilityAnchorTargetSchema>;
 export type CommercialResponsibilityHistory=z.infer<typeof CommercialResponsibilityHistorySchema>;
-export type CommercialResponsibilityAnchorHistory=z.infer<typeof CommercialResponsibilityAnchorHistorySchema>;
+export type OrderResponsibilityAnchorHistory=z.infer<typeof OrderResponsibilityAnchorHistorySchema>;
+export type CommercialResponsibilityAnchorHistory=z.infer<typeof CommercialResponsibilityAnchorHistorySchema>|OrderResponsibilityAnchorHistory;
 export const isCommercialResponsibilityAnchorHistory=(row:CommercialResponsibilityHistory):row is CommercialResponsibilityAnchorHistory=>'action' in row&&row.action==='anchor';
 type TargetType=CommercialResponsibilityTransfer['targetType'];
 const need=(value:unknown,message:string)=>{if(!value)throw new RuleError(message)};
@@ -131,6 +146,62 @@ export function commercialResponsibilityAnchorBasis(st:State,dealId:string){
   linkedOrders:st.orders.filter(order=>order.dealId===dealId).sort((a,b)=>a.id.localeCompare(b.id))
  });
 }
+// The customer order stays open until its own follow-up is complete. A
+// cancelled internal print job is still an open customer order in handover.
+// Its current owner need not be the historical owner of the won parent deal.
+export function orderResponsibilityAnchorReview(st:State,orderId:string){
+ const matches=st.orders.filter(order=>order.id===orderId),order=matches.length===1?matches[0]:undefined;
+ const customers=order?st.customers.filter(customer=>customer.id===order.customerId):[],customer=customers.length===1?customers[0]:undefined;
+ const deals=order?st.deals.filter(deal=>deal.id===order.dealId):[],linkedDeal=deals.length===1?deals[0]:undefined;
+ const linkedOrders=order?st.orders.filter(row=>row.dealId===order.dealId).sort((a,b)=>a.id.localeCompare(b.id)):[];
+ const source=sourceProfile(st,order);
+ let blockedReason='';
+ if(!matches.length)blockedReason='Ordern finns inte.';
+ else if(!order)blockedReason='Orderkopplingen är tvetydig. Granska orderunderlaget först.';
+ else if(!customer)blockedReason='Kundkopplingen saknas eller är tvetydig. Granska orderunderlaget först.';
+ else if(!linkedDeal||linkedDeal.customerId!==order.customerId||linkedDeal.stage!=='won')blockedReason='Ordern behöver en entydig vunnen affär som hör till samma kund. Granska affärskopplingen först.';
+ else if(linkedOrders.length!==1)blockedReason='Affären har flera orderkopplingar. Granska orderunderlaget först.';
+ else if(order.stage==='followed')blockedReason='En uppföljd order behåller sitt historiska ansvar.';
+ else if(order.ownerProfileId)blockedReason='Orderansvaret har redan en registrerad ansvarskoppling.';
+ else if(order.responsibilityTransfers.length)blockedReason='Ordern har registrerad ansvarshistorik. Granska den i orderns befintliga överlämningsflöde.';
+ else if(!st.settings.sellerProfilesInitialized)blockedReason='Skapa och granska de stabila säljarprofilerna innan orderansvaret kopplas.';
+ else if(!source||source.legacyOwnerName!==order.owner||st.settings.sellerProfiles.filter(profile=>profile.legacyOwnerName===order.owner).length!==1||st.settings.sellerProfiles.filter(profile=>profile.id===source.id).length!==1)blockedReason='Orderns ansvariga saknar en entydig granskad säljarprofil. Granska personkopplingen först.';
+ else if(!source.active||source.retirementHistory.length||!st.settings.owners.includes(source.legacyOwnerName))blockedReason='Orderansvaret behöver en aktiv, granskad säljarprofil bland teamets ansvariga.';
+ else if(!source.memberId||source.memberId!==source.memberId.trim()||source.memberId.includes('\0')||st.settings.sellerProfiles.filter(profile=>profile.memberId===source.memberId).length!==1)blockedReason='Säljarprofilen saknar en entydig registrerad kontokoppling. Granska profilen och personens anslutna konto först.';
+ return {order,customer,linkedDeal,linkedOrders,sourceProfile:source,blockedReason};
+}
+export function orderResponsibilityAnchorBasis(st:State,orderId:string){
+ const review=orderResponsibilityAnchorReview(st,orderId);
+ return recordBasis({
+  purpose:'order_responsibility_anchor',orderId,order:review.order||null,customer:review.customer||null,linkedDeal:review.linkedDeal||null,sourceProfile:review.sourceProfile||null,
+  responsibility:commercialResponsibilityBasis(st,'order',orderId),linkedOrders:review.linkedOrders
+ });
+}
+export function anchorOrderResponsibility(st:State,input:OrderResponsibilityAnchor,actor:Actor,target:CommercialResponsibilityAnchorTarget){
+ const parsed=OrderResponsibilityAnchorSchema.parse(input),account=CommercialResponsibilityAnchorTargetSchema.parse(target);
+ need(actor.role==='admin'&&actor.memberId&&actor.memberId===actor.memberId.trim()&&actor.id.trim()&&actor.id===actor.id.trim()&&actor.name.trim()&&actor.name===actor.name.trim()&&!actor.name.includes('\0'),'Orderansvar kopplas av en inloggad administratör.');
+ need(parsed.expectedContext===orderResponsibilityAnchorBasis(st,parsed.orderId),'Ordern eller granskningsunderlaget har ändrats. Läs in och granska aktuellt underlag innan ansvaret kopplas.');
+ validateSellerProfileReferences(st);validateCommercialResponsibilityReferences(st);
+ const review=orderResponsibilityAnchorReview(st,parsed.orderId);
+ need(!review.blockedReason,review.blockedReason);
+ const order=review.order!,profile=review.sourceProfile!;
+ need(parsed.targetProfileId===profile.id,'Koppla orderansvaret till samma redan granskade ansvariga person. Ett byte görs i Byt orderansvar.');
+ need(account.memberId===profile.memberId&&account.owner===profile.legacyOwnerName&&account.owner===order.owner,'Det anslutna kontot motsäger orderns granskade personkoppling. Läs in och granska profilen och kontot igen.');
+ need(parsed.expectedAccount===account.expectedAccount,'Det anslutna kontot har ändrats. Läs in och granska kontot igen innan ansvaret kopplas.');
+ const receipt=st.tasks.find(task=>task.dealId===order.dealId&&task.kind==='receipt'),canonicalReceiptId='receipt-'+order.id;
+ const receiptProjection=awaitingReceipt(order)&&(!receipt||receipt.id===canonicalReceiptId&&receipt.customerId===order.customerId&&receipt.owner===order.owner&&!receipt.ownerProfileId&&!receipt.done)?{taskId:canonicalReceiptId,ownerProfileId:'' as const}:null;
+ const at=new Date().toISOString(),row=OrderResponsibilityAnchorHistorySchema.parse({
+  id:crypto.randomUUID(),targetType:'order',targetId:order.id,customerId:order.customerId,dealId:order.dealId,action:'anchor',fromRecordedProfileId:'',
+  fromProfileId:profile.id,toProfileId:profile.id,fromOwner:order.owner,toOwner:order.owner,
+  fromDisplayName:profile.displayName,toDisplayName:profile.displayName,selectedTaskIds:[],
+  targetMemberId:account.memberId,targetUserId:account.userId,targetName:account.name,targetRole:account.role,receiptProjection,
+  reason:parsed.reason,at,byId:actor.id,byMemberId:actor.memberId,byName:actor.name
+ });
+ order.ownerProfileId=profile.id;order.responsibilityTransfers.push(row);
+ st.events.unshift({id:crypto.randomUUID(),customerId:order.customerId,dealId:order.dealId,kind:'order_responsibility_anchor',at,actor:{id:actor.id,name:actor.name},text:'Orderansvar kopplat: '+profile.displayName+' · '+order.owner+'\nSamma ansvariga person fortsätter. Kontokopplingen granskades vid denna registrering; ingen tidigare kontoidentitet rekonstrueras.\nUnderlag: '+parsed.reason});
+ validateCommercialResponsibilityReferences(st);
+ return st;
+}
 // The server supplies the fresh account tuple and its directory digest. A
 // payload cannot nominate a different member, role or account audit snapshot.
 export function anchorCommercialResponsibility(st:State,input:CommercialResponsibilityAnchor,actor:Actor,target:CommercialResponsibilityAnchorTarget){
@@ -193,7 +264,12 @@ export function validateCommercialResponsibilityReferences(st:State){
    if(targetType==='order')need(st.deals.some(d=>d.id===row.dealId&&d.customerId===row.customerId),'Orderns ansvarshistorik har en bruten affärskoppling.');
    need(profiles.get(row.fromProfileId)?.legacyOwnerName===row.fromOwner&&profiles.get(row.toProfileId)?.legacyOwnerName===row.toOwner,'Ansvarshistorikens profiler motsäger dess ursprungliga ansvarskopplingar.');
    if(isCommercialResponsibilityAnchorHistory(row)){
-    need(targetType==='deal'&&!previous&&!anchored&&!row.fromRecordedProfileId&&row.fromProfileId===row.toProfileId&&row.fromOwner===row.toOwner&&row.fromDisplayName===row.toDisplayName&&!row.selectedTaskIds.length,'Affärshistoriken har en ogiltig eller upprepad ansvarskoppling.');
+    need(!previous&&!anchored&&!row.fromRecordedProfileId&&row.fromProfileId===row.toProfileId&&row.fromOwner===row.toOwner&&row.fromDisplayName===row.toDisplayName&&!row.selectedTaskIds.length,'Affärs- eller orderhistoriken har en ogiltig eller upprepad ansvarskoppling.');
+    if(targetType==='order'){
+     const parents=st.deals.filter(deal=>deal.id===dealId),siblings=st.orders.filter(order=>order.dealId===dealId);
+     need(parents.length===1&&parents[0].stage==='won'&&parents[0].customerId===target.customerId&&siblings.length===1&&siblings[0].id===target.id,'Orderns ansvarskoppling har en bruten eller tvetydig vunnen affärskoppling.');
+     if(row.targetType==='order'&&row.receiptProjection)need(row.receiptProjection.taskId==='receipt-'+target.id&&!row.receiptProjection.ownerProfileId,'Orderns bevarade kvittensprofil har en felaktig orderkoppling.');
+    }
     anchored=true;
    }else need(row.fromProfileId!==row.toProfileId,'Ansvarshistorikens överföring behöver två olika säljarprofiler.');
    need(!previous||previous.toProfileId===row.fromProfileId&&previous.toOwner===row.fromOwner,'Ansvarshistorikens överföringar bildar inte en sammanhängande ansvarskedja.');
