@@ -413,7 +413,8 @@ export default function CRM(){
   const frame=requestAnimationFrame(()=>{
    if(historicalReloadFocus.current!==intent||intent.identity!==activeIdentity.current||intent.draftId!==form?.draftId||!target.isConnected)return;
    historicalReloadFocus.current=null;
-   if(document.activeElement!==document.body&&document.activeElement!==intent.origin&&document.activeElement!==target)return;
+   const ownSheetFallback=!!genericSheetNode&&genericSheetNode.isConnected&&document.activeElement===genericSheetNode&&!!intent.origin&&!intent.origin.isConnected&&genericSheetNode.contains(target);
+   if(document.activeElement!==document.body&&document.activeElement!==intent.origin&&document.activeElement!==target&&!ownSheetFallback)return;
    target.focus({preventScroll:true});target.scrollIntoView({block:'nearest',inline:'nearest'});
    if(genericSheetNode)keepFormControlVisible(genericSheetNode,target);
   });
