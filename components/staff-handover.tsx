@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect,useId,useRef,useState} from 'react';
-import {AlertTriangle,ArrowRightLeft,RefreshCw,Search,UserRound} from 'lucide-react';
+import {AlertTriangle,ArrowRightLeft,Link2,RefreshCw,Search,UserRound} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from '@/components/ui/select';
@@ -9,7 +9,7 @@ import type {State} from '@/lib/crm';
 import {staffHandoverRows,type StaffHandoverAction,type StaffHandoverRow} from '@/lib/staff-handover';
 import {SellerProfileRetirement,type RetirementSave} from './seller-profile-retirement';
 
-type Props={st:State;space:'demo'|'live';save:RetirementSave;busy:boolean;onAction:(action:StaffHandoverAction)=>void;refresh:()=>Promise<State>};
+type Props={st:State;space:'demo'|'live';save:RetirementSave;busy:boolean;onAction:(action:StaffHandoverAction,opener:HTMLElement)=>void;refresh:()=>Promise<State>};
 const unresolvedChoice='__unresolved';
 const pageSize=20;
 const identityLabel:Record<StaffHandoverRow['identity'],string>={
@@ -77,7 +77,10 @@ export function StaffHandover({st,space,save,busy,onAction,refresh}:Props){
    if(alive.current&&current===request.current){refreshLock.current=false;setRefreshing(false);}
   }
  }
- function act(row:StaffHandoverRow){if(!refreshLock.current&&row.action&&admin)onAction(row.action);}
+ function act(row:StaffHandoverRow,opener:HTMLElement,anchor=false){
+  const action=anchor?row.anchorAction:row.action;
+  if(!refreshLock.current&&!busy&&action&&admin)onAction(action,opener);
+ }
  if(!admin)return null;
 
  return <section className="business-ui panel padded staff-handover" aria-labelledby="staff-handover-heading">
@@ -85,7 +88,7 @@ export function StaffHandover({st,space,save,busy,onAction,refresh}:Props){
    <div><span className="biz-kicker">GRANSKAD ARBETSÖVERLÄMNING</span><h2 id="staff-handover-heading" tabIndex={-1}><ArrowRightLeft size={22} aria-hidden="true"/><span>Överlämna arbete</span></h2><p>Välj en säljarprofil. Se vad personen ansvarar för och granska en överlämning i taget.</p></div>
    <Button type="button" variant="outline" disabled={refreshing} onClick={()=>void fetchCurrent()}><RefreshCw size={17} aria-hidden="true"/><span>{refreshing?'Hämtar underlag…':'Hämta aktuellt underlag'}</span></Button>
   </header>
-  <p className="staff-handover-intro">Översikten samlar kundrelationer och öppna ansvarsdelar. Kund, affär, order och tillhörande uppgifter kan ha olika ansvariga. Varje post granskas separat; du väljer själv vilka tillåtna uppgifter som följer med.</p>
+  <p className="staff-handover-intro">Översikten samlar kundrelationer och öppna ansvarsdelar. Kund, affär, order och tillhörande uppgifter kan ha olika ansvariga. Koppla äldre ansvar till samma person eller granska ett byte av ansvarig. Varje post granskas separat; du väljer själv vilka tillåtna uppgifter som följer med vid ett byte.</p>
   {!st.settings.sellerProfilesInitialized?<div className="staff-handover-notice"><AlertTriangle size={19} aria-hidden="true"/><div><b>Säljarprofiler behöver granskas först</b><p>Öppna Mål & inställningar och granska de stabila säljarprofilerna. Äldre namn tilldelas ingen person automatiskt av den här översikten.</p>{selectedProfileId&&<p>Det tidigare profilvalet finns kvar men kan inte användas med det här underlaget. Ett tomt urval visar inte att arbetet har lämnats över.</p>}</div></div>:<>
    <div className="staff-handover-toolbar">
     <label className="biz-field"><span>Vems arbete vill du granska?</span><Select value={selectedProfileId||'_none'} onValueChange={changeProfile} disabled={refreshing}><SelectTrigger aria-label="Välj profil för arbetsöverlämning" aria-describedby={selectedProfileId?profileDescriptionId:undefined}><SelectValue><span className="staff-handover-choice">{selectedLabel}</span></SelectValue></SelectTrigger><SelectContent className="staff-handover-options"><SelectItem value="_none">Välj säljarprofil</SelectItem>{profiles.map(item=><SelectItem value={item.id} key={item.id}>{profileLabel(item)}</SelectItem>)}<SelectItem value={unresolvedChoice}>Ansvar som behöver granskas</SelectItem>{stale&&!profile&&<SelectItem value={selectedProfileId} disabled>Den tidigare valda profilen behöver granskas</SelectItem>}</SelectContent></Select></label>
@@ -108,8 +111,19 @@ export function StaffHandover({st,space,save,busy,onAction,refresh}:Props){
        <h3 id={rowId+'-row-'+index}>{row.title}</h3>
        <p className="staff-handover-customer"><b>Kund:</b> {row.customerName||'Ingen kundkoppling'}</p>
        <dl><div><dt>Registrerat ansvar</dt><dd>{row.owner||'Ansvar saknas'}</dd></div><div><dt>{row.dueLabel||'Datum'}</dt><dd>{displayDue(row.due)}</dd></div><div><dt>Status</dt><dd>{row.status}</dd></div>{row.ownerProfileId&&<div><dt>Sparat profil-ID</dt><dd>{row.ownerProfileId}</dd></div>}</dl>
-       {row.hint&&<p className="staff-handover-row-hint">{row.hint}</p>}
-       {row.action?<Button type="button" variant="outline" disabled={refreshing} onClick={()=>act(row)} data-customer-id={row.action.kind==='customer'?(row.action.customerId||row.action.id):undefined} aria-describedby={rowId+'-row-'+index}>{row.actionLabel}</Button>:<p className="staff-handover-unavailable"><AlertTriangle size={17} aria-hidden="true"/><span>{row.actionLabel||'Ansvarskopplingen behöver granskas innan en överlämning kan öppnas.'}</span></p>}
+       <div className="staff-handover-row-actions">
+        {row.anchorAction&&<section className="staff-handover-anchor-action" aria-label="Koppla ansvar till samma person">
+         <h4><Link2 size={17} aria-hidden="true"/><span>Behåll samma ansvariga person</span></h4>
+         {row.anchorHint&&<p id={rowId+'-anchor-hint-'+index}>{row.anchorHint}</p>}
+         {row.anchorAction.kind==='customerAnchor'&&<p className="staff-handover-anchor-next">Öppna kundkortet och välj sedan <b>Koppla kundansvaret</b>.</p>}
+         <Button type="button" variant="outline" disabled={refreshing||busy} onClick={event=>act(row,event.currentTarget,true)} data-anchor-kind={row.anchorAction.kind} data-anchor-id={row.anchorAction.id} data-customer-id={row.anchorAction.kind==='customerAnchor'?(row.anchorAction.customerId||row.anchorAction.id):undefined} aria-describedby={row.anchorHint?rowId+'-anchor-hint-'+index:rowId+'-row-'+index}><Link2 size={17} aria-hidden="true"/><span>{row.anchorAction.kind==='customerAnchor'?<>Koppla kund<wbr/>ansvaret</>:row.anchorAction.kind==='dealAnchor'?<>Koppla affärs<wbr/>ansvaret</>:row.anchorAction.kind==='orderAnchor'?<>Koppla order<wbr/>ansvaret</>:row.anchorLabel}</span></Button>
+        </section>}
+        <div className="staff-handover-transfer-action">
+         {row.anchorAction&&<h4>{row.action?.kind==='customer'&&row.kind!=='customer'?'Granska kvarvarande arbete':'Granska byte av ansvarig'}</h4>}
+         {row.hint&&<p className="staff-handover-row-hint">{row.hint}</p>}
+         {row.action?<Button type="button" variant="outline" disabled={refreshing||busy} onClick={event=>act(row,event.currentTarget)} data-customer-id={row.action.kind==='customer'?(row.action.customerId||row.action.id):undefined} aria-describedby={rowId+'-row-'+index}>{row.actionLabel}</Button>:<p className="staff-handover-unavailable"><AlertTriangle size={17} aria-hidden="true"/><span>{row.actionLabel||'Ansvarskopplingen behöver granskas innan en överlämning kan öppnas.'}</span></p>}
+        </div>
+       </div>
       </article>
      </li>)}
     </ol>
