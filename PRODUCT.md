@@ -634,3 +634,10 @@ Generella privata formulärutkast har en bestående textregion med role=status, 
 Kontaktuppgiften efter bekräftad mottagen leverans använder befintligt Följ upp: anteckning, faktiskt kontaktresultat, avslut/omplanering och nästa steg tillsammans. Ett kontaktförsök utan svar eller internt arbete blir ingen kundkontakt. Orderns mottagande, faktura och historiska ansvar samt kundens plan, onboarding och nästa avstämningsdatum behålls. Operativa godkännanden har fortfarande egna handlingar.
 
 V28 är publicerad från `317b640e6d41b9e73dca0200f8208d0a5732701f`. Obligatoriska kontroller, exakt PR-head-/app-main-CI och 16/16 isolerade browserfall är gröna. [VALIDATION](VALIDATION.md) kvitterar källa, main, artefakt och lyckad deploy separat. Ingen ny anslutning, kundacceptans eller personalpilot följer av denna avgränsning.
+# Privata behovsutkast – crm73
+
+Årsplanering och kundens årshjul använder privata utkast för nya och befintliga inköpsbehov. Välj kund innan ett nytt utkast öppnas. Ofärdiga rubriker, datum, dagar före kontakt och anteckningar kan behållas privat; Min dag visar kund, datum och en egen ingång till rätt utkast.
+
+**Spara utkast & stäng** väntar på privat sparbesked. **Spara behov och påminnelse** är en separat handling som använder exakt den sparade privata versionen. Privat sparning registrerar ingen kundkontakt, affär, påminnelse eller acceptans. Ändrade privata versioner och ändrat CRM-underlag granskas var för sig; egna innehållsfält bevaras när aktuellt registrerat ansvar uttryckligen används. Administratörens ansvarsöverlämning förblir ett separat flöde.
+
+Källkod och kontroller är inte en personlig inloggning eller personalacceptans. Aktuellt main/live-resultat redovisas separat i VALIDATION.md och agent/LOG.md.

@@ -78,7 +78,7 @@ export function yearwheelResponsibilityCandidates(st:State,customerId:string,nee
  else if(!targetProfiles.length)blockedReason='Det finns ingen aktiv säljarprofil för behovsansvaret.';
  return {customer,need:yearNeed,sourceProfile,targetProfiles,eligible,excluded,blockedReason};
 }
-function basisContext(st:State,customerId:string,needId:string){
+export function yearNeedEditContext(st:State,customerId:string,needId:string){
  const customer=st.customers.find(row=>row.id===customerId);
  return {
   customer:customer?{id:customer.id,name:customer.name,owner:customer.owner,ownerProfileId:customer.ownerProfileId,status:customer.status}:null,
@@ -87,12 +87,13 @@ function basisContext(st:State,customerId:string,needId:string){
   profiles:st.settings.sellerProfiles.map(profile=>({id:profile.id,displayName:profile.displayName,legacyOwnerName:profile.legacyOwnerName,active:profile.active,memberId:profile.memberId}))
  };
 }
+export type YearNeedEditContext=ReturnType<typeof yearNeedEditContext>;
 // Ordinary edits freeze the selected need and owner choices, independently of
 // unrelated activities. Reading fresh global data never adopts this basis.
-export function yearNeedEditBasis(st:State,customerId:string,needId:string){return recordBasis(basisContext(st,customerId,needId));}
+export function yearNeedEditBasis(st:State,customerId:string,needId:string){return recordBasis(yearNeedEditContext(st,customerId,needId));}
 // The reviewed handover additionally freezes every displayed task choice.
 export function yearwheelResponsibilityBasis(st:State,customerId:string,needId:string){
- return recordBasis({...basisContext(st,customerId,needId),tasks:st.tasks.filter(row=>row.customerId===customerId).sort((a,b)=>a.id.localeCompare(b.id))});
+ return recordBasis({...yearNeedEditContext(st,customerId,needId),tasks:st.tasks.filter(row=>row.customerId===customerId).sort((a,b)=>a.id.localeCompare(b.id))});
 }
 
 export function transferYearwheelResponsibility(st:State,input:YearwheelResponsibilityTransfer,actor:Actor){
