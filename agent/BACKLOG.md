@@ -1,3 +1,20 @@
+# Arbetskö – crm77 prioriterad åtkomsträttning, faktiskt levererad och publicerad
+
+Bekräftad kommersiell informationsläcka under en pågående CRM-läsning prioriterades före B01:s kundansvarsförankring. Den avgränsade rättningen kontrollerar aktuell medlem före CRM-state/mutationskvittens och bevarar exakt återförsök även efter nekad post-commit-kvittens.
+
+Kodkandidat `f22539e0e315a142954702e06d3f9b33ca238c47`, träd `4ce81511f0495400f56b17275193625810bfd23b`. **GitHub app-main** `e52b93542e27d3d75099a4f7e8b0b0a3e5d2471e`, [app-PR #129](https://github.com/ludros93-prog/MAgnussons-CRM/pull/129). **Sites-source** `7fcb9b08641502105e2ec91aa4a4752232e48b96`: samma träd 4ce81511f0495400f56b17275193625810bfd23b och exakt samma 367 spårade filbytes som slutkandidaten; 0 appändringar i tvåförälders källbrygga; vanlig fast-forward-push återläst. **Live v74**, deploy `appgdep_6ac913cb2f6481919ba7099c9bfea1ed`: succeeded 2026-10-09T16:22:44.733278+00:00, på [befintliga Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site). Kod, main och faktiskt publicerad Site är separata kvittenser; merge publicerar inte appen.
+
+Den efterföljande faktiska layoutkontrollen fann klippt anteckningsbörjan/caret vid 320×360/exakt 200 % text. En avgränsad höjd-/scrollrättning ingår i samma leverans; slutproven är klara och PASS på f225 enligt VALIDATION.
+
+B01:s uttryckliga förankring av äldre kundansvar hos samma ansvariga person sköts upp när den bekräftade åtkomstläckan upptäcktes och kvarstår. Även kommersiell förankring, oklara identiteter och full personalöverlämning återstår. B02:s separata chefsroll, B04:s privata driftbackuper/full hostad återställning, B05:s övriga överlämnings- och specialutkast samt B07:s verkliga konto- och personalpilot är öppna. Konkreta åtkomst-, dataförlust- och orderfel går först. Färsk källgranskning avgränsar luckan: ny kund och kundåteröppning kan redan sätta profil-ID, även till samma profil vid återöppning, men återöppning ändrar status och skapar en aktivitet. En befintlig öppen kund med tomt ownerProfileId saknar neutral, uttryckligt granskad förankring till samma person; vanlig redigering bevarar det tomma ID:t och Byt kundansvar utesluter/avvisar samma profil. Nästa avgränsning är kundpostens ID och en särskild audit/händelse, utan statusbyte, ny uppgift eller kontoåterkoppling. Befintliga äldre auditkedjor måste bevaras och ny auditsemantik kräver format-/restorekompatibilitetsprov. Ny förankring behöver separat verifierad target-user-koppling och atomisk member/user/owner/role/active-kontroll; dagens generella profilkontroll är inget bevis för en ansluten person. Inga konton skapas eller kopplas om genom förankringen.
+
+Grundprioriteringen B01/B04 före ytterligare B05 består. Återuppta den verifierade avgränsningen av samma-person-kundförankring efter denna leverans; provisionera inga saknade personkonton eller historiska identiteter utan underlag.
+
+Skrivprov använder syntetiska identiteter och isolerad lagring. Personlig inloggning/CRM-roll, observerad personalpilot, verkliga Fortnox-/Outlook-konton, full hostad backup/återställning och live-rollback är inte verifierade. Grön CI och browserprov bevisar ingen personalacceptans. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas. Konton, roller, verkliga kund-/orderdata, mejl, scheman, prompter och aktivering ändras inte genom denna rättning.
+
+
+## Historik före crm77-leveranskvittot
+
 # Arbetskö – crm76 avgränsad B01 levererad
 
 Efter ett granskat profilavslut kan en historisk **förlorad affär få rättad förlustorsak**, och en **uppföljd order med registrerat fakturabelopp, referens och datum få rättad anteckning**. Profilens exakta sparade UUID används när det finns. Ett äldre tomt UUID kräver en entydig redan granskad ansvarskoppling och förblir tomt; ingen identitet förankras eller flyttas av textändringen.
