@@ -1,3 +1,13 @@
+# Arbetskö – crm73 privata behovsutkast levererade
+
+**B05 avgränsad leverans:** skapa/redigera samma kunds behov som privata råutkast, fortsätta från Min dag och granska privat/CRM-version separat. Exakt ackad privat revision förbrukas atomiskt; global100-race och borttaget mål är skyddade. Kodkandidat `aa57965cd45dbec9eb42cc3679524c99b87ba7ae`; app-main `31c38d103062bf88520f2062d0d2c604e7b44cbf` efter [PR #121](https://github.com/ludros93-prog/MAgnussons-CRM/pull/121). Sites-source `f847d0192ba05478738fd1c6a2394958cbf42f4c`, träd `5702706f2fb784227054eb5e48dabf57593c6b79`, exakt samma 351 spårade filer som den frysta testkandidaten. **Live v70**, deploy `succeeded` 2026-10-09T08:02:11.980430+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site).
+
+**Belägg:** fem frysta kontroller PASS; exakt-head/main-CI success. Verkliga handler/SQLite SQL-racer, nio React/DraftProvider-fall med testadapters och byggd HTTP/D1-triggerrollback. [VALIDATION](../VALIDATION.md) håller mockad transport, verklig replay och browser/personliga prov isär.
+
+**Kvar:** årshjulets administrativa överlämningsdialog är inte ett bestående privat utkast; B05 övriga specialdialoger och privata driftbackuper kvarstår. Nästa: observerad personalpilot på rätt arbetsvy och fortsatt B05 för kvarvarande överlämnings-/specialdialoger. B01b2:s oklara identiteter/full personalöverlämning, B02 chefsroll, B04 privata driftbackuper och B07 verkliga konton/pilot kvarstår. Saknade konton eller verksamhetsbeslut antas inte. Browser vid 320 px/text 2×, native tangentbord, personlig CRM-roll/inloggning och observerad personalpilot är inte verifierade här. Gröna tester är ingen personalacceptans eller fungerande Fortnox-/Outlook-anslutning. Full hostad återställning/live-rollback är oprövad. Codex-referensen är oläst. Mandat, prompt, aktivering och scheman är oförändrade.
+
+## Historik före crm73-leveransen
+
 # Arbetskö för Magnussons CRM
 
 ## 2026-10-09 – B05: privat årshjulsarbete, slutkandidat crm73

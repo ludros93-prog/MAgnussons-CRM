@@ -1,3 +1,23 @@
+# Källor och tillämpning – crm73 privata årshjulsutkast
+
+Officiella offentliga texter återlästa 2026-10-09 07:28 UTC. Käll-/läsreceipt `ad944628d8378eaab329fa0d90be374d0c7286a4b8c6a44490136ad64afbbfd7`; findings `d3dacb6be82859eca3344c3569f6277f3e5bcc920f183619bb7aafab62cd03eb`. Inga HTTP-statuskoder antas när läsverktyget bara gav extraherad text.
+
+| Källa | Verifierad text och tillämpning |
+| --- | --- |
+| [Saleshub AI funktioner](https://saleshubai.se/funktioner) | “Kundkort med kontakter, filer, mail, samtal och nästa aktivitet”; samma kundsammanhang och nästa handling |
+| [Lime actions design](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) | “Use verbs in imperative mood”, “both icon and label”; få konkreta svenska handlingar med synliga etiketter |
+| [Salesforce pause flow](https://help.salesforce.com/s/articleView?id=platform.flow_pause.htm&language=en_US&type=5) | “give them the option to pause it for later”; ofärdigt arbete kopplas till rätt post och återupptas |
+| [Salesforce Classic case email drafts](https://help.salesforce.com/s/articleView?id=sf.case_interaction_draft_emails.htm&language=en_US&type=5) | “without having to send them immediately”, “Drafts aren't auto-saved.”; skilj utkast från inlämning, inget belägg för autosave eller exklusiva privata rättigheter |
+| [Lime process visualization](https://www.lime-technologies.com/en/products/lime-crm/features/process-visualization/) | “Each step can have a date to clarify the timeframe.”; begripligt nästa steg och datum |
+
+Magnussons privata användar-/arbetsytegränser, råfält, fryst basis, CAS, exakt revision och atomisk consume är egna kontrakt. Salesforce-privatdelning/Classic case-rättigheter motsvarar inte dessa. saleshub.ai är en annan B2B-dataplattform; den svenska designkällan är saleshubai.se. Lime 2025.1-läsningen gav Internal Error utan status och görs inte till nytt belägg.
+
+Statisk designgranskning `739682ffcc4ef6aa806b0bd3e42b5969e46256d1b3614f2116484060836f76de` rättade datumskydd, bounded textfält, höjdfallback, fokusskydd och kundval. Nio Reactfall är komponentprov med adapters. Browsergeometri/personlig inloggning/personalacceptans är oprövade. [VALIDATION](../VALIDATION.md) binder verklig SQL/native HTTP-replay/rollback till app-main `31c38d103062bf88520f2062d0d2c604e7b44cbf` och live v70/source `f847d0192ba05478738fd1c6a2394958cbf42f4c`.
+
+Sites reservväg är det faktiskt tillgängliga native `save_site_version`-kontraktet: “Include the archive whenever it can be packaged locally; omit it only when local packaging cannot complete and remote build fallback is required.” [Sites-instruktionen](skill://plugin_connector_1p_689987207de08191979cf68eca2941c6/sites/SKILL.md) anger normal sourcehelper/matchande arkiv. Helpern kunde inte hittas/läsas lokalt; ingen egen alternativ packare skapades. Byteverifierad source pushades först, därefter sparades version 70 och native serverbygge gav lyckad deploy 2026-10-09T08:02:11.980430+00:00. Reservvillkoret är inte ett generellt undantag från fungerande lokal paketering.
+
+## Historik före crm73-leveransen
+
 # Källor och tillämpade principer – publiceringsväg, 2026-10-09
 
 Publiceringsåterhämtningen använde native `save_site_version`-verktygets faktiskt tillgängliga kontrakt: “Include the archive whenever it can be packaged locally; omit it only when local packaging cannot complete and remote build fallback is required.” Samma Sites-källgren hade först pushats och återlästs till verifierad source `4cde45d4`/main `9cbc` med 345 byteidentiska spårade filer. Ingen tredjepartspackare eller genererad helper användes.

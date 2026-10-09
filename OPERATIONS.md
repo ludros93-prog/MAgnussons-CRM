@@ -1,3 +1,17 @@
+# Driftkomplettering – crm73 och live v70
+
+Kodkandidat `aa57965cd45dbec9eb42cc3679524c99b87ba7ae`; app-main `31c38d103062bf88520f2062d0d2c604e7b44cbf` efter [PR #121](https://github.com/ludros93-prog/MAgnussons-CRM/pull/121). Sites-source `f847d0192ba05478738fd1c6a2394958cbf42f4c`, träd `5702706f2fb784227054eb5e48dabf57593c6b79`, exakt samma 351 spårade filer som den frysta testkandidaten. **Live v70**, deploy `succeeded` 2026-10-09T08:02:11.980430+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site). Full återläst custom-policy revision 2, automationslista och miljörevision 1 är oförändrade. D1/R2-bindningar, samtliga sex SQL-migrationsfiler, låsta beroenden och CI är byteoförändrade. Ingen konto-, roll-, kund-, integrations- eller schemaåtgärd ingår.
+
+Privat `form/year_need` använder befintlig `crm_drafts`, per användare/arbetsyta, exakt råformat och fryst originalkund/behov/profiler. Global max100-gräns för nya aktiva utkast finns i det atomiska SQL-villkoret även mellan olika utkasttyper. Befintlig bodygräns 1,5 miljoner tecken gäller. CRM-inlämning binds till exakt kvitterad privat revision och förbrukar utkastet atomiskt med behov, statusstyrd påminnelse, händelse och idempotenslogg. Arkiverat utkast ensamt är inte bevis på CRM-inlämning efter tappad kvittens.
+
+**Backup/återgång:** delad CRM-backup innehåller inte privata utkast. Bevara råa privata aktiva/arkiverade kuvert utan att normalisera eller lägga dem i Git. Äldre v69 saknar editor/consumer för formatet; återgång kräver en kompatibel läsare/skrivare eller skrivskydd och en verifierad bevarande-/återöppningsväg. Välj inte äldre skrivande UI bara för att det laddar. Tidigare crm71-golv för delad produktionshistorik gäller fortsatt. Framåträttning som bevarar schema och privata format är den tillgängliga vägen; full hostad återställning/live-rollback är inte utförd.
+
+Fem frysta kontroller, exakt-head/main-CI och isolerad native HTTP/D1-triggerrollback passerade. Lokal full restore bevarar 13,5 MB R2 och privata/Outlook-sentineler; [VALIDATION](VALIDATION.md) anger begränsningarna. Föreskriven lokal Sites-helper saknas fortsatt; dokumenterat native serverbygge gav lyckad deploy och byteverifierad källa utan lokal ersättningspackare.
+
+Browser vid 320 px/text 2×, native tangentbord, personlig CRM-roll/inloggning och observerad personalpilot är inte verifierade här. Gröna tester är ingen personalacceptans eller fungerande Fortnox-/Outlook-anslutning. Full hostad återställning/live-rollback är oprövad.
+
+## Historik före crm73-leveransen
+
 # Magnussons CRM – drift efter publiceringsåterhämtning
 
 ## Samma Site med native serverbygge – 2026-10-09

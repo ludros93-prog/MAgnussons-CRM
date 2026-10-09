@@ -1,3 +1,15 @@
+# Magnussons CRM – privata behovsutkast finns live
+
+Påbörjade behov i Årsplanering och kundens årshjul kan sparas privat och fortsättas från **Fortsätt där du slutade** i Min dag. Ofärdiga fält och text finns kvar efter återläsning. Privat sparning och sparning av ändringar i CRM har separata besked; påminnelsen följer behovets status. Vid konflikt granskas aktuell version innan den används.
+
+Kodkandidat `aa57965cd45dbec9eb42cc3679524c99b87ba7ae`; app-main `31c38d103062bf88520f2062d0d2c604e7b44cbf` efter [PR #121](https://github.com/ludros93-prog/MAgnussons-CRM/pull/121). Sites-source `f847d0192ba05478738fd1c6a2394958cbf42f4c`, träd `5702706f2fb784227054eb5e48dabf57593c6b79`, exakt samma 351 spårade filer som den frysta testkandidaten. **Live v70**, deploy `succeeded` 2026-10-09T08:02:11.980430+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site).
+
+Regression, TypeScript, bygge, isolerad HTTP/runtime och diff passerade; exakt-head och app-main-CI är gröna. Begränsad delning är bevarad. [Full kvittens](VALIDATION.md), [aktuell status](STATUS-2026-10-05.md) och [backup/återgång](OPERATIONS.md) håller tester och verkliga personliga prov isär.
+
+Browser vid 320 px/text 2×, native tangentbord, personlig CRM-roll/inloggning och observerad personalpilot är inte verifierade här. Gröna tester är ingen personalacceptans eller fungerande Fortnox-/Outlook-anslutning. Full hostad återställning/live-rollback är oprövad.
+
+## Historik före crm73-leveransen
+
 # Magnussons CRM – verifierad main och publiceringsåterhämtning
 
 På samma [CRM-adress](https://magnussons-crm.rosen123.chatgpt.site) har version **69** status **succeeded**, native uppdatering 2026-10-09 05:30:57.436424 UTC (terminalt återläst 05:34:06 UTC). Den för fram befintlig main: inventering av produktionsansvar, granskat byte av hinderansvar och **Hinder du ansvarar för** i Min dag med **Öppna jobbet**. Inget nytt verksamhetsbeslut eller ny appkod ingår i publiceringsarbetet.
