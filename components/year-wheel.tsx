@@ -10,16 +10,17 @@ import {day,plusDays,type Customer,type State} from '@/lib/crm';
 import {personalSellerId} from '@/lib/seller-profiles';
 import {yearwheelResponsibleProfile,yearwheelOwnerLabel} from '@/lib/yearwheel-responsibility';
 import {YearNeedDraftEnvelopeSchema,isYearNeedDraft} from '@/lib/year-need-drafts';
+import {YearwheelResponsibilityDraftEnvelopeSchema} from '@/lib/yearwheel-responsibility-drafts';
 import {BusinessField as F,displayDate} from './business-ui';
 import {useDrafts,DraftStatus} from './draft-workspace';
 import {YearNeedEditor,type YearNeedDraftRequest} from './year-need-editor';
 import {YearNeedDraftPreview} from './year-need-draft-preview';
 import {YearwheelResponsibilityDialog,type YearwheelResponsibilitySave} from './yearwheel-responsibility-dialog';
 
-type Props={st:State;customers:Customer[];space:string;save:YearwheelResponsibilitySave;busy:boolean;refresh:()=>Promise<State>;onCustomer:(id:string)=>void;compact?:boolean;resumeDraftId?:string;onResumeClosed?:()=>void};
-export function YearWheel({st,customers,space,save,busy,refresh,onCustomer,compact=false,resumeDraftId,onResumeClosed}:Props){
+type Props={st:State;customers:Customer[];space:string;save:YearwheelResponsibilitySave;busy:boolean;refresh:()=>Promise<State>;onCustomer:(id:string)=>void;compact?:boolean;resumeDraftId?:string;onResumeClosed?:()=>void;resumeResponsibilityDraftId?:string;onResponsibilityResumeClosed?:()=>void};
+export function YearWheel({st,customers,space,save,busy,refresh,onCustomer,compact=false,resumeDraftId,onResumeClosed,resumeResponsibilityDraftId,onResponsibilityResumeClosed}:Props){
  const w=useDrafts(),[request,setRequest]=useState<(YearNeedDraftRequest&{token:string})|null>(null),[chooseCustomer,setChooseCustomer]=useState(false),[customerChoice,setCustomerChoice]=useState('');
- const [year,setYear]=useState(day().slice(0,4)),[showAll,setShowAll]=useState(false),[scope,setScope]=useState<'mine'|'team'>('mine'),[search,setSearch]=useState(''),[transfer,setTransfer]=useState<{customerId:string;needId:string}|null>(null);
+ const [year,setYear]=useState(day().slice(0,4)),[showAll,setShowAll]=useState(false),[scope,setScope]=useState<'mine'|'team'>('mine'),[search,setSearch]=useState(''),[transfer,setTransfer]=useState<{customerId:string;needId:string;resumeDraftId?:string}|null>(null);
  const heading=useRef<HTMLHeadingElement>(null),customerDescriptionId=useId();
  const identity=JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',st.viewer?.role||'']);
  const writable=['admin','seller'].includes(st.viewer?.role||''),admin=st.viewer?.role==='admin',initialized=st.settings.sellerProfilesInitialized,personal=personalSellerId(st);
@@ -28,6 +29,7 @@ export function YearWheel({st,customers,space,save,busy,refresh,onCustomer,compa
  function openDraft(id:string){const d=w.get(id),p=d&&YearNeedDraftEnvelopeSchema.safeParse(d.data);setRequest({customerId:p&&p.success?p.data.customerId:'',needId:p&&p.success?p.data.base.id:'',draftId:id,token:crypto.randomUUID()})}
  function create(){if(compact&&customers.length===1){openEdit(customers[0].id,'');return}setCustomerChoice('');setChooseCustomer(true)}
  useEffect(()=>{if(resumeDraftId&&writable&&w.ready)openDraft(resumeDraftId)},[resumeDraftId,writable,w.ready]);
+ useEffect(()=>{if(!resumeResponsibilityDraftId||!writable||!w.ready)return;const draft=w.get(resumeResponsibilityDraftId),parsed=draft&&YearwheelResponsibilityDraftEnvelopeSchema.safeParse(draft.data);setTransfer({customerId:parsed&&parsed.success?parsed.data.customerId:'',needId:parsed&&parsed.success?parsed.data.needId:'',resumeDraftId:resumeResponsibilityDraftId})},[resumeResponsibilityDraftId,writable,w.ready]);
  const all=customers.flatMap(customer=>customer.yearNeeds.map(need=>({need,customer}))).filter(({need,customer})=>{
   const own=initialized?!!personal&&yearwheelResponsibleProfile(st,need)?.id===personal:!!personal&&need.owner===personal;
   return (compact||scope==='team'||own)&&(showAll||need.status==='planned')&&(compact||[customer.name,customer.contact,need.title,need.notes,yearwheelOwnerLabel(st,need)].join(' ').toLocaleLowerCase('sv').includes(search.toLocaleLowerCase('sv')));
@@ -43,6 +45,6 @@ export function YearWheel({st,customers,space,save,busy,refresh,onCustomer,compa
   {!list.length&&<div className="biz-empty">{compact?'Inga planerade behov för kunden.':scope==='mine'?'Inga behov i ditt urval för '+year+'.':'Inga behov i teamets urval för '+year+'.'} {writable?'Lägg till nästa klädbeställning eller mässa.':'Välj ett annat år eller visa även hanterade behov.'}</div>}
   <Sheet open={chooseCustomer} onOpenChange={setChooseCustomer}><SheetContent className="crm-sheet year-need-customer-picker"><SheetHeader><SheetTitle>Vilken kund gäller behovet?</SheetTitle><SheetDescription>Välj kunden innan du börjar. Ditt privata utkast behåller denna kundkoppling.</SheetDescription></SheetHeader><div className="sheet-body business-ui"><F label="Kund"><Select value={customerChoice||'_none'} onValueChange={v=>setCustomerChoice(v==='_none'?'':v)}><SelectTrigger className="yearwheel-profile-choice" aria-label="Kund för nytt behov" aria-describedby={customerDescriptionId}><SelectValue><span className="yearwheel-profile-label">{customers.find(c=>c.id===customerChoice)?.name||'Välj kund'}</span></SelectValue></SelectTrigger><SelectContent className="yearwheel-responsibility-options"><SelectItem value="_none">Välj kund</SelectItem>{customers.map(c=><SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select></F><p id={customerDescriptionId} className="biz-callout"><b>{customerChoice?'Vald kund:':'Kundval:'}</b> {customers.find(c=>c.id===customerChoice)?.name||'Välj kunden som behovet gäller.'}</p><Button disabled={busy||!customers.some(c=>c.id===customerChoice)} onClick={()=>{if(!customers.some(c=>c.id===customerChoice))return;setChooseCustomer(false);openEdit(customerChoice,'')}}>Börja planera kundens behov</Button></div></SheetContent></Sheet>
   {request&&<YearNeedEditor key={identity+request.token} st={st} request={request} busy={busy} refresh={refresh} publish={(data,onFailure)=>save('year_need',data,false,onFailure)} onClose={()=>{setRequest(null);onResumeClosed?.()}} returnFocus={()=>heading.current}/>}
-  {transfer&&<YearwheelResponsibilityDialog key={identity+transfer.customerId+transfer.needId} st={st} space={space} customerId={transfer.customerId} needId={transfer.needId} save={save} busy={busy} refresh={refresh} onClose={()=>setTransfer(null)}/>}
+  {transfer&&<YearwheelResponsibilityDialog key={identity+transfer.customerId+transfer.needId+(transfer.resumeDraftId||'')} st={st} space={space} customerId={transfer.customerId} needId={transfer.needId} resumeDraftId={transfer.resumeDraftId} save={save} busy={busy} refresh={refresh} onClose={()=>{setTransfer(null);onResponsibilityResumeClosed?.()}} returnFocus={()=>heading.current}/>}
  </section>;
 }

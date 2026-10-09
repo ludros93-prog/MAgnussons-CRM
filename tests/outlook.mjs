@@ -56,3 +56,6 @@ await import('./outlook-hook.mjs');
 
 // Actual yearwheel editor and private workspace lifecycle; HTTP/UI primitives mocked.
 await import('./year-need-editor.mjs');
+
+// Reviewed handover uses the real dialog and provider, with controlled transport.
+await import('./yearwheel-responsibility-editor.mjs');

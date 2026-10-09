@@ -92,8 +92,11 @@ export type YearNeedEditContext=ReturnType<typeof yearNeedEditContext>;
 // unrelated activities. Reading fresh global data never adopts this basis.
 export function yearNeedEditBasis(st:State,customerId:string,needId:string){return recordBasis(yearNeedEditContext(st,customerId,needId));}
 // The reviewed handover additionally freezes every displayed task choice.
+export function yearwheelResponsibilityContext(st:State,customerId:string,needId:string){
+ return {...yearNeedEditContext(st,customerId,needId),tasks:st.tasks.filter(row=>row.customerId===customerId).sort((a,b)=>a.id.localeCompare(b.id))};
+}
 export function yearwheelResponsibilityBasis(st:State,customerId:string,needId:string){
- return recordBasis({...yearNeedEditContext(st,customerId,needId),tasks:st.tasks.filter(row=>row.customerId===customerId).sort((a,b)=>a.id.localeCompare(b.id))});
+ return recordBasis(yearwheelResponsibilityContext(st,customerId,needId));
 }
 
 export function transferYearwheelResponsibility(st:State,input:YearwheelResponsibilityTransfer,actor:Actor){

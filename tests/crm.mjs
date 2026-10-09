@@ -10,11 +10,12 @@ globalThis.FixedLengthStream=class extends TransformStream{
 };
 const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
 for(const f of readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())sqlite.exec(readFileSync('drizzle/'+f,'utf8'));
-class Prepared {constructor(sql,values=[]){this.sql=sql;this.values=values}bind(...v){return new Prepared(this.sql,v)}async first(){return sqlite.prepare(this.sql).get(...this.values)||null}async run(){return this.exec()}async all(){return this.exec()}exec(){const stmt=sqlite.prepare(this.sql);if(stmt.columns().length)return {results:stmt.all(...this.values),meta:{changes:0}};const r=stmt.run(...this.values);return {results:[],meta:{changes:Number(r.changes)}}}}
+class Prepared {constructor(sql,values=[]){this.sql=sql;this.values=values}bind(...v){return new Prepared(this.sql,v)}async first(){return sqlite.prepare(this.sql).get(...this.values)||null}async run(){return this.exec()}async all(){return this.exec()}exec(){const stmt=sqlite.prepare(this.sql);if(stmt.columns().length)return {success:true,results:stmt.all(...this.values),meta:{changes:0}};const r=stmt.run(...this.values);return {success:true,results:[],meta:{changes:Number(r.changes)}}}}
 globalThis.__crmEnv={CRM_BOOTSTRAP_ADMINS:JSON.stringify([{email:'ludwig.rosenberg@kraftringen.se',name:'Ludwig Rosenberg',owner:''},{email:'sebastian.hansson@magnussonsreklam.se',name:'Sebastian Hansson',owner:'Sebastian Hansson'}]),DB:{prepare:sql=>new Prepared(sql),batch:async statements=>{sqlite.exec('BEGIN');try{const r=statements.map(s=>s.exec());sqlite.exec('COMMIT');return r}catch(e){sqlite.exec('ROLLBACK');throw e}}}};
 const transpile=(source,target)=>writeFileSync(target,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);
 // Compile server-domain modules with their real dependencies, including v12 storage/recovery.
 const modules={'production-issue-responsibility-schema':'production-issue-responsibility-schema','production-issue-responsibility':'production-issue-responsibility','account-change-work-schema':'account-change-work-schema','account-change-review-schema':'account-change-review-schema','account-change-review':'account-change-review','production-assignment':'production-assignment','company-activity-responsibility-schema':'company-activity-responsibility-schema','company-activity-responsibility':'company-activity-responsibility','company-event-responsibility-schema':'company-event-responsibility-schema','company-event-responsibility':'company-event-responsibility','customer-reopen':'customer-reopen','seller-profile-retirement':'seller-profile-retirement','staff-handover':'staff-handover','yearwheel-responsibility-schema':'yearwheel-responsibility-schema','yearwheel-responsibility':'yearwheel-responsibility','issue-responsibility':'issue-responsibility','onboarding-responsibility':'onboarding-responsibility','meeting-responsibility':'meeting-responsibility','task-responsibility':'task-responsibility','backup-http':'backup-http','crm-files':'crm-files','crm-errors':'crm-errors','swedish-calendar':'swedish-calendar','direct-delivery':'direct-delivery','crm':'core','crm-auth':'auth','crm-db':'db','follow-up':'follow-up','record-conflicts':'record-conflicts','seller-profiles':'seller-profiles','customer-workflow-drafts':'customer-workflow-drafts','customer-responsibility':'customer-responsibility','commercial-responsibility':'commercial-responsibility','production-quantities':'production-quantities','order-work':'order-work','order-revisions':'order-revisions','receipt-drafts':'receipt-drafts','article-drafts':'article-drafts','company-event-drafts':'company-event-drafts','year-need-drafts':'year-need-drafts','drafts':'drafts','private-draft-copy':'private-draft-copy','operations':'operations','crm-operations':'crm-operations','crm-visibility':'crm-visibility','business':'business','crm-store':'crm-store','crm-restore':'crm-restore','crm-backup':'crm-backup','crm-backup-stream':'crm-backup-stream','export-references':'export-references','automation-signals':'automation-signals'};
+modules['yearwheel-responsibility-drafts']='yearwheel-responsibility-drafts';
 function compileModule(file,target){let source=readFileSync(file,'utf8').replace("import { env } from 'cloudflare:workers';","const env=globalThis.__crmEnv;");for(const [from,to] of Object.entries(modules)){source=source.replaceAll("'./"+from+"'","'./"+to+".mjs'").replaceAll("'@/lib/"+from+"'","'./"+to+".mjs'");}transpile(source,target);}
 for(const [from,to] of Object.entries(modules))compileModule('lib/'+from+'.ts','work/'+to+'.mjs');
 compileModule('app/api/crm/route.ts','work/api.mjs');
@@ -27,6 +28,15 @@ const headers={'oai-authenticated-user-id':'test-admin','oai-authenticated-user-
 const get=async(space='demo')=>{const r=await api.GET(new Request('https://crm.test/api/crm?space='+space,{headers}));assert.equal(r.status,200);return r.json()};
 const orderWork=await import('../work/order-work.mjs');
 const conflicts=await import('../work/record-conflicts.mjs'),quantities=await import('../work/production-quantities.mjs'),direct=await import('../work/direct-delivery.mjs');
+// Focused regression uses the same migrated SQLite and real route adapters,
+// without running unrelated order/integration scenarios or a production build.
+if(process.argv.includes('--yearwheel-responsibility-drafts-only')){
+ compileModule('app/api/crm/drafts/route.ts','work/draft-api.mjs');
+ const draftApi=await import('../work/draft-api.mjs'),objects=new Map();
+ globalThis.__crmEnv.BUCKET={put:async(key,stream)=>objects.set(key,new Uint8Array(await new Response(stream).arrayBuffer())),get:async key=>objects.has(key)?{body:objects.get(key),arrayBuffer:async()=>objects.get(key).buffer}:null,delete:async key=>objects.delete(key)};
+ await (await import('./yearwheel-responsibility-drafts.mjs')).verifyYearwheelResponsibilityDrafts({core,sqlite,get,api,draftApi,conflicts,objects});
+ sqlite.close();process.exit(0);
+}
 // Production records instants; receipts and direct shipments record Swedish
 // calendar dates. Midnight differs from UTC by one hour in winter and two in summer.
 const dispatchDayCases=[
@@ -445,3 +455,5 @@ await (await import('./article-drafts.mjs')).verifyArticleDrafts({core,sqlite,ge
 await (await import('./company-event-drafts.mjs')).verifyCompanyEventDrafts({core,sqlite,get,api,draftApi,conflicts,objects});
 
 await (await import('./year-need-drafts.mjs')).verifyYearNeedDrafts({core,sqlite,get,api,draftApi,conflicts,objects});
+
+await (await import('./yearwheel-responsibility-drafts.mjs')).verifyYearwheelResponsibilityDrafts({core,sqlite,get,api,draftApi,conflicts,objects});

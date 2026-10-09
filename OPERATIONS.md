@@ -1,3 +1,11 @@
+# Driftgräns – privat behovsöverlämning
+
+Lagringen använder befintlig privat form-rad/context yearwheel_responsibility_transfer; inga SQL-migrationer eller ändrade delade behov-/uppgiftsscheman. Rå utkastkopia bevarar nya context utan formatändring. Äldre d06/v71 saknar kompatibel editor/consumer och har en generisk form-fallback: använd inte dess redigering som säker återgång efter nya utkast. Behåll rå privata rader och kompatibel kopieläsare; korrigera framåt eller spärra äldre överlämningsredigering. Arkiverat utkast bevisar inte att CRM-inlämning lyckats. Automatisk import eller generell hostad restore införs inte.
+
+Teknisk kandidat under verifiering. GitHub-main är vid start d06bcd3b10e100f6fc0afa7b2b9e848d7015cf7e; publicerad Site är fortfarande v71/source b13a6791f7390ca01643ec183ac4b4071b96a861. Ingen merge/deploy eller slutlig testkvittens påstås här. Personlig inloggning/CRM-roll, personalpilot, full hostad backup/restore och verkliga integrationer återstår. Codex-task 01a104c7-a5c5-7350-8577-a4f941138061 är oläst eftersom relevant read_thread saknas.
+
+## Historik före crm75-kandidaten
+
 # Driftkvittens – crm74 kopia och lokal textåterhämtning
 
 Kodkandidat `1d2e559f803546c380f6ebb971a2c8090a7c71c6`, träd `d8bf3d78b4ef6980ad3ba1064bfa4134d8634bab`. App-main `10458af94ad84c1a2b51da56fd6d0724f7ae4ef4` efter [PR #123](https://github.com/ludros93-prog/MAgnussons-CRM/pull/123). Sites-source `b13a6791f7390ca01643ec183ac4b4071b96a861` har exakt samma 356 spårade filer. **Live v71**, deploy `succeeded` 2026-10-09T10:17:05.910541+00:00, [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site).
