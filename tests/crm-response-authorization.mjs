@@ -8,7 +8,7 @@ export async function verifyCrmResponseAuthorization({core,sqlite,api,draftApi,o
  const customerId=id('customer'),dealId=id('deal'),orderId=id('order'),taskId=id('task'),noticeId=id('notice'),eventId=id('event'),fileId=id('file'),objectKey=id('object'),at='2026-10-09T15:00:00.000Z';
  const tableNames=sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map(row=>row.name);
  assert.equal(tableNames.length,18,'Compare every migrated raw table, including private and account stores.');
- const snapshot=()=>({tables:Object.fromEntries(tableNames.map(name=>[name,sqlite.prepare('SELECT * FROM '+name+' ORDER BY rowid').all()])),objects:[...objects].map(([key,bytes])=>({key,bytes:[...bytes]}))});
+ const snapshot=()=>({tables:Object.fromEntries(tableNames.map(name=>[name,sqlite.prepare('SELECT * FROM '+name+' ORDER BY rowid').all()])),objects:[...objects].map(([key,bytes])=>({key,bytes:new Uint8Array(bytes)}))});
  const original=snapshot(),originalMeta=sqlite.prepare('SELECT * FROM crm_spaces WHERE id=?').get(space),state=await store.load(space),owner=state.settings.owners[0];
  const settings=structuredClone(state.settings);settings.budgets['2026-10']=913579;
  const rows={
