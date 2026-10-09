@@ -66,6 +66,12 @@
 .visual-day .day-blocked { border-color: #e7d4ad; }
 .visual-day .day-blocked .panel-head { background: #fff9ee; }
 .visual-day .day-blocked .panel-head svg { color: #a56b23; }
+.visual-day .day-my-issues .panel-head h2 { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.visual-day .day-my-issues .panel-head svg { flex-shrink: 0; }
+.visual-day .day-my-issues .daily-row { align-items: flex-start; flex-wrap: wrap; }
+.visual-day .day-my-issues .daily-row > div { flex: 1 1 18rem; min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.visual-day .day-my-issues .daily-row > button { min-width: 0; max-width: 100%; height: auto; min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
+.visual-day .day-my-issues .day-quiet-empty { padding-top: .7rem; }
 .day-month-card { background: #edf7f4; border: 1px solid #cfe4dc; border-radius: 16px; padding: 1.35rem 1.4rem; }
 .day-month-heading { display: flex; align-items: center; justify-content: space-between; gap: .5rem; font-size: .75rem; font-weight: 600; color: #4f8077; letter-spacing: .045em; }
 .day-month-card h2 { margin: .55rem 0 .65rem; font-size: 1.125rem; color: #254d55; text-transform: capitalize; }
