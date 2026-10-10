@@ -1,3 +1,15 @@
+# Arbetskö – crm96 exakt valt privat anteckningsutkast
+
+Vald genomförbar B05-del: Min dag ska återuppta exakt valt privat anteckningsutkast även när samma kund har flera utkast. Faktisk läsande basreproduktion visade att det andra valet öppnade det första; det bevisar fel urval, ingen faktisk lagringsförlust. Kandidaten binder vald identitet till editor och sparning, avvisar saknat/avslutat/felkopplat val utan reservutkast och bevarar syskonutkast vid fel, dubbelklick och sena svar. 29 riktade parent-/React-/providerfall med isolerad SQLite har PASS. Slutprov, browser, exakt-head CI och faktisk main/live-leverans återstår; B05 markeras inte färdig här.
+
+Crm95 Mina order är avslutad genom [PR #163](https://github.com/ludros93-prog/MAgnussons-CRM/pull/163), main `852c7bcdd5173450a79ae166c06f521bb1b1b0a0`, source `630422e5bd40f60e06016a53b0bc3dec81d0c237`, live v92. Tidigare pendingtexter nedan är historik.
+
+Nästa konkreta B01-del är Årshjulets äldre behovsansvar: vid exakt medlemsprofil B och giltigt aktuellt alias A följer de äldre behoven fortfarande profilaliaset. SalesDashboard:s personliga pipelineprojektion kräver separat ställningstagande. B02 chefsroll/personalmappning kräver förankrat underlag; B04 privata driftkopior/full hostad återställning, B05 övriga privata specialflöden och B07 personens egna bekräftelser av inloggning och sparad verklig uppföljning med nästa aktivitet/datum är öppna. Akuta verifierade åtkomst-, dataförlust- och orderfel går före kön. Ingen personalacceptans härleds från syntetiska prov.
+
+---
+
+Historik före crm96 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm95 avgränsat personligt orderansvar
 
 Nästa valda B01-del är Mina order: en gemensam stabil läsprojektion för försäljningsköns alla flikar/antal, ReceiptQueue och Min dags orderhinder/leveransfokus/listor/antal, inklusive orderkopplade leveransrisksignaler. Root:s selector, kopplingsdiagnos och Mitt resultat → Order ingår. Elva faktiska basfall och tretton separat körda kontrakts-/flikfall dokumenterar behovet; native browser, frysta slutprov och publicering återstår. Crm94 är faktiskt avslutad via PR #162 på v91.

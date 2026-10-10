@@ -1,3 +1,17 @@
+# Drift – crm95 avslutad live v92; crm96 utkastkandidat
+
+[PR #163](https://github.com/ludros93-prog/MAgnussons-CRM/pull/163) avslutar crm95. Testad kod `9b4d6f4ce9507907212fbab07b48fb6326f3df53`, GitHub-main `852c7bcdd5173450a79ae166c06f521bb1b1b0a0` och Sites-source `630422e5bd40f60e06016a53b0bc3dec81d0c237` har samma 400 spårade paths/moder/blobs och träd `584cc750406ab9348ac46709a6415127e511f678`. **Live v92** på https://magnussons-crm.rosen123.chatgpt.site, deployment `appgdep_6aca813bfd10819196f2b10cca2239c4`, terminal `succeeded`, faktisk `updated_at` `2026-10-10T18:17:54.943288+00:00`. Sparat arkiv `sha256:6cf2808843cb117c51ab3b0e28f7ea8a7489f99607f640936a0f5286bdb32bdb`, 6 051 840 byte/106 filer, verifierat mot native sparad version. Begränsad custom-policyrevision 2, miljörevision 1, auth-klient och noll automations bevarades. Slutleveranskvittot SHA-256 `b79f465b92385d9e828764db44031ae0af9e0ec34309364336fe949cfe797ca6` har 20 återlästa hashverifierade belägg. Tidigare crm95-pendingtexter nedan är historik.
+
+Crm96 ändrar vald kundantecknings editorsammanhang, inte backend, API, lagring, SQL eller hostingbindning. Privat utkast och gemensam CRM-post skiljs fortsatt åt. Efter tidigare `commercial_task`-audit krävs **crm82-kompatibel läsare och skrivare**; v78 är inget säkert direkt rollbackmål. Föredra kompatibel framåträttning. Full hostad databas-/fil-/versions-/länkåterställning och live-rollback är oprövade. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook.
+
+Initial installation och källöppning stoppade på full disk. Enbart genererade ignorerade beroenden i avslutad ägd crm95-checkout samt det egna ofullständiga installförsöket rensades; kod, historik och belägg bevarades. Ny låst crm96-installation lyckades offline med den bevarade dependencycachen. Ordinarie Site-credential användes utan beständig lagring för läsande källöppning; samtliga 400 källfiler matchade main-baslinjen. Den officiella Sites-helpern hittades inte i de kontrollerade läsbara rötterna; en rot gav PermissionError. Ingen global frånvaro eller körd helper påstås. Källöppning bevisar ingen ny paketering eller publicering.
+
+Crm96:s fem slutkommandon, isolerade browserprov, exakt-head CI, aktuell mergebas och faktisk merge/source/deploy återstår. Kandidat, main och publicerad Site ska redovisas separat. Syntetiska prov är inga konto-, integrations- eller personalprov; ingen ny driftacceptans påstås. Codex-referensen är oläst.
+
+---
+
+Historik före crm96 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Drift – crm94 avslutad live v91; crm95 orderkandidat
 
 [PR #162](https://github.com/ludros93-prog/MAgnussons-CRM/pull/162) avslutar crm94: GitHub-main `9fa58a341d8f8fc0c248eeddf261b6ff6ade7313`, Sites-source `33cb2514dd26586955d7d6f1f75d62519b191c23`, samma 398 paths/moder/blobs och träd `340e53554a722218f454042f38e6be8177c04bd4`. **Live v91**, deployment `appgdep_6aca7036ede4819182ba7d74c3870202`, terminal `succeeded`, faktisk `updated_at` `2026-10-10T17:05:16.580156+00:00`, på https://magnussons-crm.rosen123.chatgpt.site. Arkiv `sha256:17a74f291623d1b8c2aebfe818cd76aaee4ee28c661eb19659ea7f132e66dd60`, 6 041 600 byte/106 filer. Begränsad custom-policyrevision 2, miljörevision 1 och noll automations är bevarade. Äldre väntande crm94-noteringar är en fryst förpubliceringsbild som denna PR/taskkvittens avslutar.

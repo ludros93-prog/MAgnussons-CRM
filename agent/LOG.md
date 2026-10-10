@@ -1,3 +1,17 @@
+# Bygglogg – crm96 exakt valt anteckningsutkast
+
+Startbas är färsk GitHub-main `852c7bcdd5173450a79ae166c06f521bb1b1b0a0`, träd `584cc750406ab9348ac46709a6415127e511f678`, 400 spårade filer. Crm95 är avslutad genom [PR #163](https://github.com/ludros93-prog/MAgnussons-CRM/pull/163), Sites-source `630422e5bd40f60e06016a53b0bc3dec81d0c237`, live v92, terminal lyckad deploy 10 oktober 18:17:54 UTC. Slutleveranskvittots 20 refererade belägg återlästes och hashverifierades; äldre pendingtexter bevaras nedan.
+
+B05-felet reproducerades i den faktiska komponenten och separat i sidans uttryck: val av det andra privata anteckningsutkastet för samma kund öppnade det första. Basreproduktionen visar fel urval utan skrivning, ingen konstaterad lagringsförlust. Kandidaten för med valt ID, kontrollerar kund/typ/aktivt utkast, väntar på privat laddning och hindrar reservval. Kund-/konto-/medlems-/roll-/arbetsytebyte samt stängning återställer editoridentiteten. Privat flush och CRM-sparning avser valt utkast; bekräftat lyckad sparning avslutar enbart det valet. Skrivfel, konflikt och sena svar får inte förbruka ett syskon eller ett senare val.
+
+29 riktade faktiska parent-/React-/DraftProviderfall PASS den 10 oktober 19:28:06 UTC, 52 kompilerade produktionsmoduler och 60 byteverifierade källor. Autentiserade in-memory SQLite-handlers används med kontrollerad HTTP-leverans och visuella primitiv; ingen native browser, autosave-tick, live-konto eller personalacceptans ingår. Testkvitto SHA-256 `0447fa586e4a043f628c2ee91db03a970ed1fa62f1b52cb2752495e3a69e26fb`. Första riktade försöket stoppade på ett kvarvarande valt ID när kunden saknades; föräldern rättades att rensa ID och kundkort innan felbesked. Misslyckat underlag bevaras privat.
+
+Fyra aktuella officiella artikelbodies lästes, se [RESEARCH](RESEARCH.md). Ingen lagring, backend, migration eller hostingbindning ändras. Slutrevisionens fem obligatoriska kommandon, isolerad browser, exakt-head CI, aktuell bas och merge/source/deploy återstår och ska knytas till faktiska kvittenser. Codex-referensen är oläst; inga mejl, konton, roller, scheman, agentinstruktioner eller aktiveringar ändras genom denna byggleverans.
+
+---
+
+Historik före crm96 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm95 personligt orderurval
 
 Startbas main `9fa58a341d8f8fc0c248eeddf261b6ff6ade7313`, tidigare source `33cb2514dd26586955d7d6f1f75d62519b191c23`: crm94 är avslutad via PR #162/live v91, terminal lyckad deploy 10 oktober 17:05 UTC. Äldre kandidatnoteringar nedan bevaras som historik, inte aktuell publiceringsblockering.

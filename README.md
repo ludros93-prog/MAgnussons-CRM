@@ -1,3 +1,17 @@
+# Magnussons CRM – crm96 valt privat anteckningsutkast, kandidat
+
+När ett privat anteckningsutkast väljs i Min dag ska kundkortet öppna exakt det valda utkastet. Två utkast för samma kund får inte förväxlas. Ett saknat, avslutat eller felkopplat valt utkast ger ett tydligt besked och vägen tillbaka till Min dag. Vanlig öppning av kundens anteckningar behåller sitt befintliga beteende.
+
+Kandidaten bevarar det valda utkastets råa fält, hindrar sena svar från att påverka ett senare kund-/konto-/arbetsyteval och avslutar bara det valda privata utkastet efter bekräftad CRM-sparning. Privat utkast och registrerad CRM-anteckning är fortsatt skilda tillstånd.
+
+29 riktade faktiska parent-/React-/providerfall med autentiserade isolerade SQLite-handlers har PASS. HTTP-leverans och visuella primitiv är kontrollerade gränser; detta är inga browser- eller personalprov. Samtliga fem obligatoriska slutkommandon, isolerad browser, exakt-head CI, aktuell mergebas, merge och publicering återstår för crm96. Se [VALIDATION](VALIDATION.md).
+
+Crm95:s Mina order är faktiskt avslutad genom [PR #163](https://github.com/ludros93-prog/MAgnussons-CRM/pull/163), GitHub-main `852c7bcdd5173450a79ae166c06f521bb1b1b0a0` och **live v92**. Äldre väntande crm95-noteringar nedan är den bevarade bilden före publicering. Separat käll-/main-/livekvittens finns i [OPERATIONS](OPERATIONS.md).
+
+---
+
+Historik före crm96 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – crm95 Mina order, kandidat
 
 Crm95 avgränsas till det personliga orderurvalet: **Order & leverans**, **På väg till kunden** och Min dags orderhinder, leveransfokus och antal. Registrerade order ska följa kontots exakta medlemskopplade säljarprofil; äldre order utan profil-ID ska följa enbart giltigt aktuellt kundansvar. Kopplingsglapp ska beskrivas som **synligt urval**. Ingången från Mitt resultat ska öppna samma personliga orderurval.
