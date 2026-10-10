@@ -2,7 +2,7 @@
 
 Min dag → privat anteckningsutkast ska öppna det utkast användaren faktiskt valde, även när kunden har flera egna anteckningsutkast. Kandidaten använder valt ID för editor, privat flush och efterföljande CRM-sparning. Rå text, titel, kontaktmarkering och nästa steg ändras inte av öppningen. Saknat, avslutat eller felkopplat val öppnar ingen annan anteckning; användaren får ett statusbesked och vägen Till Min dag.
 
-Vanlig öppning av kundens Anteckningar behåller sitt befintliga urval. Efter bekräftad CRM-sparning avslutas enbart det valda privata utkastet; det andra öppnas inte automatiskt. Fel och revisionskonflikt bevarar valt arbete. Sena svar efter byte av kund, utkast, konto, medlem, roll eller arbetsyta får inte förbruka ett senare val. 29 riktade syntetiska fall PASS; browser och slutleverans återstår.
+Vanlig öppning av kundens Anteckningar behåller sitt befintliga urval. Efter bekräftad CRM-sparning avslutas enbart det valda privata utkastet; det andra öppnas inte automatiskt. Fel och revisionskonflikt bevarar valt arbete. Sena svar efter byte av kund, utkast, konto, medlem, roll eller arbetsyta får inte förbruka ett senare val. 31 riktade syntetiska fall PASS; browser och slutleverans återstår.
 
 Crm95:s personliga Mina order är avslutad på live v92 via [PR #163](https://github.com/ludros93-prog/MAgnussons-CRM/pull/163). Serverroller, lagring, atomiska skrivningar, CAS och idempotens består i crm96. Huvudmått är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects; TB är inget huvudmått. Inga affärsdefinitioner eller integrationer ändras. Personens egen lyckade inloggning och sparade verkliga uppföljning med nästa aktivitet/datum återstår att bekräfta.
 
