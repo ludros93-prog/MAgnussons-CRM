@@ -80,9 +80,9 @@
 .result-next-task b,.result-next-task small { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
 .result-next > button:last-child { margin: 1rem 1.4rem; }
 .result-stage-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 1.4rem 2rem; padding: .3rem 1.5rem 1.25rem; }
-.result-stage-grid button { text-align: left; padding: .3rem 0; min-width: 0; }
-.result-stage-grid button > span { display: flex; justify-content: space-between; gap: .75rem; font-size: .875rem; color: #4c637e; }
-.result-stage-grid b { color: #173951; }
+.result-stage-grid button { text-align: left; padding: .3rem 0; min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.result-stage-grid button > span { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem .75rem; font-size: .875rem; color: #4c637e; }
+.result-stage-grid b { min-width: 0; max-width: 100%; color: #173951; }
 .result-stage-grid [data-slot=progress] { margin: .6rem 0; height: 5px; background: #e9eef3; }
 .result-stage-grid [data-slot=progress-indicator] { background: #649caa; }
 .result-stage-grid small { font-size: .8125rem; }

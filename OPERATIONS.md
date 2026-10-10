@@ -2,7 +2,7 @@
 
 Färsk native metadata vid öppning visar live v94, source 093af08624f0278d2f0dfda504f1c938bc94b324 och terminal succeeded för deployment appgdep_6acac0f50d3c81919a02255162206283 på befintlig CRM-adress. Begränsad custom-policyrevision 2, miljörevision 1, samma auth-klient och noll Site-automations behålls. Ingen konkurrerande PR/körning eller publicering syntes.
 
-Ordinarie native credential gav en läsande remote-kontroll. Source och färsk main-bas har samma träd b28326ece23c3e38db1b705dd3941d360c37e4ac och samtliga 404 spårade paths/modes/blobs/bytes. Jämförelsen gäller committed main-bas, inte den pågående tvåfilers produktändringen. Ingen beständig token eller accepterad privat auto-publicering används.
+Ordinarie native credential gav en läsande remote-kontroll. Source och färsk main-bas har samma träd b28326ece23c3e38db1b705dd3941d360c37e4ac och samtliga 404 spårade paths/modes/blobs/bytes. Jämförelsen gäller committed main-bas, inte den pågående trefilers produktändringen. Ingen beständig token eller accepterad privat auto-publicering används.
 
 Officiell site-workflow.mjs hittades inte i faktiskt kontrollerade läsbara /opt och /workspace med redovisade undantag; /opt/containerd gav PermissionError. Ingen global frånvaro eller helperkörning påstås. Byteidentiska package/lock/.npmrc gav faktisk hårdlänksåteranvändning av föregående verifierade installation; ingen ny install påstås.
 
@@ -10,7 +10,7 @@ Kandidaten ändrar klientprojektion/diagnos och tester, inte backend, API, SQL, 
 
 Crm97 är avslutad genom [PR #165](https://github.com/ludros93-prog/MAgnussons-CRM/pull/165): GitHub-main `da36abb16b71e023ceb9df135d6c4f993e8eee2b`, Sites-source `093af08624f0278d2f0dfda504f1c938bc94b324` och **live v94**, terminal lyckad deploy. Dess slutleveranskvittens SHA-256 är `ec9d2fe67bd8e3cecb224a0503046679c997683ce9a854152d5a0177bd673033`; tidigare pendingtexter nedan är bevarad historik.
 
-Crm98:s fem obligatoriska slutkommandon, isolerade browserprov, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+Första kandidaten `9dd7490d3496b650e229203869c7192d2f4133d3` klarade fem obligatoriska slutkommandon och exakt-head CI [38095358280](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38095358280). Native browser hittade därefter ett faktiskt mobilfel: Identifierad-knappen hade scrollWidth 182/clientWidth 152 vid 390 px och exakt dubbel teckenstorlek. Etikett, antal och värde får nu radbrytas lokalt i pipelinepanelen. Denna nya CSS-kandidat kräver hela slutgrinden, browser och ny exakt-head CI igen; merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds i [PR #166](https://github.com/ludros93-prog/MAgnussons-CRM/pull/166) och taskresultat.
 
 Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; explicit brief och färsk main används.
 

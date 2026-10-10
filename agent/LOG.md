@@ -10,9 +10,11 @@ Fyra officiella Salesforce/Lime-bodies hämtades; RESEARCH skiljer leverantörsp
 
 Crm97 är avslutad genom [PR #165](https://github.com/ludros93-prog/MAgnussons-CRM/pull/165): GitHub-main `da36abb16b71e023ceb9df135d6c4f993e8eee2b`, Sites-source `093af08624f0278d2f0dfda504f1c938bc94b324` och **live v94**, terminal lyckad deploy. Dess slutleveranskvittens SHA-256 är `ec9d2fe67bd8e3cecb224a0503046679c997683ce9a854152d5a0177bd673033`; tidigare pendingtexter nedan är bevarad historik.
 
-Crm98:s fem obligatoriska slutkommandon, isolerade browserprov, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+Första kandidaten `9dd7490d3496b650e229203869c7192d2f4133d3` klarade fem obligatoriska slutkommandon och exakt-head CI [38095358280](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38095358280). Native browser hittade därefter ett faktiskt mobilfel: Identifierad-knappen hade scrollWidth 182/clientWidth 152 vid 390 px och exakt dubbel teckenstorlek. Etikett, antal och värde får nu radbrytas lokalt i pipelinepanelen. Denna nya CSS-kandidat kräver hela slutgrinden, browser och ny exakt-head CI igen; merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds i [PR #166](https://github.com/ludros93-prog/MAgnussons-CRM/pull/166) och taskresultat.
 
 Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; explicit brief och färsk main används.
+
+Slutgrindens första kvitto SHA-256 `81e995ed272cf2316f7f72d52b54ebd0d79a890e13ddca7354efc1fc066cf0fc`, CI-kvitto `468268d6026743b9ef963b3d427b5f62cd5e63a020f1b70f20a84d3d4a282195` och mobilfelsanalys `627ba96127d129f20f57c5c1e0f001cc6866bb1961c6009c96384bd063669665` bevaras privat. Tidigare browserharness hade en obunden väntan och klassade text i stängda details som synlig; väntor begränsades och faktisk rendering kontrolleras nu explicit. Fjärde försöket hade 172/172 synliga texter med exakt dubbel storlek, men faktisk knappoverflow; inga kontrollgränser sänktes. 1280-fallet passerade, återstående mobil-/rollfall var ännu inte fullkörda. Alla 18 syntetiska D1-tabeller och två R2-objekt bevarades och återställdes, inga skrivningar/externanrop; lokala processer och portar stängdes.
 
 ---
 

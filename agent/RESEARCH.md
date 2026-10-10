@@ -12,6 +12,8 @@ Fakturaansvar, kvalificeringsansvar, marginalunderlag, mål och befintligt stand
 
 Artikeltexterna styrker ingen Magnussons-anslutning, faktisk personlig inloggning, sparad verklig uppföljning eller personal-/kundacceptans. Kodkandidat, GitHub-main, Sites-källrevision och publicerad version kräver separata verifieringar. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; explicit brief och repo används.
 
+Mobilrättningen stöds av tre färska officiella MDN-bodies med HTTP 200 den 10 oktober 2026 23:53:39 UTC: [overflow-wrap](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap), [min-width](https://developer.mozilla.org/en-US/docs/Web/CSS/min-width) och [minmax](https://developer.mozilla.org/en-US/docs/Web/CSS/minmax). Fem korta citat återkontrollerades; privat kvitto SHA-256 `574647dbd8a4840ad20639356f4370acb7d6407e4d5d7023dd92458248d287c8`. Gridcellerna krymper redan med minmax(0,1fr); texten behöver också radbrytning. overflow-wrap:anywhere bidrar med brytpunkter även till min-content-beräkningen. Lokal flex-wrap låter antalet få nästa rad vid behov. Detta är layoutunderlag, inget browser-PASS.
+
 ---
 
 Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.
