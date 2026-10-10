@@ -1,3 +1,17 @@
+# Magnussons CRM – tydlig skillnad mellan konto, kundansvar och profil
+
+Kontoadministrationen skiljer nu registrerad inloggningskoppling, operativt kundansvar och exakt konto-ID-länk till resultatprofil. Saknade eller motsägande kopplingar visas från faktiskt läst underlag; namnlikhet skapar ingen identitet. Historiska/inaktiva profiler behåller sina riktiga länkar. Kontots kundansvarsväljare beskrivs som kundansvar, inte som en ändring av den separata resultatprofilen.
+
+Testad kandidat `0a0eb5206e1ee49b265cdc0f8dca31232e1dc89c`, träd `14e36826b46de77150bf92e1ef7a8ad78155c25a`; [app-PR #150](https://github.com/ludros93-prog/MAgnussons-CRM/pull/150).
+
+App-main `dd83f258689e155f817cb83e1d5d44df1075e53e`. Sites-source `04d75288119184fccda912f565452a733e2075fb` har exakt samma testade träd och 386 tracked-filer, med föregående source `8a6bbbd98702e02fee3320a3a2539cd4f23e064f` och app-main som verkliga föräldrar. Live **v84** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site); deployment `appgdep_6ac9ec6717d4819189d3db667cc3168a` är separat återläst `succeeded` med samma version/source/URL.
+
+Produktgränser, prov och drift finns i [PRODUCT.md](PRODUCT.md), [VALIDATION.md](VALIDATION.md) och [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm87 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – tydlig hjälp när Min dag saknar rätt koppling
 
 Min dag visar ett konkret besked när kontot har kundansvar men saknar registrerad koppling till en säljarprofil, eller när kopplad profil och kundansvar skiljer sig. En tom uppgifts- eller möteslista beskrivs då som ett synligt urval som kan vara ofullständigt. Administratören når befintliga Mål & inställningar; övriga får en konkret begäran om kontroll.

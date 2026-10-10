@@ -1,3 +1,15 @@
+# Arbetskö – crm87 korrekt kontoroster
+
+Kontoadministrationen skiljer nu registrerad inloggningskoppling, operativt kundansvar och exakt konto-ID-länk till resultatprofil. Saknade eller motsägande kopplingar visas från faktiskt läst underlag; namnlikhet skapar ingen identitet. Historiska/inaktiva profiler behåller sina riktiga länkar. Kontots kundansvarsväljare beskrivs som kundansvar, inte som en ändring av den separata resultatprofilen.
+
+B01:s avgränsade kontorosterbesked är levererat; fullständig identitets-/personalöverlämning och kopplad profil utan operativt ansvar i övriga arbetsvyer kvarstår. B02:s chefsroll, B04:s privata driftkopior/full hostad återställning, B05:s återstående privata utkast-/överlämningsflöden och B07:s verkliga konto-/personalpilot är öppna. Nästa steg är en behörig persons egen bekräftade inloggning och en sparad riktig uppföljning med nästa datum, samt nästa oberoende produktlucka efter färsk inventering.
+
+App-PR #150, verkliga leveransrevisioner och testgränser finns i [STATUS-2026-10-05.md](../STATUS-2026-10-05.md) och [VALIDATION.md](../VALIDATION.md). Åtkomst-, dataförlust- och orderfel går före normal kö.
+
+---
+
+Historik före crm87 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm86 tydlig kopplingsdiagnos i Min dag
 
 Den avgränsade luckan i den personliga arbetsdagens besked är hanterad: saknad exakt medlemslänk eller olika registrerat profil-/kundansvar förklaras innan en tom lista kan tas för en fullständig arbetskö. Befintliga uppgifter, filter och ansvar förändras inte; ingen person- eller kontokoppling gissas.

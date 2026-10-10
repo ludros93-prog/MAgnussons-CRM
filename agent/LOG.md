@@ -1,3 +1,27 @@
+# Bygglogg – crm87 korrekt kontoroster
+
+Kontoadministrationen skiljer nu registrerad inloggningskoppling, operativt kundansvar och exakt konto-ID-länk till resultatprofil. Saknade eller motsägande kopplingar visas från faktiskt läst underlag; namnlikhet skapar ingen identitet. Historiska/inaktiva profiler behåller sina riktiga länkar. Kontots kundansvarsväljare beskrivs som kundansvar, inte som en ändring av den separata resultatprofilen.
+
+Testad kandidat `0a0eb5206e1ee49b265cdc0f8dca31232e1dc89c`, träd `14e36826b46de77150bf92e1ef7a8ad78155c25a`; [app-PR #150](https://github.com/ludros93-prog/MAgnussons-CRM/pull/150).
+
+App-main `dd83f258689e155f817cb83e1d5d44df1075e53e`. Sites-source `04d75288119184fccda912f565452a733e2075fb` har exakt samma testade träd och 386 tracked-filer, med föregående source `8a6bbbd98702e02fee3320a3a2539cd4f23e064f` och app-main som verkliga föräldrar. Live **v84** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site); deployment `appgdep_6ac9ec6717d4819189d3db667cc3168a` är separat återläst `succeeded` med samma version/source/URL.
+
+Alla fem obligatoriska kommandon passerade på oförändrad ren slutkandidat: regressioner, TypeScript, bygge, isolerad runtime och `git diff --check`. Kvitto `845d0e0cd715f2f43e44f3cedaf96202fd6c8a6b7679fc8e8f4bd0ae84041159`. Exakt-head PR-CI: run `38034527352`, job `114162108532`, samtliga 13 verkliga steg completed/success; kvitto `16e0731e14fd567c56b795a5610a240b9d56558f1cf43aa9a5e4d46e2264d236`. Detta belägger kontroller för PR-head, inte påstådd main-push-CI.
+
+9 faktiska syntetiska React-baselinefall; 25 slutliga faktiska React-fall, 18 isolerade native Chromium-fall och 19 verkliga PNGs. Browserns käll-/bygge-/fixturebytes och slutlig D1/R2-baseline är oförändrade; kvitto `ba1d7926882c5c91c4db8df38fe9c8e6cc12d4355ba668e577c6699781fc48e2`. Komponentprov `907d94e9044a79d471847792b76edc4c76492240f8bb89a58dd3fd9a96ca815e`, exakt källgranskning `ef876a41931f8606d21dffc0b6bc1badd2ac8943c1c2bbca7d0424832ff35d71`. Komponenternas spartransport är mockad. Browserfallen gör inga CRM-HTTP-skrivningar; pending/503 och rollbytet är uttryckliga isolerade fixturer, inte verkliga kontoåtgärder.
+
+198 främmande worktrees och egen reservationsidentitet är kontrollerade oförändrade före denna dokumentationsförberedelse. Registrerad användarlänk är inget bevis för personens egen lyckade inloggning. Syntetiska React-/browser-/runtimeprov är inte konto-, integrations-, personal-, fysisk enhets- eller full hjälpmedelsacceptans. Inga verkliga kundorder skrivtestades, inga verkliga konton, roller eller åtkomster ändrades och inga mejl skickades i detta bygguppdrag.
+
+B01:s avgränsade kontorosterbesked är levererat; fullständig identitets-/personalöverlämning och kopplad profil utan operativt ansvar i övriga arbetsvyer kvarstår. B02:s chefsroll, B04:s privata driftkopior/full hostad återställning, B05:s återstående privata utkast-/överlämningsflöden och B07:s verkliga konto-/personalpilot är öppna. Nästa steg är en behörig persons egen bekräftade inloggning och en sparad riktig uppföljning med nästa datum, samt nästa oberoende produktlucka efter färsk inventering.
+
+Codex-referensen `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst: inget Codex `read_thread` finns. Den explicit dokumenterade briefen och färsk main används.
+
+Mandat, schema, prompt och aktivering ändras inte.
+
+---
+
+Historik före crm87 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm86 tydlig kopplingshjälp i Min dag
 
 Baseline visade att giltigt operativt kundansvar men saknad exakt medlemskoppling dolde stabilt förankrat uppgifts-/mötesansvar och gav lugnande tomhetsbesked. Faktisk members-POST med syntetiskt SQLite-underlag visade separat att kontots alias kan ändras medan registrerad profil-/resultatidentitet ligger kvar. Dessa är baselineprov, inte personligt konto-/personalprov.

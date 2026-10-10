@@ -1,3 +1,21 @@
+# Driftkvittens – crm87 läsande kontoroster
+
+Testad kandidat `0a0eb5206e1ee49b265cdc0f8dca31232e1dc89c`, träd `14e36826b46de77150bf92e1ef7a8ad78155c25a`; [app-PR #150](https://github.com/ludros93-prog/MAgnussons-CRM/pull/150).
+
+App-main `dd83f258689e155f817cb83e1d5d44df1075e53e`. Sites-source `04d75288119184fccda912f565452a733e2075fb` har exakt samma testade träd och 386 tracked-filer, med föregående source `8a6bbbd98702e02fee3320a3a2539cd4f23e064f` och app-main som verkliga föräldrar. Live **v84** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site); deployment `appgdep_6ac9ec6717d4819189d3db667cc3168a` är separat återläst `succeeded` med samma version/source/URL.
+
+116 skyddade backend-/API-/lagrings-/hosting-/konfigurationsfiler och samtliga 6 SQL-migrationer är byte-/mode-/blob-identiska mot färsk main `c6f76f7ff337c4bdea0be7c3445dbf50ec87ffbd` och faktiskt öppnad föregående v83-source `8a6bbbd98702e02fee3320a3a2539cd4f23e064f`; kvitto `3283dc1839317fe99d081c6e812ac995a37e75e58b45d48b936c5e99cc256b1f`. Ingen lagringsförändring: fortsatt crm82-kompatibel läsare **och** skrivare efter `commercial_task`-audit.
+
+Samma begränsade custom-delning revision 2 och miljömetadata revision 1; full kanonisk jämförelse av returnerad accesspolicy, miljömetadata, auth-klient, automationslista och URL är lika. Kvitto `e55fe48fe1a53bc87e5de9f79b05175237fec13c24ac06c21a63c166dc0340eb`. Miljöhemligheter returneras maskerade (`is_secret=true`, `value=null`): deras verkliga bytes är inte lästa eller jämförda.
+
+Lokalt paket `2549565b2219d0291f319e0910746c22de150d78302da6dda74860a726346d0d`: 6103040 bytes/105 filer. Sites-versionens returnerade arkivmetadata: `sha256:c3bad430e3fdb8346827d71b105312b40579be8c7c470714bf9171fecd9a2fca`, 6000640 bytes/105 filer. Nedladdningsförsöket gav: ”file could not be authorized or resolved”. Ingen hostad arkivbyteidentitet är verifierad.
+
+Full hostad återställning eller live-rollback genomfördes inte. Äldre v78 är inget säkert direkt rollbackmål; kompatibel framåträttning och separat verifierad full datakopia krävs för äldre backend. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook. Dokumentationsrevisionen behöver egna obligatoriska checks och exakt-head CI; den ändrar ingen appversion.
+
+---
+
+Historik före crm87 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Driftkvittens – crm86 läsande diagnos utan ny lagring
 
 **Testad kandidat** `39159ca284b8edf01f61d4ca30ab5acf2219f25c`, träd `413cbf97a024320b25c163b8290126536c5d4b1a`; [app-PR #147](https://github.com/ludros93-prog/MAgnussons-CRM/pull/147).

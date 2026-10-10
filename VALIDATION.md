@@ -1,3 +1,21 @@
+# Validering – crm87 konto, kundansvar och resultatprofil
+
+Testad kandidat `0a0eb5206e1ee49b265cdc0f8dca31232e1dc89c`, träd `14e36826b46de77150bf92e1ef7a8ad78155c25a`; [app-PR #150](https://github.com/ludros93-prog/MAgnussons-CRM/pull/150).
+
+Alla fem obligatoriska kommandon passerade på oförändrad ren slutkandidat: regressioner, TypeScript, bygge, isolerad runtime och `git diff --check`. Kvitto `845d0e0cd715f2f43e44f3cedaf96202fd6c8a6b7679fc8e8f4bd0ae84041159`. Exakt-head PR-CI: run `38034527352`, job `114162108532`, samtliga 13 verkliga steg completed/success; kvitto `16e0731e14fd567c56b795a5610a240b9d56558f1cf43aa9a5e4d46e2264d236`. Detta belägger kontroller för PR-head, inte påstådd main-push-CI.
+
+9 faktiska syntetiska React-baselinefall; 25 slutliga faktiska React-fall, 18 isolerade native Chromium-fall och 19 verkliga PNGs. Browserns käll-/bygge-/fixturebytes och slutlig D1/R2-baseline är oförändrade; kvitto `ba1d7926882c5c91c4db8df38fe9c8e6cc12d4355ba668e577c6699781fc48e2`. Komponentprov `907d94e9044a79d471847792b76edc4c76492240f8bb89a58dd3fd9a96ca815e`, exakt källgranskning `ef876a41931f8606d21dffc0b6bc1badd2ac8943c1c2bbca7d0424832ff35d71`. Komponenternas spartransport är mockad. Browserfallen gör inga CRM-HTTP-skrivningar; pending/503 och rollbytet är uttryckliga isolerade fixturer, inte verkliga kontoåtgärder.
+
+Obligatoriska syntetiska orderprov passerade för 40→45 med förnyad uttrycklig acceptans, 50→48 med godkännandefält, kassation, delleverans och dubbelklick/replay/CAS. Verkliga PASS-rader från slutloggen är återlästa i kvitto `86c7141dfd86f2ff07247a81c981cc43d1a627b6341e8ae5e2f58c9f672fab0c`; de innebär ingen riktig kunds acceptans.
+
+116 skyddade backend-/API-/lagrings-/hosting-/konfigurationsfiler och samtliga 6 SQL-migrationer är byte-/mode-/blob-identiska mot färsk main `c6f76f7ff337c4bdea0be7c3445dbf50ec87ffbd` och faktiskt öppnad föregående v83-source `8a6bbbd98702e02fee3320a3a2539cd4f23e064f`; kvitto `3283dc1839317fe99d081c6e812ac995a37e75e58b45d48b936c5e99cc256b1f`. Ingen lagringsförändring: fortsatt crm82-kompatibel läsare **och** skrivare efter `commercial_task`-audit.
+
+Registrerad användarlänk är inget bevis för personens egen lyckade inloggning. Syntetiska React-/browser-/runtimeprov är inte konto-, integrations-, personal-, fysisk enhets- eller full hjälpmedelsacceptans. Inga verkliga kundorder skrivtestades, inga verkliga konton, roller eller åtkomster ändrades och inga mejl skickades i detta bygguppdrag.
+
+---
+
+Historik före crm87 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm86 personlig arbetslista och kopplingsdiagnos
 
 **Testad kandidat** `39159ca284b8edf01f61d4ca30ab5acf2219f25c`, träd `413cbf97a024320b25c163b8290126536c5d4b1a`; [app-PR #147](https://github.com/ludros93-prog/MAgnussons-CRM/pull/147).
