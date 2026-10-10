@@ -339,6 +339,12 @@ body {
 .wf-issue-list .wf-card-top>span{min-width:0;max-width:100%;white-space:normal}
 @media(max-width:767px){.wf-care-scope>button{flex:1 1 12rem}.wf-issue-list .wf-grid{grid-template-columns:minmax(0,1fr)}.wf-issue-list .wf-buttons>button{flex:1 1 12rem}}
 
+/* Onboarding names wrap inside cards without widening the mobile grid. */
+.workflows[data-mode=onboarding],.workflows[data-mode=onboarding] .wf-grid,.workflows[data-mode=onboarding] .wf-card,.workflows[data-mode=onboarding] .wf-card-top{min-width:0;overflow-wrap:anywhere}
+.workflows[data-mode=onboarding] .wf-card-top{flex-wrap:wrap;align-items:flex-start}
+.workflows[data-mode=onboarding] .wf-card-top>span{min-width:0;max-width:100%;white-space:normal}
+@media(max-width:1100px){.workflows[data-mode=onboarding] .wf-grid{grid-template-columns:minmax(0,1fr)}}
+
 .wf-sheet .wf-issue-heading{scroll-margin-block:12px;outline-offset:3px}
 .wf-sheet .wf-issue-heading:focus-visible,.wf-issue-list-heading:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
 

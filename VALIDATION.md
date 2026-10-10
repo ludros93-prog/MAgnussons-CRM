@@ -1,3 +1,13 @@
+# crm92 – mobilkort behöver ny slutverifiering
+
+Den första frysta onboardingkandidaten `a8b930defd5467cefdcb97fa25376dd5f26e9195` (träd `69ae7cbe35b82aaa311888d4c9c969c26a89c87e`) passerade samtliga fem obligatoriska kommandon på rena, oförändrade 393 källfiler: regression 91,86 s, TypeScript 11,95 s, bygge 10,35 s, isolerad Worker/D1/R2-runtime 447,84 s och diffkontroll 0 s, alla exit 0. Kontrollkvitto SHA-256 `079f35d08b905d99341b80ecc77cf815a72ac80ede3e2ac037c32afbf6370d69`.
+
+Native browser vid 320 px bekräftade rätt profil-B-/äldre-alias-A-urval, antal och diagnostik men hittade ett faktiskt mobilfel med långa tillåtna syntetiska kund-/profilnamn: dokumentet blev 1 442 px brett och onboardingkorten cirka 1 425,8 px. Det nya kontobeskedet rymdes inom 16–304 px. Det befintliga gridets min-content-bredd och korttexternas radbrytning behövde rättas; CSS-blob `0a5833a8a7af37bdbeb2be19e8d7755fc17dd67f` var identisk med main-basen. Rapport-SHA-256 `4c1bc4f610b3c44f96d077e94a33e81f2bd8152d16601b2936168a6040bed5d4`. Alla 18 isolerade D1-tabeller och två R2-objekt bevarades; 14 GET gav 200, inga POST eller externa anrop gjordes. Detta är ett upptäckt produktfel, inte ett godkänt fullständigt browserprov. Ett tidigare FK-fel i den privata fixturen inträffade före någon sida kördes; båda försöken och deras ägda cleanup är bevarade.
+
+Leveransen i [PR #160](https://github.com/ludros93-prog/MAgnussons-CRM/pull/160) kompletteras därför med radbrytning och krympbarhet enbart för onboardingkorten. Prospektering/kundvård och alla skriv-, konto-, roll- och lagringsflöden bevaras. Den nya kandidaten behöver egna fem slutkommandon, hela native browserprovet och gröna checks för exakt nytt head före merge. Föregående kandidats gröna kontroller ersätter inte den grinden. Den faktiska v88-publiceringen nedan gäller fortfarande; den nya onboardingkoden är ännu inte på main/live vid denna lägeskvittens. Aktuella slutbelägg, merge, Sites-source och deploy knyts separat i leverans-PR och taskresultat.
+
+---
+
 # crm92 – verkligt basfel, 41 regressioner och avstämt v88-arkiv
 
 Det faktiska felet reproducerades från färsk main `378409a02a5790984e4b0691a6aaef86721ca4f6`: åtta normaliserade syntetiska fall med sidans verkliga selektorer, varav alias-/profilavvikelse, saknat/borttaget alias, saknad medlemslänk och läsarroll gav fel urval. Root-återkört kvitto SHA-256 `480621143f4d3a9bca399bbd1b19ff1a94f553c0a8d8dbe1b0628032deda0f2c` binder 33 bytekontrollerade basmoduler. Indata var oförändrade och 0 HTTP användes.
