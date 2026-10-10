@@ -1,3 +1,23 @@
+# Driftkvittens – crm88 läsande personlig arbetsvy
+
+Testad kandidat `0302f2ab81f39e1c0c91a371342fa337eb7df63b`, träd `d3007ef272991027c78e7567c7a176c043d64b95`; [app-PR #152](https://github.com/ludros93-prog/MAgnussons-CRM/pull/152).
+
+GitHub app-main `efa8660c35c97ac0c0e965ccac475965218e257a`. Sites-source `d708c9056fb1cfaa26bc9455e662d767e9f8fd79` har exakt samma testade träd och samtliga 386 spårade paths, modes och blobs; verkliga föräldrar är tidigare source `04d75288119184fccda912f565452a733e2075fb` och app-main. Live **v85** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6ac9fed52f848191baf056f7da4d3432`: separat återläst `succeeded` med samma source/version/URL.
+
+116 skyddade backend-/API-/lagrings-/hosting-/konfigurationsfiler och alla 6 SQL-migrationer är byte-/mode-/blob-identiska mot färsk main `627afafbe75cc1b00207f30927357feb5e6933e0` och faktiskt öppnad föregående source `04d75288119184fccda912f565452a733e2075fb`; kvitto `c0c1f0b031749e706860b1f3c1920128a75d6d9f1307578c0788f66dc242b2d9`. Ingen lagring eller schema ändras. Fortsatt **crm82-kompatibel läsare och skrivare** krävs efter `commercial_task`-audit; gammal v78 är inget säkert direkt rollbackmål.
+
+Samma begränsade custom-delning revision 2 och returnerade miljömetadata revision 1 är jämförda via full kanonisk hash för policy, miljömetadata, auth-klient, automationslista och URL. Kvitto `7fab429295106bb55a75af1f7f49021fe453c4968c739affc60cffa30ef905df`. Hemligheter returneras maskerade; deras faktiska bytes är inte lästa eller jämförda.
+
+Lokalt paket `1694fab78b911b1ac0828a84082551c666f45ba2b7498228888cbe7cc2036ea7`: 6113280 bytes/105 filer; byggt från exakt verifierad source. Faktiskt arkivnedladdningsförsök gav ”file could not be authorized or resolved”; ingen hostad arkivbyteidentitet är verifierad.
+
+Full hostad databas-/fil-/länkåterställning och live-rollback genomfördes inte. Föredra kompatibel framåträttning; en äldre backend behöver separat verifierad full datakopia och bedömning av mellanliggande arbete. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook.
+
+Dokumentationen har en separat mergegrind med egna fem obligatoriska kontroller, aktuell bas och exakt-head PR-CI. Appleveransen ovan är verifierad före dokumentationsrevisionen; dess slutliga main-revision och egna kontrollbelägg redovisas i taskkvittensen. Dokumentationsändringarna kräver ingen extra appversion.
+
+---
+
+Historik före crm88 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Driftkvittens – crm87 läsande kontoroster
 
 Testad kandidat `0a0eb5206e1ee49b265cdc0f8dca31232e1dc89c`, träd `14e36826b46de77150bf92e1ef7a8ad78155c25a`; [app-PR #150](https://github.com/ludros93-prog/MAgnussons-CRM/pull/150).

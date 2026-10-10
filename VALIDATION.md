@@ -1,3 +1,23 @@
+# Validering – crm88 exakt profil och separat kundansvar
+
+Testad kandidat `0302f2ab81f39e1c0c91a371342fa337eb7df63b`, träd `d3007ef272991027c78e7567c7a176c043d64b95`; [app-PR #152](https://github.com/ludros93-prog/MAgnussons-CRM/pull/152).
+
+Fem obligatoriska kontroller passerade med exit 0 på ren, byteoförändrad slutkandidat: `node tests/outlook.mjs`, TypeScript utan incremental, produktionsbygge, byggd isolerad `node tests/runtime-smoke.mjs` och `git diff --check`. Kontrollkvitto `760304b95edc2903c2cb4c7bbc25dc5dc1f6cb92a79db9a015f3a4c2fd769bce`. [Exakt-head PR-CI 38039103181](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38039103181) har verklig terminal success för samma head; job `114175611109` och samtliga 13 faktiskt återlästa steg är gröna. Detta bevisar PR-headens CI, inte en separat main-push-körning.
+
+Den slutliga obligatoriska regressionsloggen innehåller 32 faktiska React-komponent-/filter-/callbackfall för Min dag. Slutbrowserkvittot `128a6392f41d9430c6ef0c40b92cc024edd53c9d5ab029ae67dbb77c6dfe766f` omfattar 21 verkliga isolerade native Chromium-fall och 23 oförändrade native PNGs. Alla 18 råtabeller och R2, privata utkast-/Outlook-/filsentineler samt käll-, bygg- och fixturebytes är jämförda oförändrade. Browsern gör inga CRM-HTTP-skrivningar och använder uttryckligt syntetisk autentisering; komponentproven har syntetiska visual-/utkastgränser.
+
+116 skyddade backend-/API-/lagrings-/hosting-/konfigurationsfiler och alla 6 SQL-migrationer är byte-/mode-/blob-identiska mot färsk main `627afafbe75cc1b00207f30927357feb5e6933e0` och faktiskt öppnad föregående source `04d75288119184fccda912f565452a733e2075fb`; kvitto `c0c1f0b031749e706860b1f3c1920128a75d6d9f1307578c0788f66dc242b2d9`. Ingen lagring eller schema ändras. Fortsatt **crm82-kompatibel läsare och skrivare** krävs efter `commercial_task`-audit; gammal v78 är inget säkert direkt rollbackmål.
+
+Ordersviten behåller relevanta 40→45-, 50→48-, kassations-, delleverans-, dubbelklick-, CAS- och replayfall. Dokumenterat syntetiskt godkännande är inget riktigt kundgodkännande.
+
+Gröna syntetiska komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+Dokumentationen har en separat mergegrind med egna fem obligatoriska kontroller, aktuell bas och exakt-head PR-CI. Appleveransen ovan är verifierad före dokumentationsrevisionen; dess slutliga main-revision och egna kontrollbelägg redovisas i taskkvittensen. Dokumentationsändringarna kräver ingen extra appversion.
+
+---
+
+Historik före crm88 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm87 konto, kundansvar och resultatprofil
 
 Testad kandidat `0a0eb5206e1ee49b265cdc0f8dca31232e1dc89c`, träd `14e36826b46de77150bf92e1ef7a8ad78155c25a`; [app-PR #150](https://github.com/ludros93-prog/MAgnussons-CRM/pull/150).
