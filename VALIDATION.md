@@ -1,3 +1,19 @@
+# Validering – crm83 läsning av registrerad ansvarshistorik
+
+Kandidat `34662f18adba2fd4b45d1102560e289ff46289e6`, träd `cd9398cc623f514d4ceef58fde6251e4b6fc57ce`. Alla fem obligatoriska kommandon passerade med faktisk exit 0 på ren, byteoförändrad kandidat `34662f18adba2fd4b45d1102560e289ff46289e6`, avslutat `2026-10-10T01:41:04.462140+00:00`: `node tests/outlook.mjs`, TypeScript utan incremental, produktionsbygge, byggd isolerad `node tests/runtime-smoke.mjs` och `git diff --check`. [Exakt-head CI 38013310142](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38013310142) är `success` för samma head. Privat kontrollkvittos SHA256 är `719e860f1d8982b0209efdb4f54a50b3a3e2810a738c8d7e95733bbe4968271e`.
+
+19 isolerade browserfall och 52 sparade bilder. Faktisk Chromium mot byggd isolerad Worker och migrerad syntetisk D1/R2: sparad affärs-, order- och fristående uppgiftshistorik, namn efter senare profiländring, roll-/identitetsprojektioner, tangentbord och fokus. 320/390/1280 px med normal och fördubblad CSS-text; samtliga 107 panelnoder, 38 dialognoder och 17 expanderade auditnoder har verifierad 2x-faktor i de tre förstorade fallen. Alla 18 råa D1-tabeller och R2-bytes är identiska efter läsningen; inga browser-skrivförsök. Identitets-/uppgiftsfallen använder en uttryckligt avgränsad DOM-bypass av befintlig modalpollpaus och verklig GET i samma React-instans. Arbetsytefallet använder märkt DOM-aktivering av inert bakgrund. Detta bevisar inte automatisk serverrollåterkallelse under öppen modal, personlig inloggning, OS-/browserzoom, skärmläsaracceptans eller allmän driftacceptans. Tidigare misslyckade körningar och ett äldre begränsat fontprov är bevarade privat och räknas inte som slutlig validering.
+
+Den nya dialogen gör inga CRM-skrivningar, öppnar ingen privat uppföljning och gör ingen konto-/profiluppslagning. Visningen använder sparad audit och administratörens befintliga vy. Befintlig överlämningsdialog delar samma historikrenderer; överlämningens skrivkontrakt och granskningsvillkor består.
+
+De 102 skyddade backend-, lagrings-, migrations- och hostingfilerna har samma paths, modes, blobs och byte som föregående publicerade v79-source `4f159b8f885e136827310445550bcd0352fdc6a6`. Ingen SQL-migration, datamodell, API, CAS eller idempotens ändras. Data är kompatibla med v79-koden. Efter en tidigare `commercial_task`-audit gäller fortsatt crm82-kompatibel läsare och skrivare; v78 är inget säkert direkt rollbackmål. Live-rollback eller full hostad återställning har inte prövats i crm83.
+
+Beläggen gäller isolerad körning med syntetiska uppgifter. Verkliga personkonton, interna CRM-roller/profiler och personalens arbetsmoment är inte godkända genom dessa syntetiska kontroller. Ingen verklig Fortnox-/Outlook-anslutning, full hostad återställning eller live-rollback är verifierad. Codex-taskreferensen är oläst eftersom dess read_thread saknas.
+
+---
+
+Historik före crm83 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm82 neutral kommersiell uppgiftskoppling
 
 Administratören kan i **Överlämna arbete** granska och **Koppla uppgiftsansvaret** för en äldre öppen, faktiskt lagrad uppgift med kommersiell koppling. Uppgiften får ett stabilt profil-ID för samma person som redan har en granskad UUID-koppling på den entydigt kopplade affären eller ordern. Dialogen visar faktisk uppgift, kund, arbetsflöde, personprofil och separat återläst CRM-konto. En öppnad dialog är ingen sparning, egen inloggning eller personalacceptans.

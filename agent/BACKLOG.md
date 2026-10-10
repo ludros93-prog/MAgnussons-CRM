@@ -1,3 +1,15 @@
+# Arbetskö – crm83 synlig uppgiftsaudit
+
+B01:s avgränsade upptäckbarhetslucka är hanterad: administratören når **Visa ansvarshistorik** på en öppen uppgift med registrerad audit i Min dag, även när en ny överlämning eller förankring inte är tillgänglig. Historiken är separat från uppföljningsutkast och skrivåtgärder.
+
+Avslutade uppgifter saknar fortfarande denna fristående ingång. Globala och operativa namnalias, övrig UUID-migrering, flertydig identitet och komplett personalöverlämning kvarstår i B01. B02:s separata chefsroll, B04:s privata driftkopior/full hostad återställning, B05:s återstående utkast-/överlämningsflöden och B07:s verkliga konto-/personalpilot kvarstår. Konkreta åtkomst-, dataförlust- och orderfel går före normal kö.
+
+App-PR #141, testad kandidat `34662f18adba2fd4b45d1102560e289ff46289e6` och faktiskt publicerad v80 redovisas i [STATUS-2026-10-05.md](../STATUS-2026-10-05.md). Nästa steg är kvarvarande behörighets-/profilglapp och en faktisk konto-/personalpilot i rätt arbetsvy. Kodtesterna visar inte att personalen har kommit igång.
+
+---
+
+Historik före crm83 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm82 avgränsad samma-person-koppling för uppgift
 
 Administratören kan i **Överlämna arbete** granska och **Koppla uppgiftsansvaret** för en äldre öppen, faktiskt lagrad uppgift med kommersiell koppling. Uppgiften får ett stabilt profil-ID för samma person som redan har en granskad UUID-koppling på den entydigt kopplade affären eller ordern. Dialogen visar faktisk uppgift, kund, arbetsflöde, personprofil och separat återläst CRM-konto. En öppnad dialog är ingen sparning, egen inloggning eller personalacceptans.
