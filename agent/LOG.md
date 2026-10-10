@@ -1,3 +1,15 @@
+# crm90 – dokumentationskandidatens runtimeavbrott
+
+Dokumentationskandidat `8bd8934c6aa8348e62c35d6253b423971d86848b`, träd `0bcdd898dc0d5067e79d9eb5b84f7e875245a1a7`, gav exit 0 för regression, TypeScript och bygge. Det fjärde obligatoriska kommandot, `node tests/runtime-smoke.mjs`, avbröts därefter med exit 1 efter 339,96 sekunder (2026-10-10T12:16:21.028151+00:00–2026-10-10T12:22:00.985641+00:00). Femte diffkontrollen kördes inte. Head, träd och samtliga 389 spårade filer var rena och byteoförändrade. Kontrollkvittots SHA-256 är `e8e9ed1882eb1233f7d2dd92bf56ae31a1e628a56a31ea7f23c1f158eb942e04`; runtimeloggens är `4b6d3f3ac66dee41e32a35ca2eae90cdf64fbf19148e45abdfd6aa82cb4b0375`.
+
+Det faktiska slutfelet var `TypeError: fetch failed`, `UND_ERR_SOCKET: other side closed`. Stacken når `raw()` via `Promise.all (index 1)`, `tests/runtime-smoke.mjs:135:362`, där den isolerade R2-fixturen avläses med `bucket.get(item.key)`, och anropet vid `844:956` efter förväntat 409 för en äldre shipped-issue-revision. En tidigare workerd-`Broken pipe` finns i loggen; orsaken till den stängda socketen är inte fastställd. Ingen terminal `AssertionError` finns. Detta är ett faktiskt misslyckat runtimeförsök, utan belagd produkt- eller resursorsak.
+
+Exakt-head CI 38051186930, jobb 114210477988, hade 13 terminalt gröna steg men ersätter inte det misslyckade lokala runtimekravet. Försöket kvalificerar därför inte dokumentationskandidaten för merge. Appens tidigare verifierade main/live-leverans redovisas separat nedan. En ny fryst dokumentationskandidat behöver egna fem obligatoriska kontroller och exakt-head CI; inga framtida utfall påstås. Hela dokumenthistoriken från kandidaten ovan bevaras byteoförändrad nedan. AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering ändras inte.
+
+---
+
+Historik före detta dokumentationsförsök – befintliga dokumentbytes bevarade nedan.
+
 # Bygglogg – crm90 egna uppgifter i Resultat
 
 I **Mitt resultat** följer öppna uppgifter nu den befintliga personliga profilens stabila ID. Äldre uppgifter utan profil-ID följer kontots aktuella giltiga kundansvar. Om kontots kundansvar ändras flyttas därför inte profilkopplade uppgifter till en annan person, och ett saknat eller borttaget kundansvar döljer inte egna profilkopplade uppgifter.
