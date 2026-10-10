@@ -11,6 +11,21 @@ export function resultOperationalOwner(st:State,scope:string){
  const alias=st.settings.sellerProfilesInitialized?sellerProfileById(st.settings,scope)?.legacyOwnerName||'':scope;
  return st.settings.owners.includes(alias)?alias:'';
 }
+// Task responsibility can be anchored to a profile independently of the
+// current account's operational alias. Profile rows must not inherit the
+// viewing account's alias; the personal activity card uses that actual alias
+// only for older tasks without a registered profile ID.
+export function resultTaskScope(st:State,scope:string,activityMode:'profile'|'personal'='profile'){
+ const empty={team:false,profileId:'',legacyOwner:'',diagnostic:'' as ''|'missing'|'mismatch'|'operational-missing'};
+ const personal=activityMode==='personal',team=!personal&&scope==='all';
+ if(team)return {...empty,team:true};
+ const ownScope=personalResultScope(st);
+ if(personal&&scope!==ownScope)return empty;
+ const profileId=st.settings.sellerProfilesInitialized?(personal?ownScope:sellerProfileById(st.settings,scope)?.id||''):'';
+ const legacyOwner=personal?personalOwner(st):resultOperationalOwner(st,scope),profile=profileId?sellerProfileById(st.settings,profileId):undefined;
+ const diagnostic:typeof empty.diagnostic=personal&&st.settings.sellerProfilesInitialized?(!profileId?'missing':!legacyOwner?'operational-missing':profile&&profile.legacyOwnerName!==legacyOwner?'mismatch':''):'';
+ return {team:false,profileId,legacyOwner,diagnostic};
+}
 export function swedishMonth(at:string){if(!at)return '';const date=new Date(at);return Number.isNaN(date.getTime())?'':new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Stockholm',year:'numeric',month:'2-digit'}).format(date);}
 
 function invoiceInScope(st:State,o:State['orders'][number],scope:string){
@@ -26,8 +41,9 @@ function qualificationInScope(st:State,c:State['customers'][number],scope:string
 function sellerGoals(st:State,scope:string){return st.settings.sellerProfilesInitialized?st.settings.sellerGoalsById[scope]:st.settings.sellerGoals[scope];}
 function sellerAnnualGoals(st:State,scope:string){return st.settings.sellerProfilesInitialized?st.settings.sellerAnnualGoalsById[scope]:st.settings.sellerAnnualGoals[scope];}
 
-export function salesMetrics(st:State,month:string,owner:string){
+export function salesMetrics(st:State,month:string,owner:string,activityMode:'profile'|'personal'='profile'){
  const year=month.slice(0,4),operationalOwner=resultOperationalOwner(st,owner),matches=(r:{owner:string})=>owner==='all'||!!operationalOwner&&r.owner===operationalOwner;
+ const taskScope=resultTaskScope(st,owner,activityMode),matchesTask=(t:State['tasks'][number])=>taskScope.team||(t.ownerProfileId?!!taskScope.profileId&&t.ownerProfileId===taskScope.profileId:!!taskScope.legacyOwner&&t.owner===taskScope.legacyOwner);
  const invoices=st.orders.filter(o=>invoiceInScope(st,o,owner)&&o.invoiceValue!==null&&o.invoiceDate.startsWith(month+'-'));
  const yearInvoices=st.orders.filter(o=>invoiceInScope(st,o,owner)&&o.invoiceValue!==null&&o.invoiceDate.startsWith(year+'-'));
  const known=invoices.filter(o=>o.actualCost!==null),knownRevenue=known.reduce((n,o)=>n+o.invoiceValue!,0),knownCost=known.reduce((n,o)=>n+o.actualCost!,0);
@@ -39,7 +55,7 @@ export function salesMetrics(st:State,month:string,owner:string){
  const yearUnattributedInvoices=st.settings.sellerProfilesInitialized?yearInvoices.filter(o=>!o.invoiceOwnerId||!sellerProfileById(st.settings,o.invoiceOwnerId)):[];
  const qualified=st.customers.filter(c=>qualificationInScope(st,c,owner)&&swedishMonth(c.prospecting.qualifiedAt)===month);
  const unattributedQualified=st.settings.sellerProfilesInitialized?qualified.filter(c=>!c.prospecting.qualifiedOwnerId||!sellerProfileById(st.settings,c.prospecting.qualifiedOwnerId)):[];
- return {invoices,yearInvoices,known,revenue:invoices.reduce((n,o)=>n+o.invoiceValue!,0),target:(owner==='all'?st.settings.budgets[month]:goals?.revenue)??null,profit:known.length?knownRevenue-knownCost:null,profitTarget:goals?.grossProfit??null,margin:margin(knownRevenue,knownCost),yearRevenue:yearInvoices.reduce((n,o)=>n+o.invoiceValue!,0),yearTarget,yearTargetSource:explicitYear!=null?'annual':yearMonths.length===12?'months':'missing',configuredMonths:yearMonths.length,qualified:qualified.length,qualifiedTarget:goals?.qualified??null,open,pipeline:open.reduce((n,d)=>n+(d.value||0),0),unpriced:open.filter(d=>d.value===null).length,repeat:invoices.filter(o=>st.deals.find(d=>d.id===o.dealId)?.type==='repeat').length,tasks:st.tasks.filter(t=>matches(t)&&!t.done).sort((a,b)=>a.due.localeCompare(b.due)),customers:st.customers.filter(matches),orders:st.orders.filter(matches),meetings:st.meetings.filter(m=>(owner==='all'||(m.ownerProfileId?st.settings.sellerProfilesInitialized&&m.ownerProfileId===owner:!!operationalOwner&&m.owner===operationalOwner))&&m.status==='planned'&&m.date>=day()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)),unattributedInvoices,unattributedRevenue:unattributedInvoices.reduce((sum,o)=>sum+o.invoiceValue!,0),yearUnattributedInvoices,yearUnattributedRevenue:yearUnattributedInvoices.reduce((sum,o)=>sum+o.invoiceValue!,0),unattributedQualified:unattributedQualified.length};
+ return {invoices,yearInvoices,known,revenue:invoices.reduce((n,o)=>n+o.invoiceValue!,0),target:(owner==='all'?st.settings.budgets[month]:goals?.revenue)??null,profit:known.length?knownRevenue-knownCost:null,profitTarget:goals?.grossProfit??null,margin:margin(knownRevenue,knownCost),yearRevenue:yearInvoices.reduce((n,o)=>n+o.invoiceValue!,0),yearTarget,yearTargetSource:explicitYear!=null?'annual':yearMonths.length===12?'months':'missing',configuredMonths:yearMonths.length,qualified:qualified.length,qualifiedTarget:goals?.qualified??null,open,pipeline:open.reduce((n,d)=>n+(d.value||0),0),unpriced:open.filter(d=>d.value===null).length,repeat:invoices.filter(o=>st.deals.find(d=>d.id===o.dealId)?.type==='repeat').length,tasks:st.tasks.filter(t=>matchesTask(t)&&!t.done).sort((a,b)=>a.due.localeCompare(b.due)),customers:st.customers.filter(matches),orders:st.orders.filter(matches),meetings:st.meetings.filter(m=>(owner==='all'||(m.ownerProfileId?st.settings.sellerProfilesInitialized&&m.ownerProfileId===owner:!!operationalOwner&&m.owner===operationalOwner))&&m.status==='planned'&&m.date>=day()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)),unattributedInvoices,unattributedRevenue:unattributedInvoices.reduce((sum,o)=>sum+o.invoiceValue!,0),yearUnattributedInvoices,yearUnattributedRevenue:yearUnattributedInvoices.reduce((sum,o)=>sum+o.invoiceValue!,0),unattributedQualified:unattributedQualified.length};
 }
 export function noticeInScope(st:State,n:State['notices'][number],owner:string){if(owner==='all'||['print','warehouse','production'].includes(st.viewer?.role||''))return true;if(n.audience==='team')return true;if(!owner||owner==='_unassigned')return false;return n.owner===owner||!!n.orderId&&st.orders.some(o=>o.id===n.orderId&&o.owner===owner);}
 

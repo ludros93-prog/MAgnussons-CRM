@@ -72,3 +72,6 @@ await import('./yearwheel-responsibility-editor.mjs');
 
 // Actual calendar work keeps personal profile IDs separate from operative aliases.
 await (await import('./calendar-profile-link.mjs')).verifyCalendarProfileLink();
+
+// Result attention uses exact task/profile identity without changing financial metrics.
+await (await import('./sales-task-profile.mjs')).verifySalesTaskProfile();
