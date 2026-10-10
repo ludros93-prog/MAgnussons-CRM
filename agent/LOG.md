@@ -10,6 +10,8 @@ Riktat crm95-prov har nu passerat: **58 normaliserade domän-/faktiska sid-/Reac
 
 Första frysta kandidaten `ab5b3eed2fc4fee590a41aaa19a2b761c3794e8d` stoppades av full regression: ett äldre Kalender-test för Order-ingången förväntade historiskt profilalias i stället för aktuellt personligt urval. Testförväntningen rättades avgränsat; produktkoden bevarades. Den underkända körningens kvitto och logg är sparade privat, och alla fem slutkommandon körs om på den nya frysta kandidaten.
 
+Kandidaten `10b6a11bb12ed80fedb8458b780d4e7568fd4d59` klarade alla fem lokala slutkommandon. Native browser stoppade därefter på faktisk horisontell överrinning i ReceiptQueue vid 320 px med ett långt syntetiskt kundnamn (288 px panel, 971 px scrollbredd). Avgränsad radbrytning lades till på leveranspanelen utan ändrade data, urval eller handlingar. Den underkända browserkörningen sparas privat; alla slutkontroller och native browser körs om på ny fryst kandidat.
+
 ---
 
 Historik före crm95 – tidigare dokumentation bevarad byteoförändrad nedan.
