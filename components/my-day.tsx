@@ -25,6 +25,7 @@ import {YearwheelResponsibilityDraftPreview} from './yearwheel-responsibility-dr
 import {YearNeedDraftPreview} from './year-need-draft-preview';
 import {CompanyEventDraftPreview} from './company-event-draft-preview';
 import {TaskResponsibility,type TaskResponsibilitySaveAction} from './task-responsibility';
+import {TaskResponsibilityHistory} from './task-responsibility-history';
 import {MeetingResponsibility} from './meeting-responsibility';
 import {money,displayDate,type SaveAction} from './business-ui';
 
@@ -36,6 +37,7 @@ export function MyDay({st,space,save,saveResponsibility,busy,refreshResponsibili
  const myIssuesId=useId();
  const [showAllDrafts,setShowAllDrafts]=useState(false),[discardDraft,setDiscardDraft]=useState('');
  const [responsibilityTaskId,setResponsibilityTaskId]=useState(''),closeResponsibility=useCallback(()=>setResponsibilityTaskId(''),[]);
+ const [taskHistory,setTaskHistory]=useState<{taskId:string;opener:HTMLElement;identity:string}|null>(null),closeTaskHistory=useCallback(()=>setTaskHistory(null),[]);
  const [responsibilityMeetingId,setResponsibilityMeetingId]=useState(''),closeMeetingResponsibility=useCallback(()=>setResponsibilityMeetingId(''),[]);
  const drafts=useDrafts(),personal=personalOwner(st),canTeam=st.viewer?.role==='admin',team=owner==='all',hasScope=team||!!personal&&owner===personal,today=day(),readonly=st.viewer?.role==='reader';
  const match=(v:{owner:string})=>hasScope&&(team||v.owner===owner);
@@ -67,7 +69,7 @@ export function MyDay({st,space,save,saveResponsibility,busy,refreshResponsibili
 
  function taskRows(list:Task[]){return list.map(t=>{const context=taskResponsibilityContext(st,t);return <div className="daily-row" key={t.id} data-task-id={t.id} data-late={t.due<today}>
   <div><span className="day-row-kind">{context?.typeLabel||(t.kind==='quote'?'Offertuppföljning':t.kind==='invoice_ready'?'Fakturering':'Kundaktivitet')}</span><b>{t.title}</b><button className="daily-customer" data-customer-id={t.customerId} onClick={()=>onCustomer(t.customerId)}>{cname(t.customerId)}</button><small>{t.due<today?'Försenad · ':t.due===today?'Idag · ':''}{displayDate(t.due)}{context?' · uppgiftsansvar: '+taskResponsibility(t):team?' · '+taskResponsibility(t):''}</small></div>
-  {canTeam&&st.settings.sellerProfilesInitialized&&taskResponsibilityKind(t)?<div className="task-day-actions"><Button variant="outline" onClick={()=>onTask(t)}>{taskLabel(t)}</Button><Button className="task-day-responsibility" variant="ghost" disabled={busy} onClick={()=>setResponsibilityTaskId(t.id)}>{t.ownerProfileId?'Byt uppgiftsansvar':'Förankra ansvar'}</Button></div>:<Button variant="outline" onClick={()=>onTask(t)}>{readonly?'Visa aktivitet':taskLabel(t)}</Button>}
+  {canTeam&&(st.settings.sellerProfilesInitialized&&taskResponsibilityKind(t)||t.responsibilityTransfers.length>0)?<div className="task-day-actions"><Button variant="outline" onClick={()=>onTask(t)}>{taskLabel(t)}</Button>{st.settings.sellerProfilesInitialized&&taskResponsibilityKind(t)&&<Button className="task-day-responsibility" variant="ghost" disabled={busy} onClick={()=>setResponsibilityTaskId(t.id)}>{t.ownerProfileId?'Byt uppgiftsansvar':'Förankra ansvar'}</Button>}{t.responsibilityTransfers.length>0&&<Button type="button" className="task-day-responsibility task-day-history" variant="ghost" onClick={event=>setTaskHistory({taskId:t.id,opener:event.currentTarget,identity:JSON.stringify([space,st.viewer?.id||'',st.viewer?.memberId||'',st.viewer?.role||'',t.id])})}>Visa ansvarshistorik</Button>}</div>:<Button variant="outline" onClick={()=>onTask(t)}>{readonly?'Visa aktivitet':taskLabel(t)}</Button>}
  </div>})}
 
  return <div className="business-ui my-day visual-day" data-has-scope={hasScope}>
@@ -112,6 +114,7 @@ export function MyDay({st,space,save,saveResponsibility,busy,refreshResponsibili
   </div>
   {hasScope&&<div id="daily-receipts" tabIndex={-1}><ReceiptQueue st={st} owner={owner} onReceipt={onReceipt} compact/></div>}
   {responsibilityTaskId&&<TaskResponsibility key={responsibilityTaskId} st={st} taskId={responsibilityTaskId} space={space} save={saveResponsibility} busy={busy} refresh={refreshResponsibility} onClose={closeResponsibility} returnFocus={()=>document.getElementById('daily-tasks')}/>}
+  {taskHistory&&<TaskResponsibilityHistory key={taskHistory.taskId} st={st} taskId={taskHistory.taskId} space={space} openingIdentity={taskHistory.identity} opener={taskHistory.opener} onClose={closeTaskHistory} returnFocus={()=>document.getElementById('daily-tasks')}/>}
   {responsibilityMeetingId&&<MeetingResponsibility key={responsibilityMeetingId} st={st} meetingId={responsibilityMeetingId} space={space} save={save} busy={busy} refresh={refreshResponsibility} onClose={closeMeetingResponsibility}/>}
  </div>;
 }
