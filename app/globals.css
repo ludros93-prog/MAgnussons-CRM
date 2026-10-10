@@ -398,3 +398,16 @@ body {
 .visual-day .day-task-panel .daily-row>div:first-child{min-width:0;max-width:100%}
 .visual-day .day-task-panel .daily-customer{min-width:0;max-width:100%;min-height:44px;white-space:normal;overflow-wrap:anywhere}
 .visual-day .day-task-panel .daily-row small{max-width:100%;overflow-wrap:anywhere}
+
+/* Explain an incomplete personal workday without hiding existing work. */
+.visual-day .day-profile-notice{margin:0;padding:1.1rem 1.25rem;background:#fff9ef;border-color:#e5cfaa;min-width:0}
+.day-profile-notice h2{display:flex;align-items:flex-start;gap:.65rem;font-size:1.125rem;line-height:1.5;color:#684716;overflow-wrap:anywhere}
+.day-profile-notice h2 svg{flex-shrink:0;margin-top:.2rem}
+.day-profile-notice p,.visual-day .day-selection-note{font-size:.9375rem;line-height:1.65;color:#685537;overflow-wrap:anywhere}
+.day-profile-notice p{margin:.65rem 0}
+.day-profile-notice button{min-height:44px;max-width:100%;height:auto;white-space:normal;overflow-wrap:anywhere}
+.day-profile-notice button:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
+.visual-day[data-profile-diagnostic] .day-task-panel .panel-head,.visual-day[data-profile-diagnostic] .day-meetings .panel-head{flex-wrap:wrap}
+.visual-day[data-profile-diagnostic] .day-task-panel .panel-head>div{min-width:0;max-width:100%}
+.visual-day[data-profile-diagnostic] .panel-head h2{flex-wrap:wrap}
+.visual-day[data-profile-diagnostic] .day-month-card p{overflow-wrap:anywhere;min-width:0}
