@@ -1,3 +1,13 @@
+# Principer – crm87 separata identitetsunderlag
+
+5 officiella artikelkroppar fick faktisk HTTP200 och 13 exakta citat återlästes mot sparade bodies; researchkvitto `de615b42e46f391ead95dab60587efc0311d74eb31bf068e22dbe2dea57c8bb7`. Faktiskt lästa källor: [lime-users](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/), [salesforce-record-access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records), [mdn-description-list](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dl), [react-rendering-lists](https://react.dev/learn/rendering-lists), [mdn-status-role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role). Lime skiljer login och medarbetare, Salesforce förankrar serverbestämd postbehörighet, React stöder stabila list-ID:n och MDN beskriver märkta metadata och lugna statusbesked. Dessa principer ersätter inga kontotester. Tidigare verifierad Saleshub-kundkontext återbrukas från repohistoriken utan ny marknads- eller integrationsverifiering.
+
+Exakt medlems-ID-länk och operativt ansvar är Magnussons befintliga kontrakt. Profilkontolänk härleds inte från namn, mejl, första kontomatch eller webbsidans delningslista. Begriplig separat presentation är vårt produktval; externa källor påstår ingen lyckad Magnussons-inloggning.
+
+---
+
+Historik före crm87 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer för crm86:s kopplingsdiagnos
 
 Två officiella artikelkroppar lästes med faktisk HTTP 200 den 10 oktober 2026 kl. 05:22:49 UTC. Hela bodyfiler, SHA256 och fyra exakta återlästa citat finns i privat `research/verified-crm86-research.json`, SHA256 `35aa69771709417a8da871be242a0118a5a7e0a4325cd866b103686713fcc795`.

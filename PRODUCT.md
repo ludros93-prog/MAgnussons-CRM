@@ -1,3 +1,17 @@
+# Produktkvittens – begriplig kontoadministration
+
+Kontoadministrationen skiljer nu registrerad inloggningskoppling, operativt kundansvar och exakt konto-ID-länk till resultatprofil. Saknade eller motsägande kopplingar visas från faktiskt läst underlag; namnlikhet skapar ingen identitet. Historiska/inaktiva profiler behåller sina riktiga länkar. Kontots kundansvarsväljare beskrivs som kundansvar, inte som en ändring av den separata resultatprofilen.
+
+En tillåten webbplatsadress, registrerat CRM-konto, serverroll, kundansvar och resultatprofil är separata underlag. Kontoöversikten lovar därför ingen första inloggning eller klar personalintroduktion från `user_id`-kopplingen. Rätt konto-ID och profil-ID visas med sitt faktiska underlag; brister granskas i befintliga administrativa flöden.
+
+Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects. Serverroller, privata utkast, atomiska skrivningar, CAS och idempotens är oförändrade.
+
+Registrerad användarlänk är inget bevis för personens egen lyckade inloggning. Syntetiska React-/browser-/runtimeprov är inte konto-, integrations-, personal-, fysisk enhets- eller full hjälpmedelsacceptans. Inga verkliga kundorder skrivtestades, inga verkliga konton, roller eller åtkomster ändrades och inga mejl skickades i detta bygguppdrag.
+
+---
+
+Historik före crm87 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produktkvittens – begriplig kopplingshjälp i Min dag
 
 I den egna arbetsdagen får ett konto med giltigt kundansvar ett synligt besked om säljarregistret är upprättat men kontots exakta medlems-ID saknar profilkoppling. Uppgifter och möten med profilansvar kan då saknas. Om en profil är kopplad men dess registrerade ansvar skiljer sig från kundansvaret, visas de två ansvaren var för sig och arbetet beskrivs som ett blandat synligt urval.
