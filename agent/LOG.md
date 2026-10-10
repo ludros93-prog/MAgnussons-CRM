@@ -8,6 +8,8 @@ Färsk helpersökning gav inga matchande filer i kontrollerade läsbara rötter 
 
 Riktat crm95-prov har nu passerat: **58 normaliserade domän-/faktiska sid-/React-fall**, 43 kompilerade produktionsmoduler och 46 byteverifierade källor; noll HTTP. Rapport SHA-256 `10f8f64760dfc64aa116a49a16f06ab9d5995afd41284aefca88679b04c8a177`. Det är syntetiskt kandidatunderlag; native browser och fem slutkommandon på fryst head, exakt-head CI och faktisk publicering återstår.
 
+Första frysta kandidaten `ab5b3eed2fc4fee590a41aaa19a2b761c3794e8d` stoppades av full regression: ett äldre Kalender-test för Order-ingången förväntade historiskt profilalias i stället för aktuellt personligt urval. Testförväntningen rättades avgränsat; produktkoden bevarades. Den underkända körningens kvitto och logg är sparade privat, och alla fem slutkommandon körs om på den nya frysta kandidaten.
+
 ---
 
 Historik före crm95 – tidigare dokumentation bevarad byteoförändrad nedan.
