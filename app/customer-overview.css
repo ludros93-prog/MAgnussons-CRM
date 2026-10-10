@@ -135,6 +135,40 @@
 .customer-overview .co-outlook-entry .ol-body p { padding: 12px; }
 .customer-overview .co-show-more { width: 100%; margin-top: 6px; }
 
+.customer-overview .co-completed-history { min-width: 0; border: 1px solid var(--co-line); border-radius: 12px; background: #f7f9fc; }
+.customer-overview .co-completed-history > summary {
+  display: grid; grid-template-columns: 20px minmax(0, 1fr) 20px; align-items: center;
+  gap: 10px; min-height: 44px; padding: 12px 16px; list-style: none;
+  color: var(--co-navy); font-size: 17px; font-weight: 650; cursor: pointer;
+}
+.customer-overview .co-completed-history > summary::-webkit-details-marker { display: none; }
+.customer-overview .co-completed-history > summary > span { overflow-wrap: anywhere; }
+.customer-overview .co-completed-history > summary > svg { flex: 0 0 auto; color: #53657d; }
+.customer-overview .co-completed-history[open] .co-completed-history-chevron { transform: rotate(180deg); }
+.customer-overview .co-completed-history-content { padding: 0 16px 16px; }
+.customer-overview .co-completed-history-description, .customer-overview .co-completed-history-count,
+.customer-overview .co-completed-history-empty { color: var(--co-muted); font-size: 14px; }
+.customer-overview .co-completed-history-count { margin-block: 12px; }
+.customer-overview .co-completed-task-list { list-style: none; margin: 0; padding: 0; }
+.customer-overview .co-completed-task-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px;
+  padding: 16px 0; border-top: 1px solid var(--co-line);
+}
+.customer-overview .co-completed-task-copy { flex: 1 1 260px; min-width: 0; }
+.customer-overview .co-completed-task-facts { display: grid; gap: 9px; margin: 10px 0 0; }
+.customer-overview .co-completed-task-facts dt { color: var(--co-muted); font-size: 14px; overflow-wrap: anywhere; }
+.customer-overview .co-completed-task-facts dd { margin: 2px 0 0; font-size: 15px; }
+.customer-overview .co-completed-task-audit-button, .customer-overview .co-completed-history-more {
+  min-height: 44px; max-width: 100%; height: auto; padding: 10px 12px;
+  white-space: normal; overflow-wrap: anywhere; line-height: 1.45;
+}
+.customer-overview .co-completed-task-audit-button { flex: 0 1 auto; }
+.customer-overview .co-completed-history-more { width: 100%; margin-top: 8px; }
+.customer-overview .co-completed-history > summary:focus-visible,
+.customer-overview .co-completed-task-audit-button:focus-visible,
+.customer-overview .co-completed-history-more:focus-visible,
+.customer-overview .co-completed-history-fallback:focus { outline: 3px solid var(--ring); outline-offset: 3px; }
+
 /* Compact only the customer sheet. Contact details remain visible. */
 .customer-card-sheet .customer-action-mobile { display: none; }
 .customer-card-sheet [data-slot="sheet-header"] { padding: 20px 20px 16px; }
