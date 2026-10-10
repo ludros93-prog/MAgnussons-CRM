@@ -1,3 +1,18 @@
+# Principer för crm86:s kopplingsdiagnos
+
+Två officiella artikelkroppar lästes med faktisk HTTP 200 den 10 oktober 2026 kl. 05:22:49 UTC. Hela bodyfiler, SHA256 och fyra exakta återlästa citat finns i privat `research/verified-crm86-research.json`, SHA256 `35aa69771709417a8da871be242a0118a5a7e0a4325cd866b103686713fcc795`.
+
+- [React conditional rendering](https://react.dev/learn/conditional-rendering): olika JSX kan återges utifrån ett villkor. Magnussons visar diagnosen från faktiskt redan läst kontoprojektion och registrerad profillänk.
+- [MDN status role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role): status har implicit `aria-live=polite` och `aria-atomic=true`; fokus ska inte flyttas när statusinnehållet uppdateras. Magnussons använder ett lugnt statusbesked framför uppgifterna.
+
+Tidigare verifierade Saleshub-/Salesforce-/Lime-principer återbrukas från daterad repohistorik: samlad kundkontext, konkreta handlingsverb, stabil identitet och skillnaden mellan personprofil, inloggning och postbehörighet. Ingen ny läsning av dessa leverantörers artiklar eller fungerande integration påstås. Den första tekniska fetchanteckningen bevarar några gissade långcitat som inte matchade normaliserad inline-text; den räknas inte som citatbelägg. Slutkvittots fyra citat återlästes exakt mot de sparade artikelkropparna.
+
+Att beskriva en arbetskö som ett synligt urval vid kopplingsglapp är Magnussons eget produktval. Källorna ersätter inte serverroller, personlig inloggning, personalacceptans eller faktisk hjälpmedels-/browserverifiering. Slutbelägg finns i [VALIDATION.md](../VALIDATION.md).
+
+---
+
+Historik före crm86 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer för crm85:s åtkomstläsning
 
 Fyra officiella artikelkroppar lästes med HTTP 200 den 10 oktober 2026 kl. 03:20:51–03:20:53 UTC och kontrollerades mot privata källhashar:

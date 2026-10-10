@@ -1,3 +1,15 @@
+# Arbetskö – crm86 tydlig kopplingsdiagnos i Min dag
+
+Den avgränsade luckan i den personliga arbetsdagens besked är hanterad: saknad exakt medlemslänk eller olika registrerat profil-/kundansvar förklaras innan en tom lista kan tas för en fullständig arbetskö. Befintliga uppgifter, filter och ansvar förändras inte; ingen person- eller kontokoppling gissas.
+
+B01 kvarstår för kontorosterns tydliga åtskillnad mellan inloggning, operativt alias och resultatprofil, medlemskopplad profil utan operativt kundansvar, övriga namnalias/UUID-/identitetsfall och fullständig personalöverlämning. B02:s chefsroll, B04:s separata privata driftkopior/full hostad återställning, B05:s återstående privata utkast-/överlämningsflöden och B07:s verkliga konto-/personalpilot kvarstår.
+
+[App-PR #147](https://github.com/ludros93-prog/MAgnussons-CRM/pull/147) och faktiskt publicerad version redovisas i [STATUS-2026-10-05.md](../STATUS-2026-10-05.md). Nästa genomförbara produktsteg väljs efter färsk inventering av kvarvarande kopplingsbesked. Personberoende införande behöver egen bekräftad inloggning och sparad verklig uppföljning med nästa datum; inget sådant genomförande påstås från tekniska prov. Konkreta åtkomst-, dataförlust- och orderfel går före normal kö.
+
+---
+
+Historik före crm86 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm85 åtkomstkontroll under redigering
 
 Det konkret verifierade klientglappet är hanterat: dialog, inmatning, öppna informationsfält, inställningar och produktkatalog stoppar inte längre den återkommande åtkomstläsningen. Giltig ändrad användare, medlemskoppling, roll eller registrerat ansvar tas emot även vid oförändrad CRM-version. Faktiskt 401/403 spärrar tidigare arbetsvy. Vanliga datauppdateringar hålls fortsatt tillbaka under redigering.
