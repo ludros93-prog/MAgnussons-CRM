@@ -1,3 +1,15 @@
+# Principer – crm90 uppgiftsidentitet och nästa handling
+
+Fyra färska officiella artikelkroppar fick faktisk HTTP 200 och sju korta exakta utdrag återlästes mot sparade bodies; privat kvitto `fed8f84f9c05d635f91ce497ff7fdbbeedd86c7a1a06a52563c321f6362ca5e9`. [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer objektåtkomst från postbehörighet. [Salesforce Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) beskriver egna uppgifter i kund-/affärssammanhang och prioriterad nästa handling. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer user/coworker och beskriver stabila Object ID:n. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet på sin officiella marknadssida.
+
+Magnussons exakta medlems-ID-/profil-ID-urval, aktuellt giltigt äldre kundansvar, separat personligt respektive profilbaserat teamurval och oförändrad resultatgrind är egna kontrakt och produktval. Limes dokumenterade first-match-beteende införs inte. Källorna bevisar ingen integration, egen kontoinloggning, personalacceptans eller CRM-sparning.
+
+Källorna används för kundsammanhang, tydlig nästa handling och åtskild identitet/behörighet. Den tekniska slutverifieringen finns i [VALIDATION.md](../VALIDATION.md).
+
+---
+
+Historik före crm90 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer – crm89 profilidentitet och aktivitetskontext
 
 Fyra färska officiella artikelkroppar fick faktisk HTTP 200 och sju korta exakta utdrag återlästes mot sparade bodies; privat kvitto `a142ce998c9149e02aa7acc7841dfbbc9ba9152a2f3124d525d4bbd686cdada3`. [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer objektåtkomst från postbehörighet. [Salesforce Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) beskriver uppgifter och möten i kund-/affärssammanhang och prioriterad nästa handling. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer user/coworker och beskriver stabila Object ID:n. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet på sin officiella marknadssida.

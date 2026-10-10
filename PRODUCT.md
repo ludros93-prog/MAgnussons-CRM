@@ -1,3 +1,21 @@
+# Produktkvittens – uppgifter och förseningsantal i Resultat
+
+I **Mitt resultat** följer öppna uppgifter nu den befintliga personliga profilens stabila ID. Äldre uppgifter utan profil-ID följer kontots aktuella giltiga kundansvar. Om kontots kundansvar ändras flyttas därför inte profilkopplade uppgifter till en annan person, och ett saknat eller borttaget kundansvar döljer inte egna profilkopplade uppgifter.
+
+**Kräver uppmärksamhet** använder samma personliga uppgiftsurval för dagens antal, försenade aktiviteter och de tre första uppgiftsraderna. Avvikande profil-/kundansvar eller saknat giltigt kundansvar ger konkreta besked om **synligt urval** och befintlig administrativ hjälp. Teamets försenade uppgifter räknas per faktisk profil, även för historiskt inaktiv profil; uttryckligt teamurval behåller alla öppna uppgifter.
+
+Resultatets befintliga grind vid saknad egen resultatprofil består: där visas inga personliga försäljningssiffror eller den personliga uppgiftsdelen. Ett domänprov av ett tomt profilurval betyder inte att denna uppgiftsdel kan nås i användargränssnittet. Ingen personkoppling eller behörighet skapas genom urvalet.
+
+De 26 andra resultatfälten, finansiella beräkningarna, huvudmåttens JSX och befintlig navigering bevaras. Försäljning följer fortsatt registrerade fakturor och ansvar vid fakturaregistrering; marginal använder registrerade kostnader och saknad kostnad förblir okänd. Månads-/årsmål och nya kvalificerade prospects behåller sina tidigare definitioner. Ändringen omfattar uppgiftsurval och uppgiftsantal, inte övrig operativ ID-migrering, Outlook-kalendern eller personalöverlämning.
+
+Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects. TB är inget huvudmått. Serverroller, privat kommunikation och utkast, atomiska skrivningar, CAS och idempotens bevaras.
+
+Gröna syntetiska domän-, komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, sparade riktiga kunduppföljningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+---
+
+Historik före crm90 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produktkvittens – personliga CRM-aktiviteter
 
 Kalenderns **Kundmöten i CRM** och **Aktiviteter** använder nu den personliga profilens stabila ID före äldre namnansvar. Kontots exakta medlems-ID-länk avgör den egna profilen i aktuell arbetsyta. En annan persons uppgift med samma namnansvar blir inte egen genom namnlikheten. Äldre aktiviteter utan profil-ID följer fortsatt det faktiskt giltiga kundansvaret.

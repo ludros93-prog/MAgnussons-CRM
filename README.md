@@ -1,3 +1,19 @@
+# Magnussons CRM – egna uppgifter i Resultat
+
+I **Mitt resultat** följer öppna uppgifter nu den befintliga personliga profilens stabila ID. Äldre uppgifter utan profil-ID följer kontots aktuella giltiga kundansvar. Om kontots kundansvar ändras flyttas därför inte profilkopplade uppgifter till en annan person, och ett saknat eller borttaget kundansvar döljer inte egna profilkopplade uppgifter.
+
+**Kräver uppmärksamhet** använder samma personliga uppgiftsurval för dagens antal, försenade aktiviteter och de tre första uppgiftsraderna. Avvikande profil-/kundansvar eller saknat giltigt kundansvar ger konkreta besked om **synligt urval** och befintlig administrativ hjälp. Teamets försenade uppgifter räknas per faktisk profil, även för historiskt inaktiv profil; uttryckligt teamurval behåller alla öppna uppgifter.
+
+Testad kandidat `cdc032f7588e32b2ccd3a6e3754398f5f6fcd203`, träd `a859365e228eadd8a730aa566b1d12e78c1d6654`; [app-PR #156](https://github.com/ludros93-prog/MAgnussons-CRM/pull/156).
+
+GitHub app-main `78a8518111eb5ff4aaf3bd159fad0cb84d5a8d97`. Sites-source `be802c0b5133e9a8f8ba62e85940543ee9f9afe6` har exakt samma testade träd och samtliga 389 spårade paths, modes och blobs; verkliga föräldrar är tidigare v86-source `c9c95beb8b5c34372192a959631866d587f07fda` och app-main. Live **v87** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6aca29f6a3d88191a13c46fdc2acc63d`: separat återläst `succeeded`, faktisk `updated_at` `2026-10-10T12:05:22.286862+00:00` och efterkontroll `2026-10-10T12:05:44+00:00`, med samma source/version/URL.
+
+Produktgränser, prov och drift finns i [PRODUCT.md](PRODUCT.md), [VALIDATION.md](VALIDATION.md) och [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm90 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – egna kundmöten och aktiviteter
 
 Kalenderns **Kundmöten i CRM** och **Aktiviteter** använder nu den personliga profilens stabila ID före äldre namnansvar. Kontots exakta medlems-ID-länk avgör den egna profilen i aktuell arbetsyta. En annan persons uppgift med samma namnansvar blir inte egen genom namnlikheten. Äldre aktiviteter utan profil-ID följer fortsatt det faktiskt giltiga kundansvaret.

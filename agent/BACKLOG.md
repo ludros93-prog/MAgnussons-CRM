@@ -1,3 +1,19 @@
+# Arbetskö – crm90 Resultatets uppgiftsansvar
+
+I **Mitt resultat** följer öppna uppgifter nu den befintliga personliga profilens stabila ID. Äldre uppgifter utan profil-ID följer kontots aktuella giltiga kundansvar. Om kontots kundansvar ändras flyttas därför inte profilkopplade uppgifter till en annan person, och ett saknat eller borttaget kundansvar döljer inte egna profilkopplade uppgifter.
+
+**Kräver uppmärksamhet** använder samma personliga uppgiftsurval för dagens antal, försenade aktiviteter och de tre första uppgiftsraderna. Avvikande profil-/kundansvar eller saknat giltigt kundansvar ger konkreta besked om **synligt urval** och befintlig administrativ hjälp. Teamets försenade uppgifter räknas per faktisk profil, även för historiskt inaktiv profil; uttryckligt teamurval behåller alla öppna uppgifter.
+
+B01:s avgränsade Resultat-lucka för uppgiftsurval och förseningsantal är levererad. Övrig UUID-/aliasmigrering och fullständig identitets-/personalöverlämning kvarstår. B02:s chefsroll, B04:s separata privata driftkopior och full hostad återställning, B05:s återstående privata utkast-/överlämningsflöden och B07:s verkliga personalpilot är fortsatt öppna.
+
+En behörig persons egen lyckade inloggning och sparad riktig uppföljning med nästa aktivitet/datum behöver fortfarande bekräftas av personen själv. Nästa oberoende kodförbättring väljs efter färsk inventering av kvarvarande ansvar, privata utkast och uppföljning; ingen ännu oprövad buggrättning eller kontoåtgärd påstås.
+
+App-PR #156, verifierade leveransrevisioner och provgränser finns i [STATUS-2026-10-05.md](../STATUS-2026-10-05.md) och [VALIDATION.md](../VALIDATION.md). Åtkomst-, dataförlust- och orderfel går före normal kö.
+
+---
+
+Historik före crm90 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm89 profilkopplad Kalender
 
 Kalenderns **Kundmöten i CRM** och **Aktiviteter** använder nu den personliga profilens stabila ID före äldre namnansvar. Kontots exakta medlems-ID-länk avgör den egna profilen i aktuell arbetsyta. En annan persons uppgift med samma namnansvar blir inte egen genom namnlikheten. Äldre aktiviteter utan profil-ID följer fortsatt det faktiskt giltiga kundansvaret.
