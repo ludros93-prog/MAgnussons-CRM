@@ -1,3 +1,21 @@
+# Bygglogg – crm97 äldre behovsansvar i personligt Årshjul
+
+Startbas är färsk main c9f6c3dcc4e1bb1f23dce052834204ea33560a18, träd ea7bed7d0fe1712b29c79d5932ac41aab9cc6769, 401 spårade filer. Inga öppna PR:er eller konkurrerande aktiva körningar syntes vid start. Egen branch/worktree och lokal atomisk reservation används. Crm96 är avslutad genom [PR #164](https://github.com/ludros93-prog/MAgnussons-CRM/pull/164): GitHub-main `c9f6c3dcc4e1bb1f23dce052834204ea33560a18`, Sites-source `e7eefa6b2641aa4f0ff2e007631f51d412a8e86e` och **live v93**. Dess slutleveranskvittens SHA-256 är `7b64e7633559aaca2fb0a2998bd597df914c1a2b88ce8d2e8c92300d2b63176b`; äldre pendingtexter nedan är bevarad historik.
+
+Baslinjens 14 frysta normaliserade fall visade nio urvalsavvikelser: äldre behov följde profilens historiska alias i stället för giltigt aktuellt kontoansvar, och saknad profilkoppling dolde även giltigt äldre ansvar. Kandidaten delar registrerat profilansvar och äldre operativt ansvar i en ren selector. Samma selector driver listor, sökning och antal; diagnos med adminhjälp beskriver kopplingsglapp som synligt urval. Kundkortets kompakta vy och backend-/skrivflöden ändras inte.
+
+24 riktade fall PASS med 39 byteverifierade produktionsmoduler, djupfrysta syntetiska indata och noll HTTP. De första två testharnessförsöken korrigerades för fixtureklassificering respektive tom operational-parent; produktförväntningarna sänktes inte. Granskning fann en personlig hjälptext i teamvyn som rättades; slutlig produktionsgranskning har inga blockers. Separat TypeScript PASS före frysning ersätter inte slutgrinden.
+
+Tre officiella artikelbodies lästes: Salesforce Record Access, Lime Users & Groups och Lime To-do. Fresh Saleshub-body eller Salesforce Transfer-read påstås inte. Se RESEARCH för källor och kvitto. Ordinarie native credential öppnade source läsande; samtliga 401 paths/moder/blobs och arbetsbytes matchade main-baslinjen. Ingen helperkörning eller ny beroendeinstallation påstås.
+
+Crm97:s fem slutkommandon, isolerad browser, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid denna dokumentfrysning. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+Syntetiska kontroller bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst. Inga mejl, konton, roller, agentinstruktioner, scheman eller aktiveringar ändras.
+
+---
+
+Historik före crm97 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm96 exakt valt anteckningsutkast
 
 Startbas är färsk GitHub-main `852c7bcdd5173450a79ae166c06f521bb1b1b0a0`, träd `584cc750406ab9348ac46709a6415127e511f678`, 400 spårade filer. Crm95 är avslutad genom [PR #163](https://github.com/ludros93-prog/MAgnussons-CRM/pull/163), Sites-source `630422e5bd40f60e06016a53b0bc3dec81d0c237`, live v92, terminal lyckad deploy 10 oktober 18:17:54 UTC. Slutleveranskvittots 20 refererade belägg återlästes och hashverifierades; äldre pendingtexter bevaras nedan.

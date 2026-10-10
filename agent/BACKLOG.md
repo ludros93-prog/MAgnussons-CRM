@@ -1,3 +1,17 @@
+# Arbetskö – crm97 personligt Årshjul, kandidat
+
+B01:s avgränsade äldre behovsansvar är rättat i kandidaten. Registrerade behov följer exakt medlemsprofil, äldre behov giltigt aktuellt kontoansvar; saknad eller motstridig koppling ger synligt urval. 24 riktade fall PASS. Team, kompakt kundvy, läsar-/tryck-/lagergränser och skrivflöden bevaras.
+
+Crm96 är avslutad genom [PR #164](https://github.com/ludros93-prog/MAgnussons-CRM/pull/164): GitHub-main `c9f6c3dcc4e1bb1f23dce052834204ea33560a18`, Sites-source `e7eefa6b2641aa4f0ff2e007631f51d412a8e86e` och **live v93**. Dess slutleveranskvittens SHA-256 är `7b64e7633559aaca2fb0a2998bd597df914c1a2b88ce8d2e8c92300d2b63176b`; äldre pendingtexter nedan är bevarad historik.
+
+Crm97:s fem slutkommandon, isolerad browser, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid denna dokumentfrysning. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+Nästa B01-del är separat inventering/ställningstagande till SalesDashboard:s personliga pipelineprojektion och kvarvarande identitets-/personalöverlämning. B02 förankrad chefsroll/personalmappning kräver faktiskt underlag. B04 privata driftkopior/full hostad återställning, B05 övriga privata specialflöden och B07 personens egen bekräftelse av inloggning samt sparad verklig uppföljning med nästa aktivitet/datum är öppna. Tillgängliga Sites-verktyg saknar D1/R2-snapshot/restore-operation. Akuta verifierade åtkomst-, dataförlust- och orderfel går före kön. Ingen personalacceptans härleds från syntetiska prov.
+
+---
+
+Historik före crm97 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm96 exakt valt privat anteckningsutkast
 
 Vald genomförbar B05-del: Min dag ska återuppta exakt valt privat anteckningsutkast även när samma kund har flera utkast. Faktisk läsande basreproduktion visade att det andra valet öppnade det första; det bevisar fel urval, ingen faktisk lagringsförlust. Kandidaten binder vald identitet till editor och sparning, avvisar saknat/avslutat/felkopplat val utan reservutkast och bevarar syskonutkast vid fel, dubbelklick och sena svar. 31 riktade parent-/React-/providerfall med isolerad SQLite har PASS. Slutprov, browser, exakt-head CI och faktisk main/live-leverans återstår; B05 markeras inte färdig här.

@@ -1,3 +1,17 @@
+# Magnussons CRM – crm97 personligt Årshjul, kandidat
+
+Mina behov ska följa rätt person även när kontots aktuella ansvar och säljarprofilens historiska alias skiljer sig. Registrerade behov följer exakt medlemskopplad profil; äldre behov utan profil-ID följer giltigt aktuellt kontoansvar. Samma läsurval används för kort, månadsantal, kontakta-nu, sökning och tomtexter. Kopplingsglapp beskrivs som synligt urval.
+
+24 riktade faktiska domän-/parent-/Reactfall PASS, 39 byteverifierade produktionsmoduler, noll HTTP. Serverroller, lagring, skrivflöden och privata utkast ändras inte. Se [VALIDATION](VALIDATION.md).
+
+Crm96 är avslutad genom [PR #164](https://github.com/ludros93-prog/MAgnussons-CRM/pull/164): GitHub-main `c9f6c3dcc4e1bb1f23dce052834204ea33560a18`, Sites-source `e7eefa6b2641aa4f0ff2e007631f51d412a8e86e` och **live v93**. Dess slutleveranskvittens SHA-256 är `7b64e7633559aaca2fb0a2998bd597df914c1a2b88ce8d2e8c92300d2b63176b`; äldre pendingtexter nedan är bevarad historik.
+
+Crm97:s fem slutkommandon, isolerad browser, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid denna dokumentfrysning. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+---
+
+Historik före crm97 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – crm96 valt privat anteckningsutkast, kandidat
 
 När ett privat anteckningsutkast väljs i Min dag ska kundkortet öppna exakt det valda utkastet. Två utkast för samma kund får inte förväxlas. Ett saknat, avslutat eller felkopplat valt utkast ger ett tydligt besked och vägen tillbaka till Min dag. Vanlig öppning av kundens anteckningar behåller sitt befintliga beteende.

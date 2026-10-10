@@ -1,3 +1,19 @@
+# Produkt – crm97 rätt ansvar i Mina behov
+
+Fulla Årshjulet skiljer registrerat profilansvar från äldre operativt ansvar. Ett exakt profil-ID jämförs med arbetsytans medlemskopplade profil, även om profilen är inaktiv; äldre blankt profil-ID kräver giltigt aktuellt kontoansvar. Namnlikhet, saknad länk eller `_unassigned` skapar inget personligt ansvar. Kopplingsglapp förklaras före listor och antal med vilket urval som faktiskt syns.
+
+Samma urval gäller månadsrutor, kontakta-nu, full lista, hanterade behov, år och sökning. Teamvyn visar teamets serveråtkomliga behov. Kundkortets kompakta Årshjul behåller kundens samtliga planerade behov. Läsaren behåller sin läsvy utan skrivknappar; tryck och lager behåller operativa arbetsköer. Administratörens hjälpingång öppnar befintliga konton eller profilinställningar. Den ändrar ingen behörighet.
+
+Editor, ansvaröverföring, Skapa affär, lagring, CAS och idempotens består. Pipeline-, mål-, marginal- och affärsdefinitioner ändras inte; huvudmåtten är försäljning mot månads-/årsmål, marginal och nya prospects.
+
+Crm96 är avslutad genom [PR #164](https://github.com/ludros93-prog/MAgnussons-CRM/pull/164): GitHub-main `c9f6c3dcc4e1bb1f23dce052834204ea33560a18`, Sites-source `e7eefa6b2641aa4f0ff2e007631f51d412a8e86e` och **live v93**. Dess slutleveranskvittens SHA-256 är `7b64e7633559aaca2fb0a2998bd597df914c1a2b88ce8d2e8c92300d2b63176b`; äldre pendingtexter nedan är bevarad historik.
+
+Crm97:s fem slutkommandon, isolerad browser, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid denna dokumentfrysning. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+---
+
+Historik före crm97 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produkt – crm96 exakt valt privat anteckningsutkast, kandidat
 
 Min dag → privat anteckningsutkast ska öppna det utkast användaren faktiskt valde, även när kunden har flera egna anteckningsutkast. Kandidaten använder valt ID för editor, privat flush och efterföljande CRM-sparning. Rå text, titel, kontaktmarkering och nästa steg ändras inte av öppningen. Saknat, avslutat eller felkopplat val öppnar ingen annan anteckning; användaren får ett statusbesked och vägen Till Min dag.
