@@ -1,3 +1,17 @@
+# Produktkvittens – begriplig kopplingshjälp i Min dag
+
+I den egna arbetsdagen får ett konto med giltigt kundansvar ett synligt besked om säljarregistret är upprättat men kontots exakta medlems-ID saknar profilkoppling. Uppgifter och möten med profilansvar kan då saknas. Om en profil är kopplad men dess registrerade ansvar skiljer sig från kundansvaret, visas de två ansvaren var för sig och arbetet beskrivs som ett blandat synligt urval.
+
+Uppgifts-, mötes- och fokusvyn skiljer då **Inga uppgifter visas** från **Inget planerat**. Befintliga synliga aktiviteter är fortsatt tillgängliga inom sin faktiska behörighet. Diagnosen är ett lugnt statusbesked och flyttar inte fokus. Administratören kan välja **Öppna Mål & inställningar**; övriga får konkret hjälp att be en administratör kontrollera kopplingen.
+
+Ingen koppling eller överlämning sker automatiskt. Exakta stabila profil-ID:n, äldre namnansvar, befintliga filter och historisk resultatfördelning ligger kvar. En korrekt medlemskopplad historisk/inaktiv profil blir inte ett kopplingsfel enbart för att den är inaktiv. Teamurval och ännu ej initialiserade profiler behåller sina tidigare regler. Huvudmått är fortfarande försäljning mot månads-/årsmål, marginal och nya prospects.
+
+En kontolänk eller synlig kö bevisar ingen egen lyckad inloggning eller sparad verklig uppföljning. Kontorosterns kopplingsbesked, kopplad profil utan operativt ansvar och observerad personalpilot kräver fortsatt separat arbete. Faktiska slutprov och gränser finns i [VALIDATION.md](VALIDATION.md).
+
+---
+
+Historik före crm86 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produktkvittens – aktuell arbetsvy under redigering
 
 En administratörs ändring av CRM-konto, medlemskoppling, roll eller registrerat ansvar kan påverka en redan öppen arbetsvy utan att CRM:s dataversion ändras. CRM tar nu emot ett giltigt sådant färskt svar även när en dialog, öppna informationsfält, inmatning, inställningar eller produktkatalog annars pausar vanlig datauppdatering.

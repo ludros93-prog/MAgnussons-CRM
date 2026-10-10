@@ -1,3 +1,17 @@
+# Magnussons CRM – tydlig hjälp när Min dag saknar rätt koppling
+
+Min dag visar ett konkret besked när kontot har kundansvar men saknar registrerad koppling till en säljarprofil, eller när kopplad profil och kundansvar skiljer sig. En tom uppgifts- eller möteslista beskrivs då som ett synligt urval som kan vara ofullständigt. Administratören når befintliga Mål & inställningar; övriga får en konkret begäran om kontroll.
+
+Diagnosen skapar ingen koppling och ändrar varken ansvar, konton eller historiska försäljningsresultat. **Testad kandidat** `39159ca284b8edf01f61d4ca30ab5acf2219f25c`, träd `413cbf97a024320b25c163b8290126536c5d4b1a`; [app-PR #147](https://github.com/ludros93-prog/MAgnussons-CRM/pull/147).
+
+**App-main** `a6fa2fbdebb079d8b2764fe889ffa1a5cb84c250`. **Sites-source** `8a6bbbd98702e02fee3320a3a2539cd4f23e064f`, exakt testat träd 413cbf97a024320b25c163b8290126536c5d4b1a och samtliga 384 tracked-källfiler. Källbryggan bevarar två verkliga föräldrar: tidigare Sites-source 95d473e5ed8704651902ec7455afabbc3259b4b8 och verifierad app-main a6fa2fbdebb079d8b2764fe889ffa1a5cb84c250; inga extra appändringar. **Live v83** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6ac9d1842fcc8191acc33bc6b4c44bc8`: succeeded, därefter separat återläst via get_deployment_status och get_site_version med samma version/source/deployment och live-URL; privat leveranskvittots SHA-256 167c5d9b20373d0d1369e9e62434e209e728fd30d5e218ef187881c9871c898c.
+
+Produktgränser finns i [PRODUCT.md](PRODUCT.md), prov i [VALIDATION.md](VALIDATION.md), leveransrevisioner i [STATUS-2026-10-05.md](STATUS-2026-10-05.md) och drift i [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm86 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – aktuell behörighet även under redigering
 
 CRM läser aktuell konto-/rollprojektion även när en dialog, ett öppet informationsfält eller fokuserad inmatning håller vanlig datauppdatering pausad. Ett giltigt färskt konto-/rollbyte uppdaterar arbetsvyn även utan ny CRM-version. Ett faktiskt 401/403-svar från CRM visar en konkret inloggnings-/åtkomstspärr med **Försök igen**.
