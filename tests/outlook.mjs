@@ -87,3 +87,6 @@ await (await import('./customer-issue-scope.mjs')).verifyCustomerIssueScope();
 
 // Personal Offers uses exact member-linked responsibility with honest subset guidance.
 await (await import('./deal-scope.mjs')).verifyDealScope();
+
+// Personal Orders and receipt work follow the order's exact member-linked responsibility.
+await (await import('./order-scope.mjs')).verifyOrderScope();
