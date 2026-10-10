@@ -1,3 +1,27 @@
+# Driftkvittens – crm85 med oförändrat datakontrakt
+
+**Testad kandidat** `ccf4abb855ace2ad488ae4bee7f005018557a325`, träd `764bb9f1bfecb33dd2e1f36cf9174d841a09e173`; [app-PR #145](https://github.com/ludros93-prog/MAgnussons-CRM/pull/145).
+
+**App-main** `4628ab93564b3e0a693a26ea010d0825b74f4088`. **Sites-source** `95d473e5ed8704651902ec7455afabbc3259b4b8`, samma träd och 383 spårade paths, modes och blobs som testad kandidat/app-main. **Live v82** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6ac9b8d9ef988191b7cf9c0b774e6d59`: terminal `succeeded`, återläst `2026-10-10T04:03:07.225215+00:00`.
+
+Sites-source är en verifierad tvåföräldrabrygga från faktiskt tidigare v81-source `451f1491587e3c97c8f15fc0cdb20a04429ebe1c` och app-main `4628ab93564b3e0a693a26ea010d0825b74f4088`. Faktisk vanlig fast-forward-push och fjärråterläsning verifierar exakt testat träd och 383 spårade paths, modes och blobs, utan extra appändringar, force-push eller automatisk privat publicering. Privata källproveniensens SHA256 är `20b86cd56332a8944d89c9a8819f4110ef089b4f09c465f43e59f558b8012cba`; push-/återläskvittots `db1e705247ee9266e33dfec9b1947ca99b2fc1523422f7ad4ccf3cc10f2dcf5e`.
+
+Stödd Sites-helper saknades; befintlig spårad Sites/Vinext-byggintegration och lokalt native tarpaket användes. Sourcebygget passerade med faktisk exit 0 utan källändring. Jämförelse av testbygget och sourcebygget gav 78 råa lika filer och 27 skillnader i paths eller bytes. Efter uttrycklig normalisering enbart av identifierade genererade bygg-ID:n/chunkreferenser och namngivna prerender-/draftmode-/revalidationfält matchar samtliga 105 paketerade filer; inga godtyckliga UUID-/hashliteraler maskeras. Privat slutkvitto `generated-build-comparison-final.json` har SHA256 `06f25d8658fa3bb22eecf2c089e45f80188ae9aad44298c9661a93c97684aa0c`. Det första 103-filsresultatet med `pass: false` är bevarat separat. Normaliserad likhet är inget rått binäridentitetsbevis, inget nytt runtimeprov och ingen nedladdad hostad artefakt. Deploy `appgdep_6ac9b8d9ef988191b7cf9c0b774e6d59` återlästes terminal `succeeded`, med native `updated_at` `2026-10-10T04:02:42.805068+00:00`.
+
+Fullständig kanonisk före-/efterjämförelse bevarar begränsad `custom`-delning (policyrevision 2), hela runtime-konfigurationen (revision 1), samma auth-klient, 0 automations och samma live-URL. Privat `hosting-postdeploy.json` har SHA256 `4f5aa6c0281ef4c20f5c2463963ffc6d54348741cb14d3cce35f65de86434d3d`. Metadata verifierar ingen personlig CRM-roll eller inloggning.
+
+102 skyddade backend-/lagrings-/API-/migrations-/hosting-/byggberoendefiler är byteidentiska med faktiskt föregående v81-source `451f1491587e3c97c8f15fc0cdb20a04429ebe1c`, inklusive sex SQL-migrationer och hostingbindningen. Privat `protected-identity.json` har SHA256 `e8c6d7f4711484d072064f05886b5072d563ec9046d5ef02a86928b9b87b3657`. Ingen ny datamodell, auditvariant, SQL-migration eller API-väg införs. Klientens aktuella åtkomstläsning använder befintlig GET; den ändrar inte serverroller, atomiska skrivningar, CAS eller idempotens.
+
+Efter tidigare `commercial_task`-audit krävs fortsatt crm82-kompatibel läsare och skrivare. Föregående v81 är datakompatibel enligt källidentiteten; live-rollback till den har inte provats. v78 är inget säkert direkt rollbackmål. Föredra kompatibel framåträttning; äldre backend kräver separat verifierad full kopia före nya auditer och bedömning av mellanliggande arbete. Gemensam CRM-backup ersätter inte konton, privata utkast eller Outlook. Full hostad databas-/fil-/versions-/länkåterställning och live-rollback är oprövade.
+
+Det faktiskt inlämnade lokala tarpaketet omfattar 105 filer/6 082 560 byte och SHA256 `fdbac7a56edf08db4f522b1e6dd5c208e0751f325287ec895754ac228d26ed89`. Återläst metadata för sparad Sites-version 82 anger 105 filer/5 980 160 byte och `sha256:8877236eadfdf08987744ed0d0e82704e35c66b9763b5956efafc186d43a3ec2`. Faktisk `download_file` för det nya arkivets fil-ID svarade exakt `file could not be authorized or resolved`. Sparade arkivbytes och likhet med det lokala paketet är därför inte oberoende verifierade. Källrevision, lokal paketering, sparad källanknytning och terminal deploy är skilda belägg. Privat `saved-version-readback.json` har SHA256 `0a29dc39c413a1d9bd3ce2a73235284198039fa7c7bd07b4117e4b776dbf6558`.
+
+Kod, GitHub-main och faktiskt publicerad Site redovisas separat. En efterföljande dokumentationsrevision kräver egna obligatoriska checks/exakt-head CI men ingen extra appversion. Metadata visar ingen personlig CRM-roll, inloggning, personalacceptans eller fungerande integration. Kontrollomfattning finns i [VALIDATION.md](VALIDATION.md).
+
+---
+
+Historik före crm85 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Driftkvittens – crm84 med bibehållet datakontrakt
 
 **Testad kandidat** `d81b55c368ba539fab82bb960e32c470aee68626`, träd `e126a33040b8df7238ff07555410704e191894b4`; [app-PR #143](https://github.com/ludros93-prog/MAgnussons-CRM/pull/143).

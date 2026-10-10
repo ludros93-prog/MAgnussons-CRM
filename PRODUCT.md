@@ -1,3 +1,19 @@
+# Produktkvittens – aktuell arbetsvy under redigering
+
+En administratörs ändring av CRM-konto, medlemskoppling, roll eller registrerat ansvar kan påverka en redan öppen arbetsvy utan att CRM:s dataversion ändras. CRM tar nu emot ett giltigt sådant färskt svar även när en dialog, öppna informationsfält, inmatning, inställningar eller produktkatalog annars pausar vanlig datauppdatering.
+
+Åtkomstläsningen försöks var 30:e sekund i synlig flik samt när fokus eller synlighet återkommer. Högst ett återkommande försök är igång; ett hängande försök avbryts efter 15 sekunder så att ett senare försök kan göras. Dold flik och pågående sparning pausar kontrollen. Nätfel och uteblivet giltigt svar kan fördröja uppdateringen; någon fast återkallelsetid garanteras inte.
+
+Ett aktuellt konto-/rollbyte stänger tidigare dialoger och rensar vyns tillfälliga underlag. Faktiskt 401 visar **Din inloggning behöver kontrolleras. Logga in igen och välj Försök igen.** Faktiskt 403 visar **Ditt konto saknar åtkomst till arbetsytan. Be administratören kontrollera kontot och välj sedan Försök igen.** Arbetsvyn ersätts då av befintlig startspärr. Tillfälligt läsfel blir ingen påhittad behörighetsförlust och behåller nuvarande arbetsyta.
+
+Vanlig högre dataversion ersätter inte pågående redigering. Föråldrade svar efter sparning, explicit återläsning eller byte av konto/arbetsyta kan inte återställa gammal vy. Ett sent POST-svar från tidigare arbetsyta återöppnar inte dess formulär i den nya arbetsytan. Serverns befintliga åtkomst- och skrivkontroller avgör fortsatt vilka handlingar som är tillåtna; klientkontrollen ger ingen ny roll.
+
+Sparade privata utkast följer sina befintliga konto-/rollkontrakt. Ingen generell bevaring av osparad text över åtkomst- eller identitetsbyte påstås. Isolerade prov och deras gränser finns i [VALIDATION.md](VALIDATION.md); leveransrevisionerna i [STATUS-2026-10-05.md](STATUS-2026-10-05.md).
+
+---
+
+Historik före crm85 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produktkvittens – ansvarshistorik även efter uppgiftsavslut
 
 Administratören kan i kundkortets **Överblick** öppna **Avslutade uppgifter med ansvarshistorik** och välja **Visa ansvarshistorik** för en avslutad uppgift med faktiskt registrerad audit. Läsningen använder befintlig sparad historik utan ny sparning.

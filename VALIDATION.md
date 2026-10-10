@@ -1,3 +1,37 @@
+# Validering – crm85 aktuell behörighet under redigering
+
+**Testad kandidat** `ccf4abb855ace2ad488ae4bee7f005018557a325`, träd `764bb9f1bfecb33dd2e1f36cf9174d841a09e173`; [app-PR #145](https://github.com/ludros93-prog/MAgnussons-CRM/pull/145).
+
+Fem obligatoriska kommandon passerade med faktisk exit 0 på ren, byteoförändrad appkandidat, avslutat `2026-10-10T03:37:02.319237+00:00`: regressioner, TypeScript utan incremental, produktionsbygge, byggd isolerad runtime och `git diff --check`. Privat `checks-app/checks.json` har SHA256 `cd1f820b5f41e4f7b1a697419af426f29b51fd4b97ea661ccc6b07bf1bdaf4d9`. [Exakt-head CI 38020630290](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38020630290) återlästes `completed/success` för samma kandidathead, jobb 114120630972 med åtta föreskrivna workflowsteg och samtliga 13 faktiska jobbsteg gröna. Privat CI-kvitto har SHA256 `3f6755c93f2af8a60fef09caf8c47219feae4239b2c50a0938a03c93ff4f62d3`.
+
+- `node tests/outlook.mjs`: exit 0, log-SHA256 `11a0b4d118046363f9bf5148ca5294997eb4d903e80f1a6d341b9a403bee8aa9`.
+- `node node_modules/typescript/bin/tsc --noEmit --incremental false`: exit 0, log-SHA256 `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+- `corepack pnpm build`: exit 0, log-SHA256 `da6f65c71adbb74d3c5e8bde512a8634e891c4328b262552ae31b09bc73804f8`.
+- `node tests/runtime-smoke.mjs`: exit 0, log-SHA256 `cbf46e83d23640592884a586279471b643a54a77fdd5845ebbc1463d18110601`.
+- `git diff --check`: exit 0, log-SHA256 `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+
+Det faktiska gamla pollingblocket från main `7ef967bc15a614735b5b9f4ab6986817affbc9de` togs ut oförändrat via AST och kördes efter TypeScript-transpilering genom React med syntetisk transport/DOM/tid. Åtta fall gav sju observerade brister: öppen dialog stoppar åtkomst-GET, ändrad id/member/role/owner med samma CRM-version ignoreras samt 401/403 lämnar tidigare tillstånd kvar. Högre vanlig dataversion var positiv kontroll. Detta är ett baselineprov, inte ett verkligt konto- eller browserprov. Privat `tests/old-poll-receipt.json` har SHA256 `7d25039849489d6b44b35bf4a309b03273d321af145fb1f4530bd77f4e3d37fd`.
+
+31 isolerade grupper körde den faktiska React-hooken med syntetisk transport, DOM och tid. De omfattar alla UI-pauser, samma-version-id/member/role/owner, 401/403, tillfälliga fel, överlappande händelser, synlighet/fokus, sparning, föråldrade svar, timeout, arbetsyte-/identitetsbyte, StrictMode och cleanup. Separat direktkörning av `node tests/crm-poll.mjs` gav faktisk exit 0; privat `tests/crm-poll-final.json` har SHA256 `f1fb037a90141e5fc20c04eaeaffdd452b7cfb0698f5e53b79f166e4e9131eb7`. Hooktesterna använder styrda händelser och bevisar inga native browser-fokus-/synlighetshändelser eller verkliga konton.
+
+13 distinkta positiva native Chromium-fall mot byggd lokal Worker och isolerad syntetisk D1/R2 slutfördes i tre bidragande körningar: 6 fall i en bevarad `INTERRUPTED_HARNESS`, 5 i en bevarad `FAIL` och 2 i en terminal `PASS`. Det är ingen enskild oavbruten 13-falls-PASS. 30 oförändrade nativebilder och faktisk rootbildgranskning ingår. Fallen omfattar rollbyten under pausad UI, faktisk 401/403, ett sparat privat uppföljningsutkast, privat Outlook-fixtur och gamla GET-/settings-POST-svar över arbetsytebyte. Alla positiva fall återställde individuellt 18 råtabeller och R2 exakt; bara sista tvåfalls-PASS har terminal baslinjelikhet för hela försökslagret. Source/build är oförändrade i de tre körningarna. Privat aggregat `browser/completed-case-set-receipt.json` har SHA256 `edd657122cd75f7ec6e4c5377b7b53301424ff9eef5520b3f224b61f219aef94`.
+
+Native browserprov använder oförändrade verkliga 30-sekundersintervall. Verkliga fokus-/synlighetshändelser i browsern är inte belagda; en tidigare headless bring-to-front-händelse emitterade inget fokusevent. Fokus-/synlighetslogiken prövas separat i de styrda React-livscykelproven. 11 observerade oförändrade native 30-sekundersintervall och ytterligare ett faktiskt Worker-GET-svar som hölls över arbetsytebyte ingår. En 503-respons och kvittensfördröjning av ett faktiskt GET respektive två faktiskt utförda settings-POST är uttryckligt märkta transportadapters. Ett privat draft-POST och två settings-POST gjordes enbart i syntetiska lokala data; inga browser-POST till kund/order/Outlook eller hostade kund-/order-/kontoskrivningar gjordes. Sparad privat text provas i sitt särskilda fall; ingen generell retention över åtkomstbyte påstås. Nativevyerna är 390/1280 px; full WCAG-, fysisk telefon-, skärmläsar- och OS-/browserzoomacceptans påstås inte. Root granskade faktiska oförändrade browserbilder, privat kvitto SHA256 `6670acdb2c775b56799ef55d077f5520a9fd9432191594b131a34a510c5cc4f2`.
+
+Sex misslyckade eller avbrutna harnesskörningar och en separat navigationdiagnostik bevaras med ursprungliga statusar; de räknas inte om till terminal PASS. Ofullständiga försökslager avvecklades, utan påstående om terminal helstore-baslinjelikhet i de två partiella bidragande körningarna. Åtta återlästa launch-städkvitton verifierar stängda egna portar, borttagna egna stores och inga levande fångade resurser. Kvittona innehåller 23 observationer av avslutade ej reapade Z/FDSize0-processer över körningarna; ingen fullständig PID-frånvaro eller åtgärd mot PID1/främmande processer påstås.
+
+Ordinarie obligatoriska regressioner omfattar 40→45, 50→48 med uttryckligt dokumenterat syntetiskt godkännande, kassation, delleverans och dubbelklick. Serverroller, CAS, idempotens och privata lagringsgränser prövas i befintliga isolerade sviter; inget verkligt kundgodkännande skapas.
+
+102 skyddade backend-/lagrings-/API-/migrations-/hosting-/byggberoendefiler har identiska paths, modes, blobs, SHA256 och bytes mot faktiskt föregående v81-source `451f1491587e3c97c8f15fc0cdb20a04429ebe1c`, inklusive sex SQL-migrationer och hostingbindningen. Privat `protected-identity.json` har SHA256 `e8c6d7f4711484d072064f05886b5072d563ec9046d5ef02a86928b9b87b3657`. Ingen ny datamodell/auditvariant, SQL-migrering eller API-väg införs. Källidentitet är separat från runtime- och restoreprov. Efter tidigare `commercial_task`-audit krävs fortsatt crm82-kompatibel läsare och skrivare; v78 är inget säkert direkt rollbackmål. Full hostad återställning och live-rollback är oprövade.
+
+Återläsning är en återkommande klientkontroll när fliken är synlig och sparning inte pågår. Synlighets-/spar-/transportvillkor och misslyckat serversvar innebär att varken omedelbar återkallelse eller ett 30-sekundersmaximum kan garanteras. Förnekad eller ändrad åtkomst rensar tidigare vyns tillfälliga underlag; generell bevaring av osparad text över denna gräns påstås inte.
+
+Gröna syntetiska prov är inga personliga inloggningar, personalacceptans, riktig kundacceptans, fungerande Outlook/Fortnox, full WCAG-, fysisk telefon-, skärmläsar- eller OS-/browserzoomacceptans. Inga riktiga kundorder används för skrivprov. Refererad Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom relevant `read_thread` saknas; explicit brief och färsk repo-main används. Main/live/source, policy-/arkivbevis och återställningsgränser finns i [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm85 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm84 läsning av avslutade uppgifters audit
 
 **Testad kandidat** `d81b55c368ba539fab82bb960e32c470aee68626`, träd `e126a33040b8df7238ff07555410704e191894b4`; [app-PR #143](https://github.com/ludros93-prog/MAgnussons-CRM/pull/143).

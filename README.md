@@ -1,3 +1,17 @@
+# Magnussons CRM – aktuell behörighet även under redigering
+
+CRM läser aktuell konto-/rollprojektion även när en dialog, ett öppet informationsfält eller fokuserad inmatning håller vanlig datauppdatering pausad. Ett giltigt färskt konto-/rollbyte uppdaterar arbetsvyn även utan ny CRM-version. Ett faktiskt 401/403-svar från CRM visar en konkret inloggnings-/åtkomstspärr med **Försök igen**.
+
+Kontrollen försöks var 30:e sekund i synlig flik samt vid fokus och återkomst till fliken. Nätfel, dold flik och pågående sparning innebär att någon fast tidsgräns för uppdateringen inte kan garanteras.
+
+**App-main** `4628ab93564b3e0a693a26ea010d0825b74f4088`. **Sites-source** `95d473e5ed8704651902ec7455afabbc3259b4b8`, verifierat mot testad kandidats träd. **Live v82** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site): deployment `appgdep_6ac9b8d9ef988191b7cf9c0b774e6d59`, terminal `succeeded`, återläst `2026-10-10T04:03:07.225215+00:00`.
+
+Beteende och gränser finns i [PRODUCT.md](PRODUCT.md), leveransrevisionerna i [STATUS-2026-10-05.md](STATUS-2026-10-05.md), prov i [VALIDATION.md](VALIDATION.md) och drift i [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm85 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – avslutade uppgifters ansvarshistorik
 
 Administratören kan i kundkortets **Överblick** öppna **Avslutade uppgifter med ansvarshistorik** och välja **Visa ansvarshistorik** för en avslutad uppgift med faktiskt registrerad audit. Läsningen använder befintlig sparad historik utan ny sparning.

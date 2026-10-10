@@ -1,3 +1,21 @@
+# Bygglogg – crm85 aktuell behörighet under redigering
+
+Klientens återläsning skiljer nu aktuell åtkomst från vanlig datauppdatering. UI-redigering pausar vanlig datauppdatering, samtidigt som aktuell konto-/rollprojektion läses när fliken är synlig. Ändrad användare, medlemskoppling, roll eller registrerat ansvar tas emot även med samma CRM-version; faktiskt 401/403 stänger tidigare arbetsvy. Tillfälligt läsfel behåller arbetsytan. Sena svar efter sparning, explicit återläsning, arbetsyte-/identitetsbyte eller unmount kan inte ersätta nyare underlag.
+
+**Testad kandidat** `ccf4abb855ace2ad488ae4bee7f005018557a325`, träd `764bb9f1bfecb33dd2e1f36cf9174d841a09e173`; [app-PR #145](https://github.com/ludros93-prog/MAgnussons-CRM/pull/145). Fyra app-/testfiler ändras. Oberoende slutgranskning har inga kvarvarande blockerare; faktisk check-/CI-/browseromfattning finns i [VALIDATION.md](../VALIDATION.md).
+
+Fem obligatoriska kommandon passerade med faktisk exit 0 på ren, byteoförändrad appkandidat, avslutat `2026-10-10T03:37:02.319237+00:00`: regressioner, TypeScript utan incremental, produktionsbygge, byggd isolerad runtime och `git diff --check`. Privat `checks-app/checks.json` har SHA256 `cd1f820b5f41e4f7b1a697419af426f29b51fd4b97ea661ccc6b07bf1bdaf4d9`. [Exakt-head CI 38020630290](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38020630290) återlästes `completed/success` för samma kandidathead, jobb 114120630972 med åtta föreskrivna workflowsteg och samtliga 13 faktiska jobbsteg gröna. Privat CI-kvitto har SHA256 `3f6755c93f2af8a60fef09caf8c47219feae4239b2c50a0938a03c93ff4f62d3`.
+
+13 distinkta positiva native Chromium-fall mot byggd lokal Worker och isolerad syntetisk D1/R2 slutfördes i tre bidragande körningar: 6 fall i en bevarad `INTERRUPTED_HARNESS`, 5 i en bevarad `FAIL` och 2 i en terminal `PASS`. Det är ingen enskild oavbruten 13-falls-PASS. 30 oförändrade nativebilder och faktisk rootbildgranskning ingår. Fallen omfattar rollbyten under pausad UI, faktisk 401/403, ett sparat privat uppföljningsutkast, privat Outlook-fixtur och gamla GET-/settings-POST-svar över arbetsytebyte. Alla positiva fall återställde individuellt 18 råtabeller och R2 exakt; bara sista tvåfalls-PASS har terminal baslinjelikhet för hela försökslagret. Source/build är oförändrade i de tre körningarna. Privat aggregat `browser/completed-case-set-receipt.json` har SHA256 `edd657122cd75f7ec6e4c5377b7b53301424ff9eef5520b3f224b61f219aef94`.
+
+**App-main** `4628ab93564b3e0a693a26ea010d0825b74f4088`. **Sites-source** `95d473e5ed8704651902ec7455afabbc3259b4b8`, verifierat källträd `764bb9f1bfecb33dd2e1f36cf9174d841a09e173`. **Live v82**, deployment `appgdep_6ac9b8d9ef988191b7cf9c0b774e6d59`: terminal `succeeded`, återläst `2026-10-10T04:03:07.225215+00:00`.
+
+102 skyddade backend-/lagrings-/API-/migrations-/hosting-/byggberoendefiler är byteidentiska med faktiskt föregående v81-source. Ingen lagrings- eller API-ändring införs. Drift-/arkiv-/rollbackgränser finns i [OPERATIONS.md](../OPERATIONS.md). Syntetiska prov är inga personliga inloggningar eller personalacceptans; ingen rutinmässig fast återkallelsetid eller generell retention av osparad text över åtkomstbyte påstås.
+
+---
+
+Historik före crm85 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm84 avslutade kunduppgifters ansvarshistorik
 
 Administratören kan i kundkortets **Överblick** öppna **Avslutade uppgifter med ansvarshistorik** och välja **Visa ansvarshistorik** för en avslutad uppgift med faktiskt registrerad audit. Läsningen använder befintlig sparad historik utan ny sparning.
