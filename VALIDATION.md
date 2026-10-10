@@ -1,3 +1,17 @@
+# Validering – crm93 riktade ärendescopeprov
+
+Faktisk baseline och oberoende återkörning på main `b507044`, träd `a3df7dd`: 17 accepterade frysta normaliseringsfall, tre verkliga `visibleState`-avdelningsprojektioner och exakt parentgrind; 34 produktionsmoduler, 393 oförändrade arbetsfiler och noll HTTP/kund-/konto-/orderskrivningar. Saknat/borttaget giltigt kundansvar dolde den exakta medlemsprofilen. Accepterat äldre bokstavligt `_unassigned` adopterades; vanligt blankt ansvar provades separat. Fullt kvitto och failure-gränser finns i [agent/LOG.md](agent/LOG.md).
+
+44 nya ärendescopefall PASS med faktisk normalisering, domän, exakta parentuttryck och React: 37 bytekontrollerade moduler och noll HTTP. Befintliga onboarding 41/Kalender 40 PASS; båda riktade kommandona exit 0. Fallen omfattar ID/äldre alias, saknad länk utan lånad profil, inaktiv exakt profil, team/annat ansvar, sökning, arbetsyta, rollgrind, diagnos, antal/tomtext och bevarad kundportfölj. Visuella primitiv, oöppnade editorer och observerade callbacks är kontrollerade gränser; ingen native browser eller full CRM-root körs i dessa komponentprov. Första riktade försöket stoppades av felaktiga fixtureantal, korrigerade före andra godkända försöket; ingen produktdefekt påstås därifrån.
+
+Kandidatens fem obligatoriska kommandon enligt AGENTS/CI, slutligt isolerat native browserprov, gröna checks för exakt head, aktuell bas, merge, verifierad Sites-source och lyckad deploy återstår vid denna kvittens. Slutrevisionens faktiska belägg knyts i leverans-PR:ns body och taskresultat efter frysning. Föregående crm92:s gröna slutprov och v89-publicering är separat avslutade, se [LOG](agent/LOG.md) och [OPERATIONS](OPERATIONS.md).
+
+Syntetiska prov är inga riktiga kontoinloggningar, sparade verkliga kunduppföljningar, personal-/integrations- eller full hostingåterställningsprov. Ingen ny lagringsgräns införs; tidigare återgångsgränser finns i OPERATIONS. Codex-referensen är fortsatt oläst.
+
+---
+
+Historik före crm93 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # crm92 – mobilkort behöver ny slutverifiering
 
 Den första frysta onboardingkandidaten `a8b930defd5467cefdcb97fa25376dd5f26e9195` (träd `69ae7cbe35b82aaa311888d4c9c969c26a89c87e`) passerade samtliga fem obligatoriska kommandon på rena, oförändrade 393 källfiler: regression 91,86 s, TypeScript 11,95 s, bygge 10,35 s, isolerad Worker/D1/R2-runtime 447,84 s och diffkontroll 0 s, alla exit 0. Kontrollkvitto SHA-256 `079f35d08b905d99341b80ecc77cf815a72ac80ede3e2ac037c32afbf6370d69`.

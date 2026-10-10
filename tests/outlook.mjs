@@ -81,3 +81,6 @@ await (await import('./followup-draft-resume.mjs')).verifyFollowupDraftResume();
 
 // Personal onboarding follows immutable member-linked profile responsibility.
 await (await import('./onboarding-scope.mjs')).verifyOnboardingScope();
+
+// Personal customer issues follow exact profile responsibility independently of the customer portfolio.
+await (await import('./customer-issue-scope.mjs')).verifyCustomerIssueScope();

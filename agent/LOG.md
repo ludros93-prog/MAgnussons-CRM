@@ -1,3 +1,19 @@
+# Bygglogg – crm93 ärendescope
+
+Oberoende faktisk baseline på main `b507044781e9876ab873e0dc270e466376b68756`, träd `a3df7ddfe38eb4f5b8f41b4ef45b488b96a544aa`: 34 produktionsmoduler kompilerade i minne, 17 normaliserade frysta fall och tre faktiska `visibleState`-avdelningsprojektioner med exakt parentgrind. Blank/borttagen operativ koppling dolde personens exakta medlemsprofil; accepterat äldre bokstavligt `_unassigned` adopterades i stället, medan vanligt blankt ärendeansvar inte gjorde det. Alla 393 arbetsfiler bevarades; noll HTTP/CRM-/konto-/orderskrivningar. Root-kvitto SHA-256 `3d54903c119a4b6df078a840d9856c8b400ebd84069312d2023899c7326b1491`.
+
+Införd kandidat: ren `customer-issue-scope`-läsprojektion, personlig återgång i kundvårdens ansvarsväljare och ärendespecifik diagnos/antal/tomtext. Registrerade ID:n följer exakt medlemsprofil, äldre ärenden giltigt aktuellt alias; saknad länk lånar ingen profil. Oberoende läsgranskning bevarar kundportföljens fulla uttryck, kundrelationsgren, editor-/överföringsingångar, parentens roll-/avdelningsgrind och 102 befintliga skyddsfiler. Inga kvarstående kodanmärkningar; läsgranskningen är ingen runtimekontroll.
+
+44 nya faktiska domän-/parent-/React-fall PASS, 37 bytekontrollerade moduler och noll HTTP. Befintliga onboarding 41 och Kalender 40 PASS; två riktade kommandon exit 0. Första riktade försöket hade felaktiga fixtureförväntningar 6/6/4 mot kundportföljens faktiskt bevarade 7/7/5; förväntningarna korrigerades och andra försöket passerar. Detta är skilt från läsgranskningens första JSX-utdragsfel. Nya svitens logg-SHA-256 `2c346ed068f8fbf8277146634d7f02ac8cd40fba585939d4f4e7a4f041d9fd09`.
+
+Föregående crm92 är stängd via PR #160: dess fem slutkontroller, 41 riktade regressioner, 13 native appfall, 13 separat körda native sourcefall och exakt-head CI-run `38061062894` med 13 lyckade steg passerade. Kod/main/source/live v89 och identisk arkivhash är avstämda i [OPERATIONS](../OPERATIONS.md). Äldre pendingnoteringar nedan är historik. Crm93:s egen slutgrind och publicering återstår; slutbelägg förs till leverans-PR:ns body/taskresultat efter frysning.
+
+Ingen lagring, SQL, API, konto-, CRM-roll-, åtkomst- eller skrivväg ändras. Privata utkast, CAS, atomiska skrivningar och idempotens bevaras. Syntetiska prov styrker inte personlig inloggning, personalacceptans, ansluten integration eller full hostingåterställning. Inga riktiga kundorder eller externa meddelanden används. AGENTS/MISSION/RUNBOOK, schema, prompt och aktivering bevaras. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst; explicit brief och färsk main används. Kvarvarande prioriteringar finns i [BACKLOG](BACKLOG.md).
+
+---
+
+Historik före crm93 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # crm92 – mobilkort behöver ny slutverifiering
 
 Den första frysta onboardingkandidaten `a8b930defd5467cefdcb97fa25376dd5f26e9195` (träd `69ae7cbe35b82aaa311888d4c9c969c26a89c87e`) passerade samtliga fem obligatoriska kommandon på rena, oförändrade 393 källfiler: regression 91,86 s, TypeScript 11,95 s, bygge 10,35 s, isolerad Worker/D1/R2-runtime 447,84 s och diffkontroll 0 s, alla exit 0. Kontrollkvitto SHA-256 `079f35d08b905d99341b80ecc77cf815a72ac80ede3e2ac037c32afbf6370d69`.

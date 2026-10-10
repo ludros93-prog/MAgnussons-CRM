@@ -1,3 +1,15 @@
+# Arbetskö – crm93 personligt kundärendeurval
+
+Den avgränsade B01-kandidaten visar profilkopplade kundärenden via arbetsytans exakta medlemslänk även utan giltigt operativt kundansvar. Äldre ärenden kräver giltigt aktuellt alias; `_unassigned` adopteras inte som äldre ansvar. Saknad profil-/kontolänk eller avvikande ansvar förklaras som **synligt urval**. Kundrelationsgrenen behåller `customer.owner` och sina befintliga handlingar.
+
+Färsk main-bas `b507044781e9876ab873e0dc270e466376b68756` gav faktisk oberoende basreproduktion; 44 nya riktade fall och 41 onboarding-/40 Kalenderfall passerar. Fem slutkommandon, native browser, exakt-head CI, aktuell bas, merge/source/deploy återstår. Faktisk slutkvittens knyts i leverans-PR/taskresultat. Föregående crm92 är avslutad på live v89 via PR #160; äldre pendingnoteringar nedan är historik. Se [LOG](LOG.md), [VALIDATION](../VALIDATION.md) och [OPERATIONS](../OPERATIONS.md).
+
+B01 kvarstår för övriga operativa alias-/UUID-fall och fullständig identitets-/personalöverlämning. B02 separat chefsstöd, B04 privata driftkopior/full hostad återställning, B05 övriga privata specialflöden och B07 verklig konto-/personalpilot är öppna. En persons egen lyckade inloggning och sparad riktig uppföljning med nästa aktivitet/datum behöver fortfarande bekräftas av personen själv. Konkreta åtkomst-, dataförlust- och orderfel går före normal kö.
+
+---
+
+Historik före crm93 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # crm92 – mobilkort behöver ny slutverifiering
 
 Den första frysta onboardingkandidaten `a8b930defd5467cefdcb97fa25376dd5f26e9195` (träd `69ae7cbe35b82aaa311888d4c9c969c26a89c87e`) passerade samtliga fem obligatoriska kommandon på rena, oförändrade 393 källfiler: regression 91,86 s, TypeScript 11,95 s, bygge 10,35 s, isolerad Worker/D1/R2-runtime 447,84 s och diffkontroll 0 s, alla exit 0. Kontrollkvitto SHA-256 `079f35d08b905d99341b80ecc77cf815a72ac80ede3e2ac037c32afbf6370d69`.
