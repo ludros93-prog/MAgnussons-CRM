@@ -1,3 +1,13 @@
+# Arbetskö – crm94 avgränsat affärsurval
+
+B01-kandidaten rättar Offerter/Mina affärer och personlig resultat-ingång; registrerade affärer följer exakt medlemsprofil, äldre affärer giltigt aktuellt kontoalias. 45 faktiska domän-/parent-/Reactfall PASS; full slutgrind/publicering återstår. Föregående crm93 är avslutad på v90 via PR #161.
+
+Nästa konkreta B01-gränser är Orders/ReceiptQueue:s aliasurval och Årshjul:s äldre behovsansvar. SalesDashboard:s personliga pipelineprojektion kräver separat ställningstagande. B05: valt `noteDraft` kan öppna första privata anteckningen för samma kund i stället för vald; reproducerat utan skrivning. B04 full hostingåterställning/privata driftkopior och B07 personens egna bekräftelser om inloggning och verklig uppföljning med nästa aktivitet/datum är öppna. B02 chefsroll/personalmappning saknar förankrat underlag. Akuta åtkomst-, dataförlust- och orderfel går före kön.
+
+---
+
+Historik före crm94 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm93 personligt kundärendeurval
 
 Den avgränsade B01-kandidaten visar profilkopplade kundärenden via arbetsytans exakta medlemslänk även utan giltigt operativt kundansvar. Äldre ärenden kräver giltigt aktuellt alias; `_unassigned` adopteras inte som äldre ansvar. Saknad profil-/kontolänk eller avvikande ansvar förklaras som **synligt urval**. Kundrelationsgrenen behåller `customer.owner` och sina befintliga handlingar.

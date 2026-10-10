@@ -84,3 +84,6 @@ await (await import('./onboarding-scope.mjs')).verifyOnboardingScope();
 
 // Personal customer issues follow exact profile responsibility independently of the customer portfolio.
 await (await import('./customer-issue-scope.mjs')).verifyCustomerIssueScope();
+
+// Personal Offers uses exact member-linked responsibility with honest subset guidance.
+await (await import('./deal-scope.mjs')).verifyDealScope();

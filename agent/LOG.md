@@ -1,3 +1,17 @@
+# Bygglogg – crm94 affärsurval
+
+Bas `35fbf0b4086945c5f67e81753fcd56258f447b9a`/träd `dedd9c6bad7c2023368301528187027021718d9a`: scope-agentens åtta faktiska normaliseringsfall gav fem Offerter- och separat sju Årshjul-avvikelser. Oberoende inventering använde nio andra fall och gav sju respektive fem set-avvikelser; dessa antal slås inte ihop. Inventeringens första Årshjuljämförelse räknade sorteringsordning, korrigerat till set-jämförelse och bevarat i privat kvitto.
+
+Ren `deal-scope`-projektion och diagnostik införd; åtta isolerade faktiska Offerterfall PASS/34 moduler/noll HTTP eller CRM-skrivning, SHA `598715c4983b07ef53a1dc6eb88e578808d40b31348c081dc7e88d1b8bfe76f4`. Root:s 383 skyddsfiler och oberoende 41 namngivna funktioner bevaras; resultat-/pipelineberäkning, server/API/lagring och skrivflöden ändras inte. Åtta dokument får prefix med exakta gamla suffix/modes. 45 nya faktiska domän-/parent-/Reactfall PASS/34 moduler/noll HTTP; befintliga Kalender 40/kundärenden 44 PASS. Riktat testkvitto SHA `bf26033025a1814918d6fcd9776fc3e5a10eab505b6e5f0373ce0b3e7dea413c`. Fem slutkommandon, CI/browser/merge/deploy återstår; slutbelägg hör till fryst PR/taskresultat.
+
+Första frysta head `01a803ce17c98badf3e66ce81695afcd555e3fc9` avbröts i `node tests/outlook.mjs` med exit 1: det befintliga MyDay-profilprovets extraherade parentcallback saknade fri variabel `view` (`tests/my-day-profile-link.mjs:75/217`). Detta är ett testkontextfel; ingen produktdefekt, merge eller deploy påstås. Minimal faktisk parentkontext kompletteras i provet; de fem slutkommandona kräver ny frysning och full återkörning. Den tidigare skyddsgränsen 384 blir 383 när detta befintliga prov ändras.
+
+Crm93 är faktiskt avslutad: PR #161, kod `392fe68`/main `35fbf0b`/source `ee92013`/live v90; detaljer i OPERATIONS/VALIDATION. Inga riktiga ordertester, externa meddelanden eller mandat-/schemaändringar. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst; explicit brief och färsk repo används.
+
+---
+
+Historik före crm94 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm93 ärendescope
 
 Oberoende faktisk baseline på main `b507044781e9876ab873e0dc270e466376b68756`, träd `a3df7ddfe38eb4f5b8f41b4ef45b488b96a544aa`: 34 produktionsmoduler kompilerade i minne, 17 normaliserade frysta fall och tre faktiska `visibleState`-avdelningsprojektioner med exakt parentgrind. Blank/borttagen operativ koppling dolde personens exakta medlemsprofil; accepterat äldre bokstavligt `_unassigned` adopterades i stället, medan vanligt blankt ärendeansvar inte gjorde det. Alla 393 arbetsfiler bevarades; noll HTTP/CRM-/konto-/orderskrivningar. Root-kvitto SHA-256 `3d54903c119a4b6df078a840d9856c8b400ebd84069312d2023899c7326b1491`.

@@ -1,3 +1,13 @@
+# Principer – crm94 stabilt affärsansvar
+
+Fem färska officiella HTTP-200-bodies lästes 10 oktober 2026: [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från listurval; [Opportunities](https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience/work-your-opportunities) och [Kanban](https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience/visualize-success-with-path-and-kanban) skiljer affärsägare, listfilter och stegvärden. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer oföränderligt Object ID från user-/coworkerkoppling. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Kvitto SHA-256 `2cb260deaa788da236a57cbcec9309e2c47d8ad22e387c21c99cdd6e8526fe03`; tre gissade Salesforce-paths gav 404 och används inte som belägg.
+
+Magnussons kontrakt kommer från repot/basprov: exakt medlemsprofil, separat giltigt äldre kontoalias och synligt urval inom redan serverbehörig State. Inga nya affärsdefinitioner, behörigheter, anslutningar eller personalacceptanser antas. Codex-referensen är oläst.
+
+---
+
+Historik före crm94 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer – crm93 eget ärendeansvar
 
 Fyra färska officiella bodies gav faktisk HTTP 200 med återlästa korta textutdrag. [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från annan objekttillgång. [Salesforce Case List Views](https://trailhead.salesforce.com/content/learn/modules/cases-list-view-step-by-step/work-with-case-list-views) använder ärendeägare som listvillkor och kundnamnsfilter separat. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer stabilt Object ID från user-/coworkerkoppling. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Forskningskvitto SHA-256 `7cbca8f74fc2df59fe365b980c1a2367b61049d695e77bed4cbd5b0b64545593`.

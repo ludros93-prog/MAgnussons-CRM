@@ -1,3 +1,13 @@
+# Magnussons CRM – crm94 Mina affärer
+
+Kandidaten visar profilkopplade affärer genom kontots exakta medlemslänk. Äldre affärer följer enbart giltigt aktuellt kundansvar. Kopplingsglapp får besked om **synligt urval**. Team och annat giltigt ansvar bevaras.
+
+Detta gäller Offerter-listan och ingången från Mitt resultat; resultat-/pipelineberäkningarna är oförändrade. Åtta isolerade scopefall och därefter 45 faktiska domän-/parent-/Reactfall passerar. Full slutverifiering/publicering återstår. Föregående crm93 är avslutad på **live v90**, se [OPERATIONS](OPERATIONS.md), [VALIDATION](VALIDATION.md) och PR #161.
+
+---
+
+Historik före crm94 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – personliga kundärenden
 
 I kandidaten följer **Kundvård → Mina kundärenden** kontots exakta medlemskopplade säljarprofil, också när giltigt kundansvar saknas eller har tagits bort. Äldre ärenden utan profil-ID följer enbart giltigt aktuellt kundansvar. Namnlikhet skapar ingen personlig profillänk.
