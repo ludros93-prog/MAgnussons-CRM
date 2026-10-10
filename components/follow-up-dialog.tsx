@@ -9,20 +9,20 @@ import {followupBasis,protectedFollowUp} from '@/lib/follow-up';
 import {DraftStatus,useDrafts} from './draft-workspace';
 import {FollowUpSaveStatus,type FollowUpFailure,type FollowUpOperation,type FollowUpDetails} from './follow-up-save-status';
 export type FollowUpSaveAction=(type:string,data:unknown,close?:boolean,onFailure?:(status:number,message?:string)=>void)=>Promise<boolean>;
-export function FollowUpDialog({st,taskId,save,busy,onClose,onDeal,onWorkflow}:{st:State;taskId:string;save:FollowUpSaveAction;busy:boolean;onClose:()=>void;onDeal:(d:Deal)=>void;onWorkflow:()=>void}){
- const task=st.tasks.find(t=>t.id===taskId)!,customer=st.customers.find(c=>c.id===task.customerId),deal=st.deals.find(d=>d.id===task.dealId),w=useDrafts(),current=w.records.find(d=>d.kind==='followup'&&d.context===taskId),[failure,setFailure]=useState<FollowUpFailure|null>(null),[closeFailure,setCloseFailure]=useState(''),[operation,setOperation]=useState<FollowUpOperation>(''),[submitting,setSubmitting]=useState(false),lock=useRef(false),alive=useRef(true),attempt=useRef(0),readonly=st.viewer?.role==='reader';
+export function FollowUpDialog({st,taskId,draftId,save,busy,onClose,onDeal,onWorkflow}:{st:State;taskId:string;draftId?:string;save:FollowUpSaveAction;busy:boolean;onClose:()=>void;onDeal:(d:Deal)=>void;onWorkflow:()=>void}){
+ const task=st.tasks.find(t=>t.id===taskId)!,customer=st.customers.find(c=>c.id===task.customerId),deal=st.deals.find(d=>d.id===task.dealId),w=useDrafts(),current=w.records.find(d=>(!draftId||d.id===draftId&&d.data.taskId===taskId)&&!d.archived&&d.kind==='followup'&&d.context===taskId),[failure,setFailure]=useState<FollowUpFailure|null>(null),[closeFailure,setCloseFailure]=useState(''),[operation,setOperation]=useState<FollowUpOperation>(''),[submitting,setSubmitting]=useState(false),lock=useRef(false),alive=useRef(true),attempt=useRef(0),readonly=st.viewer?.role==='reader';
  const draftDetails=useRef<HTMLDivElement>(null),recordDetails=useRef<HTMLDivElement>(null),saveDetails=useRef<HTMLDivElement>(null),closeDetails=useRef<HTMLDivElement>(null);
  useEffect(()=>{alive.current=true;return()=>{alive.current=false;attempt.current++;}},[]);
  busy=busy||submitting;
  const protectedWork=protectedFollowUp(task),canonical=['quote','discovery','csm','prospecting'].includes(task.kind);
- useEffect(()=>{if(w.ready&&!current&&!task.done&&!readonly)w.create('followup',taskId,{taskId,expectedContext:followupBasis(st,taskId),outcome:'contact',occurredOn:day(),note:'',completed:false,nextAction:task.title,nextDate:plusDays(day(),1)},'Uppföljning · '+(customer?.name||task.title));},[w.ready,current?.id,taskId,task.done]);
+ useEffect(()=>{if(w.ready&&!draftId&&!current&&!task.done&&!readonly)w.create('followup',taskId,{taskId,expectedContext:followupBasis(st,taskId),outcome:'contact',occurredOn:day(),note:'',completed:false,nextAction:task.title,nextDate:plusDays(day(),1)},'Uppföljning · '+(customer?.name||task.title));},[w.ready,current?.id,taskId,task.done,draftId,readonly]);
  async function leave(next=onClose){
   if(lock.current)return;if(!current||readonly){next();return}
   const id=current.id,run=++attempt.current;lock.current=true;setSubmitting(true);setOperation('leave');
   try{const ref=await w.flush(id);if(!alive.current||attempt.current!==run)return;if(ref)next();else setCloseFailure(w.get(id)?.error||'Det privata utkastet kunde inte sparas. Försök igen innan du stänger.');}
   finally{lock.current=false;if(alive.current&&attempt.current===run){setSubmitting(false);setOperation('');}}
  }
- if(!current)return <Dialog open onOpenChange={v=>{if(!v)onClose()}}><DialogContent><DialogHeader><DialogTitle>Följ upp aktiviteten</DialogTitle><DialogDescription>{task.title}</DialogDescription></DialogHeader>{readonly?<p>Ditt konto har läsbehörighet.</p>:task.done?<p>Aktiviteten är redan avslutad.</p>:<DraftStatus id=""/>}</DialogContent></Dialog>;
+ if(!current)return <Dialog open onOpenChange={v=>{if(!v)onClose()}}><DialogContent><DialogHeader><DialogTitle>Följ upp aktiviteten</DialogTitle><DialogDescription>{task.title}</DialogDescription></DialogHeader>{readonly?<p>Ditt konto har läsbehörighet.</p>:task.done?<p>Aktiviteten är redan avslutad.</p>:<>{draftId&&w.ready?<div role="status"><p>Det valda privata utkastet kan inte öppnas för denna aktivitet. Det kan vara avslutat eller inte längre finnas i din aktuella arbetsyta.</p><p>Inget annat utkast har öppnats och ingen uppföljning har registrerats. Stäng och välj ett utkast i Min dag.</p><Button type="button" variant="outline" onClick={onClose}>Tillbaka till Min dag</Button></div>:<DraftStatus id=""/>}</>}</DialogContent></Dialog>;
  const v=current.data,changed=v.expectedContext!==followupBasis(st,taskId),required=canonical||protectedWork||v.outcome==='no_reply'||!v.completed;
  const update=(key:string,value:unknown)=>w.update(current.id,{...v,[key]:value});
  async function submit(){

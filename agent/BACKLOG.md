@@ -1,3 +1,17 @@
+# Arbetskö – crm91 privat uppföljningsutkast
+
+När användaren väljer ett privat uppföljningsutkast i **Min dag → Fortsätt där du slutade** följer det valda utkastets ID med till **Följ upp**. Två egna utkast för samma aktivitet återupptas därför var för sig med rätt anteckning, resultat och nästa aktivitet/datum. Dialogens identitet inkluderar valt utkast och rensas vid stängning, byte till kund-/affärsflöde samt konto-/arbetsytebyte.
+
+Ett uttryckligt valt utkast måste ha rätt ID, typ, aktivitetskontext och task-ID. Ett saknat, avslutat eller felkopplat utkast ersätts inte med ett annat utkast och skapar inte automatiskt ett nytt. Beskedet leder tillbaka till Min dag. Saknad aktivitet upptäcks före öppning. Vanlig **Följ upp** från aktivitetsraden behåller sitt befintliga öppningsflöde; en ny generell väljare mellan flera utkast ingår inte.
+
+B05:s avgränsade återupptagning är rättad i källan. Övriga utkastflöden och separat privat driftkopia kvarstår. Nästa belagda B01-lucka är onboardingens personliga urval: åtta normaliserade syntetiska basfall visar att kontots alias ersätter den exakta medlemskopplade profilen, eller döljer egna profilkopplade poster när giltigt kundansvar saknas. Onboarding och kundärenden ändras inte i denna leverans. B02:s chefsroll, B04:s fulla hostade återställning och B07:s personens egen bekräftade inloggning/riktiga uppföljning kvarstår.
+
+Inventerad bas är färsk main `da5071fd3a56008802b3b8adcc032b5f390a32dd`, utan öppna PR:er. Vid körningens inledning återlästes **live v87**, source `be802c0b5133e9a8f8ba62e85940543ee9f9afe6`, terminal `succeeded`. Det är ett startunderlag, inte en kvittens för den här ändringens publicering. Kod, exakt-head checks, GitHub-main och faktisk Sites-version har separata belägg i leverans-PR och taskkvittot.
+
+---
+
+Historik före crm91 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm90 Resultatets uppgiftsansvar
 
 I **Mitt resultat** följer öppna uppgifter nu den befintliga personliga profilens stabila ID. Äldre uppgifter utan profil-ID följer kontots aktuella giltiga kundansvar. Om kontots kundansvar ändras flyttas därför inte profilkopplade uppgifter till en annan person, och ett saknat eller borttaget kundansvar döljer inte egna profilkopplade uppgifter.

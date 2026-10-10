@@ -1,3 +1,17 @@
+# Produkt – exakt privat uppföljningsutkast
+
+När användaren väljer ett privat uppföljningsutkast i **Min dag → Fortsätt där du slutade** följer det valda utkastets ID med till **Följ upp**. Två egna utkast för samma aktivitet återupptas därför var för sig med rätt anteckning, resultat och nästa aktivitet/datum. Dialogens identitet inkluderar valt utkast och rensas vid stängning, byte till kund-/affärsflöde samt konto-/arbetsytebyte.
+
+Ett uttryckligt valt utkast måste ha rätt ID, typ, aktivitetskontext och task-ID. Ett saknat, avslutat eller felkopplat utkast ersätts inte med ett annat utkast och skapar inte automatiskt ett nytt. Beskedet leder tillbaka till Min dag. Saknad aktivitet upptäcks före öppning. Vanlig **Följ upp** från aktivitetsraden behåller sitt befintliga öppningsflöde; en ny generell väljare mellan flera utkast ingår inte.
+
+Ingen lagring, datamodell, API, kontokoppling eller serverroll ändras. Privat ägare/arbetsyta, revision, CAS, request-ID och atomisk CRM-sparning/utkastavslut använder samma servervägar. CRM-sparning är fortsatt skild från privat utkast och kräver faktiskt sparbesked. Försäljning mot månads-/årsmål, marginal och nya prospects bevaras; TB är inget huvudmått.
+
+Syntetiska prov är inga riktiga kontoinloggningar, sparade verkliga kunduppföljningar, personalacceptans eller fungerande Fortnox-/Outlook-anslutningar. Inga riktiga kundorder används för skrivprov och inga kund-/personalmeddelanden skickas. Full hostad återställning och live-rollback är fortsatt oprövade. Refererad Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst; tillgängligt read_thread gäller Slack.
+
+---
+
+Historik före crm91 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produktkvittens – uppgifter och förseningsantal i Resultat
 
 I **Mitt resultat** följer öppna uppgifter nu den befintliga personliga profilens stabila ID. Äldre uppgifter utan profil-ID följer kontots aktuella giltiga kundansvar. Om kontots kundansvar ändras flyttas därför inte profilkopplade uppgifter till en annan person, och ett saknat eller borttaget kundansvar döljer inte egna profilkopplade uppgifter.

@@ -75,3 +75,6 @@ await (await import('./calendar-profile-link.mjs')).verifyCalendarProfileLink();
 
 // Result attention uses exact task/profile identity without changing financial metrics.
 await (await import('./sales-task-profile.mjs')).verifySalesTaskProfile();
+
+// Continuing a chosen private followup keeps its exact identity through save.
+await (await import('./followup-draft-resume.mjs')).verifyFollowupDraftResume();
