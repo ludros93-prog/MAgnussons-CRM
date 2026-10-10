@@ -1,3 +1,37 @@
+# Bygglogg – crm89 personlig Kalender
+
+Kalenderns **Kundmöten i CRM** och **Aktiviteter** använder nu den personliga profilens stabila ID före äldre namnansvar. Kontots exakta medlems-ID-länk avgör den egna profilen i aktuell arbetsyta. En annan persons uppgift med samma namnansvar blir inte egen genom namnlikheten. Äldre aktiviteter utan profil-ID följer fortsatt det faktiskt giltiga kundansvaret.
+
+Saknad medlemslänk, olika registrerat profil-/kundansvar och borttaget eller saknat giltigt kundansvar får konkreta besked. **Mina aktiviteter · synligt urval** och tomtexter visar när listan kan vara ofullständig. Befintliga teamurval, uttryckligt annat ansvar och läsar-/administratörsregler bevaras. Kalenderns ansvarsväljare erbjuder den egna arbetsdagen även när kontot behöver det befintliga `_unassigned`-värdet; ingen profil eller behörighet skapas genom valet.
+
+Ändringen gäller de två CRM-listorna i Kalender, inte Outlook-kalendern, företagsevent eller personalöverlämning. Kalendergrenen i resultatvyns befintliga parentcallback använder kontots aktuella eget urval. SalesDashboard har ingen faktisk Kalender-knapp: den grenen provas som verklig källkod i komponentproven, medan browsernavigationen använder sidomenyn. Ingen sådan knapp eller användarresa uppfinns.
+
+Testad kandidat `737810806823fc095e294d5e473781b65fd59399`, träd `cdbb9b591cd14db116f7bdbea2d3e9e9059bcf9a`; [app-PR #154](https://github.com/ludros93-prog/MAgnussons-CRM/pull/154).
+
+GitHub app-main `052c71b25ef28c0cae005b071abfd62d81a7ad26`. Sites-source `c9c95beb8b5c34372192a959631866d587f07fda` har exakt samma testade träd och samtliga 388 spårade paths, modes och blobs; verkliga föräldrar är tidigare v85-source `d708c9056fb1cfaa26bc9455e662d767e9f8fd79` och app-main. Live **v86** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6aca18c7a544819198bdcfef5de47177`: separat återläst `succeeded`, faktisk `updated_at` `2026-10-10T10:52:01.451138+00:00` och efterkontroll `2026-10-10T10:52:15Z`, med samma source/version/URL.
+
+Fem obligatoriska kontroller passerade med exit 0 på ren, byteoförändrad slutkandidat: `node tests/outlook.mjs`, TypeScript utan incremental, produktionsbygge, därefter byggd isolerad `node tests/runtime-smoke.mjs` och `git diff --check`. Kontrollkvitto `13c06a433afcdf494e71544335461998b2db7ed133dcf9a2ea5b01f0cc820309`. [Exakt-head PR-CI 38045243149](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38045243149) har faktisk terminal success för samma head; job `114193337683` och samtliga 13 återlästa steg är gröna. Detta belägger PR-headens CI, inte en separat main-push-körning.
+
+Tre gamla fel reproducerades separat på oförändrad baseline: eget profilansvar blandades med annan persons lika namnansvar, saknat operativt alias dolde egna aktiviteter och den faktiska parentcallbackens Kalender-mål valde historiskt profilalias. Tidigare privata fixtur-/harnessfel sparades separat och räknas inte som slutkandidatens produktfel eller slutbevis.
+
+Slutregressionen omfattar 40 nya faktiska CalendarWork-/domän-/parentexpressionsfall och 32 Min dag-fall. Slutbrowserkvittot `151f2c8890358a1bf4fd1a6afecb9ccd90f656a8ed8e2d122a104f3f0563a5d5` omfattar 27 verkliga isolerade native Chromium-fall och 32 oförändrade native PNGs. Alla 18 råtabeller och R2 samt privata utkast-/Outlook-/filsentineler bevaras. Käll-, bygg- och fixturebytes är oförändrade. Browsern gör inga CRM-HTTP-skrivningar och använder uttryckligt syntetisk autentisering; komponentproven har syntetiska visual-/callbackgränser.
+
+116 skyddade backend-/API-/lagrings-/hosting-/konfigurationsfiler och alla sex SQL-migrationer är byte-/mode-/blob-identiska mot färsk main `4ebce2973cbb63d4df7b0ee99c36843cee901c8b` och föregående v85-source `d708c9056fb1cfaa26bc9455e662d767e9f8fd79`. Ingen lagring, datamodell, schema, API-, konto- eller rollskrivväg ändras. Fortsatt **crm82-kompatibel läsare och skrivare** krävs efter tidigare `commercial_task`-audit; gammal v78 är inget säkert direkt rollbackmål. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook. Full hostad databas-/fil-/länkåterställning och live-rollback är fortsatt oprövade.
+
+B01:s avgränsade Kalender-lucka är levererad; T01/T02/T04/T05 har relevanta syntetiska belägg för just denna del, inte generell verksamhetsacceptans. Övrig UUID-/aliasmigrering och fullständig identitets-/personalöverlämning kvarstår. B02:s chefsroll, B04:s separata privata driftkopior och full hostad återställning, B05:s återstående privata utkast-/överlämningsflöden och B07:s verkliga personalpilot är fortsatt öppna.
+
+Nästa konkret kodbelagda oberoende lucka är Resultatets `salesMetrics.tasks`, vars uppgiftsurval fortfarande följer namnansvar. Den behöver en separat avgränsning med bevarad affärsdefinition och nya prov; denna kalenderändring rättar inte den delen. En persons egen lyckade inloggning och sparad riktig uppföljning med nästa aktivitet/datum behöver fortfarande bekräftas av personen själv.
+
+Gröna syntetiska komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, sparade riktiga kunduppföljningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst: tillgängligt `read_thread` gäller Slack, inte Codex. Den explicita briefen och färsk main används.
+
+Dokumentationen har en separat mergegrind med egna fem obligatoriska kontroller, aktuell bas och exakt-head PR-CI. Appleveransen ovan är verifierad före dokumentationsrevisionen; dess slutliga main-revision och egna kontrollbelägg redovisas i taskkvittensen. Dokumentationsändringarna kräver ingen extra appversion. AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering ändras inte genom denna dokumentationsrevision.
+
+---
+
+Historik före crm89 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm88 profilkopplad Min dag
 
 Min dag visar nu egna profilkopplade uppgifter, möten och försäljningsresultat även när kontot saknar giltigt operativt kundansvar. Urvalet använder den befintliga exakta medlems-ID-länken i aktuell arbetsyta. Profilens namn eller äldre kundansvar används inte som ersättning för operativt ansvar. Administratören kan växla mellan Mina uppgifter och Teamets uppgifter; teamurvalet kräver fortsatt administratörsroll. Till min arbetsdag från Mitt resultat öppnar direkt det aktuella kontots egen arbetsdag, också när resultatprofilens äldre alias skiljer sig från kundansvaret. Administratörens uttryckliga teamläge bevaras; övriga resultatlänkar behåller sitt operativa urval.

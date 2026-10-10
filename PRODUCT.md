@@ -1,3 +1,19 @@
+# Produktkvittens – personliga CRM-aktiviteter
+
+Kalenderns **Kundmöten i CRM** och **Aktiviteter** använder nu den personliga profilens stabila ID före äldre namnansvar. Kontots exakta medlems-ID-länk avgör den egna profilen i aktuell arbetsyta. En annan persons uppgift med samma namnansvar blir inte egen genom namnlikheten. Äldre aktiviteter utan profil-ID följer fortsatt det faktiskt giltiga kundansvaret.
+
+Saknad medlemslänk, olika registrerat profil-/kundansvar och borttaget eller saknat giltigt kundansvar får konkreta besked. **Mina aktiviteter · synligt urval** och tomtexter visar när listan kan vara ofullständig. Befintliga teamurval, uttryckligt annat ansvar och läsar-/administratörsregler bevaras. Kalenderns ansvarsväljare erbjuder den egna arbetsdagen även när kontot behöver det befintliga `_unassigned`-värdet; ingen profil eller behörighet skapas genom valet.
+
+Ändringen gäller de två CRM-listorna i Kalender, inte Outlook-kalendern, företagsevent eller personalöverlämning. Kalendergrenen i resultatvyns befintliga parentcallback använder kontots aktuella eget urval. SalesDashboard har ingen faktisk Kalender-knapp: den grenen provas som verklig källkod i komponentproven, medan browsernavigationen använder sidomenyn. Ingen sådan knapp eller användarresa uppfinns.
+
+Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects. TB är inget huvudmått. Serverroller, privat kommunikation och utkast, atomiska skrivningar, CAS och idempotens bevaras.
+
+Gröna syntetiska komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, sparade riktiga kunduppföljningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+---
+
+Historik före crm89 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produktkvittens – egna aktiviteter och resultat i Min dag
 
 Min dag visar nu egna profilkopplade uppgifter, möten och försäljningsresultat även när kontot saknar giltigt operativt kundansvar. Urvalet använder den befintliga exakta medlems-ID-länken i aktuell arbetsyta. Profilens namn eller äldre kundansvar används inte som ersättning för operativt ansvar. Administratören kan växla mellan Mina uppgifter och Teamets uppgifter; teamurvalet kräver fortsatt administratörsroll. Till min arbetsdag från Mitt resultat öppnar direkt det aktuella kontots egen arbetsdag, också när resultatprofilens äldre alias skiljer sig från kundansvaret. Administratörens uttryckliga teamläge bevaras; övriga resultatlänkar behåller sitt operativa urval.

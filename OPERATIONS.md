@@ -1,3 +1,23 @@
+# Driftkvittens – crm89 utan lagringsändring
+
+Testad kandidat `737810806823fc095e294d5e473781b65fd59399`, träd `cdbb9b591cd14db116f7bdbea2d3e9e9059bcf9a`; [app-PR #154](https://github.com/ludros93-prog/MAgnussons-CRM/pull/154).
+
+GitHub app-main `052c71b25ef28c0cae005b071abfd62d81a7ad26`. Sites-source `c9c95beb8b5c34372192a959631866d587f07fda` har exakt samma testade träd och samtliga 388 spårade paths, modes och blobs; verkliga föräldrar är tidigare v85-source `d708c9056fb1cfaa26bc9455e662d767e9f8fd79` och app-main. Live **v86** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6aca18c7a544819198bdcfef5de47177`: separat återläst `succeeded`, faktisk `updated_at` `2026-10-10T10:52:01.451138+00:00` och efterkontroll `2026-10-10T10:52:15Z`, med samma source/version/URL.
+
+116 skyddade backend-/API-/lagrings-/hosting-/konfigurationsfiler och alla sex SQL-migrationer är byte-/mode-/blob-identiska mot färsk main `4ebce2973cbb63d4df7b0ee99c36843cee901c8b` och föregående v85-source `d708c9056fb1cfaa26bc9455e662d767e9f8fd79`. Ingen lagring, datamodell, schema, API-, konto- eller rollskrivväg ändras. Fortsatt **crm82-kompatibel läsare och skrivare** krävs efter tidigare `commercial_task`-audit; gammal v78 är inget säkert direkt rollbackmål. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook. Full hostad databas-/fil-/länkåterställning och live-rollback är fortsatt oprövade. Kvitto `166c334e9e4aaefe2f49446f4ed1912490615397a1c382b2b26f2ec87673a9a5`.
+
+Samma begränsade custom-delning revision 2 och returnerade miljömetadata revision 1 bevaras. Fullständiga returnerade metadata för policy, miljö, auth-klient, automationslista och URL är jämförda i verktygsminnet före och efter publicering. Faktiska hemlighetsbytes är inte lästa eller verifierade; ingen hash- eller bytejämförelse av hemligheter påstås. Ingen full hostad återställning eller live-rollback genomfördes.
+
+Lokalt tarpaket har SHA-256 `71b63be08b9a510caf12494bec22112f677f9885b34917bdafb6294a11941de5`, 6 010 880 byte och 106 filer. Native save/get återgav samma serverarkivmetadata: SHA-256 `e7d4ee1b9a6d1c88d4685403bb9a40b10be9ecfdb2fc610b658740c697b4a4f9`, 6 010 880 byte och 106 filer. Ett faktiskt `download_file`-försök för returnerat Sediment-ID nekades med `file could not be authorized or resolved`. Lokal tar och servermetadata har olika hash; orsaken är inte verifierad. Hostad arkivbyteidentitet är inte verifierad. Detta ändrar inte de separata käll-, versions- och deploybeläggen.
+
+Gröna syntetiska komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, sparade riktiga kunduppföljningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+Dokumentationen har en separat mergegrind med egna fem obligatoriska kontroller, aktuell bas och exakt-head PR-CI. Appleveransen ovan är verifierad före dokumentationsrevisionen; dess slutliga main-revision och egna kontrollbelägg redovisas i taskkvittensen. Dokumentationsändringarna kräver ingen extra appversion. AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering ändras inte genom denna dokumentationsrevision.
+
+---
+
+Historik före crm89 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Driftkvittens – crm88 läsande personlig arbetsvy
 
 Testad kandidat `0302f2ab81f39e1c0c91a371342fa337eb7df63b`, träd `d3007ef272991027c78e7567c7a176c043d64b95`; [app-PR #152](https://github.com/ludros93-prog/MAgnussons-CRM/pull/152).
