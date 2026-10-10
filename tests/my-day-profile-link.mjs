@@ -123,7 +123,7 @@ export const DraftStatus=()=>null,PrivateDraftCopyEntry=()=>null,ReceiptQueue=()
    st.settings.sellerGoalsById[b]={[month]:{revenue:2000,grossProfit:null,qualified:null}};
    for(const [id,profile,value] of [['own-invoice',a,125],['other-invoice',b,875],['unattributed-invoice','',225]]){
     const deal=core.DealSchema.parse({id:id+'-deal',customerId:'synthetic-customer',owner:nameB,title:'Syntetisk '+id,stage:'won',confirmed:true,value,cost:50});st.deals.push(deal);
-    st.orders.push(core.OrderSchema.parse({id,customerId:'synthetic-customer',dealId:deal.id,owner:nameB,invoiceOwner:nameB,invoiceOwnerId:profile,invoiceOwnerSource:'recorded',stage:'delivered',proofRequired:false,proofApproved:false,supplierConfirmed:true,deliveryDate:today,deliveredDate:today,invoiceDate:month+'-01',invoiceRef:'SYNTHETIC-'+id,invoiceValue:value,actualCost:50,notes:''}));
+    st.orders.push(core.OrderSchema.parse({id,customerId:'synthetic-customer',dealId:deal.id,owner:nameB,invoiceOwner:profile===a?nameA:nameB,invoiceOwnerId:profile,invoiceOwnerSource:'recorded',stage:'delivered',proofRequired:false,proofApproved:false,supplierConfirmed:true,deliveryDate:today,deliveredDate:today,invoiceDate:month+'-01',invoiceRef:'SYNTHETIC-'+id,invoiceValue:value,actualCost:50,notes:''}));
    }
    return st;
   }
@@ -131,8 +131,8 @@ export const DraftStatus=()=>null,PrivateDraftCopyEntry=()=>null,ReceiptQueue=()
    // Empty aliases below are explicitly defensive render input. Normal task
    // and meeting schema validation rejects empty operational responsibility.
    const blankTask={...task('blank-legacy'),owner:''},blankMeeting={...meeting('blank-legacy'),owner:''};
-   st.tasks=[task('own-profile',a,nameB),task('other-profile',b,nameA),task('profile-alias-legacy','',nameA),task('other-legacy','',nameB),blankTask];
-   st.meetings=[meeting('own-profile',a,nameB),meeting('other-profile',b,nameA),meeting('profile-alias-legacy','',nameA),meeting('other-legacy','',nameB),blankMeeting];
+   st.tasks=[task('own-profile',a,nameA),task('other-profile',b,nameB),task('profile-alias-legacy','',nameA),task('other-legacy','',nameB),blankTask];
+   st.meetings=[meeting('own-profile',a,nameA),meeting('other-profile',b,nameB),meeting('profile-alias-legacy','',nameA),meeting('other-legacy','',nameB),blankMeeting];
    st.customers[0]=core.CustomerSchema.parse({...st.customers[0],status:'risk',riskReason:'SYNTHETIC_ALIAS_CONTACT_SIGNAL'});
    const blocker=core.OrderSchema.parse({...st.orders[0],id:'alias-order-blocker',invoiceDate:'',invoiceValue:null,actualCost:null,stage:'production',production:{status:'submitted',issue:'SYNTHETIC_ALIAS_ORDER_ISSUE'}});blocker.owner=nameA;st.orders.push(blocker);return st;
   }
