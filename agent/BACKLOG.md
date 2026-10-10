@@ -1,3 +1,19 @@
+# Arbetskö – crm98 personlig Resultat-pipeline, kandidat
+
+B01:s avgränsade personliga open/pipeline/unpriced är rättade i koden. Profilregistrerat ansvar följer exakt medlemsprofil, äldre blankt ansvar giltigt aktuellt kontoalias; antal, prislösa, värde och steg följer samma öppna affärer som Mina affärer. 41 nya och 51 befintliga riktade fall PASS. Övriga finansiella/operativa fält och explicit profil-/teamläge bevaras; B01 som helhet är inte färdig.
+
+Nästa B01-del är separat inventering av Resultats kvarvarande operativa kund-/order-/mötesprojektioner och fullständig identitets-/personalöverlämning. Ingen ny affärsdefinition bestäms här. B02 förankrad chefsroll/personalmappning, B04 privata driftkopior/full hostad återställning, B05 övriga privata specialflöden och B07 personens egen bekräftelse av inloggning samt sparad riktig uppföljning med nästa aktivitet/datum är öppna. Tillgängliga Sites-verktyg saknar D1/R2-snapshot/restore-operation. Akuta verifierade åtkomst-, dataförlust- och orderfel går före kön.
+
+Crm97 är avslutad genom [PR #165](https://github.com/ludros93-prog/MAgnussons-CRM/pull/165): GitHub-main `da36abb16b71e023ceb9df135d6c4f993e8eee2b`, Sites-source `093af08624f0278d2f0dfda504f1c938bc94b324` och **live v94**, terminal lyckad deploy. Dess slutleveranskvittens SHA-256 är `ec9d2fe67bd8e3cecb224a0503046679c997683ce9a854152d5a0177bd673033`; tidigare pendingtexter nedan är bevarad historik.
+
+Crm98:s fem obligatoriska slutkommandon, isolerade browserprov, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; explicit brief och färsk main används.
+
+---
+
+Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm97 personligt Årshjul, kandidat
 
 B01:s avgränsade äldre behovsansvar är rättat i kandidaten. Registrerade behov följer exakt medlemsprofil, äldre behov giltigt aktuellt kontoansvar; saknad eller motstridig koppling ger synligt urval. 24 riktade fall PASS. Team, kompakt kundvy, läsar-/tryck-/lagergränser och skrivflöden bevaras.

@@ -1,3 +1,21 @@
+# Principer – crm98 personligt offertvärde i Mitt resultat
+
+Fyra officiella artikelbodies med faktisk HTTP 200 lästes och hashades den 10 oktober 2026 **23:22:26–23:23:03 UTC**. Privat kvitto `/workspace/.crm98-evidence/research.json`, SHA-256 `a1dae4f956e9a6e53afc30392132758eed5f6b4ed50d5515dfce474f8c0f2d53`, innehåller URL, status, hämtningstid, rå body-hash och åtta korta exakta citat som återkontrollerats mot sparad text.
+
+- [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från ägarskap. Synlighet bevisar inte personligt ansvar.
+- [Salesforce Opportunities](https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience/work-your-opportunities) beskriver potentiell försäljning och pipeline med antal, värde och steg. [Path/Kanban](https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience/visualize-success-with-path-and-kanban) beskriver ägarbyte, listfilter och sammanställning av listans rader. Den hämtade Kanban-texten innehöll inte frasen ”My Opportunities”; inget sådant specifikt filterpåstående används som belägg.
+- [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer loginanvändare från kopplad coworker, beskriver problem med personligt affärsurval när kopplingen saknas och skiljer stabilt Object ID från änderliga namn. Limes first-match-beteende införs inte i Magnussons.
+
+Magnussons avgränsade produktbeslut gäller **endast den personliga aktuella pipelinen i Mitt resultat**: registrerade affärer följer exakt medlemskopplad profil och äldre affärer utan profil-ID följer kontots giltiga aktuella kundansvar. Antal, offertvärde, affärer utan värde och steg ska komma från samma öppna rader som det personliga affärsurvalet. Kopplingsglapp ska förklaras som synligt, möjligen ofullständigt urval. Historiskt profilalias, namnlikhet eller runtime-user-ID ska inte ersätta exakt medlemskoppling. Detta är repoets ansvarskontrakt och vårt produktval, inte en föreskriven leverantörsregel.
+
+Fakturaansvar, kvalificeringsansvar, marginalunderlag, mål och befintligt standardläge för profil-/teamrapportering behålls separat. Den befintliga gränsen vid saknad egen resultatprofil ska fortsatt visa förklaringen utan personliga resultatsiffror. Ingen ny affärsdefinition, automatisk omattribuering, behörighet eller kontokoppling införs. Tidigare separat daterad [Saleshub AI-princip](https://saleshubai.se/funktioner) om kundsammanhang och nästa aktivitet behålls från repohistoriken; ingen färsk Saleshub-bodyhämtning påstås här.
+
+Artikeltexterna styrker ingen Magnussons-anslutning, faktisk personlig inloggning, sparad verklig uppföljning eller personal-/kundacceptans. Kodkandidat, GitHub-main, Sites-källrevision och publicerad version kräver separata verifieringar. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; explicit brief och repo används.
+
+---
+
+Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer – crm97 personligt årshjul och tydligt ofullständigt urval
 
 Tre officiella artikelbodies med faktisk HTTP 200 lästes och hashades den 10 oktober 2026 **22:16:16–22:16:18 UTC**. Privat kvitto `/workspace/.crm97-evidence/research.json`, SHA-256 `d6e17d0750fd98d9337ed0656ebaa624b0a31ffcdfd19abf35056ff0ad98f5b4`, innehåller URL, status, hämtningstid, rå body-hash och sju korta exakta citat som återkontrollerats mot sparad text.

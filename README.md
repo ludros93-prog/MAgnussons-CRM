@@ -1,3 +1,19 @@
+# Magnussons CRM – crm98 rätt affärsurval i Mitt resultat
+
+Den personliga pipelinepanelen ska visa samma öppna affärer som dess ingång till Mina affärer. Registrerade affärer följer exakt medlemskopplad profil; äldre affärer utan profil-ID följer kontots giltiga aktuella ansvar. Värde, antal, prislösa affärer och samtliga steg använder samma urval. Kopplingsglapp märks som synligt urval.
+
+41 nya riktade domän-/parent-/Reactfall och 51 befintliga aktivitetsfall PASS. Fakturerad försäljning, mål, marginal, kvalificeringar, historik och explicit profil-/teamberäkning behåller befintliga regler. Se [VALIDATION](VALIDATION.md).
+
+Crm97 är avslutad genom [PR #165](https://github.com/ludros93-prog/MAgnussons-CRM/pull/165): GitHub-main `da36abb16b71e023ceb9df135d6c4f993e8eee2b`, Sites-source `093af08624f0278d2f0dfda504f1c938bc94b324` och **live v94**, terminal lyckad deploy. Dess slutleveranskvittens SHA-256 är `ec9d2fe67bd8e3cecb224a0503046679c997683ce9a854152d5a0177bd673033`; tidigare pendingtexter nedan är bevarad historik.
+
+Crm98:s fem obligatoriska slutkommandon, isolerade browserprov, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; explicit brief och färsk main används.
+
+---
+
+Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – crm97 personligt Årshjul, kandidat
 
 Mina behov ska följa rätt person även när kontots aktuella ansvar och säljarprofilens historiska alias skiljer sig. Registrerade behov följer exakt medlemskopplad profil; äldre behov utan profil-ID följer giltigt aktuellt kontoansvar. Samma läsurval används för kort, månadsantal, kontakta-nu, sökning och tomtexter. Kopplingsglapp beskrivs som synligt urval.

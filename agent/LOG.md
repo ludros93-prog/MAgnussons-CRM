@@ -1,3 +1,23 @@
+# Bygglogg – crm98 samma personliga affärer i Resultat och Offerter
+
+Startbas är färsk main da36abb16b71e023ceb9df135d6c4f993e8eee2b, träd b28326ece23c3e38db1b705dd3941d360c37e4ac, 404 spårade filer. Inga öppna PR:er, konkurrerande körningar eller aktiv publicering syntes. Egen branch/worktree och lokal atomisk reservation används.
+
+14 normaliserade basfall visar nio åtkomliga avvikelser: personliga Resultat använde profilens historiska alias medan faktiskt Mina affärer använder exakt profil-ID plus giltigt aktuellt kontoansvar för äldre blankt ansvar. Saknad personlig profil hålls redan bakom JSX-grinden. Rättningen ändrar bara personlig pipelineprojektion; samma open-lista bär total, stegmängder/värden och prislösa affärer. Synligt-urval-text beskriver kopplingsglapp. Historiska fakturor, kvalificeringar, mål och explicit profile/team består.
+
+41 nya riktade fall och 51 befintliga aktivitetsfall PASS. Det första nya testharnessförsöket rättades för byte av callback-observationsarray; inga produktförväntningar sänktes. Oberoende granskning jämför 180 fulla default-metrics, 180 övriga personliga metrics samt 36 personliga pipelineurval med Offerter; inga blockers. Root körde förberedande TypeScript med exit0. Se VALIDATION för faktiska kvittohashar och gränser.
+
+Fyra officiella Salesforce/Lime-bodies hämtades; RESEARCH skiljer leverantörsprinciper från repoets egna regler. Sites-source öppnades läsande med ordinarie credential; alla 404 baselinebytes matchar committed main. Helper söks i redovisade läsbara rötter och hittas inte där. Ingen helperkörning eller ny installation påstås; matching låsta beroenden återbrukas via faktisk cp -al. Inga mejl, konton, roller, agentinstruktioner, scheman eller aktiveringar ändras.
+
+Crm97 är avslutad genom [PR #165](https://github.com/ludros93-prog/MAgnussons-CRM/pull/165): GitHub-main `da36abb16b71e023ceb9df135d6c4f993e8eee2b`, Sites-source `093af08624f0278d2f0dfda504f1c938bc94b324` och **live v94**, terminal lyckad deploy. Dess slutleveranskvittens SHA-256 är `ec9d2fe67bd8e3cecb224a0503046679c997683ce9a854152d5a0177bd673033`; tidigare pendingtexter nedan är bevarad historik.
+
+Crm98:s fem obligatoriska slutkommandon, isolerade browserprov, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; explicit brief och färsk main används.
+
+---
+
+Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm97 äldre behovsansvar i personligt Årshjul
 
 Startbas är färsk main c9f6c3dcc4e1bb1f23dce052834204ea33560a18, träd ea7bed7d0fe1712b29c79d5932ac41aab9cc6769, 401 spårade filer. Inga öppna PR:er eller konkurrerande aktiva körningar syntes vid start. Egen branch/worktree och lokal atomisk reservation används. Crm96 är avslutad genom [PR #164](https://github.com/ludros93-prog/MAgnussons-CRM/pull/164): GitHub-main `c9f6c3dcc4e1bb1f23dce052834204ea33560a18`, Sites-source `e7eefa6b2641aa4f0ff2e007631f51d412a8e86e` och **live v93**. Dess slutleveranskvittens SHA-256 är `7b64e7633559aaca2fb0a2998bd597df914c1a2b88ce8d2e8c92300d2b63176b`; äldre pendingtexter nedan är bevarad historik.

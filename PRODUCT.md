@@ -1,3 +1,21 @@
+# Produkt – crm98 personligt offertvärde och affärsantal
+
+I Mitt resultat använder aktuell personlig pipeline samma ansvar som Mina affärer: exakt medlemskopplad profil för registrerat ownerProfileId, giltigt aktuellt kontoansvar för äldre blankt profil-ID. Namnlikhet och sessions-ID ersätter inte medlemskopplingen. En inaktiv exakt profil går fortsatt att läsa. Saknat/borttaget kontoalias döljer inte registrerade egna affärer.
+
+Totalt oviktat offertvärde, pågående antal, antal utan värde och stegens antal/värden drivs av samma öppna affärer oberoende av vald rapportmånad. Won/paused/lost och tidigare avslutsregler behåller sina befintliga betydelser. Kopplingsglapp markerar pipelinepanelen som synligt urval. Saknad egen resultatprofil behåller sin befintliga grind; personliga siffror visas inte där. Administrativ hjälp och faktiskt Offerter-flöde bevaras.
+
+Endast personal-lägets open/pipeline/unpriced ändras. Explicit profil-/teamläge, fakturaansvar vid registrering, försäljning, årssiffror, marginal/kostnadstäckning, prospects, mål och övriga operativa metricfält består. Huvudmåtten är fortsatt försäljning mot månads-/årsmål, marginal och nya prospects; TB är inget huvudmått. Inga affärsdefinitioner, serverroller, lagrings-/skrivflöden eller integrationer ändras.
+
+Crm97 är avslutad genom [PR #165](https://github.com/ludros93-prog/MAgnussons-CRM/pull/165): GitHub-main `da36abb16b71e023ceb9df135d6c4f993e8eee2b`, Sites-source `093af08624f0278d2f0dfda504f1c938bc94b324` och **live v94**, terminal lyckad deploy. Dess slutleveranskvittens SHA-256 är `ec9d2fe67bd8e3cecb224a0503046679c997683ce9a854152d5a0177bd673033`; tidigare pendingtexter nedan är bevarad historik.
+
+Crm98:s fem obligatoriska slutkommandon, isolerade browserprov, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; explicit brief och färsk main används.
+
+---
+
+Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produkt – crm97 rätt ansvar i Mina behov
 
 Fulla Årshjulet skiljer registrerat profilansvar från äldre operativt ansvar. Ett exakt profil-ID jämförs med arbetsytans medlemskopplade profil, även om profilen är inaktiv; äldre blankt profil-ID kräver giltigt aktuellt kontoansvar. Namnlikhet, saknad länk eller `_unassigned` skapar inget personligt ansvar. Kopplingsglapp förklaras före listor och antal med vilket urval som faktiskt syns.

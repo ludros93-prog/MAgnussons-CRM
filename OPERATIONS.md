@@ -1,3 +1,23 @@
+# Drift – crm97 avslutad live v94; crm98 Resultat-kandidat
+
+Färsk native metadata vid öppning visar live v94, source 093af08624f0278d2f0dfda504f1c938bc94b324 och terminal succeeded för deployment appgdep_6acac0f50d3c81919a02255162206283 på befintlig CRM-adress. Begränsad custom-policyrevision 2, miljörevision 1, samma auth-klient och noll Site-automations behålls. Ingen konkurrerande PR/körning eller publicering syntes.
+
+Ordinarie native credential gav en läsande remote-kontroll. Source och färsk main-bas har samma träd b28326ece23c3e38db1b705dd3941d360c37e4ac och samtliga 404 spårade paths/modes/blobs/bytes. Jämförelsen gäller committed main-bas, inte den pågående tvåfilers produktändringen. Ingen beständig token eller accepterad privat auto-publicering används.
+
+Officiell site-workflow.mjs hittades inte i faktiskt kontrollerade läsbara /opt och /workspace med redovisade undantag; /opt/containerd gav PermissionError. Ingen global frånvaro eller helperkörning påstås. Byteidentiska package/lock/.npmrc gav faktisk hårdlänksåteranvändning av föregående verifierade installation; ingen ny install påstås.
+
+Kandidaten ändrar klientprojektion/diagnos och tester, inte backend, API, SQL, datamodell eller hostingbindning. V94 är kompatibelt UI-återgångsmål för denna avgränsning; återgång har inte utförts. Tidigare commercial_task-audit kräver fortsatt crm82-kompatibel läsare/skrivare, och v78 är inget säkert direkt rollbackmål. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook.
+
+Crm97 är avslutad genom [PR #165](https://github.com/ludros93-prog/MAgnussons-CRM/pull/165): GitHub-main `da36abb16b71e023ceb9df135d6c4f993e8eee2b`, Sites-source `093af08624f0278d2f0dfda504f1c938bc94b324` och **live v94**, terminal lyckad deploy. Dess slutleveranskvittens SHA-256 är `ec9d2fe67bd8e3cecb224a0503046679c997683ce9a854152d5a0177bd673033`; tidigare pendingtexter nedan är bevarad historik.
+
+Crm98:s fem obligatoriska slutkommandon, isolerade browserprov, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; explicit brief och färsk main används.
+
+---
+
+Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Drift – crm96 avslutad live v93; crm97 läsurvalskandidat
 
 Crm96 är avslutad genom [PR #164](https://github.com/ludros93-prog/MAgnussons-CRM/pull/164): GitHub-main `c9f6c3dcc4e1bb1f23dce052834204ea33560a18`, Sites-source `e7eefa6b2641aa4f0ff2e007631f51d412a8e86e` och **live v93**. Dess slutleveranskvittens SHA-256 är `7b64e7633559aaca2fb0a2998bd597df914c1a2b88ce8d2e8c92300d2b63176b`; äldre pendingtexter nedan är bevarad historik.

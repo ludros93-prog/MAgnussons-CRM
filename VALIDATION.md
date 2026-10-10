@@ -1,3 +1,23 @@
+# Validering – crm98 riktad personlig pipeline; slutgrind återstår
+
+Färsk main da36abb1 gav 14 accepterade normaliserade syntetiska basfall med nio åtkomliga Resultat–Offerter-avvikelser, 34 faktiska kompilerade domänmoduler och noll HTTP/skrivningar. Saknad medlemslänk har en stängd personlig Resultat-grind och räknas inte som åtkomligt UI-fel. Bas-audit SHA-256 2ac2e85ebe7c20f90dc8c600818138e814c219b4365000633b3a6deb843a6818.
+
+Ny tests/result-deal-scope.mjs har 41 PASS: 23 faktiska React-/parentfall, 25 jämförelser av alla skyddade metricfält mot hela main-baslinjen, 36 byteverifierade produktionsmoduler och noll HTTP. Samma affärer jämförs med faktisk Offerter-parent/projektion. Befintlig tests/sales-task-profile.mjs har 51 PASS, 16 UI-fall, 180 skyddade jämförelser samt 90 självständiga personliga pipelinekontroller. Bara open/pipeline/unpriced separeras i personal-lägets baslinjekontroll; explicit profile behåller full jämförelse. Kvitto SHA-256 27ec4d69da8b2c610942230f2d8e36a4ad0c1343dd8254e767271d908b9e35b3. En callback-observationsarray i första privata nya testkörningen rättades utan sänkta produktförväntningar; misslyckat underlag bevaras.
+
+Separat produktionsgranskning har inga blockers: 180 fulla default-profile/teamjämförelser och 180 personliga jämförelser av övriga metricfält matchar main; 36 personliga pipelinejämförelser matchar Offerter över tre rapportmånader. Resultat utanför pipelinepanelen, alla helperfunktioner, årstrend och teamrader är bevarade. Granskningskvitto SHA-256 17f858ea2b895daf7115f87afe167dbbff4aaa183cef6130fdfd24bef39487bd. Förberedande TypeScript PASS ersätter inte slutgrinden.
+
+På slutrevision krävs Node24/pnpm11.25.0 och node tests/outlook.mjs, node node_modules/typescript/bin/tsc --noEmit --incremental false, pnpm build, node tests/runtime-smoke.mjs samt git diff --check enligt aktuell CI. Riktade visuella primitiv är ingen native browser, konto- eller personalacceptans.
+
+Crm97 är avslutad genom [PR #165](https://github.com/ludros93-prog/MAgnussons-CRM/pull/165): GitHub-main `da36abb16b71e023ceb9df135d6c4f993e8eee2b`, Sites-source `093af08624f0278d2f0dfda504f1c938bc94b324` och **live v94**, terminal lyckad deploy. Dess slutleveranskvittens SHA-256 är `ec9d2fe67bd8e3cecb224a0503046679c997683ce9a854152d5a0177bd673033`; tidigare pendingtexter nedan är bevarad historik.
+
+Crm98:s fem obligatoriska slutkommandon, isolerade browserprov, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid dokumentfrysningen. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; explicit brief och färsk main används.
+
+---
+
+Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm97 riktade Årshjulsprov; slutgrind återstår
 
 Baslinjen på main c9f6c3d omfattade 14 normaliserade frysta syntetiska fall och nio avvikelser i personligt urval; 33 faktiska produktionsmoduler och noll HTTP/skrivningar. Auditkvitto SHA-256 `ad63ede1a312c69f7067a2dc481895aec88490c7cb3c0bf49d930c6742bac5eb`.
