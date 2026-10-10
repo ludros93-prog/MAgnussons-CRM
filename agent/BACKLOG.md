@@ -1,3 +1,17 @@
+# Arbetskö – crm91 kräver arkivkontroll före publicering
+
+**Kritiskt leveranshinder:** app-PR #158 är sammanslagen på main `7806c8306146020e5b0682c7a8d87eb36b664409`; den testade kandidaten är `43dfeb5b1d9c920ff86c0a04c3bf9c530c8e0fc6`. Native Sites-källa `563a1b6ff087e77bc72dac828f75706f9a20d57f` har samma 390 spårade filer, träd `0fbde45ff22b2f7208cd701b361947116ec4d456` och verifierade arbetsbytes som kandidaten, och källbygget lyckades. Sparad v88 har rätt källrevision men arkivhashen avviker: lokal rå tar-SHA-256 `5fd027a36304678dcc72eff30cc8fc66bd87bc61ee3b87b01a383d21f93f7174`, native `content_hash` `sha256:f26b22e36b56cf0c98d753d78192a7b2b8602c95a94aee09f80076815c5bd0af`. Samma rapporterade 6 021 120 byte/106 filer bevisar inte arkividentitet. Exakt ett `download_file`-försök misslyckades med `file could not be authorized or resolved`. Ingen deploy, ny uppladdning eller ny sparversion anropades efter avvikelsen; orsak, normalisering och native byte-/innehållslikhet är inte verifierade.
+
+Prioritera fungerande auktoriserad återläsning av **befintlig v88**, därefter verklig bytejämförelse eller dokumenterad semantisk arkivkontroll innan samma version används för deploy. Undvik blind återuppladdning. Senaste verifierade live är v87/källa `be802c0b5133e9a8f8ba62e85940543ee9f9afe6`; sparad v88 saknar deployment-ID. Kod/main/live ska fortsätta redovisas var för sig.
+
+B05:s avgränsade rättning för exakt valt privat uppföljningsutkast är nu på main och verifierad med 24 React/provider/API-fall, åtta native browserfall, tre visuella fall, alla fem obligatoriska kontroller och CI med 13 lyckade steg för kandidatens exakta head. Detta styrker inte riktiga personkonton, verksamhetsacceptans eller integrationer. Det här dokumentationstilläggets egna slutkontroller/CI är fortfarande väntande vid denna kvittens och kräver separat belägg för dess slutrevision.
+
+**Nästa kodspår efter leveranskontrollen är fortsatt B01:** redan reproducerat onboarding-/profilgap där kontoalias ersätter exakt medlemskopplad profil eller döljer den egna medlemskopplade profilen när giltigt operativt alias saknas; åtta normaliserade syntetiska basfall finns i tidigare kvittens. B02:s chefsstöd, B04:s fulla hostingåterställning och B07:s egen bekräftelse av personlig inloggning och sparad verklig uppföljning är fortsatt öppna. Ingen kontotilldelning eller antagen användaracceptans görs som del av detta dokumentationstillägg.
+
+---
+
+Historik före denna leveranskvittens – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm91 privat uppföljningsutkast
 
 När användaren väljer ett privat uppföljningsutkast i **Min dag → Fortsätt där du slutade** följer det valda utkastets ID med till **Följ upp**. Två egna utkast för samma aktivitet återupptas därför var för sig med rätt anteckning, resultat och nästa aktivitet/datum. Dialogens identitet inkluderar valt utkast och rensas vid stängning, byte till kund-/affärsflöde samt konto-/arbetsytebyte.
