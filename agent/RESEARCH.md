@@ -9,6 +9,8 @@ Fyra officiella artikelbodies med HTTP 200 lästes och hashades 10 oktober 2026 
 
 Exakt valt ID, privat utkast kontra gemensam CRM-anteckning, samma användare/arbetsyta, CAS, idempotens och atomisk förbrukning är Magnussons egna repo-/testkontrakt. Leverantörstexter bevisar inte att vår implementation följer dem, någon lagringsförlust, verklig inloggning, personalanvändning eller ansluten integration. Codex-referensen är fortsatt oläst.
 
+[Radix Select](https://www.radix-ui.com/primitives/docs/components/select) lästes med HTTP 200 den 10 oktober 21:23:50 UTC. Root-styrningens `disabled` används för ansvarsväljaren under sparning; parentens omedelbara lås stoppar även sena callbackhändelser. Rå body SHA-256 `f0e579e5997d6c3a52dae624ee794000ed0910c27b1e11f8f9fc26b639c690c6`.
+
 ---
 
 Historik före crm96 – tidigare dokumentation bevarad byteoförändrad nedan.
