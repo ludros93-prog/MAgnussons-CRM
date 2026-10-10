@@ -1,3 +1,19 @@
+# Arbetskö – crm89 profilkopplad Kalender
+
+Kalenderns **Kundmöten i CRM** och **Aktiviteter** använder nu den personliga profilens stabila ID före äldre namnansvar. Kontots exakta medlems-ID-länk avgör den egna profilen i aktuell arbetsyta. En annan persons uppgift med samma namnansvar blir inte egen genom namnlikheten. Äldre aktiviteter utan profil-ID följer fortsatt det faktiskt giltiga kundansvaret.
+
+Saknad medlemslänk, olika registrerat profil-/kundansvar och borttaget eller saknat giltigt kundansvar får konkreta besked. **Mina aktiviteter · synligt urval** och tomtexter visar när listan kan vara ofullständig. Befintliga teamurval, uttryckligt annat ansvar och läsar-/administratörsregler bevaras. Kalenderns ansvarsväljare erbjuder den egna arbetsdagen även när kontot behöver det befintliga `_unassigned`-värdet; ingen profil eller behörighet skapas genom valet.
+
+B01:s avgränsade Kalender-lucka är levererad; T01/T02/T04/T05 har relevanta syntetiska belägg för just denna del, inte generell verksamhetsacceptans. Övrig UUID-/aliasmigrering och fullständig identitets-/personalöverlämning kvarstår. B02:s chefsroll, B04:s separata privata driftkopior och full hostad återställning, B05:s återstående privata utkast-/överlämningsflöden och B07:s verkliga personalpilot är fortsatt öppna.
+
+Nästa konkret kodbelagda oberoende lucka är Resultatets `salesMetrics.tasks`, vars uppgiftsurval fortfarande följer namnansvar. Den behöver en separat avgränsning med bevarad affärsdefinition och nya prov; denna kalenderändring rättar inte den delen. En persons egen lyckade inloggning och sparad riktig uppföljning med nästa aktivitet/datum behöver fortfarande bekräftas av personen själv.
+
+App-PR #154, verifierade leveransrevisioner och provgränser finns i [STATUS-2026-10-05.md](../STATUS-2026-10-05.md) och [VALIDATION.md](../VALIDATION.md). Åtkomst-, dataförlust- och orderfel går före normal kö.
+
+---
+
+Historik före crm89 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm88 medlemskopplad egen arbetsdag
 
 Min dag visar nu egna profilkopplade uppgifter, möten och försäljningsresultat även när kontot saknar giltigt operativt kundansvar. Urvalet använder den befintliga exakta medlems-ID-länken i aktuell arbetsyta. Profilens namn eller äldre kundansvar används inte som ersättning för operativt ansvar. Administratören kan växla mellan Mina uppgifter och Teamets uppgifter; teamurvalet kräver fortsatt administratörsroll. Till min arbetsdag från Mitt resultat öppnar direkt det aktuella kontots egen arbetsdag, också när resultatprofilens äldre alias skiljer sig från kundansvaret. Administratörens uttryckliga teamläge bevaras; övriga resultatlänkar behåller sitt operativa urval.

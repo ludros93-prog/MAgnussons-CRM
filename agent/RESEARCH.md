@@ -1,3 +1,15 @@
+# Principer – crm89 profilidentitet och aktivitetskontext
+
+Fyra färska officiella artikelkroppar fick faktisk HTTP 200 och sju korta exakta utdrag återlästes mot sparade bodies; privat kvitto `a142ce998c9149e02aa7acc7841dfbbc9ba9152a2f3124d525d4bbd686cdada3`. [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer objektåtkomst från postbehörighet. [Salesforce Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) beskriver uppgifter och möten i kund-/affärssammanhang och prioriterad nästa handling. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer user/coworker och beskriver stabila Object ID:n. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet på sin officiella marknadssida.
+
+Magnussons exakta medlems-ID-/profil-ID-urval, separat äldre operativt namnansvar, fail-closed vid saknad koppling och synligt ofullständigt urval är egna kontrakt och produktval. Limes dokumenterade first-match-beteende införs inte. Källorna bevisar ingen extern integration, egen kontoinloggning, personalacceptans eller CRM-sparning.
+
+Källorna används för kundsammanhang, tydlig nästa handling och åtskild identitet/behörighet. Den tekniska slutverifieringen finns i [VALIDATION.md](../VALIDATION.md).
+
+---
+
+Historik före crm89 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer – crm88 personlig identitet och synligt urval
 
 4 officiella artikelkroppar fick faktisk HTTP 200 och 7 korta exakta utdrag återlästes mot sparade bodies; kvitto `63d05d961f6b002d988a7a80d9f73158a60869c7f1ea83a69d84e73f81ac6d70`. Lästa källor: [salesforce-record-access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records), [salesforce-activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1), [lime-users](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/), [saleshub-features](https://saleshubai.se/funktioner). Salesforce beskriver egna uppgifter i kund-/affärssammanhang och skiljer objektåtkomst från postbehörighet. Lime skiljer användare/coworker och beskriver stabila Object ID:n. Saleshub beskriver kundkort med nästa aktivitet på sin officiella marknadssida. Magnussons exakta medlems-ID/profilkoppling, separation mellan resultat och operativt kundansvar samt tydligt ofullständigt urval är våra egna kontrakt och produktval. Limes dokumenterade first-match-beteende införs inte här. Källorna bevisar ingen integration, kontoinloggning eller personalacceptans.

@@ -1,3 +1,25 @@
+# Validering – crm89 stabilt aktivitetsurval
+
+Testad kandidat `737810806823fc095e294d5e473781b65fd59399`, träd `cdbb9b591cd14db116f7bdbea2d3e9e9059bcf9a`; [app-PR #154](https://github.com/ludros93-prog/MAgnussons-CRM/pull/154).
+
+Fem obligatoriska kontroller passerade med exit 0 på ren, byteoförändrad slutkandidat: `node tests/outlook.mjs`, TypeScript utan incremental, produktionsbygge, därefter byggd isolerad `node tests/runtime-smoke.mjs` och `git diff --check`. Kontrollkvitto `13c06a433afcdf494e71544335461998b2db7ed133dcf9a2ea5b01f0cc820309`. [Exakt-head PR-CI 38045243149](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38045243149) har faktisk terminal success för samma head; job `114193337683` och samtliga 13 återlästa steg är gröna. Detta belägger PR-headens CI, inte en separat main-push-körning.
+
+Tre gamla fel reproducerades separat på oförändrad baseline: eget profilansvar blandades med annan persons lika namnansvar, saknat operativt alias dolde egna aktiviteter och den faktiska parentcallbackens Kalender-mål valde historiskt profilalias. Tidigare privata fixtur-/harnessfel sparades separat och räknas inte som slutkandidatens produktfel eller slutbevis.
+
+Slutregressionen omfattar 40 nya faktiska CalendarWork-/domän-/parentexpressionsfall och 32 Min dag-fall. Slutbrowserkvittot `151f2c8890358a1bf4fd1a6afecb9ccd90f656a8ed8e2d122a104f3f0563a5d5` omfattar 27 verkliga isolerade native Chromium-fall och 32 oförändrade native PNGs. Alla 18 råtabeller och R2 samt privata utkast-/Outlook-/filsentineler bevaras. Käll-, bygg- och fixturebytes är oförändrade. Browsern gör inga CRM-HTTP-skrivningar och använder uttryckligt syntetisk autentisering; komponentproven har syntetiska visual-/callbackgränser.
+
+Ändringen gäller de två CRM-listorna i Kalender, inte Outlook-kalendern, företagsevent eller personalöverlämning. Kalendergrenen i resultatvyns befintliga parentcallback använder kontots aktuella eget urval. SalesDashboard har ingen faktisk Kalender-knapp: den grenen provas som verklig källkod i komponentproven, medan browsernavigationen använder sidomenyn. Ingen sådan knapp eller användarresa uppfinns.
+
+116 skyddade backend-/API-/lagrings-/hosting-/konfigurationsfiler och alla sex SQL-migrationer är byte-/mode-/blob-identiska mot färsk main `4ebce2973cbb63d4df7b0ee99c36843cee901c8b` och föregående v85-source `d708c9056fb1cfaa26bc9455e662d767e9f8fd79`. Ingen lagring, datamodell, schema, API-, konto- eller rollskrivväg ändras. Fortsatt **crm82-kompatibel läsare och skrivare** krävs efter tidigare `commercial_task`-audit; gammal v78 är inget säkert direkt rollbackmål. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook. Full hostad databas-/fil-/länkåterställning och live-rollback är fortsatt oprövade. Kvitto `166c334e9e4aaefe2f49446f4ed1912490615397a1c382b2b26f2ec87673a9a5`.
+
+Gröna syntetiska komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, sparade riktiga kunduppföljningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+Dokumentationen har en separat mergegrind med egna fem obligatoriska kontroller, aktuell bas och exakt-head PR-CI. Appleveransen ovan är verifierad före dokumentationsrevisionen; dess slutliga main-revision och egna kontrollbelägg redovisas i taskkvittensen. Dokumentationsändringarna kräver ingen extra appversion. AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering ändras inte genom denna dokumentationsrevision.
+
+---
+
+Historik före crm89 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm88 exakt profil och separat kundansvar
 
 Testad kandidat `0302f2ab81f39e1c0c91a371342fa337eb7df63b`, träd `d3007ef272991027c78e7567c7a176c043d64b95`; [app-PR #152](https://github.com/ludros93-prog/MAgnussons-CRM/pull/152).
