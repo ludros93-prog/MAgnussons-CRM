@@ -1,3 +1,15 @@
+# Produkt – onboarding följer kontots profil
+
+Personlig **Onboarding** använder den aktuella arbetsytans exakta medlemskopplade säljarprofil. Profilkopplade kunder följer profil-ID; äldre onboarding utan profil-ID följer enbart kontots giltiga aktuella kundansvar (`onboarding.owner || customer.owner`). Saknad medlemslänk adopterar ingen namnmatchad profil. Saknat eller borttaget kontoalias döljer inte en faktiskt medlemskopplad profil. Uttryckligt teamurval och annat giltigt ansvar samt läsning av inaktiv exakt kopplad profil bevaras.
+
+Verktygsraden skiljer **Min onboarding** och **Teamets onboarding**. Saknad länk, avvikande alias eller saknat giltigt kundansvar ger ett statusbesked före listor och antal. Antal och båda tomflikarna märks som **synligt urval** när kopplingen behöver kontrolleras. Administratören får en befintlig ingång till Mål & inställningar eller Konton & roller; övriga får konkret hjälptext. Ingen konto- eller profilkoppling skapas av visningen.
+
+Ingen befintlig backend, API, lagring, datamodell, SQL-migration, hostingbindning eller serverroll ändras. Den nya scope-modulen är en ren läsprojektion. Privata utkast, atomiska skrivningar, CAS, idempotens och arbetsflödets sparning är bevarade. Försäljning mot månads-/årsmål, marginal och nya prospects består; TB är inget huvudmått. Syntetiska prov är inga riktiga kontoinloggningar, personalacceptanser eller fungerande Fortnox-/Outlook-anslutningar. Inga riktiga kundorder används för skrivprov och inga kund-/personalmeddelanden skickas. AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering bevaras. Codex-referensen `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget anropbart Codex read_thread finns.
+
+---
+
+Historik före crm92 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produkt – exakt privat uppföljningsutkast
 
 När användaren väljer ett privat uppföljningsutkast i **Min dag → Fortsätt där du slutade** följer det valda utkastets ID med till **Följ upp**. Två egna utkast för samma aktivitet återupptas därför var för sig med rätt anteckning, resultat och nästa aktivitet/datum. Dialogens identitet inkluderar valt utkast och rensas vid stängning, byte till kund-/affärsflöde samt konto-/arbetsytebyte.

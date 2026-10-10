@@ -78,3 +78,6 @@ await (await import('./sales-task-profile.mjs')).verifySalesTaskProfile();
 
 // Continuing a chosen private followup keeps its exact identity through save.
 await (await import('./followup-draft-resume.mjs')).verifyFollowupDraftResume();
+
+// Personal onboarding follows immutable member-linked profile responsibility.
+await (await import('./onboarding-scope.mjs')).verifyOnboardingScope();

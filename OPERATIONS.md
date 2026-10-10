@@ -1,3 +1,19 @@
+# Drift – crm92 och återupptagen v88-publicering
+
+**Tidigare leverans är nu faktiskt live v88:** Sites-source `563a1b6ff087e77bc72dac828f75706f9a20d57f`, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_5c224870a7c481919022f13512f3988c`, deployment `appgdep_6aca4ace79d481919e2851f1603f2a9d`, terminal `succeeded` med faktisk `updated_at` `2026-10-10T14:25:27.929234+00:00`, på https://magnussons-crm.rosen123.chatgpt.site. Befintlig sparad version återanvändes utan ny uppladdning eller ny save. V88 avser crm91:s redan testade privata utkastfix, inte den här onboardingkandidaten.
+
+V88:s tidigare arkivhinder är avstämt med reproducerbar hashkontroll: lokal rå tar-SHA-256 `5fd027a36304678dcc72eff30cc8fc66bd87bc61ee3b87b01a383d21f93f7174`; enbart regular-filernas PAX-rättigheter 0600→0644 och tillhörande checksummor ger exakt native `content_hash` `sha256:f26b22e36b56cf0c98d753d78192a7b2b8602c95a94aee09f80076815c5bd0af`. Två oberoende metoder och separat root-återkörning ger identiska bytes: 331 ändrade headerbytes, 106 oförändrade namn/nyttolaster/storlekar, 6 021 120 byte. Alla nyttolaster matchar verifierad byggd source; samtliga 390 spårade källfiler bytekontrollerades. Säker isolerad extraktion verifierades. Färsk native source/hash återlästes före deploy. Native arkivnedladdning har inte lyckats och någon generell backend-normalisering är inte dokumenterad; ingen sådan läsning eller generell regel påstås. Full custom-policy och returnerad miljömetadata är oförändrade efter deploy; hemlighetsvärden lästes inte.
+
+Ingen ny lagrings- eller migrationsgräns införs. Föregående v88 använder samma befintliga läsare/skrivare. Efter tidigare `commercial_task`-audit gäller fortsatt crm82-kompatibel läsare och skrivare; v78 är inget säkert direkt rollbackmål. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook. Full hostad återställning och live-rollback är fortfarande oprövade.
+
+Ingen befintlig backend, API, lagring, datamodell, SQL-migration, hostingbindning eller serverroll ändras. Den nya scope-modulen är en ren läsprojektion. Privata utkast, atomiska skrivningar, CAS, idempotens och arbetsflödets sparning är bevarade. Försäljning mot månads-/årsmål, marginal och nya prospects består; TB är inget huvudmått. Syntetiska prov är inga riktiga kontoinloggningar, personalacceptanser eller fungerande Fortnox-/Outlook-anslutningar. Inga riktiga kundorder används för skrivprov och inga kund-/personalmeddelanden skickas. AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering bevaras. Codex-referensen `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget anropbart Codex read_thread finns.
+
+Denna kodförändring ligger i egen branch `feat/crm92-member-profile` från basen ovan. Den frysta slutrevisionens kontroller, faktisk merge, Sites-source och publicering redovisas separat i leverans-PR och taskkvittot. Main vid inventeringen är `378409a02a5790984e4b0691a6aaef86721ca4f6`, inga öppna PR:er och ingen aktiv deploy. Kod, GitHub-main och live är separata tillstånd.
+
+---
+
+Historik före crm92 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Drift – crm91 återupptagning utan lagringsändring
 
 Inventerad bas är färsk main `da5071fd3a56008802b3b8adcc032b5f390a32dd`, utan öppna PR:er. Vid körningens inledning återlästes **live v87**, source `be802c0b5133e9a8f8ba62e85940543ee9f9afe6`, terminal `succeeded`. Det är ett startunderlag, inte en kvittens för den här ändringens publicering. Kod, exakt-head checks, GitHub-main och faktisk Sites-version har separata belägg i leverans-PR och taskkvittot.
