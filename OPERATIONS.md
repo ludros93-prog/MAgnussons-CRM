@@ -1,3 +1,25 @@
+# Driftkvittens – crm90 läsprojektion utan lagringsändring
+
+Testad kandidat `cdc032f7588e32b2ccd3a6e3754398f5f6fcd203`, träd `a859365e228eadd8a730aa566b1d12e78c1d6654`; [app-PR #156](https://github.com/ludros93-prog/MAgnussons-CRM/pull/156).
+
+GitHub app-main `78a8518111eb5ff4aaf3bd159fad0cb84d5a8d97`. Sites-source `be802c0b5133e9a8f8ba62e85940543ee9f9afe6` har exakt samma testade träd och samtliga 389 spårade paths, modes och blobs; verkliga föräldrar är tidigare v86-source `c9c95beb8b5c34372192a959631866d587f07fda` och app-main. Live **v87** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6aca29f6a3d88191a13c46fdc2acc63d`: separat återläst `succeeded`, faktisk `updated_at` `2026-10-10T12:05:22.286862+00:00` och efterkontroll `2026-10-10T12:05:44+00:00`, med samma source/version/URL.
+
+Den ursprungliga skyddslistan har 116 filer. `lib/sales-dashboard.ts` är ett uttryckligt undantag för ändrad läsprojektion; de övriga 115 skyddade backend-/API-/lagrings-/hosting-/konfigurationsfilerna och alla sex SQL-migrationer är byte-/mode-/blob-identiska mot färsk main `96936a26105d6434ea59fe6aecc56bb6e6232e4a` och föregående v86-source `c9c95beb8b5c34372192a959631866d587f07fda`. AGENTS, MISSION och RUNBOOK är oförändrade. Ingen lagring, datamodell, schema, API-, konto- eller rollskrivväg ändras. Fortsatt **crm82-kompatibel läsare och skrivare** krävs efter tidigare `commercial_task`-audit; gammal v78 är inget säkert direkt rollbackmål. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook. Full hostad databas-/fil-/länkåterställning och live-rollback är fortsatt oprövade. Kvitto `c3d6f0e82e877707a15264bd7ab8365f4c855a618fe5d5a170a9c6c05c21d822`.
+
+Samma begränsade custom-delning revision 2 och returnerade miljömetadata revision 1 bevaras. Fullständiga returnerade metadata för policy, miljö, auth-klient, automationslista och URL är jämförda i verktygsminnet före och efter publicering. Faktiska hemlighetsbytes är inte lästa eller verifierade; ingen hash- eller bytejämförelse av hemligheter påstås. Ingen full hostad återställning eller live-rollback genomfördes.
+
+Paketeringen stoppades först av faktiskt `ERR_PNPM_ENOSPC` i det temporära diskutrymmet. Endast körningens egna aktuella cache- och källresurser flyttades till större arbetsdisk; äldre och främmande resurser ändrades inte. Därefter passerade faktisk låst installation och bygge med exit 0, med samtliga 389 kandidatbytes bevarade och samma redan pushade källrevision. Ingen andra sourcepush gjordes. Åtgärdskvitto `edf440b2f9cbc58fd82fbbef1b7ef1158f902530324d4e184a27a36b0e1a235c`. Denna verifierade diskåterhämtning fastställer ingen orsak till det separata tidigare runtime-avbrottet.
+
+Lokalt tarpaket har SHA-256 `8f1c2bdcd97c96794f79d73ddcd1a99f3ad0df26974ec91226e78206bb1f50ed`, 6 021 120 byte och 106 filer. Native save/get återgav samma serverarkivmetadata: SHA-256 `89cfc83e8c68b3986452b67e72823cca4fb2145f0caf5f74475147d4a88129d7`, 6 021 120 byte och 106 filer. Ett faktiskt `download_file`-försök för returnerat Sediment-ID nekades med `file could not be authorized or resolved`. Hostad arkivbyteidentitet är inte verifierad. Lokal tar och servermetadata har olika hash; orsaken är inte verifierad. Detta ändrar inte de separata käll-, versions- och deploybeläggen.
+
+Gröna syntetiska domän-, komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, sparade riktiga kunduppföljningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+Dokumentationen har en separat mergegrind med egna fem obligatoriska kontroller, aktuell bas och exakt-head PR-CI. Appleveransen ovan är verifierad före dokumentationsrevisionen; dess slutliga main-revision och egna kontrollbelägg redovisas i taskkvittensen. Dokumentationsändringarna kräver ingen extra appversion. AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering ändras inte genom denna dokumentationsrevision.
+
+---
+
+Historik före crm90 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Driftkvittens – crm89 utan lagringsändring
 
 Testad kandidat `737810806823fc095e294d5e473781b65fd59399`, träd `cdbb9b591cd14db116f7bdbea2d3e9e9059bcf9a`; [app-PR #154](https://github.com/ludros93-prog/MAgnussons-CRM/pull/154).

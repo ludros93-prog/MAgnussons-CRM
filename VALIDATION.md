@@ -1,3 +1,43 @@
+# crm90 – misslyckat lokalt dokumentationsprov
+
+Dokumentationskandidat `8bd8934c6aa8348e62c35d6253b423971d86848b`, träd `0bcdd898dc0d5067e79d9eb5b84f7e875245a1a7`, gav exit 0 för regression, TypeScript och bygge. Det fjärde obligatoriska kommandot, `node tests/runtime-smoke.mjs`, avbröts därefter med exit 1 efter 339,96 sekunder (2026-10-10T12:16:21.028151+00:00–2026-10-10T12:22:00.985641+00:00). Femte diffkontrollen kördes inte. Head, träd och samtliga 389 spårade filer var rena och byteoförändrade. Kontrollkvittots SHA-256 är `e8e9ed1882eb1233f7d2dd92bf56ae31a1e628a56a31ea7f23c1f158eb942e04`; runtimeloggens är `4b6d3f3ac66dee41e32a35ca2eae90cdf64fbf19148e45abdfd6aa82cb4b0375`.
+
+Det faktiska slutfelet var `TypeError: fetch failed`, `UND_ERR_SOCKET: other side closed`. Stacken når `raw()` via `Promise.all (index 1)`, `tests/runtime-smoke.mjs:135:362`, där den isolerade R2-fixturen avläses med `bucket.get(item.key)`, och anropet vid `844:956` efter förväntat 409 för en äldre shipped-issue-revision. En tidigare workerd-`Broken pipe` finns i loggen; orsaken till den stängda socketen är inte fastställd. Ingen terminal `AssertionError` finns. Detta är ett faktiskt misslyckat runtimeförsök, utan belagd produkt- eller resursorsak.
+
+Exakt-head CI 38051186930, jobb 114210477988, hade 13 terminalt gröna steg men ersätter inte det misslyckade lokala runtimekravet. Försöket kvalificerar därför inte dokumentationskandidaten för merge. Appens tidigare verifierade main/live-leverans redovisas separat nedan. En ny fryst dokumentationskandidat behöver egna fem obligatoriska kontroller och exakt-head CI; inga framtida utfall påstås. Hela dokumenthistoriken från kandidaten ovan bevaras byteoförändrad nedan. AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering ändras inte.
+
+---
+
+Historik före detta dokumentationsförsök – befintliga dokumentbytes bevarade nedan.
+
+# Validering – crm90 profilkopplat uppgiftsurval
+
+Testad kandidat `cdc032f7588e32b2ccd3a6e3754398f5f6fcd203`, träd `a859365e228eadd8a730aa566b1d12e78c1d6654`; [app-PR #156](https://github.com/ludros93-prog/MAgnussons-CRM/pull/156).
+
+Fem obligatoriska kontroller passerade med exit 0 på ren, byteoförändrad slutkandidat: `node tests/outlook.mjs`, TypeScript utan incremental, produktionsbygge, därefter byggd isolerad `node tests/runtime-smoke.mjs` och `git diff --check`. Kontrollkvitto `3281455c6d9204fd9643db7b3230d0fa1a6aa062a94dc15182328d0428fe2bac`. [Exakt-head PR-CI 38049384483](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38049384483) har faktisk terminal success för samma head; job `114205311287` och samtliga 13 återlästa steg är gröna. Detta belägger PR-headens CI, inte en separat main-push-körning.
+
+Oförändrad baseline gav 18 observationer och nio skillnader i personligt domänurval. 16 observationer använde underlag som accepterades av faktisk normalizeState; två korsade ID-/aliasfall är defensiva läsprov som faktiskt avvisas av den valideringen. Ett av skillnadsfallen ligger bakom den oförändrade saknad-profil-grinden och visar ingen nåbar felaktig uppgiftslista. Domän-, UI- och defensiva slutsatser hålls därför isär. Baselinekvitto `29ab30dcf2922c349fada186db1ae4946977e354acdc045c5782e0855c7297bb`. Tidigare privata fixture-/harnessfel räknas inte som slutkandidatens produktfel eller slutbevis.
+
+Slutregressionen omfattar 51 uppgifts-/Resultatfall: 47 med accepterade referenser och 4 uttryckliga defensiva läsfall, däribland 16 faktiska React-/parentfall. 180 exakta jämförelser mot baseline bevarar de 26 andra resultatfälten. Slutbrowserkvittot `7d8bd435d52bf9957bbda8f635621938e53ded5a545066b130f900ea84a761a2` omfattar 33 verkliga isolerade native Chromium-fall med accepterat syntetiskt läsunderlag och 40 oförändrade native PNGs. Alla 18 råtabeller och R2 samt privata utkast-/Outlook-/filsentineler bevaras. Käll-, bygg- och fixturebytes är oförändrade. Browsern gör inga CRM-HTTP-skrivningar och använder uttryckligt syntetisk autentisering med frånkopplade integrationskonton. En ansluten Outlook-session har inte prövats och dess automatiska synkning omfattas inte av detta nollskrivningsbelägg. Komponentproven har syntetiska visual-/callbackgränser.
+
+Ett tidigare native browserförsök på föregående kandidat hittade ett verkligt mobilfel: långa profilnamn och uppgiftsetiketter gav dokumentbredd 1 671 px vid 320 px viewport. Den avgränsade rättningen ligger i befintlig Resultat-CSS och låter identitet samt uppgiftsrubrik/kundtext brytas inom raden; huvudmåttens JSX och finansiella logik ändras inte. Tidigare två försök stoppades av separata harnessproblem och räknas inte som slutkandidatens produktfel. Det misslyckade mobilkvittot bevaras separat; fem slutkontroller, CI och browser måste avse den nya slutkandidaten. Kvitto `bee8a829f695734a3fab45c8abb00491fd9eb2142960a64c47d273daa102a68b`.
+
+Föregående kandidats obligatoriska lokala runtimekommando avbröts med exit 1 efter 365,72 sekunder och `TypeError: fetch failed; ECONNREFUSED 127.0.0.1:40489`. Fyra kommandon nådde utfall; det fjärde misslyckades och femte diffkontrollen nåddes inte. Källbytes var oförändrade. Den undersökta worker-evalrad 32 hör till installerad Miniflares synkrona binding-/RPC-proxy; exakt appanrop och orsaken till att localhost-lyssnaren försvann är inte fastställda. Detta är ett bevarat misslyckat försök, inte slutkvalifikation eller bevisad produktorsak. Den nya kandidatens runtime och browser körs sekventiellt; en grön ny slutkontroll visar det nya utfallet och upphäver inte det äldre felkvittot. Felkvitto `1183070e8556c0b27e7f03c12d0f68b435eb5684842e38f90819cce37417aca1`, undersökning `f7a70ebc579fc5bcf788e0f024bd4f424ad094d1aab7c40d92da6aa3c57a94b2`.
+
+Resultatets befintliga grind vid saknad egen resultatprofil består: där visas inga personliga försäljningssiffror eller den personliga uppgiftsdelen. Ett domänprov av ett tomt profilurval betyder inte att denna uppgiftsdel kan nås i användargränssnittet. Ingen personkoppling eller behörighet skapas genom urvalet.
+
+De 26 andra resultatfälten, finansiella beräkningarna, huvudmåttens JSX och befintlig navigering bevaras. Försäljning följer fortsatt registrerade fakturor och ansvar vid fakturaregistrering; marginal använder registrerade kostnader och saknad kostnad förblir okänd. Månads-/årsmål och nya kvalificerade prospects behåller sina tidigare definitioner. Ändringen omfattar uppgiftsurval och uppgiftsantal, inte övrig operativ ID-migrering, Outlook-kalendern eller personalöverlämning.
+
+Den ursprungliga skyddslistan har 116 filer. `lib/sales-dashboard.ts` är ett uttryckligt undantag för ändrad läsprojektion; de övriga 115 skyddade backend-/API-/lagrings-/hosting-/konfigurationsfilerna och alla sex SQL-migrationer är byte-/mode-/blob-identiska mot färsk main `96936a26105d6434ea59fe6aecc56bb6e6232e4a` och föregående v86-source `c9c95beb8b5c34372192a959631866d587f07fda`. AGENTS, MISSION och RUNBOOK är oförändrade. Ingen lagring, datamodell, schema, API-, konto- eller rollskrivväg ändras. Fortsatt **crm82-kompatibel läsare och skrivare** krävs efter tidigare `commercial_task`-audit; gammal v78 är inget säkert direkt rollbackmål. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook. Full hostad databas-/fil-/länkåterställning och live-rollback är fortsatt oprövade. Kvitto `c3d6f0e82e877707a15264bd7ab8365f4c855a618fe5d5a170a9c6c05c21d822`.
+
+Gröna syntetiska domän-, komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, sparade riktiga kunduppföljningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+Dokumentationen har en separat mergegrind med egna fem obligatoriska kontroller, aktuell bas och exakt-head PR-CI. Appleveransen ovan är verifierad före dokumentationsrevisionen; dess slutliga main-revision och egna kontrollbelägg redovisas i taskkvittensen. Dokumentationsändringarna kräver ingen extra appversion. AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering ändras inte genom denna dokumentationsrevision.
+
+---
+
+Historik före crm90 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm89 stabilt aktivitetsurval
 
 Testad kandidat `737810806823fc095e294d5e473781b65fd59399`, träd `cdbb9b591cd14db116f7bdbea2d3e9e9059bcf9a`; [app-PR #154](https://github.com/ludros93-prog/MAgnussons-CRM/pull/154).
