@@ -1,3 +1,21 @@
+# Arbetskö – crm92 personligt onboardingansvar
+
+Personlig **Onboarding** använder den aktuella arbetsytans exakta medlemskopplade säljarprofil. Profilkopplade kunder följer profil-ID; äldre onboarding utan profil-ID följer enbart kontots giltiga aktuella kundansvar (`onboarding.owner || customer.owner`). Saknad medlemslänk adopterar ingen namnmatchad profil. Saknat eller borttaget kontoalias döljer inte en faktiskt medlemskopplad profil. Uttryckligt teamurval och annat giltigt ansvar samt läsning av inaktiv exakt kopplad profil bevaras.
+
+Verktygsraden skiljer **Min onboarding** och **Teamets onboarding**. Saknad länk, avvikande alias eller saknat giltigt kundansvar ger ett statusbesked före listor och antal. Antal och båda tomflikarna märks som **synligt urval** när kopplingen behöver kontrolleras. Administratören får en befintlig ingång till Mål & inställningar eller Konton & roller; övriga får konkret hjälptext. Ingen konto- eller profilkoppling skapas av visningen.
+
+B01:s avgränsade onboardingurval är rättat i kandidaten och 41 meningsfulla regressioner passerar. Övriga globala/operativa namnalias, bredare UUID-migrering och full personalöverlämning kvarstår. B02 separat chefsstöd, B04 privata driftkopior/full hostad återställning, B05 övriga privata specialflöden och B07 verklig konto-/personalpilot är fortsatt öppna. Nästa avgränsning väljs efter faktisk slutleverans och färsk inventering; konkreta konto-, åtkomst-, order- och datafel går före normal kö.
+
+**Tidigare leverans är nu faktiskt live v88:** Sites-source `563a1b6ff087e77bc72dac828f75706f9a20d57f`, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_5c224870a7c481919022f13512f3988c`, deployment `appgdep_6aca4ace79d481919e2851f1603f2a9d`, terminal `succeeded` med faktisk `updated_at` `2026-10-10T14:25:27.929234+00:00`, på https://magnussons-crm.rosen123.chatgpt.site. Befintlig sparad version återanvändes utan ny uppladdning eller ny save. V88 avser crm91:s redan testade privata utkastfix, inte den här onboardingkandidaten.
+
+V88:s hashhinder är avstämt genom exakt match efter enbart 0600→0644-headerändring, två oberoende metoder och root-återkörning; alla 106 innehåll matchar verifierad byggd source. Ingen återuppladdning gjordes. Native nedladdning och generell normaliseringsregel påstås inte. Det tidigare blockerade tillståndet nedan är historik, inte aktuell v88-status.
+
+Denna kodförändring ligger i egen branch `feat/crm92-member-profile` från basen ovan. Den frysta slutrevisionens kontroller, faktisk merge, Sites-source och publicering redovisas separat i leverans-PR och taskkvittot. Main vid inventeringen är `378409a02a5790984e4b0691a6aaef86721ca4f6`, inga öppna PR:er och ingen aktiv deploy. Kod, GitHub-main och live är separata tillstånd.
+
+---
+
+Historik före crm92 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm91 kräver arkivkontroll före publicering
 
 **Kritiskt leveranshinder:** app-PR #158 är sammanslagen på main `7806c8306146020e5b0682c7a8d87eb36b664409`; den testade kandidaten är `43dfeb5b1d9c920ff86c0a04c3bf9c530c8e0fc6`. Native Sites-källa `563a1b6ff087e77bc72dac828f75706f9a20d57f` har samma 390 spårade filer, träd `0fbde45ff22b2f7208cd701b361947116ec4d456` och verifierade arbetsbytes som kandidaten, och källbygget lyckades. Sparad v88 har rätt källrevision men arkivhashen avviker: lokal rå tar-SHA-256 `5fd027a36304678dcc72eff30cc8fc66bd87bc61ee3b87b01a383d21f93f7174`, native `content_hash` `sha256:f26b22e36b56cf0c98d753d78192a7b2b8602c95a94aee09f80076815c5bd0af`. Samma rapporterade 6 021 120 byte/106 filer bevisar inte arkividentitet. Exakt ett `download_file`-försök misslyckades med `file could not be authorized or resolved`. Ingen deploy, ny uppladdning eller ny sparversion anropades efter avvikelsen; orsak, normalisering och native byte-/innehållslikhet är inte verifierade.

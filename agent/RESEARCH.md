@@ -1,3 +1,15 @@
+# crm92 – stabil identitet och konkret nästa handling
+
+Färska officiella källor lästes med faktisk HTTP 200 och verkliga textutdrag: [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från objektåtkomst; [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer oföränderligt Object ID från databasspecifikt ID och separat user-/coworkerkoppling; [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Forskningskvitto SHA-256 `a5767bf18a6270e81323f4daed1462265ccdd411109f9f9febd57f6dcf3f7207`. Salesforce-texten återlästes från full body när en första artikelavgränsning inte fann utdraget; första ofullständiga extraktionen bevaras i kvittot.
+
+Magnussons exakta medlems-/profil-ID, separat giltigt äldre alias, synligt urval och befintliga administrativa hjälpingångar kommer från repoets verkliga domänkontrakt och basprov. Limes first-match-beteende införs inte. Förändringen är ansvarsurval inom redan serverbehörig State, ingen ny serveråtkomst eller kontokoppling. Leverantörskällor bevisar inga Magnussons-konton, integrationer eller personalacceptanser.
+
+V88:s specifika native arkivhash reproducerades exakt från lokalt kontrollerat innehåll genom enbart filrättigheter 0600→0644. Detta ger ett konkret kryptografiskt underlag för samma sparade versions deploy, men belägger ingen generell odokumenterad Sites-normaliseringsregel.
+
+---
+
+Historik före crm92 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # crm91 – källmedveten identitet och nästa aktivitet
 
 Färsk officiell dokumentation lästes: [Salesforce Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) om aktiviteter i kundsammanhang, [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) om identitet/behörighet, [Saleshub AI](https://saleshubai.se/funktioner) om kundkort med nästa aktivitet och [React](https://react.dev/learn/preserving-and-resetting-state) om formuläridentitet med key. Den egna tillämpningen är exakt valt privat utkast, bevarad session och tydlig skillnad mellan privat sparning och CRM-inlämning.
