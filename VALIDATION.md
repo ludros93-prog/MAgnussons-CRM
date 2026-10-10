@@ -1,3 +1,13 @@
+# Validering – crm94 riktade affärsscopeprov
+
+Färsk main `35fbf0b`, träd `dedd9c6`, 396 filer: åtta normaliserade frysta baselinefall gav fem Offerter-avvikelser och separat sju Årshjul-avvikelser. Kandidatens åtta faktiska Offerterfall PASS med 34 kompilerade produktionsmoduler, noll HTTP/kund-/konto-/orderskrivningar; Årshjul lämnas oförändrat. Scopekvitto SHA-256 `598715c4983b07ef53a1dc6eb88e578808d40b31348c081dc7e88d1b8bfe76f4`. Root kontrollerade 384 skyddade befintliga filer byte-/modoförändrade; 41 befintliga namngivna appfunktioner bevaras i oberoende läsgranskning.
+
+45 nya faktiska domän-/parent-/Reactfall PASS, 34 bytekontrollerade moduler/noll HTTP. Befintliga Kalender 40/kundärenden 44 PASS. Testkvitto SHA-256 `bf26033025a1814918d6fcd9776fc3e5a10eab505b6e5f0373ce0b3e7dea413c`. Kandidatens fem obligatoriska slutkommandon, native browser, exakt-head CI, aktuell bas, merge/source/deploy återstår. Föregående crm93:s fem slutprov, 44 ärendescopefall, CI med 13 lyckade steg och 16+16 separat körda app/source-browserfall är avslutade via PR #161/live v90. Mock/syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller hostad återställning.
+
+---
+
+Historik före crm94 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm93 riktade ärendescopeprov
 
 Faktisk baseline och oberoende återkörning på main `b507044`, träd `a3df7dd`: 17 accepterade frysta normaliseringsfall, tre verkliga `visibleState`-avdelningsprojektioner och exakt parentgrind; 34 produktionsmoduler, 393 oförändrade arbetsfiler och noll HTTP/kund-/konto-/orderskrivningar. Saknat/borttaget giltigt kundansvar dolde den exakta medlemsprofilen. Accepterat äldre bokstavligt `_unassigned` adopterades; vanligt blankt ansvar provades separat. Fullt kvitto och failure-gränser finns i [agent/LOG.md](agent/LOG.md).

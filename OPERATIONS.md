@@ -1,3 +1,13 @@
+# Drift – crm93 avslutad live v90; crm94 kandidat
+
+[PR #161](https://github.com/ludros93-prog/MAgnussons-CRM/pull/161) avslutar crm93: kod `392fe681ecadf8b78b8a0248fee8a9f333b81924`, main `35fbf0b4086945c5f67e81753fcd56258f447b9a`, Sites-source `ee920137db1a6cca729cf914c43799ce07a8e09b`; 396 källfiler matchar träd `dedd9c6bad7c2023368301528187027021718d9a`. **Live v90**, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_73392e7dec1481919e414d9804c68af9`, deployment `appgdep_6aca61e4dfd081919fe4c497fded426c`, succeeded `2026-10-10T16:04:02.858165+00:00`, på https://magnussons-crm.rosen123.chatgpt.site. Arkiv `sha256:abe89f28057f598d94988751af8ffc66affc21204df82400e742e5319c1eef85`; 6 031 360 byte/106 filer. Begränsad custom-policyrevision 2 och miljörevision 1 bevarades.
+
+Crm94 ändrar en läsprojektion; SQL/API/lagring, atomiska skrivningar, CAS och idempotens består. Crm82-kompatibel läsare/skrivare krävs efter tidigare audit; v78 är inget säkert direkt rollbackmål. Full hostad återställning/live-rollback är oprövade. Crm94:s slutprov/main/source/deploy återstår; slutkvittens knyts efter frysning i PR/taskresultat.
+
+---
+
+Historik före crm94 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Drift – föregående crm92 live v89; crm93 kandidat
 
 Crm92 är avslutad via [PR #160](https://github.com/ludros93-prog/MAgnussons-CRM/pull/160): kod `0d93393a5af62bc1c67de33e94938dc6beef1442`, GitHub-main `b507044781e9876ab873e0dc270e466376b68756`, Sites-source `59223d156c6a7ab43deac5a818a76f1acb806167`. **Live v89**: version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_3aef1b134bf881919fcc41b552398872`, deployment `appgdep_6aca5582b55c8191bcf541b4ba5bebfd`, `succeeded` vid `2026-10-10T15:11:09.808075+00:00`, på https://magnussons-crm.rosen123.chatgpt.site. Äldre väntande crm92-noteringar nedan är historik.

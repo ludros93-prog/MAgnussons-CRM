@@ -1,3 +1,13 @@
+# Produkt – crm94 personligt affärsurval
+
+Registrerat `ownerProfileId` följer exakt medlemskopplad profil, även inaktiv sådan. Blank-ID-affärer kräver giltigt aktuellt kontoalias; namnlikhet och `_unassigned` skapar inget ansvar. Saknad/avvikande koppling ger konkret hjälp till administratörens befintliga konton/inställningar och besked om synligt urval, antal och offertvärden.
+
+Team, annat giltigt ansvar, sökning, steg, editor, överföring och orderingång bevaras. SalesDashboard:s resultat-/pipeline- och mål-/marginaldefinitioner ändras inte. Serverroller, avdelningsvyer och privata utkast består. Ingen SQL, API eller lagring ändras.
+
+---
+
+Historik före crm94 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produkt – ärendeansvar skilt från kundportfölj
 
 I kandidaten använder personligt ärendeurval `plan.issueOwnerProfileId` från arbetsytans exakta medlemskopplade profil. En inaktiv exakt profil kan fortfarande läsas. Äldre ärenden med blankt profil-ID följer giltigt aktuellt kundansvar; det tekniska `_unassigned`-valet adopterar inget äldre ärende med samma ansvarstext. Saknad medlemslänk lånar ingen namnmatchad profil. Team och annat giltigt ansvar bevaras.
