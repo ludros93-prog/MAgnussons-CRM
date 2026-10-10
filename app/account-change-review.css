@@ -1,4 +1,13 @@
 .account-change-workspace,.account-change-sheet,.account-change-workspace .biz-repeat>div{min-width:0;overflow-wrap:anywhere}
+.account-roster-member{width:100%;min-width:0;border-top:1px solid #dfe8f4;padding-top:12px;overflow-wrap:anywhere}
+.account-roster-member>b{font-size:.875rem}.account-roster-member>button{width:100%;min-height:44px}
+.account-identity-details{display:grid;gap:10px;margin-top:14px;min-width:0;font-size:.875rem;line-height:1.6}
+.account-identity-details>div{display:grid;grid-template-columns:140px minmax(0,1fr);gap:8px;min-width:0}
+.account-identity-details dt{font-weight:600;color:#415570}.account-identity-details dd{min-width:0;margin:0;overflow-wrap:anywhere}
+.account-linked-profile+.account-linked-profile{margin-top:12px}.account-linked-profile>b{display:block}
+.account-change-workspace .account-identity-warning{color:#765018;background:#fff6df;border-left:3px solid #be8728;padding:9px 12px;font-size:.875rem;margin:7px 0;overflow-wrap:anywhere}
+.account-registered>button{min-height:44px}
+@media(max-width:767px){.account-identity-details>div{grid-template-columns:minmax(0,1fr);gap:2px}}
 .account-change-workspace h2,.account-change-sheet h3{scroll-margin:1rem}
 .account-change-workspace button:not([data-slot=checkbox]),.account-change-sheet button:not([data-slot=checkbox]){min-height:44px;height:auto;min-width:0;max-width:100%;white-space:normal;line-height:1.5;overflow-wrap:anywhere}
 .account-change-workspace input,.account-change-sheet input{min-width:0;max-width:100%;min-height:44px;font-size:1rem}
