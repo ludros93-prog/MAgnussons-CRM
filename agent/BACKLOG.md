@@ -1,3 +1,15 @@
+# Arbetskö – crm84 läsbar audit efter uppgiftsavslut
+
+B01:s avgränsade lucka för fristående läsning av avslutade kunduppgifters registrerade ansvarshistorik är hanterad. Administratören når den från kundkortets Överblick; överlämning, uppföljning och privata utkast behöver inte öppnas.
+
+Globala/operativa namnalias, övrig UUID-migrering, flertydig identitet och komplett personalöverlämning kvarstår i B01. B02:s chefsroll, B04:s privata driftkopior/full hostad återställning, B05:s återstående utkast-/överlämningsflöden och B07:s verkliga konto-/personalpilot kvarstår. Konkreta åtkomst-, dataförlust- och orderfel går före normal kö.
+
+App-PR #143 och faktisk v81 redovisas i [STATUS-2026-10-05.md](../STATUS-2026-10-05.md). Nästa steg är kvarvarande roll-/profilglapp och en observerad konto-/personalpilot i rätt arbetsvy.
+
+---
+
+Historik före crm84 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm83 synlig uppgiftsaudit
 
 B01:s avgränsade upptäckbarhetslucka är hanterad: administratören når **Visa ansvarshistorik** på en öppen uppgift med registrerad audit i Min dag, även när en ny överlämning eller förankring inte är tillgänglig. Historiken är separat från uppföljningsutkast och skrivåtgärder.

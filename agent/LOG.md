@@ -1,3 +1,21 @@
+# Bygglogg – crm84 avslutade kunduppgifters ansvarshistorik
+
+Administratören kan i kundkortets **Överblick** öppna **Avslutade uppgifter med ansvarshistorik** och välja **Visa ansvarshistorik** för en avslutad uppgift med faktiskt registrerad audit. Läsningen använder befintlig sparad historik utan ny sparning.
+
+**Testad kandidat** `d81b55c368ba539fab82bb960e32c470aee68626`, träd `e126a33040b8df7238ff07555410704e191894b4`; [app-PR #143](https://github.com/ludros93-prog/MAgnussons-CRM/pull/143).
+
+Fem obligatoriska kommandon passerade med faktisk exit 0 på ren, byteoförändrad slutkandidat, avslutat `2026-10-10T02:37:03.025668+00:00`. Privat `checks-app/checks.json` har SHA256 `ad2ba39268707e4a09c80a02fa4b40bfbb2e0361d5f0ab12c5239368739ee7b9`. [Exakt-head CI 38016998593](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38016998593) återlästes `completed/success` med alla föreskrivna steg gröna för samma kandidathead `d81b55c368ba539fab82bb960e32c470aee68626` vid `2026-10-10T02:34:54+00:00`.
+
+25 grupper i slutrapporten omfattar 29 konkreta browserfall (fem rollfall ligger i en grupp), med 80 oförändrade nativebilder; 382 loggade native browser-HTTP-händelser inklusive rollgruppens barnfall. Chromium mot byggd lokal Worker och migrerad isolerad syntetisk D1/R2 läste 8 sparade auditkällor. Alla 18 råtabeller och R2-bytes är identiska efter läsningen; inga business-/utkast-POST. Käll-/byggbyte är oförändrade och rootens bildgranskning ingår. Avslutat `2026-10-10T02:40:13.869149+00:00`.
+
+**App-main** `55aca5200c3315b22cc13bb50dddafc7b5adbf59`. **Sites-source** `451f1491587e3c97c8f15fc0cdb20a04429ebe1c`, samma träd och samma 381 spårade paths, modes och blobs som testad kandidat/main. **Live v81** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deploy `appgdep_6ac9a64a3684819196f41e4a3ac8f664`: `succeeded`, återläst `updated_at` `2026-10-10T02:43:32.921481+00:00`; efterkontroll `2026-10-10T02:44:00+00:00`.
+
+Lagringskontraktet är oförändrat. Exakta loghashar, projectionens avgränsning och tidigare misslyckade körningar hålls skilda från slutbeläggen i [VALIDATION.md](../VALIDATION.md). Käll-/drift-/rollbackgränser finns i [OPERATIONS.md](../OPERATIONS.md).
+
+---
+
+Historik före crm84 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm83 fristående uppgiftshistorik
 
 Administratören kan välja **Visa ansvarshistorik** direkt på en öppen uppgift i **Min dag** när uppgiften har faktisk registrerad ansvarshistorik. Läsningen är fristående från om uppgiften kan överlämnas eller förankras. Dialogen visar registrerade namn, tidpunkt, orsak och referens från auditen; nuvarande profilnamn ersätter inte historiska namn.

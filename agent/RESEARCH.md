@@ -1,3 +1,18 @@
+# Principer för crm84:s avslutade uppgiftshistorik
+
+Två färska officiella W3C-artikelkroppar lästes och hashkontrollerades:
+
+- [Dialog (Modal) Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/): HTTP 200, läst `2026-10-10T02:22:56.861519+00:00`.
+- [Disclosure (Show/Hide) Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/): HTTP 200, läst `2026-10-10T02:22:57.065216+00:00`.
+
+Modalprinciperna används för rubrikfokus, tangentbord, scroll och återgång till öppnaren. Disclosure-principerna används för en stängd, expanderbar historiksektion. Artikelunderlagets privata kvitto `official-docs.json` har SHA256 `3afa3bfda15917b82a5005f89dd3d9b8d466b22771b7438516a22358b7ba8a1e`.
+
+Kundgräns, tio-plus-tio, tidsvalidering/sortering och Europe/Stockholm är Magnussons egen tillämpning. Tidigare verifierade Saleshub-/Salesforce-/Lime-principer återbrukas; ingen ny läsning av deras artiklar eller fungerande integration påstås. Faktiska browserprov och deras begränsningar finns i [VALIDATION.md](../VALIDATION.md).
+
+---
+
+Historik före crm84 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer för crm83:s läsbara uppgiftsaudit
 
 Färsk officiell [W3C APG-dokumentation om modaldialoger](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) och [disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) lästes `2026-10-10T01:20:20+00:00`; båda svarade HTTP 200. Tillämpningen använder läsdialog med tydlig rubrik, tangentbordsfokus och återgång till öppnaren samt befintlig expanderbar detaljerad historik. Dokumentationen och isolerade prov utgör ingen full WCAG- eller skärmläsaracceptans.

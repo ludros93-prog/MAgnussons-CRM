@@ -1,3 +1,25 @@
+# Driftkvittens – crm84 med bibehållet datakontrakt
+
+**Testad kandidat** `d81b55c368ba539fab82bb960e32c470aee68626`, träd `e126a33040b8df7238ff07555410704e191894b4`; [app-PR #143](https://github.com/ludros93-prog/MAgnussons-CRM/pull/143).
+
+**App-main** `55aca5200c3315b22cc13bb50dddafc7b5adbf59`. **Sites-source** `451f1491587e3c97c8f15fc0cdb20a04429ebe1c`, samma träd och samma 381 spårade paths, modes och blobs som testad kandidat/main. **Live v81** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deploy `appgdep_6ac9a64a3684819196f41e4a3ac8f664`: `succeeded`, återläst `updated_at` `2026-10-10T02:43:32.921481+00:00`; efterkontroll `2026-10-10T02:44:00+00:00`.
+
+Sites-source är en verifierad tvåföräldrabrygga från tidigare source `499d03c370af70053b0d9b9ac065a16c471ab0a5` och app-main `55aca5200c3315b22cc13bb50dddafc7b5adbf59`. Faktisk push/remoteåterläsning, lokalt källträd och sparad deployanknytning är separata kvittenser. Källproveniensens privata SHA256 är `8464cfe1b6d1dede7b5aa5fc0bb2e51f274fd3fefd5329b0bbee04da83eaa0b5`; deploykvittot `21ad3e37656e847f362095faa8bee491750afb439ea3fd3abde2cf7f59bc6765` och full policy-/runtimejämförelse `7a1835abc97b5b37be6f930442001b9e4cd4020445b83711d13e7948058960bf`.
+
+Stödda Sites-hjälpskript saknades; befintlig spårad Vinext-/Sites-byggintegration, lokalt tarpaket och native push/save/deploy användes.
+
+Fullständig före-/efterjämförelse bevarar begränsad `custom`-delning (policyrevision 2), auth-klient, 0 automations och hela runtime-konfigurationen (revision 1). Metadata verifierar ingen personlig CRM-roll eller inloggning.
+
+De 102 skyddade backend-, lagrings-, API-, migrations-, hosting- och byggberoendefilerna har identiska paths, modes, blobs, SHA256 och bytes mot faktiskt föregående v80-source `499d03c370af70053b0d9b9ac065a16c471ab0a5`, inklusive sex SQL-migrationer och hostingbindningen. Ingen ny API/datamodell/auditvariant eller SQL-migration införs. Efter tidigare `commercial_task`-audit krävs fortsatt crm82-kompatibel läsare och skrivare. v80 är datakompatibelt enligt källidentiteten; v78 är inget säkert direkt rollbackmål. Full hostad återställning och live-rollback är oprövade. Privat 102-filsbevis SHA256 `cbfcf4d9fdc1f68482ff74d2e0b189fd157329150e6de65b5fa01a18587e52bb`. Gemensam CRM-backup ersätter inte konton, privata utkast eller Outlook. Äldre backend kräver separat verifierad full kopia före nya auditer och bedömning av mellanliggande arbete; kompatibel framåträttning är förstahandsvägen.
+
+Arkivnedladdningen svarade exakt `file could not be authorized or resolved`. Arkivets bytes och binär identitet med lokalt bygge är därför inte oberoende verifierade; källrevision, sparad källanknytning och terminal deploy redovisas separat.
+
+Kod, main och faktiskt publicerad version redovisas separat. En efterföljande docsrevision kräver egna obligatoriska checks/exakt-head CI men ingen extra appversion. Konto-/personal-/integration-/hostad-restoreacceptans härleds inte från dessa metadata; körda prover finns i [VALIDATION.md](VALIDATION.md).
+
+---
+
+Historik före crm84 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Driftkvittens – crm83 läsdialog med bibehållet lagringskontrakt
 
 **Kodkandidat** `34662f18adba2fd4b45d1102560e289ff46289e6`, träd `cd9398cc623f514d4ceef58fde6251e4b6fc57ce`. **GitHub app-main** `9e6a61ecd2014f92ed73b3575b4bc2d293106ce3`, [app-PR #141](https://github.com/ludros93-prog/MAgnussons-CRM/pull/141). **Sites-source** `499d03c370af70053b0d9b9ac065a16c471ab0a5` har samma träd och samma 380 spårade paths, modes och blobs som testad kandidat och app-main. **Live v80** på [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6ac999399a288191a6f2608c334bd748`: terminal `succeeded`, återläst `updated_at` `2026-10-10T01:47:48.453025+00:00` och efterkontroll `2026-10-10T01:48:05.409227+00:00`. Fullständig jämförelse visar oförändrad begränsad delning, automationslista, auth-klient och runtimeinställningar (policyrevision 2, envrevision 1). Kod, main och publicerad version är separata kvittenser.
