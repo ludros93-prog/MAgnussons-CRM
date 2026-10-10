@@ -1,3 +1,20 @@
+# Principer för crm85:s åtkomstläsning
+
+Fyra officiella artikelkroppar lästes med HTTP 200 den 10 oktober 2026 kl. 03:20:51–03:20:53 UTC och kontrollerades mot privata källhashar:
+
+- [React useEffect](https://react.dev/reference/react/useEffect): cleanup och skydd mot asynkrona svar som anländer i annan ordning.
+- [MDN visibilitychange](https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event): synlighetsändring som signal för återläsning.
+- [MDN Request.cache](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache): `no-store` kringgår webbläsarens HTTP-cache.
+- [MDN AbortController.abort](https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort): avbrytning av fetch och svarsläsning.
+
+Privat kvitto `research/verified-research.json` har SHA256 `a623e3ade21b11fe1528c01d1e00e2e975a7422a688202d9b56819119d7ae1b1`. Verktygsprinciperna tillämpas på separata åtkomst-/datauppdateringar, ett pågående försök, generationskontroll och städning. Magnussons väljer själv 30-sekundersintervallet och 15-sekundersförsökets timeout; källorna definierar ingen kontoinloggning, serverpush eller garanterad återkallelsetid.
+
+Tidigare verifierade Saleshub-/Salesforce-/Lime-principer om kundsammanhang, konkreta handlingar och skilda konto-/personidentiteter återbrukas från daterad repohistorik. Ingen ny läsning av leverantörssidor eller fungerande integration påstås. Faktiska prov och deras gränser finns i [VALIDATION.md](../VALIDATION.md).
+
+---
+
+Historik före crm85 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer för crm84:s avslutade uppgiftshistorik
 
 Två färska officiella W3C-artikelkroppar lästes och hashkontrollerades:

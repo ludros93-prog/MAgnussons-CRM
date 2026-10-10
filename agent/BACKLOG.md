@@ -1,3 +1,15 @@
+# Arbetskö – crm85 åtkomstkontroll under redigering
+
+Det konkret verifierade klientglappet är hanterat: dialog, inmatning, öppna informationsfält, inställningar och produktkatalog stoppar inte längre den återkommande åtkomstläsningen. Giltig ändrad användare, medlemskoppling, roll eller registrerat ansvar tas emot även vid oförändrad CRM-version. Faktiskt 401/403 spärrar tidigare arbetsvy. Vanliga datauppdateringar hålls fortsatt tillbaka under redigering.
+
+Detta avslutar inte B01:s återstående namnalias, UUID-migrering, flertydiga identitet eller fullständiga personalöverlämning. B02:s chefsroll, B04:s privata driftkopior/full hostad återställning, B05:s återstående privata utkast-/överlämningsflöden och B07:s verkliga konto-/personalpilot kvarstår. Ingen omedelbar serverpush eller tidsbestämd återkallelse i dold flik, under sparning eller vid uteblivet serversvar påstås.
+
+[App-PR #145](https://github.com/ludros93-prog/MAgnussons-CRM/pull/145) och faktisk v82 redovisas i [STATUS-2026-10-05.md](../STATUS-2026-10-05.md). Nästa steg är kvarvarande roll-/profilglapp och en observerad konto-/personalpilot i rätt arbetsvy. Konkreta åtkomst-, dataförlust- och orderfel går före normal kö.
+
+---
+
+Historik före crm85 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm84 läsbar audit efter uppgiftsavslut
 
 B01:s avgränsade lucka för fristående läsning av avslutade kunduppgifters registrerade ansvarshistorik är hanterad. Administratören når den från kundkortets Överblick; överlämning, uppföljning och privata utkast behöver inte öppnas.
