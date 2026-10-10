@@ -1,3 +1,15 @@
+# Principer – crm93 eget ärendeansvar
+
+Fyra färska officiella bodies gav faktisk HTTP 200 med återlästa korta textutdrag. [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från annan objekttillgång. [Salesforce Case List Views](https://trailhead.salesforce.com/content/learn/modules/cases-list-view-step-by-step/work-with-case-list-views) använder ärendeägare som listvillkor och kundnamnsfilter separat. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer stabilt Object ID från user-/coworkerkoppling. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Forskningskvitto SHA-256 `7cbca8f74fc2df59fe365b980c1a2367b61049d695e77bed4cbd5b0b64545593`.
+
+Första exakta sökningen efter Case Owner gav ingen match; senare bodyläsning fann artikelns verkliga mening om att ärendet inte längre ägs av användaren. Ingen saknad textmatch påstås som citatbelägg.
+
+Magnussons tillämpning är exakt registrerad medlems-/profilkoppling, separat giltigt äldre kundansvar, ärendeansvar skilt från kundportfölj och synligt urval vid kopplingsglapp. Kontrakten kommer från repot/basprov. Limes first-match-beteende införs inte. Förändringen är presentation inom redan serverbehörig State, ingen ny behörighet eller kontokoppling. Källorna styrker inga Magnussons-anslutningar eller personalacceptanser; Codex-referensen är oläst.
+
+---
+
+Historik före crm93 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # crm92 – stabil identitet och konkret nästa handling
 
 Färska officiella källor lästes med faktisk HTTP 200 och verkliga textutdrag: [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från objektåtkomst; [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer oföränderligt Object ID från databasspecifikt ID och separat user-/coworkerkoppling; [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Forskningskvitto SHA-256 `a5767bf18a6270e81323f4daed1462265ccdd411109f9f9febd57f6dcf3f7207`. Salesforce-texten återlästes från full body när en första artikelavgränsning inte fann utdraget; första ofullständiga extraktionen bevaras i kvittot.

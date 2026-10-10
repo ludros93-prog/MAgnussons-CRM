@@ -1,3 +1,15 @@
+# Produkt – ärendeansvar skilt från kundportfölj
+
+I kandidaten använder personligt ärendeurval `plan.issueOwnerProfileId` från arbetsytans exakta medlemskopplade profil. En inaktiv exakt profil kan fortfarande läsas. Äldre ärenden med blankt profil-ID följer giltigt aktuellt kundansvar; det tekniska `_unassigned`-valet adopterar inget äldre ärende med samma ansvarstext. Saknad medlemslänk lånar ingen namnmatchad profil. Team och annat giltigt ansvar bevaras.
+
+Saknad länk, olika registrerat profil-/kundansvar eller saknat giltigt kundansvar ger ett statusbesked i ärendevyn. Rubrik, antal och tomtext märks som **synligt urval**. Administratören når befintliga inställningar/konton; övriga får konkret hjälptext. Kundrelationsgrenen behåller sitt fulla `customer.owner`-urval, antal, editor och handlingar.
+
+Läsarspärren, avdelningarnas egna arbetsvyer, privata utkast och serverbehörighet bevaras. Ingen lagring, SQL eller skrivväg ändras. Huvudmåtten består: försäljning mot månads-/årsmål, marginal och nya prospects; TB är inget huvudmått. Kandidatens provgränser och återstående leveransgrind finns i [VALIDATION.md](VALIDATION.md).
+
+---
+
+Historik före crm93 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produkt – onboarding följer kontots profil
 
 Personlig **Onboarding** använder den aktuella arbetsytans exakta medlemskopplade säljarprofil. Profilkopplade kunder följer profil-ID; äldre onboarding utan profil-ID följer enbart kontots giltiga aktuella kundansvar (`onboarding.owner || customer.owner`). Saknad medlemslänk adopterar ingen namnmatchad profil. Saknat eller borttaget kontoalias döljer inte en faktiskt medlemskopplad profil. Uttryckligt teamurval och annat giltigt ansvar samt läsning av inaktiv exakt kopplad profil bevaras.

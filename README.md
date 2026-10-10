@@ -1,3 +1,15 @@
+# Magnussons CRM – personliga kundärenden
+
+I kandidaten följer **Kundvård → Mina kundärenden** kontots exakta medlemskopplade säljarprofil, också när giltigt kundansvar saknas eller har tagits bort. Äldre ärenden utan profil-ID följer enbart giltigt aktuellt kundansvar. Namnlikhet skapar ingen personlig profillänk.
+
+Kopplingsglapp får konkret hjälptext och besked om **synligt urval** i ärendevyn. **Kundrelationer** behåller sitt befintliga kundansvar, antal, kundplan och handlingar. Teamurval och annat giltigt ansvar bevaras.
+
+44 nya riktade regressioner passerar; slutverifiering och publicering återstår. Senast verifierad live är föregående crm92:s **v89**. Se [VALIDATION.md](VALIDATION.md) för provgränser och [OPERATIONS.md](OPERATIONS.md) för separat kod-/main-/livekvittens.
+
+---
+
+Historik före crm93 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – personligt onboardingurval
 
 Personlig **Onboarding** använder den aktuella arbetsytans exakta medlemskopplade säljarprofil. Profilkopplade kunder följer profil-ID; äldre onboarding utan profil-ID följer enbart kontots giltiga aktuella kundansvar (`onboarding.owner || customer.owner`). Saknad medlemslänk adopterar ingen namnmatchad profil. Saknat eller borttaget kontoalias döljer inte en faktiskt medlemskopplad profil. Uttryckligt teamurval och annat giltigt ansvar samt läsning av inaktiv exakt kopplad profil bevaras.

@@ -1,3 +1,17 @@
+# Drift – föregående crm92 live v89; crm93 kandidat
+
+Crm92 är avslutad via [PR #160](https://github.com/ludros93-prog/MAgnussons-CRM/pull/160): kod `0d93393a5af62bc1c67de33e94938dc6beef1442`, GitHub-main `b507044781e9876ab873e0dc270e466376b68756`, Sites-source `59223d156c6a7ab43deac5a818a76f1acb806167`. **Live v89**: version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_3aef1b134bf881919fcc41b552398872`, deployment `appgdep_6aca5582b55c8191bcf541b4ba5bebfd`, `succeeded` vid `2026-10-10T15:11:09.808075+00:00`, på https://magnussons-crm.rosen123.chatgpt.site. Äldre väntande crm92-noteringar nedan är historik.
+
+Arkiv `sha256:ccf71320af716a06751a7ba2c646ad4f1c724cad98b1241a488ee9edca619b45`, 6 031 360 byte/106 filer, matchar native återläsning och verifierad source. Full begränsad custom-policyrevision 2, samma URL och returnerad miljörevision 1 bevarades. Inga hemlighetsvärden lästes.
+
+Crm93 inför ingen lagring, SQL, API, serverroll eller DB/BUCKET-ändring. Kundportfölj, privata utkast, atomiska skrivningar, CAS och idempotens består. Efter tidigare `commercial_task`-audit krävs crm82-kompatibel läsare och skrivare; v78 är inget säkert direkt rollbackmål. V89 delar backendkontraktet med denna läsprojektion, men faktisk live-rollback/full hostad databas-/fil-/länkåterställning är oprövade. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook.
+
+Kandidatens slutkontroller, merge/source/deploy återstår enligt [STATUS](STATUS-2026-10-05.md) och [VALIDATION](VALIDATION.md). Slutlig leveranskvittens knyts i PR-body/taskresultat efter frysning; ingen crm93-publicering påstås här.
+
+---
+
+Historik före crm93 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Drift – crm92 och återupptagen v88-publicering
 
 **Tidigare leverans är nu faktiskt live v88:** Sites-source `563a1b6ff087e77bc72dac828f75706f9a20d57f`, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_5c224870a7c481919022f13512f3988c`, deployment `appgdep_6aca4ace79d481919e2851f1603f2a9d`, terminal `succeeded` med faktisk `updated_at` `2026-10-10T14:25:27.929234+00:00`, på https://magnussons-crm.rosen123.chatgpt.site. Befintlig sparad version återanvändes utan ny uppladdning eller ny save. V88 avser crm91:s redan testade privata utkastfix, inte den här onboardingkandidaten.
