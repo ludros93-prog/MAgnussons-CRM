@@ -1,3 +1,15 @@
+# Datakompatibilitet för fristående ansvarshistorik – crm83
+
+Detta är en deklarativ kompatibilitetsnotis. De tidigare avsnittens uppdrag, mandat, prioritering, arbetsprocedur, schema, prompt och aktivering ligger kvar byteoförändrade.
+
+De 102 skyddade backend-, lagrings-, migrations- och hostingfilerna har samma paths, modes, blobs och byte som föregående publicerade v79-source `4f159b8f885e136827310445550bcd0352fdc6a6`. Ingen SQL-migration, datamodell, API, CAS eller idempotens ändras. Data är kompatibla med v79-koden. Efter en tidigare `commercial_task`-audit gäller fortsatt crm82-kompatibel läsare och skrivare; v78 är inget säkert direkt rollbackmål. Live-rollback eller full hostad återställning har inte prövats i crm83.
+
+Kodkandidat `34662f18adba2fd4b45d1102560e289ff46289e6`, träd `cd9398cc623f514d4ceef58fde6251e4b6fc57ce`; faktiskt föregående publicerad källa är v79-source ovan. Läsdialogen återbrukar befintlig registrerad audit och lägger inte till en lagringsvariant.
+
+---
+
+Historik före crm83 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Datakompatibilitet för kommersiell uppgiftsförankring – crm82-kod
 
 Detta är en deklarativ notis om dataformatets kompatibilitet och återställning. Byggagentens uppdrag, mandat, prioritering, arbetsprocedur, schema, prompt och aktivering ligger kvar byteoförändrade i tidigare avsnitt.

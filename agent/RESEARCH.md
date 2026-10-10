@@ -1,3 +1,15 @@
+# Principer för crm83:s läsbara uppgiftsaudit
+
+Färsk officiell [W3C APG-dokumentation om modaldialoger](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) och [disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) lästes `2026-10-10T01:20:20+00:00`; båda svarade HTTP 200. Tillämpningen använder läsdialog med tydlig rubrik, tangentbordsfokus och återgång till öppnaren samt befintlig expanderbar detaljerad historik. Dokumentationen och isolerade prov utgör ingen full WCAG- eller skärmläsaracceptans.
+
+Tidigare verifierade Saleshub-, Salesforce- och Lime-principer återbrukas från repoets historik: kundkontext, få konkreta handlingar, spårbart ansvar och faktisk behörighet. Ingen ny leverantörsläsning eller fungerande extern integration påstås. Att visa oförändrade registrerade namn i en separat läsvy är Magnussons egen tillämpning.
+
+Ingången omfattar öppna uppgifter i Min dag. Någon ingång för avslutade uppgifter eller utökad behörighet för andra roller ingår inte. Verklig personlig inloggning, personalacceptans och anslutna integrationer är fortsatt oberoende verifieringar.
+
+---
+
+Historik före crm83 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer för crm82:s granskade kommersiella uppgiftskoppling
 
 Färsk officiell dokumentation lästes om W3C APG:s modaldialoger och Salesforce Secure Apex samt Task/Event Change Data Capture. Cloudflares dokumentationswebb gav faktiskt HTTP 403; officiell cloudflare/cloudflare-docs-källa på GitHub lästes för D1 batch-transaktioners rollback vid fel. Dessa principer stöder separat serverbehörighet, atomisk skrivning och konkret dialogfokus; de verifierar ingen extern integration.

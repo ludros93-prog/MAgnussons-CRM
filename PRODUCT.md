@@ -1,3 +1,17 @@
+# Produktkvittens – ansvarshistorik där uppgiften finns
+
+Administratören kan välja **Visa ansvarshistorik** direkt på en öppen uppgift i **Min dag** när uppgiften har faktisk registrerad ansvarshistorik. Läsningen är fristående från om uppgiften kan överlämnas eller förankras. Dialogen visar registrerade namn, tidpunkt, orsak och referens från auditen; nuvarande profilnamn ersätter inte historiska namn.
+
+Knappen skiljer läsning från **Följ upp** och från ansvarsåtgärder. Historiken kräver ingen ny sparning. Den egna läsdialogen använder scroll, synligt tangentbordsfokus och återgång till öppnaren eller arbetsvyns rubrik. Registrerat kontounderlag vid tidigare koppling visas med sin befintliga förklaring; det bevisar ingen tidigare kontoidentitet eller personens lyckade inloggning.
+
+Ingången omfattar öppna uppgifter i Min dag. Någon ingång för avslutade uppgifter eller utökad behörighet för andra roller ingår inte. Verklig personlig inloggning, personalacceptans och anslutna integrationer är fortsatt oberoende verifieringar. 19 isolerade browserfall och 52 sparade bilder. Faktisk Chromium mot byggd isolerad Worker och migrerad syntetisk D1/R2: sparad affärs-, order- och fristående uppgiftshistorik, namn efter senare profiländring, roll-/identitetsprojektioner, tangentbord och fokus. 320/390/1280 px med normal och fördubblad CSS-text; samtliga 107 panelnoder, 38 dialognoder och 17 expanderade auditnoder har verifierad 2x-faktor i de tre förstorade fallen. Alla 18 råa D1-tabeller och R2-bytes är identiska efter läsningen; inga browser-skrivförsök.
+
+Leveransrevisionerna finns i [STATUS-2026-10-05.md](STATUS-2026-10-05.md); kontroller och deras begränsningar i [VALIDATION.md](VALIDATION.md).
+
+---
+
+Historik före crm83 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produktkvittens – samma person för en äldre kommersiell uppgift
 
 Administratören kan i **Överlämna arbete** granska och **Koppla uppgiftsansvaret** för en äldre öppen, faktiskt lagrad uppgift med kommersiell koppling. Uppgiften får ett stabilt profil-ID för samma person som redan har en granskad UUID-koppling på den entydigt kopplade affären eller ordern. Dialogen visar faktisk uppgift, kund, arbetsflöde, personprofil och separat återläst CRM-konto. En öppnad dialog är ingen sparning, egen inloggning eller personalacceptans.

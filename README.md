@@ -1,3 +1,15 @@
+# Magnussons CRM – läs uppgiftens ansvarshistorik
+
+Administratören kan välja **Visa ansvarshistorik** direkt på en öppen uppgift i **Min dag** när uppgiften har faktisk registrerad ansvarshistorik. Läsningen är fristående från om uppgiften kan överlämnas eller förankras. Dialogen visar registrerade namn, tidpunkt, orsak och referens från auditen; nuvarande profilnamn ersätter inte historiska namn.
+
+**Kodkandidat** `34662f18adba2fd4b45d1102560e289ff46289e6`, träd `cd9398cc623f514d4ceef58fde6251e4b6fc57ce`. **GitHub app-main** `9e6a61ecd2014f92ed73b3575b4bc2d293106ce3`, [app-PR #141](https://github.com/ludros93-prog/MAgnussons-CRM/pull/141). **Sites-source** `499d03c370af70053b0d9b9ac065a16c471ab0a5` har samma träd och samma 380 spårade paths, modes och blobs som testad kandidat och app-main. **Live v80** på [https://magnussons-crm.rosen123.chatgpt.site](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6ac999399a288191a6f2608c334bd748`: terminal `succeeded`, återläst `updated_at` `2026-10-10T01:47:48.453025+00:00` och efterkontroll `2026-10-10T01:48:05.409227+00:00`. Fullständig jämförelse visar oförändrad begränsad delning, automationslista, auth-klient och runtimeinställningar (policyrevision 2, envrevision 1). Kod, main och publicerad version är separata kvittenser.
+
+Ingången omfattar öppna uppgifter i Min dag. Någon ingång för avslutade uppgifter eller utökad behörighet för andra roller ingår inte. Verklig personlig inloggning, personalacceptans och anslutna integrationer är fortsatt oberoende verifieringar. För kontroller och driftbelägg, se [VALIDATION.md](VALIDATION.md) och [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm83 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – koppla en äldre kommersiell uppgift till samma person
 
 Administratören kan i **Överlämna arbete** granska och **Koppla uppgiftsansvaret** för en äldre öppen, faktiskt lagrad uppgift med kommersiell koppling. Uppgiften får ett stabilt profil-ID för samma person som redan har en granskad UUID-koppling på den entydigt kopplade affären eller ordern. Dialogen visar faktisk uppgift, kund, arbetsflöde, personprofil och separat återläst CRM-konto. En öppnad dialog är ingen sparning, egen inloggning eller personalacceptans.
