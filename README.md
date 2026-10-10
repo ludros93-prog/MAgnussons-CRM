@@ -1,3 +1,17 @@
+# Magnussons CRM – avslutade uppgifters ansvarshistorik
+
+Administratören kan i kundkortets **Överblick** öppna **Avslutade uppgifter med ansvarshistorik** och välja **Visa ansvarshistorik** för en avslutad uppgift med faktiskt registrerad audit. Läsningen använder befintlig sparad historik utan ny sparning.
+
+Faktiskt avslutsdatum visas i Europe/Stockholm; saknat/ogiltigt underlag blir **Avslutsdatum saknas**. Listan visar tio åt gången.
+
+**App-main** `55aca5200c3315b22cc13bb50dddafc7b5adbf59`. **Sites-source** `451f1491587e3c97c8f15fc0cdb20a04429ebe1c`, samma träd och samma 381 spårade paths, modes och blobs som testad kandidat/main. **Live v81** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deploy `appgdep_6ac9a64a3684819196f41e4a3ac8f664`: `succeeded`, återläst `updated_at` `2026-10-10T02:43:32.921481+00:00`; efterkontroll `2026-10-10T02:44:00+00:00`.
+
+Beteende och gränser finns i [PRODUCT.md](PRODUCT.md); leveranskvittens i [STATUS-2026-10-05.md](STATUS-2026-10-05.md), kontroller i [VALIDATION.md](VALIDATION.md) och drift i [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm84 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – läs uppgiftens ansvarshistorik
 
 Administratören kan välja **Visa ansvarshistorik** direkt på en öppen uppgift i **Min dag** när uppgiften har faktisk registrerad ansvarshistorik. Läsningen är fristående från om uppgiften kan överlämnas eller förankras. Dialogen visar registrerade namn, tidpunkt, orsak och referens från auditen; nuvarande profilnamn ersätter inte historiska namn.

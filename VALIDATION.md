@@ -1,3 +1,33 @@
+# Validering – crm84 läsning av avslutade uppgifters audit
+
+**Testad kandidat** `d81b55c368ba539fab82bb960e32c470aee68626`, träd `e126a33040b8df7238ff07555410704e191894b4`; [app-PR #143](https://github.com/ludros93-prog/MAgnussons-CRM/pull/143).
+
+Fem obligatoriska kommandon passerade med faktisk exit 0 på ren, byteoförändrad slutkandidat, avslutat `2026-10-10T02:37:03.025668+00:00`. Privat `checks-app/checks.json` har SHA256 `ad2ba39268707e4a09c80a02fa4b40bfbb2e0361d5f0ab12c5239368739ee7b9`.
+
+- `node tests/outlook.mjs`: exit 0, log-SHA256 `70ce60629e86b0e2ecd943332710efb5823423218c943edd530d1c57fa226e04`.
+- `node node_modules/typescript/bin/tsc --noEmit --incremental false`: exit 0, log-SHA256 `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+- `corepack pnpm build`: exit 0, log-SHA256 `69b98872f1c62cc86b3f316b0eee4debf1c4656d16b741d0d5a4af29a56e35fc`.
+- `node tests/runtime-smoke.mjs`: exit 0, log-SHA256 `f436c5546d18f9970bd4243b23fa4122bbe4e790a172381a3a7fa5ef3ffc8a8a`.
+- `git diff --check`: exit 0, log-SHA256 `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+
+[Exakt-head CI 38016998593](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38016998593) återlästes `completed/success` med alla föreskrivna steg gröna för samma kandidathead `d81b55c368ba539fab82bb960e32c470aee68626` vid `2026-10-10T02:34:54+00:00`. Privat CI-kvitto SHA256 `30dc4da32ed9880cd643dc2a6d78da45b6171bf435ccf856dcc9f15d5c642715`.
+
+Fem misslyckade harnessförsök är bevarade som misslyckade; syntetiska fixtures och navigationstestdata rättades utan appfixar för harnessen. Slutligt PASS med 25 rapportgrupper, 29 konkreta browserfall och 80 nativebilder redovisas separat från dessa försök.
+
+25 grupper i slutrapporten omfattar 29 konkreta browserfall (fem rollfall ligger i en grupp), med 80 oförändrade nativebilder; 382 loggade native browser-HTTP-händelser inklusive rollgruppens barnfall. Chromium mot byggd lokal Worker och migrerad isolerad syntetisk D1/R2 läste 8 sparade auditkällor. Alla 18 råtabeller och R2-bytes är identiska efter läsningen; inga business-/utkast-POST. Käll-/byggbyte är oförändrade och rootens bildgranskning ingår. Avslutat `2026-10-10T02:40:13.869149+00:00`. Privat browserrapport SHA256 `0c9a99483d13d1ca7f81ad55f5921ddc6aced942e05e671f851c027d97c6157f`. Kund-/auditgräns, tio-plus-tio, saknad/ogiltig avslutstid, historiska namn, Europe/Stockholm, inaktiva/avslutade sammanhang samt tangentbord/fokus och liten vy med fördubblad CSS-text omfattas av den slutliga rapporten.
+
+Identitets-/borttagningsfallen använder uttrycklig DOM-bypass av befintliga pollpauser och verklig native GET i samma React-instans. Det belägger omedelbar visningsspärr när färsk projektion når vyn; automatisk serverrollåterkallelse under pausad polling eller naturligt byte i öppen modal är inte verifierat.
+
+De 102 skyddade backend-, lagrings-, API-, migrations-, hosting- och byggberoendefilerna har identiska paths, modes, blobs, SHA256 och bytes mot faktiskt föregående v80-source `499d03c370af70053b0d9b9ac065a16c471ab0a5`, inklusive sex SQL-migrationer och hostingbindningen. Ingen ny API/datamodell/auditvariant eller SQL-migration införs. Efter tidigare `commercial_task`-audit krävs fortsatt crm82-kompatibel läsare och skrivare. v80 är datakompatibelt enligt källidentiteten; v78 är inget säkert direkt rollbackmål. Full hostad återställning och live-rollback är oprövade. Privat identitetskvitto SHA256 `cbfcf4d9fdc1f68482ff74d2e0b189fd157329150e6de65b5fa01a18587e52bb`. Källidentitet är separat från ett utfört runtime- eller restoreprov.
+
+Syntetiska prov bevisar inte personliga inloggningar, personalacceptans, riktig kundacceptans, Outlook/Fortnox, full WCAG, fysisk telefon, skärmläsare eller OS-/browserzoom. Inga riktiga kundorder används för skrivprov. Codex-taskreferensen är fortsatt oläst; mandat, schema, prompt och aktivering är oförändrade.
+
+Main/live/source och arkivets faktiska verifieringsgräns finns i [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm84 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm83 läsning av registrerad ansvarshistorik
 
 Kandidat `34662f18adba2fd4b45d1102560e289ff46289e6`, träd `cd9398cc623f514d4ceef58fde6251e4b6fc57ce`. Alla fem obligatoriska kommandon passerade med faktisk exit 0 på ren, byteoförändrad kandidat `34662f18adba2fd4b45d1102560e289ff46289e6`, avslutat `2026-10-10T01:41:04.462140+00:00`: `node tests/outlook.mjs`, TypeScript utan incremental, produktionsbygge, byggd isolerad `node tests/runtime-smoke.mjs` och `git diff --check`. [Exakt-head CI 38013310142](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38013310142) är `success` för samma head. Privat kontrollkvittos SHA256 är `719e860f1d8982b0209efdb4f54a50b3a3e2810a738c8d7e95733bbe4968271e`.

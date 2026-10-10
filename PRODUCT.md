@@ -1,3 +1,17 @@
+# Produktkvittens – ansvarshistorik även efter uppgiftsavslut
+
+Administratören kan i kundkortets **Överblick** öppna **Avslutade uppgifter med ansvarshistorik** och välja **Visa ansvarshistorik** för en avslutad uppgift med faktiskt registrerad audit. Läsningen använder befintlig sparad historik utan ny sparning.
+
+Urvalet omfattar bara den valda kundens avslutade uppgifter med icke-tom registrerad audit. Sektionen börjar stängd, visar tio uppgifter och utökas tio åt gången med **Visa fler avslutade uppgifter**. Giltigt registrerat `doneAt` sorteras fallande efter faktisk tid; lika eller okända tider ordnas stabilt efter uppgifts-ID och okända tider ligger sist. Tid visas uttryckligen i Europe/Stockholm. Saknad, ogiltig eller enbart datumangiven avslutstid visas som **Avslutsdatum saknas**; förfallodag och auditens tid används inte som ersättning.
+
+Läsning kräver administratörens befintliga kundåtkomst, inte ett aktivt överlämningsbart arbetsflöde eller en aktiv tidigare profil. Registrerad historik finns kvar även i inaktiva/avslutade sammanhang. Andra roller får ingen ny ingång. Ändrad kund, arbetsyta, user-/member-ID eller roll rensar urvalet; återöppnad/raderad uppgift eller borttagen audit stänger vald historik. Registrerade namn ersätts inte av nuvarande profilnamn. Fokus återgår till öppnaren eller kundvyns rubrik/sektion.
+
+Ingen CRM-skrivning, privat uppföljning, kontouppslagning eller ny ansvarskoppling görs av läsvyn. Tillgängliga historiska kontosnapshots ger ingen ny åtkomst eller personlig inloggning. Faktiska isolerade prov och pollpausens gräns finns i [VALIDATION.md](VALIDATION.md); leveransrevisionerna i [STATUS-2026-10-05.md](STATUS-2026-10-05.md).
+
+---
+
+Historik före crm84 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produktkvittens – ansvarshistorik där uppgiften finns
 
 Administratören kan välja **Visa ansvarshistorik** direkt på en öppen uppgift i **Min dag** när uppgiften har faktisk registrerad ansvarshistorik. Läsningen är fristående från om uppgiften kan överlämnas eller förankras. Dialogen visar registrerade namn, tidpunkt, orsak och referens från auditen; nuvarande profilnamn ersätter inte historiska namn.
