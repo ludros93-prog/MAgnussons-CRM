@@ -1,5 +1,5 @@
 'use client';
-import {useId,useState,type MouseEvent} from 'react';
+import {useId,useRef,useState,type MouseEvent} from 'react';
 import {AlertCircle,ArrowRight,CalendarClock,FileText,Mail,MessageSquare,Package,Paperclip,Search,UserRound} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
@@ -8,13 +8,15 @@ import {day,concerns,DELIVERY,label,type State,type Customer,type Task,type Orde
 import {CustomerProfileSummary} from './customer-profile';
 import {OutlookActivity,type OutlookContext} from './outlook';
 import {displayDate,money} from './business-ui';
+import {CompletedTaskResponsibilityHistory,completedTaskHistoryIdentity} from './completed-task-responsibility-history';
 
 const taskAction=(t:Task)=>['handover','proof_deadline','order_deadline'].includes(t.kind)?'Hantera underlag':t.kind==='invoice_ready'?'Fakturera':t.kind==='receipt'?'Bekräfta mottaget':'Följ upp';
 const taskTiming=(due:string,today:string)=>due<today?'Försenad':due===today?'Idag':'Kommande';
 const eventType=(kind:string)=>['note','customer_note'].includes(kind)?'Anteckning':kind==='contact'?'Kundkontakt':['file','file_uploaded'].includes(kind)?'Kundunderlag':'Affärshändelse';
 
-export function CustomerWorkspace({st,c,outlook,onTask,onOrder,onPlan,onNewTask}:{st:State;c:Customer;outlook:OutlookContext;onTask:(t:Task)=>void;onOrder:(o:Order)=>void;onPlan:()=>void;onNewTask:()=>void}){
+export function CustomerWorkspace({st,c,space,outlook,onTask,onOrder,onPlan,onNewTask}:{st:State;c:Customer;space:string;outlook:OutlookContext;onTask:(t:Task)=>void;onOrder:(o:Order)=>void;onPlan:()=>void;onNewTask:()=>void}){
  const [filter,setFilter]=useState('all'),[query,setQuery]=useState(''),[limit,setLimit]=useState(20);
+ const completedHistorySummary=useRef<HTMLElement|null>(null),historyHeading=useRef<HTMLHeadingElement|null>(null);
  const id=useId(),today=day(),reader=st.viewer?.role==='reader',canPlan=['admin','seller'].includes(st.viewer?.role||'');
  const sectionId=(section:string)=>id+'-'+section;
  const tasks=st.tasks.filter(t=>t.customerId===c.id&&!t.done).sort((a,b)=>a.due.localeCompare(b.due));
@@ -58,8 +60,10 @@ export function CustomerWorkspace({st,c,outlook,onTask,onOrder,onPlan,onNewTask}
 
   <details className="biz-details co-customer-details"><summary>Kunduppgifter, behov & adresser</summary><p>{c.need||'Behovet är ännu inte dokumenterat.'}</p><CustomerProfileSummary customer={c}/></details>
 
+  <CompletedTaskResponsibilityHistory key={completedTaskHistoryIdentity(st,space,c.id)} st={st} c={c} space={space} summaryRef={completedHistorySummary} returnFocus={()=>completedHistorySummary.current||historyHeading.current}/>
+
   <section className="co-section co-history customer-timeline" id={sectionId('history')} tabIndex={-1} aria-labelledby={sectionId('history-title')}>
-   <div className="co-section-heading"><h3 id={sectionId('history-title')}><MessageSquare size={20} aria-hidden="true"/>Historik <span className="co-count">{allItems.length}</span></h3></div><p className="co-section-description">Anteckningar, kundkontakt och händelser som du har tillgång till.</p>
+   <div className="co-section-heading"><h3 ref={historyHeading} tabIndex={-1} className="co-completed-history-fallback" id={sectionId('history-title')}><MessageSquare size={20} aria-hidden="true"/>Historik <span className="co-count">{allItems.length}</span></h3></div><p className="co-section-description">Anteckningar, kundkontakt och händelser som du har tillgång till.</p>
    <div className="co-history-search"><Search size={18} aria-hidden="true"/><Input aria-label="Sök i kundhistoriken" placeholder="Sök i kundens historik…" value={query} onChange={e=>{setQuery(e.target.value);setLimit(20)}}/></div>
    <Tabs value={filter} onValueChange={v=>{setFilter(v);setLimit(20)}}><TabsList aria-label="Filtrera kundhistoriken"><TabsTrigger value="all">Allt</TabsTrigger><TabsTrigger value="contact">Kontakt & anteckningar</TabsTrigger><TabsTrigger value="work">Affär & order</TabsTrigger><TabsTrigger value="files">Filer</TabsTrigger></TabsList></Tabs>
    {!outlook.state?.connection&&!mailItems.length&&<p className="co-history-hint">Outlook-korrespondens visas när kopplingen är aktiverad och händelserna har kopplats till kunden.</p>}
