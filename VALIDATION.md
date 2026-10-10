@@ -1,3 +1,21 @@
+# Validering – crm97 riktade Årshjulsprov; slutgrind återstår
+
+Baslinjen på main c9f6c3d omfattade 14 normaliserade frysta syntetiska fall och nio avvikelser i personligt urval; 33 faktiska produktionsmoduler och noll HTTP/skrivningar. Auditkvitto SHA-256 `ad63ede1a312c69f7067a2dc481895aec88490c7cb3c0bf49d930c6742bac5eb`.
+
+Den nya sviten har 24 faktiska domän-/parent-/Reactfall PASS, 39 byteverifierade kompilerade produktionsmoduler och noll HTTP. Den omfattar avvikande alias/profil, exakt medlemslänk kontra sessions-ID, saknad länk, saknat/borttaget operativt ansvar, sentinel, inaktiv exakt profil, samma namn med olika ID, äldre profilläge, team, sökning, år/hanterade, månad/kontakta-nu/lista, adminnavigation, läsarroll och tryck-/lagerparent samt kompakt kundvy. Djupfrysta indata bevaras. Visuella primitiv, redo-tom privat provider och oöppnade editorer är kontrollerade gränser. Testet ingår i tests/outlook.mjs; dessa prov är inga native browser- eller serverinloggningsprov.
+
+Kodgranskningen fann en missvisande personlig hjälptext i teamvyn; den är rättad. Slutgranskningen av fyra produktionsfiler har inga blockerande fynd och tolv statiska bevarandekontroller, kvitto SHA-256 `79202ec301d9c8768529aa404c8bcd5d3bd7d701d1a1f394d92d4d95554f2c5e`. Tre officiella artikelbodies lästes och hashades; se [RESEARCH](agent/RESEARCH.md).
+
+På fryst ren slutrevision krävs node tests/outlook.mjs, node node_modules/typescript/bin/tsc --noEmit --incremental false, pnpm build, node tests/runtime-smoke.mjs och git diff --check med Node 24/pnpm 11.25.0 enligt aktuell CI. Crm97:s fem slutkommandon, isolerad browser, exakt-head CI, aktuell mergebas samt merge/source/deploy återstår vid denna dokumentfrysning. Faktiska slutbelägg och separata kandidat-/main-/live-revisioner binds därefter i leverans-PR och taskresultat.
+
+Crm96 är avslutad genom [PR #164](https://github.com/ludros93-prog/MAgnussons-CRM/pull/164): GitHub-main `c9f6c3dcc4e1bb1f23dce052834204ea33560a18`, Sites-source `e7eefa6b2641aa4f0ff2e007631f51d412a8e86e` och **live v93**. Dess slutleveranskvittens SHA-256 är `7b64e7633559aaca2fb0a2998bd597df914c1a2b88ce8d2e8c92300d2b63176b`; äldre pendingtexter nedan är bevarad historik. Dess fem slutkommandon, CI för exakt head och app-/source-browser passerade; lokalt kallkopieprov var syntetiskt och ersätter inte hostad återställning.
+
+Syntetiska kontroller bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst.
+
+---
+
+Historik före crm97 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm96 riktade utkastprov; slutgrind återstår
 
 31 riktade faktiska parent-/React-/DraftProviderfall har PASS med autentiserade in-memory SQLite-handlers, 52 kompilerade produktionsmoduler och 60 byteverifierade källor. Rapport den 10 oktober 2026 21:21:17 UTC, SHA-256 `b55f9d146f769842f1d9328382ac3a486b6ad99b8a1f439b105e19e4b6373cf5`. Samtliga 60 källbyte matchar nuvarande kandidat. Fallen omfattar två egna utkast för samma kund, exakt valt äldre utkast, saknat/arkiverat/fel typ/fel kund/annan användare/annan arbetsyta, väntande laddning, vanlig kundöppning, identitets-/stängningsåterställning, privat flush-/CRM-fel, revisionskonflikt, dubbelklick och sena flush-/CRM-svar. Både råa valda fält och syskonutkast kontrolleras.

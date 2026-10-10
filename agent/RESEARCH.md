@@ -1,3 +1,19 @@
+# Principer – crm97 personligt årshjul och tydligt ofullständigt urval
+
+Tre officiella artikelbodies med faktisk HTTP 200 lästes och hashades den 10 oktober 2026 **22:16:16–22:16:18 UTC**. Privat kvitto `/workspace/.crm97-evidence/research.json`, SHA-256 `d6e17d0750fd98d9337ed0656ebaa624b0a31ffcdfd19abf35056ff0ad98f5b4`, innehåller URL, status, hämtningstid, rå body-hash och sju korta exakta citat som återkontrollerats mot sparad text.
+
+- [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från ägarskap och objektåtkomst. Att en post är synlig betyder inte att den tillhör användarens ansvar. Källan fastställer inga regler för ansvarsöverföring, historiskt kommersiellt resultat eller Magnussons årshjul; inga färska Salesforce-transferpåståenden görs.
+- [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer loginanvändare från kopplad coworker, beskriver problem med personligt dataurval när kopplingen saknas och rekommenderar stabila Object ID:n framför änderliga namn. Limes dokumenterade first-match-beteende införs inte i Magnussons.
+- [Lime To-do](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/todo-features/) skiljer avslut, senareläggning och nästa uppgift samt beskriver uppföljning med bevarade kopplingar. Källan beskriver inget personligt årshjul eller Magnussons privata utkast-/sparmodell.
+
+Tidigare separat daterad [Saleshub AI-princip](https://saleshubai.se/funktioner) om kundsammanhang och nästa aktivitet behålls från repohistoriken. Ingen ny Saleshub-bodyhämtning eller integrationsverifiering påstås i denna tre-källors avgränsning.
+
+Magnussons personliga urval inom redan serverbehörig State, exakta medlems-/profilkoppling, aktuellt giltiga äldre kundansvarsalias och konkreta diagnos vid ofullständigt urval är egna repo-/domänkontrakt och produktval. Loginmedlem, säljarprofil, uppgiftsansvar och operativt kundansvar ska hållas isär; saknad koppling eller tomt urval blir inte bevis för att arbetsvyn är fullständig. Källorna bevisar ingen Magnussons-integration, personlig inloggning, faktisk sparning eller personal-/kundacceptans. Implementation och tekniska prov behöver egna belägg. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; explicit brief och repo används.
+
+---
+
+Historik före crm97 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer – crm96 exakt valt privat anteckningsutkast
 
 Fyra officiella artikelbodies med HTTP 200 lästes och hashades 10 oktober 2026 19:22:29–19:22:31 UTC. Privat researchkvitto SHA-256 `12c2ce1347baccc874ca4be2cdde76acbb56740a7cc41a54ba45bc344f87a5e0` innehåller URL, status, tid, rå body-hash och kontrollerade korta citat.
