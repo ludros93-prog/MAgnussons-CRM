@@ -1,3 +1,20 @@
+# Principer – crm96 exakt valt privat anteckningsutkast
+
+Fyra officiella artikelbodies med HTTP 200 lästes och hashades 10 oktober 2026 19:22:29–19:22:31 UTC. Privat researchkvitto SHA-256 `12c2ce1347baccc874ca4be2cdde76acbb56740a7cc41a54ba45bc344f87a5e0` innehåller URL, status, tid, rå body-hash och kontrollerade korta citat.
+
+- [React: Preserving and Resetting State](https://react.dev/learn/preserving-and-resetting-state) beskriver hur en annan `key` återställer komponentens state. Kandidaten använder vald kund-/utkasts-/kontoidentitet vid återupptagning.
+- [React: Synchronizing with Effects](https://react.dev/learn/synchronizing-with-effects) beskriver att avbryta en hämtning eller ignorera dess gamla resultat. Sena svar ska inte påverka en annan aktuell editoridentitet.
+- [Lime: Actions Design Guidelines](https://platform.docs.lime-crm.com/en/latest/configuration/webclient/actions/actions-design-guidelines/) beskriver relevanta kontextuella handlingar med tydlig etikett. Otillgängligt valt utkast ska förklaras på rätt kundkort med en begriplig väg tillbaka.
+- [Salesforce: Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) beskriver öppna uppgifter, planerade möten och tidigare aktivitet i postens sammanhang. Den tidigare verifierade Saleshub-principen om samlad kundkontext och nästa aktivitet behålls; ingen ny Saleshub-bodyläsning påstås här.
+
+Exakt valt ID, privat utkast kontra gemensam CRM-anteckning, samma användare/arbetsyta, CAS, idempotens och atomisk förbrukning är Magnussons egna repo-/testkontrakt. Leverantörstexter bevisar inte att vår implementation följer dem, någon lagringsförlust, verklig inloggning, personalanvändning eller ansluten integration. Codex-referensen är fortsatt oläst.
+
+[Radix Select](https://www.radix-ui.com/primitives/docs/components/select) lästes med HTTP 200 den 10 oktober 21:23:50 UTC. Root-styrningens `disabled` används för ansvarsväljaren under sparning; parentens omedelbara lås stoppar även sena callbackhändelser. Rå body SHA-256 `f0e579e5997d6c3a52dae624ee794000ed0910c27b1e11f8f9fc26b639c690c6`.
+
+---
+
+Historik före crm96 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer – crm95 personligt orderurval
 
 Fyra färska officiella HTTP-200-bodies lästes och hashades 10 oktober 2026 17:25 UTC: [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från listurval; [Path/Kanban](https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience/visualize-success-with-path-and-kanban) beskriver ägarskap, filter och sammanställning som skilda val. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer stabilt Object ID från user-/coworkerkoppling. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Privat researchkvitto SHA-256 `3caebeec54706906404d83f2114a5faddfd50fcf4967bc77da2cf2910ee890ab`; rå body-hash, tid/status och exakta korta citat är återlästa. Totala citatord per utgivare: Salesforce 18, Lime 19, Saleshub 9.

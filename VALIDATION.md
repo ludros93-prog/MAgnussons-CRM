@@ -1,3 +1,17 @@
+# Validering – crm96 riktade utkastprov; slutgrind återstår
+
+31 riktade faktiska parent-/React-/DraftProviderfall har PASS med autentiserade in-memory SQLite-handlers, 52 kompilerade produktionsmoduler och 60 byteverifierade källor. Rapport den 10 oktober 2026 21:21:17 UTC, SHA-256 `b55f9d146f769842f1d9328382ac3a486b6ad99b8a1f439b105e19e4b6373cf5`. Samtliga 60 källbyte matchar nuvarande kandidat. Fallen omfattar två egna utkast för samma kund, exakt valt äldre utkast, saknat/arkiverat/fel typ/fel kund/annan användare/annan arbetsyta, väntande laddning, vanlig kundöppning, identitets-/stängningsåterställning, privat flush-/CRM-fel, revisionskonflikt, dubbelklick och sena flush-/CRM-svar. Både råa valda fält och syskonutkast kontrolleras.
+
+HTTP-leverans och visuella primitiv är kontrollerade gränser. Testerna kör inga autosave-ticks, native browser, live-konton, riktiga kundorder eller personalacceptans. Basreproduktionen visar fel val av utkast utan skrivning, ingen konstaterad lagringsförlust. Den nya sviten ingår i `tests/outlook.mjs`.
+
+För crm96 återstår på fryst ren slutrevision: `node tests/outlook.mjs`, `node node_modules/typescript/bin/tsc --noEmit --incremental false`, `pnpm build`, `node tests/runtime-smoke.mjs` och `git diff --check`, med Node 24/pnpm 11.25.0 enligt aktuell CI. Därefter krävs isolerat browserprov, gröna checks för exakt PR-head och aktuell bas före merge samt verifierad Sites-source och lyckad deploy. Riktad PASS och tidigare leveransers kontroller ersätter inte denna grind. Slutbeläggen knyts till faktisk slutrevision i leverans-PR/taskresultat.
+
+Crm95 är faktiskt avslutad genom [PR #163](https://github.com/ludros93-prog/MAgnussons-CRM/pull/163)/live v92: alla fem slutkommandon PASS på kandidat `9b4d6f4ce9507907212fbab07b48fb6326f3df53`, [CI 38073712089](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38073712089) success för samma head samt 18 app-/18 source-browserfall, noll browsermutationer. Dess 20 refererade slutbelägg är hashverifierade. Detta bekräftar inga personliga konton, verkliga uppföljningar, fungerande Fortnox/Outlook, full hostad återställning eller live-rollback.
+
+---
+
+Historik före crm96 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm95 orderbaslinje; slutprov återstår
 
 På färsk main `9fa58a341d8f8fc0c248eeddf261b6ff6ade7313` kördes elva faktiska normaliserade React-/domänbasfall med ProductionBoard sales, full ReceiptQueue och full MyDay. De visar alias/profil-avvikelse, saknad medlemslänk, saknat/borttaget alias, inaktiv exakt profil, giltig kontroll, team, annat giltigt ansvar, äldre profiläge och läsare. Basrapport SHA-256 `929ab672b8005aa1378cbb6cc91c3f21422d2c30bada367413cbe6ab89b45954`. Tretton separat körda kontrakts-/flikfall bevarar receipt-definitionen och dokumenterar Aktiva/Att fakturera/Historik samt tryck-/lagerköernas oberoende; rapport SHA-256 `a87da14b18a462cbb3263d458b3d9a0cd4dbd3cc41cc6ac4508ae420219fef88`. Antalen summeras inte till unika fall. Faktisk normalisering och bytebundna produktionsmoduler användes, noll HTTP eller kund-/konto-/orderskrivningar. Visuella primitiv, privat utkastprovider och orelaterade stängda dialoger är uttryckliga adaptrar.
