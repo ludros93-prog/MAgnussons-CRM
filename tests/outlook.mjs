@@ -55,6 +55,9 @@ console.log('PASS: Outlook configuration gate, authenticated identity, encrypted
 // Real React lifecycle regressions for private Outlook identity/workspace changes.
 await import('./outlook-hook.mjs');
 
+// CRM access reads continue during UI pauses without replacing unfinished work.
+await import('./crm-poll.mjs');
+
 // Actual yearwheel editor and private workspace lifecycle; HTTP/UI primitives mocked.
 await import('./year-need-editor.mjs');
 
