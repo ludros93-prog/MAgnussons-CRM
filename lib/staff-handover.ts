@@ -2,7 +2,7 @@ import type {State,Task} from './crm';
 import {sellerProfileById,sellerProfileForOwner} from './seller-profiles';
 import {customerResponsibilityCandidates,customerResponsibilityAnchorReview} from './customer-responsibility';
 import {commercialResponsibilityCandidates,commercialResponsibilityAnchorReview,orderResponsibilityAnchorReview} from './commercial-responsibility';
-import {taskResponsibilityCandidates,taskResponsibilityContext,taskResponsibilityKind,taskResponsibleProfile} from './task-responsibility';
+import {taskResponsibilityCandidates,taskResponsibilityContext,taskResponsibilityKind,taskResponsibleProfile,commercialTaskResponsibilityAnchorReview} from './task-responsibility';
 import {meetingResponsibilityCandidates} from './meeting-responsibility';
 import {onboardingResponsibilityCandidates} from './onboarding-responsibility';
 import {issueResponsibilityCandidates} from './issue-responsibility';
@@ -11,7 +11,7 @@ import {companyEventResponsibilityCandidates} from './company-event-responsibili
 import {companyActivityResponsibilityCandidates} from './company-activity-responsibility';
 
 export type StaffHandoverAction={
- kind:'customer'|'deal'|'order'|'task'|'meeting'|'onboarding'|'issue'|'yearwheel'|'companyEvent'|'companyEventPreparation'|'customerAnchor'|'dealAnchor'|'orderAnchor';
+ kind:'customer'|'deal'|'order'|'task'|'meeting'|'onboarding'|'issue'|'yearwheel'|'companyEvent'|'companyEventPreparation'|'customerAnchor'|'dealAnchor'|'orderAnchor'|'taskAnchor';
  id:string;customerId?:string;needId?:string;checklistId?:string;
 };
 export type StaffHandoverRow={
@@ -69,13 +69,13 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
  function destination(action:StaffHandoverAction,label:string,blockedReason:string,hint:string):Destination{
   return blockedReason?customerDestination(action.customerId||'',blockedReason):{action,actionLabel:label,hint};
  }
- // A neutral link is a separate review of this exact parent record. The
+ // A neutral link is a separate review of this exact responsibility record. The
  // inventory knows the profile link, not whether its account is connected or
  // still eligible. The existing dialog reads that account before saving.
- function anchorDestination(kind:'customerAnchor'|'dealAnchor'|'orderAnchor',id:string,customerId:string,blockedReason:string):Pick<StaffHandoverRow,'anchorAction'|'anchorLabel'|'anchorHint'>{
+ function anchorDestination(kind:'customerAnchor'|'dealAnchor'|'orderAnchor'|'taskAnchor',id:string,customerId:string,blockedReason:string):Pick<StaffHandoverRow,'anchorAction'|'anchorLabel'|'anchorHint'>{
   if(blockedReason)return {};
-  const labels={customerAnchor:'Koppla kundansvaret',dealAnchor:'Koppla affärsansvaret',orderAnchor:'Koppla orderansvaret'};
-  const subjects={customerAnchor:'kundrelationens ansvar',dealAnchor:'affärens ansvar',orderAnchor:'orderns kommersiella ansvar'};
+  const labels={customerAnchor:'Koppla kundansvaret',dealAnchor:'Koppla affärsansvaret',orderAnchor:'Koppla orderansvaret',taskAnchor:'Koppla uppgiftsansvaret'};
+  const subjects={customerAnchor:'kundrelationens ansvar',dealAnchor:'affärens ansvar',orderAnchor:'orderns kommersiella ansvar',taskAnchor:'denna uppgifts ansvar'};
   return {
    anchorAction:{kind,id,customerId},anchorLabel:labels[kind],
    anchorHint:'Samma person fortsätter. Endast '+subjects[kind]+' kopplas till personens befintliga profil-ID. Övriga ansvar och uppgifter ändras inte. Personens CRM-konto och anslutning granskas i dialogen innan kopplingen kan sparas.'
@@ -165,7 +165,11 @@ export function staffHandoverRows(st:State):StaffHandoverRow[]{
  }
  // Tasks are inventoried independently of parent state/ownership. A handover
  // that left a task with its old owner must not make that task disappear.
- for(const task of st.tasks.filter(value=>!value.done))add({kind:'task',typeLabel:taskResponsibilityContext(st,task)?.typeLabel||'Uppgift',title:task.title,customerId:task.customerId,owner:task.owner,ownerProfileId:task.ownerProfileId,due:task.due,dueLabel:'Förfallodatum',status:'Öppen',...taskDestination(task)},['task',task.id]);
+ for(const task of st.tasks.filter(value=>!value.done)){
+  const anchor=commercialTaskResponsibilityAnchorReview(st,task.id);
+  add({kind:'task',typeLabel:taskResponsibilityContext(st,task)?.typeLabel||'Uppgift',title:task.title,customerId:task.customerId,owner:task.owner,ownerProfileId:task.ownerProfileId,due:task.due,dueLabel:'Förfallodatum',status:'Öppen',...taskDestination(task),
+   ...anchorDestination('taskAnchor',task.id,task.customerId,anchor.blockedReason)},['task',task.id]);
+ }
  for(const meeting of st.meetings.filter(value=>value.status==='planned')){
   const candidates=meetingResponsibilityCandidates(st,meeting.id);
   add({kind:'meeting',typeLabel:'Kundmöte',title:meeting.title,customerId:meeting.customerId,owner:meeting.owner,ownerProfileId:meeting.ownerProfileId,due:meeting.date,dueLabel:'Mötesdatum',status:'Planerat',

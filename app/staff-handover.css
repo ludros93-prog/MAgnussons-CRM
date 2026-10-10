@@ -73,3 +73,7 @@
    screens. Long reasons stay scrollable inside a bounded input. */
 .task-responsibility-dialog textarea,.meeting-responsibility-dialog textarea,.commercial-responsibility-dialog textarea{min-width:0;max-width:100%;font-size:1rem;field-sizing:fixed;max-height:min(14rem,calc(100dvh - 5rem));overflow-y:auto}
 .commercial-responsibility-selected{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;line-height:1.4;max-height:2.8em;min-width:0;flex:1;text-align:left}
+
+/* Reuse the reviewed same-person dialog, with a clear read-only parent card. */
+.commercial-task-anchor-parent{border-left:3px solid #a8bccc;background:#f4f7fa}
+.commercial-task-anchor-parent h3{font-size:1rem;line-height:1.5;letter-spacing:0}
