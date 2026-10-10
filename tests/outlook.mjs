@@ -58,6 +58,9 @@ await import('./outlook-hook.mjs');
 // CRM access reads continue during UI pauses without replacing unfinished work.
 await import('./crm-poll.mjs');
 
+// Actual MyDay profile diagnostics must not change selection, rights or data.
+await (await import('./my-day-profile-link.mjs')).verifyMyDayProfileLink();
+
 // Actual yearwheel editor and private workspace lifecycle; HTTP/UI primitives mocked.
 await import('./year-need-editor.mjs');
 
