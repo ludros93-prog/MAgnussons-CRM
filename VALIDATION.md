@@ -1,3 +1,17 @@
+# Validering – crm95 orderbaslinje; slutprov återstår
+
+På färsk main `9fa58a341d8f8fc0c248eeddf261b6ff6ade7313` kördes elva faktiska normaliserade React-/domänbasfall med ProductionBoard sales, full ReceiptQueue och full MyDay. De visar alias/profil-avvikelse, saknad medlemslänk, saknat/borttaget alias, inaktiv exakt profil, giltig kontroll, team, annat giltigt ansvar, äldre profiläge och läsare. Basrapport SHA-256 `929ab672b8005aa1378cbb6cc91c3f21422d2c30bada367413cbe6ab89b45954`. Tretton separat körda kontrakts-/flikfall bevarar receipt-definitionen och dokumenterar Aktiva/Att fakturera/Historik samt tryck-/lagerköernas oberoende; rapport SHA-256 `a87da14b18a462cbb3263d458b3d9a0cd4dbd3cc41cc6ac4508ae420219fef88`. Antalen summeras inte till unika fall. Faktisk normalisering och bytebundna produktionsmoduler användes, noll HTTP eller kund-/konto-/orderskrivningar. Visuella primitiv, privat utkastprovider och orelaterade stängda dialoger är uttryckliga adaptrar.
+
+Detta är **baslinje**, inte kandidatens sluttest, browser, serverinloggning eller personalacceptans. Fyra färska officiella HTTP-200-bodies lästes och hashades 10 oktober 17:25 UTC; researchkvitto SHA-256 `3caebeec54706906404d83f2114a5faddfd50fcf4967bc77da2cf2910ee890ab`. Root:s kompletterande befintliga riktade regressioner Min dag 32, affärsurval 45 och kundärenden 44 har faktiskt PASS med exit 0; de ersätter inte nya orderprov eller slutgrinden. Crm95:s native browser samt samtliga fem slutkommandon, exakt-head CI, aktuell bas, merge/source/deploy återstår och knyts efter frysning i PR/taskresultat.
+
+Crm94:s slutverifiering/publicering är avslutad genom [PR #162](https://github.com/ludros93-prog/MAgnussons-CRM/pull/162)/live v91. Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer, kundgodkännanden eller full hostad återställning. Crm82-kompatibel läsare/skrivare krävs efter tidigare audit; v78 är inget säkert direkt rollbackmål.
+
+Riktat crm95-prov har nu passerat: **58 normaliserade domän-/faktiska sid-/React-fall**, 43 kompilerade produktionsmoduler och 46 byteverifierade källor; noll HTTP. Rapport SHA-256 `10f8f64760dfc64aa116a49a16f06ab9d5995afd41284aefca88679b04c8a177`. Det är syntetiskt kandidatunderlag; native browser och fem slutkommandon på fryst head, exakt-head CI och faktisk publicering återstår.
+
+---
+
+Historik före crm95 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – crm94 riktade affärsscopeprov
 
 Färsk main `35fbf0b`, träd `dedd9c6`, 396 filer: åtta normaliserade frysta baselinefall gav fem Offerter-avvikelser och separat sju Årshjul-avvikelser. Kandidatens åtta faktiska Offerterfall PASS med 34 kompilerade produktionsmoduler, noll HTTP/kund-/konto-/orderskrivningar; Årshjul lämnas oförändrat. Scopekvitto SHA-256 `598715c4983b07ef53a1dc6eb88e578808d40b31348c081dc7e88d1b8bfe76f4`. Root kontrollerade 383 skyddade befintliga filer byte-/modoförändrade; 41 befintliga namngivna appfunktioner bevaras i oberoende läsgranskning.

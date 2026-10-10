@@ -1,3 +1,15 @@
+# Drift – crm94 avslutad live v91; crm95 orderkandidat
+
+[PR #162](https://github.com/ludros93-prog/MAgnussons-CRM/pull/162) avslutar crm94: GitHub-main `9fa58a341d8f8fc0c248eeddf261b6ff6ade7313`, Sites-source `33cb2514dd26586955d7d6f1f75d62519b191c23`, samma 398 paths/moder/blobs och träd `340e53554a722218f454042f38e6be8177c04bd4`. **Live v91**, deployment `appgdep_6aca7036ede4819182ba7d74c3870202`, terminal `succeeded`, faktisk `updated_at` `2026-10-10T17:05:16.580156+00:00`, på https://magnussons-crm.rosen123.chatgpt.site. Arkiv `sha256:17a74f291623d1b8c2aebfe818cd76aaee4ee28c661eb19659ea7f132e66dd60`, 6 041 600 byte/106 filer. Begränsad custom-policyrevision 2, miljörevision 1 och noll automations är bevarade. Äldre väntande crm94-noteringar är en fryst förpubliceringsbild som denna PR/taskkvittens avslutar.
+
+Crm95 avgränsas till läsande orderurval. Backend/API/lagring, atomiska skrivningar, CAS, idempotens, SQL och hostingbindningar ska bevaras. Efter tidigare `commercial_task`-audit krävs fortsatt **crm82-kompatibel läsare och skrivare**; v78 är inget säkert direkt rollbackmål. Full hostad databas-/fil-/länkåterställning och live-rollback är oprövade. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook.
+
+Färsk helpersökning fann inga filer i de faktiskt läsbara kontrollerade rötterna; `/root/.agents/skills` gav PermissionError. Ingen global frånvaro påstås. Root:s manuella läsande källöppning med ordinarie credential verifierade alla 398 filer mot main, utan helper. Det bevisar källöppning, inte crm95-paketering/publicering. Slutkontroller, merge/source/deploy binds efter frysning i leverans-PR/taskresultat. Syntetiska prov ger inga konto-, integrations-, kund- eller personalacceptanser.
+
+---
+
+Historik före crm95 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Drift – crm93 avslutad live v90; crm94 kandidat
 
 [PR #161](https://github.com/ludros93-prog/MAgnussons-CRM/pull/161) avslutar crm93: kod `392fe681ecadf8b78b8a0248fee8a9f333b81924`, main `35fbf0b4086945c5f67e81753fcd56258f447b9a`, Sites-source `ee920137db1a6cca729cf914c43799ce07a8e09b`; 396 källfiler matchar träd `dedd9c6bad7c2023368301528187027021718d9a`. **Live v90**, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_73392e7dec1481919e414d9804c68af9`, deployment `appgdep_6aca61e4dfd081919fe4c497fded426c`, succeeded `2026-10-10T16:04:02.858165+00:00`, på https://magnussons-crm.rosen123.chatgpt.site. Arkiv `sha256:abe89f28057f598d94988751af8ffc66affc21204df82400e742e5319c1eef85`; 6 031 360 byte/106 filer. Begränsad custom-policyrevision 2 och miljörevision 1 bevarades.

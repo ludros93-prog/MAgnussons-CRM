@@ -1,3 +1,13 @@
+# Principer – crm95 personligt orderurval
+
+Fyra färska officiella HTTP-200-bodies lästes och hashades 10 oktober 2026 17:25 UTC: [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från listurval; [Path/Kanban](https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience/visualize-success-with-path-and-kanban) beskriver ägarskap, filter och sammanställning som skilda val. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer stabilt Object ID från user-/coworkerkoppling. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Privat researchkvitto SHA-256 `3caebeec54706906404d83f2114a5faddfd50fcf4967bc77da2cf2910ee890ab`; rå body-hash, tid/status och exakta korta citat är återlästa. Totala citatord per utgivare: Salesforce 18, Lime 19, Saleshub 9.
+
+Magnussons exakta medlemsprofil och giltiga äldre kontoalias kommer från repots etablerade kontrakt och faktiska basfall. Personligt orderurval ska ligga inom redan serverbehörig State, utan nya behörigheter eller sammanblandning av konto, profil och kundansvar. Limes first-match-beteende införs inte. Officiella produkttexter bevisar inga fungerande Magnussons-anslutningar, affärsdefinitioner eller personal-/kundacceptanser. Codex-referensen är oläst; Slack read_thread användes inte.
+
+---
+
+Historik före crm95 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer – crm94 stabilt affärsansvar
 
 Fem färska officiella HTTP-200-bodies lästes 10 oktober 2026: [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från listurval; [Opportunities](https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience/work-your-opportunities) och [Kanban](https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience/visualize-success-with-path-and-kanban) skiljer affärsägare, listfilter och stegvärden. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer oföränderligt Object ID från user-/coworkerkoppling. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Kvitto SHA-256 `2cb260deaa788da236a57cbcec9309e2c47d8ad22e387c21c99cdd6e8526fe03`; tre gissade Salesforce-paths gav 404 och används inte som belägg.

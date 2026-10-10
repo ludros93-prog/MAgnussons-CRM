@@ -1,3 +1,17 @@
+# Magnussons CRM – crm95 Mina order, kandidat
+
+Crm95 avgränsas till det personliga orderurvalet: **Order & leverans**, **På väg till kunden** och Min dags orderhinder, leveransfokus och antal. Registrerade order ska följa kontots exakta medlemskopplade säljarprofil; äldre order utan profil-ID ska följa enbart giltigt aktuellt kundansvar. Kopplingsglapp ska beskrivas som **synligt urval**. Ingången från Mitt resultat ska öppna samma personliga orderurval.
+
+Crm94 är faktiskt avslutad via [PR #162](https://github.com/ludros93-prog/MAgnussons-CRM/pull/162) på **live v91**. Äldre väntande crm94-noteringar nedan är en fryst bild före publicering. Se [OPERATIONS](OPERATIONS.md) för dess verifierade main/source/deploy.
+
+Elva faktiska normaliserade basfall och tretton separat körda kontrakts-/flikfall dokumenterar nuläget; de är inga slutprov av crm95. Native browser, fem slutkommandon, exakt-head CI och publicering återstår. Slutkvittensen binds till fryst revision i leverans-PR och taskresultat.
+
+Riktat crm95-prov har nu passerat: **58 normaliserade domän-/faktiska sid-/React-fall**, 43 kompilerade produktionsmoduler och 46 byteverifierade källor; noll HTTP. Rapport SHA-256 `10f8f64760dfc64aa116a49a16f06ab9d5995afd41284aefca88679b04c8a177`. Det är syntetiskt kandidatunderlag; native browser och fem slutkommandon på fryst head, exakt-head CI och faktisk publicering återstår.
+
+---
+
+Historik före crm95 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – crm94 Mina affärer
 
 Kandidaten visar profilkopplade affärer genom kontots exakta medlemslänk. Äldre affärer följer enbart giltigt aktuellt kundansvar. Kopplingsglapp får besked om **synligt urval**. Team och annat giltigt ansvar bevaras.

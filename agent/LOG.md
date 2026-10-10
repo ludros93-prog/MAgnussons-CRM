@@ -1,3 +1,17 @@
+# Bygglogg – crm95 personligt orderurval
+
+Startbas main `9fa58a341d8f8fc0c248eeddf261b6ff6ade7313`, tidigare source `33cb2514dd26586955d7d6f1f75d62519b191c23`: crm94 är avslutad via PR #162/live v91, terminal lyckad deploy 10 oktober 17:05 UTC. Äldre kandidatnoteringar nedan bevaras som historik, inte aktuell publiceringsblockering.
+
+Vald B01-scope: ny ren order-scope, sales ProductionBoard samtliga flikar/antal, gemensam ReceiptQueue, Min dags orderhinder/receipt-fokus/listor/antal/mount samt root:s orderselector, diagnostic och ResultatOrders-ingång. Icke-uppgiftskopplade leveransrisksignaler med order-ID ska följa den verkliga ordern och samma scope; uppgiftssignaler behåller uppgiftsansvar och kund/okänd fallback sitt aliasurval. Elva faktiska normaliserade basfall och tretton separat körda receipt-/flik-/avdelningskontrakt är dokumenterade; noll HTTP/kund-/konto-/orderskrivningar. Basrapport `929ab672b8005aa1378cbb6cc91c3f21422d2c30bada367413cbe6ab89b45954`, kontraktsrapport `a87da14b18a462cbb3263d458b3d9a0cd4dbd3cc41cc6ac4508ae420219fef88`. Fyra färska officiella 200-bodies gav researchkvitto `3caebeec54706906404d83f2114a5faddfd50fcf4967bc77da2cf2910ee890ab`.
+
+Färsk helpersökning gav inga matchande filer i kontrollerade läsbara rötter och PermissionError för `/root/.agents/skills`; root:s ordinarie credential öppnade tidigare source manuellt, alla 398 filer matchade main. Ingen helperkörning påstås. Browser, fryst head, fem slutkommandon, CI/merge/deploy återstår. Slutbelägg hör till PR/taskresultat efter frysning. Åtta dokument får prefix med bevarade hela gamla suffix/moder; AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering bevaras. Inga verkliga ordertester, externa meddelanden, konto-/integrations-/personalacceptanser eller läst Codex-task påstås.
+
+Riktat crm95-prov har nu passerat: **58 normaliserade domän-/faktiska sid-/React-fall**, 43 kompilerade produktionsmoduler och 46 byteverifierade källor; noll HTTP. Rapport SHA-256 `10f8f64760dfc64aa116a49a16f06ab9d5995afd41284aefca88679b04c8a177`. Det är syntetiskt kandidatunderlag; native browser och fem slutkommandon på fryst head, exakt-head CI och faktisk publicering återstår.
+
+---
+
+Historik före crm95 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm94 affärsurval
 
 Bas `35fbf0b4086945c5f67e81753fcd56258f447b9a`/träd `dedd9c6bad7c2023368301528187027021718d9a`: scope-agentens åtta faktiska normaliseringsfall gav fem Offerter- och separat sju Årshjul-avvikelser. Oberoende inventering använde nio andra fall och gav sju respektive fem set-avvikelser; dessa antal slås inte ihop. Inventeringens första Årshjuljämförelse räknade sorteringsordning, korrigerat till set-jämförelse och bevarat i privat kvitto.

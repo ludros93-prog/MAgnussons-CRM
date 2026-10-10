@@ -1,3 +1,15 @@
+# Produkt – crm95 personligt orderurval, kandidat
+
+Den avgränsade läsprojektionen ska använda registrerat `ownerProfileId` för order kopplade till kontots exakta medlemsprofil, även en inaktiv exakt kopplad profil. Äldre order med blankt profil-ID kräver giltigt aktuellt kontoalias. Namnlikhet och `_unassigned` ska inte skapa personligt ansvar. Kopplingsglapp ska förklaras före urval, antal och tomtexter.
+
+Samma urval ska bära försäljningsköns Aktiva, Att fakturera och Historik, den gemensamma leveransbevakningen samt Min dags orderhinder, leveransfokus, listor och antal. Resultat-ingången ska öppna Mina order. Team, annat giltigt ansvar, sökning och befintliga handlingar behålls. Min dags orderkopplade leveransrisksignaler ska använda den faktiska ordern och samma orderurval. Uppgiftskopplade signaler behåller eget uppgiftsansvar; kund- och okänd fallback behåller aliasurvalet. Produktionshindrets separata kontoansvar består.
+
+Tryck, lager och ProductionWorkspace, serverroller, API, lagring, SQL, privata utkast, mängder, godkännanden, dialoger och skrivflöden ska bevaras. Resultat-, pipeline-, mål- och marginaldefinitioner ändras inte. Crm94:s Mina affärer är avslutad på v91 via PR #162; crm95:s riktade slutprov och publicering återstår.
+
+---
+
+Historik före crm95 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produkt – crm94 personligt affärsurval
 
 Registrerat `ownerProfileId` följer exakt medlemskopplad profil, även inaktiv sådan. Blank-ID-affärer kräver giltigt aktuellt kontoalias; namnlikhet och `_unassigned` skapar inget ansvar. Saknad/avvikande koppling ger konkret hjälp till administratörens befintliga konton/inställningar och besked om synligt urval, antal och offertvärden.

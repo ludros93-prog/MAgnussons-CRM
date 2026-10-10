@@ -1,3 +1,15 @@
+# Arbetskö – crm95 avgränsat personligt orderansvar
+
+Nästa valda B01-del är Mina order: en gemensam stabil läsprojektion för försäljningsköns alla flikar/antal, ReceiptQueue och Min dags orderhinder/leveransfokus/listor/antal, inklusive orderkopplade leveransrisksignaler. Root:s selector, kopplingsdiagnos och Mitt resultat → Order ingår. Elva faktiska basfall och tretton separat körda kontrakts-/flikfall dokumenterar behovet; native browser, frysta slutprov och publicering återstår. Crm94 är faktiskt avslutad via PR #162 på v91.
+
+Därefter kvarstår B01:s Årshjul med äldre behovsansvar och separat ställningstagande till SalesDashboard:s personliga pipelineprojektion. B05: valt `noteDraft` kan öppna första privata anteckningen för samma kund i stället för vald; tidigare reproduktion är läsande och bevisar ingen faktisk lagringsförlust. B04 full hostad återställning/privata driftkopior och B07 personens egen bekräftelse av inloggning samt verklig sparad uppföljning med nästa aktivitet/datum är öppna. B02 chefsroll/personalmappning kräver faktiskt underlag. Akuta verifierade åtkomst-, dataförlust- och orderfel går före kön; inga personer, konton eller acceptanser uppfinns.
+
+Riktat crm95-prov har nu passerat: **58 normaliserade domän-/faktiska sid-/React-fall**, 43 kompilerade produktionsmoduler och 46 byteverifierade källor; noll HTTP. Rapport SHA-256 `10f8f64760dfc64aa116a49a16f06ab9d5995afd41284aefca88679b04c8a177`. Det är syntetiskt kandidatunderlag; native browser och fem slutkommandon på fryst head, exakt-head CI och faktisk publicering återstår.
+
+---
+
+Historik före crm95 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Arbetskö – crm94 avgränsat affärsurval
 
 B01-kandidaten rättar Offerter/Mina affärer och personlig resultat-ingång; registrerade affärer följer exakt medlemsprofil, äldre affärer giltigt aktuellt kontoalias. 45 faktiska domän-/parent-/Reactfall PASS; full slutgrind/publicering återstår. Föregående crm93 är avslutad på v90 via PR #161.
