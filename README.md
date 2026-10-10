@@ -1,3 +1,19 @@
+# Magnussons CRM – egen arbetsdag även utan kundansvar
+
+Min dag visar nu egna profilkopplade uppgifter, möten och försäljningsresultat även när kontot saknar giltigt operativt kundansvar. Urvalet använder den befintliga exakta medlems-ID-länken i aktuell arbetsyta. Profilens namn eller äldre kundansvar används inte som ersättning för operativt ansvar. Administratören kan växla mellan Mina uppgifter och Teamets uppgifter; teamurvalet kräver fortsatt administratörsroll. Till min arbetsdag från Mitt resultat öppnar direkt det aktuella kontots egen arbetsdag, också när resultatprofilens äldre alias skiljer sig från kundansvaret. Administratörens uttryckliga teamläge bevaras; övriga resultatlänkar behåller sitt operativa urval.
+
+Beskedet **Kundansvar saknas** förklarar att kundsignaler, order, leveransbevakning och äldre aktiviteter utan profilansvar kan saknas. Arbetslistan och dess antal märks som **synligt urval**, inte en bekräftad fullständig arbetsdag. Administratören når befintliga **Konton & roller**; övriga får konkret hjälp att be en administratör kontrollera kundansvaret. Ingen kontokoppling eller ansvarstilldelning skapas genom visningen.
+
+Testad kandidat `0302f2ab81f39e1c0c91a371342fa337eb7df63b`, träd `d3007ef272991027c78e7567c7a176c043d64b95`; [app-PR #152](https://github.com/ludros93-prog/MAgnussons-CRM/pull/152).
+
+GitHub app-main `efa8660c35c97ac0c0e965ccac475965218e257a`. Sites-source `d708c9056fb1cfaa26bc9455e662d767e9f8fd79` har exakt samma testade träd och samtliga 386 spårade paths, modes och blobs; verkliga föräldrar är tidigare source `04d75288119184fccda912f565452a733e2075fb` och app-main. Live **v85** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6ac9fed52f848191baf056f7da4d3432`: separat återläst `succeeded` med samma source/version/URL.
+
+Produktgränser, prov och drift finns i [PRODUCT.md](PRODUCT.md), [VALIDATION.md](VALIDATION.md) och [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm88 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – tydlig skillnad mellan konto, kundansvar och profil
 
 Kontoadministrationen skiljer nu registrerad inloggningskoppling, operativt kundansvar och exakt konto-ID-länk till resultatprofil. Saknade eller motsägande kopplingar visas från faktiskt läst underlag; namnlikhet skapar ingen identitet. Historiska/inaktiva profiler behåller sina riktiga länkar. Kontots kundansvarsväljare beskrivs som kundansvar, inte som en ändring av den separata resultatprofilen.

@@ -1,3 +1,19 @@
+# Produktkvittens – egna aktiviteter och resultat i Min dag
+
+Min dag visar nu egna profilkopplade uppgifter, möten och försäljningsresultat även när kontot saknar giltigt operativt kundansvar. Urvalet använder den befintliga exakta medlems-ID-länken i aktuell arbetsyta. Profilens namn eller äldre kundansvar används inte som ersättning för operativt ansvar. Administratören kan växla mellan Mina uppgifter och Teamets uppgifter; teamurvalet kräver fortsatt administratörsroll. Till min arbetsdag från Mitt resultat öppnar direkt det aktuella kontots egen arbetsdag, också när resultatprofilens äldre alias skiljer sig från kundansvaret. Administratörens uttryckliga teamläge bevaras; övriga resultatlänkar behåller sitt operativa urval.
+
+Beskedet **Kundansvar saknas** förklarar att kundsignaler, order, leveransbevakning och äldre aktiviteter utan profilansvar kan saknas. Arbetslistan och dess antal märks som **synligt urval**, inte en bekräftad fullständig arbetsdag. Administratören når befintliga **Konton & roller**; övriga får konkret hjälp att be en administratör kontrollera kundansvaret. Ingen kontokoppling eller ansvarstilldelning skapas genom visningen.
+
+Saknad medlemslänk, annan arbetsyta eller borttagen koppling ger ingen gissad personlig profil. Historiskt registrerat resultat ligger kvar hos stabil profil. En säljares urval kan inte öppna teamets arbetsdag eller resultat genom värdet all.
+
+Huvudmåtten är försäljning mot månads-/årsmål, marginal och nya prospects. TB är inget huvudmått. Serverroller, privat kommunikation och utkast, atomiska skrivningar, CAS och idempotens bevaras.
+
+Gröna syntetiska komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+---
+
+Historik före crm88 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Produktkvittens – begriplig kontoadministration
 
 Kontoadministrationen skiljer nu registrerad inloggningskoppling, operativt kundansvar och exakt konto-ID-länk till resultatprofil. Saknade eller motsägande kopplingar visas från faktiskt läst underlag; namnlikhet skapar ingen identitet. Historiska/inaktiva profiler behåller sina riktiga länkar. Kontots kundansvarsväljare beskrivs som kundansvar, inte som en ändring av den separata resultatprofilen.

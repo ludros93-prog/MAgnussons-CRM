@@ -1,3 +1,33 @@
+# Bygglogg – crm88 profilkopplad Min dag
+
+Min dag visar nu egna profilkopplade uppgifter, möten och försäljningsresultat även när kontot saknar giltigt operativt kundansvar. Urvalet använder den befintliga exakta medlems-ID-länken i aktuell arbetsyta. Profilens namn eller äldre kundansvar används inte som ersättning för operativt ansvar. Administratören kan växla mellan Mina uppgifter och Teamets uppgifter; teamurvalet kräver fortsatt administratörsroll. Till min arbetsdag från Mitt resultat öppnar direkt det aktuella kontots egen arbetsdag, också när resultatprofilens äldre alias skiljer sig från kundansvaret. Administratörens uttryckliga teamläge bevaras; övriga resultatlänkar behåller sitt operativa urval.
+
+Beskedet **Kundansvar saknas** förklarar att kundsignaler, order, leveransbevakning och äldre aktiviteter utan profilansvar kan saknas. Arbetslistan och dess antal märks som **synligt urval**, inte en bekräftad fullständig arbetsdag. Administratören når befintliga **Konton & roller**; övriga får konkret hjälp att be en administratör kontrollera kundansvaret. Ingen kontokoppling eller ansvarstilldelning skapas genom visningen.
+
+Testad kandidat `0302f2ab81f39e1c0c91a371342fa337eb7df63b`, träd `d3007ef272991027c78e7567c7a176c043d64b95`; [app-PR #152](https://github.com/ludros93-prog/MAgnussons-CRM/pull/152).
+
+GitHub app-main `efa8660c35c97ac0c0e965ccac475965218e257a`. Sites-source `d708c9056fb1cfaa26bc9455e662d767e9f8fd79` har exakt samma testade träd och samtliga 386 spårade paths, modes och blobs; verkliga föräldrar är tidigare source `04d75288119184fccda912f565452a733e2075fb` och app-main. Live **v85** på [Magnussons CRM](https://magnussons-crm.rosen123.chatgpt.site), deployment `appgdep_6ac9fed52f848191baf056f7da4d3432`: separat återläst `succeeded` med samma source/version/URL.
+
+Fem obligatoriska kontroller passerade med exit 0 på ren, byteoförändrad slutkandidat: `node tests/outlook.mjs`, TypeScript utan incremental, produktionsbygge, byggd isolerad `node tests/runtime-smoke.mjs` och `git diff --check`. Kontrollkvitto `760304b95edc2903c2cb4c7bbc25dc5dc1f6cb92a79db9a015f3a4c2fd769bce`. [Exakt-head PR-CI 38039103181](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38039103181) har verklig terminal success för samma head; job `114175611109` och samtliga 13 faktiskt återlästa steg är gröna. Detta bevisar PR-headens CI, inte en separat main-push-körning.
+
+Den slutliga obligatoriska regressionsloggen innehåller 32 faktiska React-komponent-/filter-/callbackfall för Min dag. Slutbrowserkvittot `128a6392f41d9430c6ef0c40b92cc024edd53c9d5ab029ae67dbb77c6dfe766f` omfattar 21 verkliga isolerade native Chromium-fall och 23 oförändrade native PNGs. Alla 18 råtabeller och R2, privata utkast-/Outlook-/filsentineler samt käll-, bygg- och fixturebytes är jämförda oförändrade. Browsern gör inga CRM-HTTP-skrivningar och använder uttryckligt syntetisk autentisering; komponentproven har syntetiska visual-/utkastgränser.
+
+200 främmande worktrees och egen reservationsidentitet är kontrollerade oförändrade före denna dokumentationsförberedelse.
+
+Gröna syntetiska komponent-, browser-, runtime- och CI-prov är inga verkliga kontoinloggningar, fungerande Fortnox-/Outlook-anslutningar, personalacceptans, fysisk telefon-/skärmläsaracceptans eller full WCAG-bedömning. Inga riktiga kundorder används för skrivprov. Konton, CRM-roller, webbplatsåtkomst, privata data och integrationer ändras inte; inga kund-/personalmeddelanden skickas i bygguppdraget.
+
+B01:s avgränsade lucka för en medlemskopplad profil utan operativt kundansvar i Min dag är levererad. B01b2:s fullständiga identitets-/personalöverlämning och verkliga konto-/profilverifiering kvarstår, liksom övriga operativa alias-/UUID-fall. B02:s chefsroll, B04:s separata privata driftkopior och full hostad återställning, B05:s återstående privata utkast-/överlämningsflöden samt B07:s verkliga personalpilot är öppna. Nästa steg är en behörig persons egen bekräftade inloggning och sparad riktig uppföljning med nästa datum, samt nästa oberoende produktlucka efter färsk inventering.
+
+Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst: tillgängligt `read_thread` gäller Slack, inte Codex. Den explicita briefen och färsk main används.
+
+Dokumentationen har en separat mergegrind med egna fem obligatoriska kontroller, aktuell bas och exakt-head PR-CI. Appleveransen ovan är verifierad före dokumentationsrevisionen; dess slutliga main-revision och egna kontrollbelägg redovisas i taskkvittensen. Dokumentationsändringarna kräver ingen extra appversion.
+
+AGENTS, MISSION, RUNBOOK, schema, prompt och aktivering ändras inte genom denna dokumentationsrevision.
+
+---
+
+Historik före crm88 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Bygglogg – crm87 korrekt kontoroster
 
 Kontoadministrationen skiljer nu registrerad inloggningskoppling, operativt kundansvar och exakt konto-ID-länk till resultatprofil. Saknade eller motsägande kopplingar visas från faktiskt läst underlag; namnlikhet skapar ingen identitet. Historiska/inaktiva profiler behåller sina riktiga länkar. Kontots kundansvarsväljare beskrivs som kundansvar, inte som en ändring av den separata resultatprofilen.
