@@ -69,3 +69,6 @@ await import('./year-need-editor.mjs');
 
 // Reviewed handover uses the real dialog and provider, with controlled transport.
 await import('./yearwheel-responsibility-editor.mjs');
+
+// Actual calendar work keeps personal profile IDs separate from operative aliases.
+await (await import('./calendar-profile-link.mjs')).verifyCalendarProfileLink();
