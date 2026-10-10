@@ -393,3 +393,8 @@ body {
 .operations>[data-slot=tabs]{min-width:0;max-width:100%}
 .operations>[data-slot=tabs]>[data-slot=tabs-list]{width:100%;min-width:0;max-width:100%;height:auto;flex-wrap:wrap;gap:.25rem;justify-content:flex-start}
 .operations>[data-slot=tabs]>[data-slot=tabs-list]>[data-slot=tabs-trigger]{flex:1 1 max-content;min-width:0;max-width:100%;height:auto;min-height:44px;white-space:normal;overflow-wrap:normal;word-break:normal;line-height:1.5;padding:8px}
+
+/* Keep each task's full customer and responsibility readable in Min dag. */
+.visual-day .day-task-panel .daily-row>div:first-child{min-width:0;max-width:100%}
+.visual-day .day-task-panel .daily-customer{min-width:0;max-width:100%;min-height:44px;white-space:normal;overflow-wrap:anywhere}
+.visual-day .day-task-panel .daily-row small{max-width:100%;overflow-wrap:anywhere}
