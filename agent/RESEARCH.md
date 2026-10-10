@@ -1,3 +1,13 @@
+# crm91 – källmedveten identitet och nästa aktivitet
+
+Färsk officiell dokumentation lästes: [Salesforce Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) om aktiviteter i kundsammanhang, [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) om identitet/behörighet, [Saleshub AI](https://saleshubai.se/funktioner) om kundkort med nästa aktivitet och [React](https://react.dev/learn/preserving-and-resetting-state) om formuläridentitet med key. Den egna tillämpningen är exakt valt privat utkast, bevarad session och tydlig skillnad mellan privat sparning och CRM-inlämning.
+
+Tre direkta artikelhämtningar gav HTTP 200. Saleshub gav HTTP 403 i den direkta hämtningen men dess text lästes separat genom webbverktyget. Ingen direkt 200 för Saleshub påstås. Principerna bevisar ingen ansluten integration eller personalacceptans; Limes first-match-beteende införs inte. Privat källkvitto SHA-256 `1e271088a102cbcfa85deb42b16c59dd45ad8d75b8f6d5b7e55c9ba4e82cd30d`.
+
+---
+
+Historik före crm91 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer – crm90 uppgiftsidentitet och nästa handling
 
 Fyra färska officiella artikelkroppar fick faktisk HTTP 200 och sju korta exakta utdrag återlästes mot sparade bodies; privat kvitto `fed8f84f9c05d635f91ce497ff7fdbbeedd86c7a1a06a52563c321f6362ca5e9`. [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer objektåtkomst från postbehörighet. [Salesforce Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) beskriver egna uppgifter i kund-/affärssammanhang och prioriterad nästa handling. [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer user/coworker och beskriver stabila Object ID:n. [Saleshub AI](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet på sin officiella marknadssida.

@@ -1,3 +1,27 @@
+# crm91 – verifierat felutkast och avgränsad rättning
+
+Avgränsad slutregression passerade 24 faktiska React-/parent-/DraftProvider-fall med autentiserade draft- och CRM-handlers i isolerad SQLite med sex migrationer. Den omfattar exakt andra utkastets råtext/resultat/datum, åtta uttryckliga avslag utan fallback, faktisk privat sparning/fel/återförsök, faktisk atomisk CRM-sparning och vald utkastrevision vid dubbelklick, CAS/basis och sena svar efter byte av dialogidentitet. Inga autosave-ticks, native browser eller personalkonton påstås av detta komponentprov. Testfil SHA-256 `bb7855c0908cdb55453bc5c51c909aaa9af0ec3aa5b49acce1be8b26565990c3`, logg `6e08763a48441e04cec5f2456227ef2fee8e0efe39e9863ba52549cb85669179`. De fem obligatoriska slutkontrollerna och exakt-head CI är separata belägg.
+
+Inventerad bas är färsk main `da5071fd3a56008802b3b8adcc032b5f390a32dd`, utan öppna PR:er. Vid körningens inledning återlästes **live v87**, source `be802c0b5133e9a8f8ba62e85940543ee9f9afe6`, terminal `succeeded`. Det är ett startunderlag, inte en kvittens för den här ändringens publicering. Kod, exakt-head checks, GitHub-main och faktisk Sites-version har separata belägg i leverans-PR och taskkvittot.
+
+Felet reproducerades mot den oförändrade basen: två autentiserade privata draft-POST i isolerad SQLite gav 200, och GET återläste båda. Faktisk parent-handler och faktisk React-dialog öppnade B:s råtext/nästa aktivitet efter valet av A. Presentation och useDrafts-läsgräns var syntetiska; inga CRM-skrivningar gjordes i UI-reproduktionen. Kvitto SHA-256 `45a504927358f84c1b798150ee60f5de7093e33f80de9ba06777815062dc1c71` binder 51 käll-/SQLmanifestposter. Det belägger fel återupptagningsval, inte observerad förlust av sparade kunddata.
+
+När användaren väljer ett privat uppföljningsutkast i **Min dag → Fortsätt där du slutade** följer det valda utkastets ID med till **Följ upp**. Två egna utkast för samma aktivitet återupptas därför var för sig med rätt anteckning, resultat och nästa aktivitet/datum. Dialogens identitet inkluderar valt utkast och rensas vid stängning, byte till kund-/affärsflöde samt konto-/arbetsytebyte.
+
+Ett uttryckligt valt utkast måste ha rätt ID, typ, aktivitetskontext och task-ID. Ett saknat, avslutat eller felkopplat utkast ersätts inte med ett annat utkast och skapar inte automatiskt ett nytt. Beskedet leder tillbaka till Min dag. Saknad aktivitet upptäcks före öppning. Vanlig **Följ upp** från aktivitetsraden behåller sitt befintliga öppningsflöde; en ny generell väljare mellan flera utkast ingår inte.
+
+Oberoende statisk granskning av de två produktfilerna hittade inga blockerande fel. Skyddsjämförelse visar 103 oförändrade backend-/domän-/API-/SQL-/hosting-/skript-/mandatfiler mot färsk bas. Dessa belägg ersätter inte slutrevisionens egna obligatoriska kontroller.
+
+B05:s avgränsade återupptagning är rättad i källan. Övriga utkastflöden och separat privat driftkopia kvarstår. Nästa belagda B01-lucka är onboardingens personliga urval: åtta normaliserade syntetiska basfall visar att kontots alias ersätter den exakta medlemskopplade profilen, eller döljer egna profilkopplade poster när giltigt kundansvar saknas. Onboarding och kundärenden ändras inte i denna leverans. B02:s chefsroll, B04:s fulla hostade återställning och B07:s personens egen bekräftade inloggning/riktiga uppföljning kvarstår.
+
+Ingen lagring, datamodell, API, kontokoppling eller serverroll ändras. Privat ägare/arbetsyta, revision, CAS, request-ID och atomisk CRM-sparning/utkastavslut använder samma servervägar. CRM-sparning är fortsatt skild från privat utkast och kräver faktiskt sparbesked. Försäljning mot månads-/årsmål, marginal och nya prospects bevaras; TB är inget huvudmått.
+
+Syntetiska prov är inga riktiga kontoinloggningar, sparade verkliga kunduppföljningar, personalacceptans eller fungerande Fortnox-/Outlook-anslutningar. Inga riktiga kundorder används för skrivprov och inga kund-/personalmeddelanden skickas. Full hostad återställning och live-rollback är fortsatt oprövade. Refererad Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst; tillgängligt read_thread gäller Slack.
+
+---
+
+Historik före crm91 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # crm90 – dokumentationskandidatens runtimeavbrott
 
 Dokumentationskandidat `8bd8934c6aa8348e62c35d6253b423971d86848b`, träd `0bcdd898dc0d5067e79d9eb5b84f7e875245a1a7`, gav exit 0 för regression, TypeScript och bygge. Det fjärde obligatoriska kommandot, `node tests/runtime-smoke.mjs`, avbröts därefter med exit 1 efter 339,96 sekunder (2026-10-10T12:16:21.028151+00:00–2026-10-10T12:22:00.985641+00:00). Femte diffkontrollen kördes inte. Head, träd och samtliga 389 spårade filer var rena och byteoförändrade. Kontrollkvittots SHA-256 är `e8e9ed1882eb1233f7d2dd92bf56ae31a1e628a56a31ea7f23c1f158eb942e04`; runtimeloggens är `4b6d3f3ac66dee41e32a35ca2eae90cdf64fbf19148e45abdfd6aa82cb4b0375`.

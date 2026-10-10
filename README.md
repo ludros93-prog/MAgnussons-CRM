@@ -1,3 +1,15 @@
+# Magnussons CRM – återuppta det valda uppföljningsutkastet
+
+När användaren väljer ett privat uppföljningsutkast i **Min dag → Fortsätt där du slutade** följer det valda utkastets ID med till **Följ upp**. Två egna utkast för samma aktivitet återupptas därför var för sig med rätt anteckning, resultat och nästa aktivitet/datum. Dialogens identitet inkluderar valt utkast och rensas vid stängning, byte till kund-/affärsflöde samt konto-/arbetsytebyte.
+
+Ett uttryckligt valt utkast måste ha rätt ID, typ, aktivitetskontext och task-ID. Ett saknat, avslutat eller felkopplat utkast ersätts inte med ett annat utkast och skapar inte automatiskt ett nytt. Beskedet leder tillbaka till Min dag. Saknad aktivitet upptäcks före öppning. Vanlig **Följ upp** från aktivitetsraden behåller sitt befintliga öppningsflöde; en ny generell väljare mellan flera utkast ingår inte.
+
+Provgränser och drift beskrivs i [VALIDATION.md](VALIDATION.md) och [OPERATIONS.md](OPERATIONS.md).
+
+---
+
+Historik före crm91 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – egna uppgifter i Resultat
 
 I **Mitt resultat** följer öppna uppgifter nu den befintliga personliga profilens stabila ID. Äldre uppgifter utan profil-ID följer kontots aktuella giltiga kundansvar. Om kontots kundansvar ändras flyttas därför inte profilkopplade uppgifter till en annan person, och ett saknat eller borttaget kundansvar döljer inte egna profilkopplade uppgifter.
