@@ -14,6 +14,10 @@ Tredje kandidaten `fd21313724e5376e205c585895ea87f2df23fb3a` klarade samtliga fe
 
 Den nya layoutkandidaten begränsar arbetsdagsknappens bredd även med mobilindraget, låter trendflikar/rubriker radbrytas och anpassar diagramhöjden till dess teckenstorlek. Recharts 3.8.0 mäter Y-axelns bredd med width="auto"; X-axeln får större utrymme under och efter sista etiketten. Serier, finansiella definitioner och månadsnavigation behåller befintligt beteende. Inga teckenstorlekar krymps för att undvika mätningen. Den nya revisionen kräver alla fem slutkommandon, full isolerad browser och gröna checks för exakt nytt head. Merge/source/deploy återstår vid dokumentfrysningen; faktisk slutleverans binds i PR #166 och taskresultat.
 
+Fjärde kandidaten `34c767780867d9abf262fd26bd231fd24e4325e4` klarade åter samtliga fem slutkommandon (kvitto SHA-256 `872ef374379f2fac4e41226c50b99ef652b00b54805a805a48a36bfa239de1a4`) och [exakt-head CI 38098703327](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38098703327). Förstärkta oförändrade browserkrav hittade vid 1280 px/dubbel text en Y-tick `3 tn kr` med överkant 4,77 px utanför SVG. Övriga 24 läsbarhetskontroller i det fallet passerade, men hela provet stoppades före mobil-/rollfallen; inga fullständiga browser-PASS påstås. 172/172 HTML-teckenstorlekar var exakt dubbla. Data/återställning för 18 syntetiska D1-tabeller/två R2-objekt samt cleanup var PASS, utan skrivningar/externanrop. Felsanalys SHA-256 `4171dad74adf8fbc749df12094553a9148f47913e8cb795789b3de45881cdd3b` bevaras privat.
+
+Diagrammets toppmarginal ökas nu 14→30 px för den faktiskt uppmätta glyfen; data, serier och navigation bevaras. Hela slutgrinden och samma förstärkta browserprov krävs igen för nytt head. Merge/source/deploy återstår vid denna dokumentfrysning; slutbeläggen binds separat i PR #166 och taskresultat.
+
 ---
 
 Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.
