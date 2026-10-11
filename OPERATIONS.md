@@ -1,3 +1,17 @@
+# CRM114: gemensamma CRM-sparningar bevarar historikens läsargräns
+
+Slutgrinden i `/api/crm` räknar nu den vanliga mutationens verkliga historik efter reducer och eventuell extra ändringsaudit. Över 50 000 händelser stoppas före denna mutations commit med ett konkret svenskt 400-besked. Återställning reserverar fortfarande en audit per kund med identiskt tidigare felbesked och ordning. Exakta redan sparade aktörs-/avsiktskvittot returnerar tidigare; säkert CAS-återförsök räknar om verklig konkurrerande tillväxt. Historik kapas inte och privat utkast förbrukas inte vid detta avslag. Befintlig separat 16 MB-dataheadergrind, kodningsprobe och restore-radbudget ligger kvar.
+
+Ingen lagringsvariant, migration, SQL-tabelländring, backupformatändring eller ändring i commit-SQL införs. Öppningskällan v110 `b76b1d20e3652010aa3e0757cd9f43bb74c17c9d` kan läsa samma accepterade data; återpublicering av den är kodåtergångsvägen men tar bort den nya historikgrinden och kan återinföra luckan. Ingen återgång eller verklig återställning av kunddata utförs.
+
+Förra automatiska main-kontrollen `38179212274`, jobb `114587990620`, avbröts av 15-minutersgränsen enligt faktiska GitHub-annotations. Install/regression/TypeScript/build var godkända, runtime avbrutet; den körningen räknas inte grön. CI-jobbens tidsbudget höjs 15→25 minuter. Alla kontrollkommandon, versioner, permissions, concurrency och utlösare behålls exakt; inget prov hoppas över. Det är jobbets körbudget, ingen ändring av agenternas schema/prompt/aktivering.
+
+Detta skyddar gemensamma `/api/crm`-mutationers historikantal, inte varje CRM-skrivare eller hela backupens giltighet. Filuppladdningen har egen historikskrivning utanför denna grind. Filmetadata/innehåll, andra samlingars antal, historiktextens längd, JSON/base64-totalbudget, D1-/Workerkapacitet och verklig hostingåterställning återstår separat. Exakt 50 000 är läsarschemats gräns; en senare återställning behöver ytterligare kund-audits och kan därför fortfarande avvisas. Redan överstor historik ger avslag på nya gemensamma skrivningar, också utan nya events; inga poster raderas för att komma runt grinden.
+
+Vid denna källfrysning är baslinjer och riktade Node-prov verifierade. Fem obligatoriska kontroller på slutlig head, byggd kandidatruntime, kontrollerat browserprov, exakt-head CI, aktuell-bas merge, eget SOURCE-bygge/paket och samma Sites-publicering återstår. Faktisk kandidat, GitHub-main, Sites-källa och lyckad liveversion redovisas separat i PR/task efter verkliga kvitton. Syntetiska tekniska prov är ingen konto-, integrations-, kund- eller personalacceptans. Refererad Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget Codex read_thread-verktyg finns; explicit brief och färsk repo används.
+
+---
+
 # CRM113: vanliga CRM-ändringar bevarar dataexportens bytebudget
 
 Den gemensamma slutpunkten för `/api/crm` mäter nu färdig dataheader med befintlig UTF-8-serializer efter genererad historik och med destinationens nästa revision, före denna CRM-mutations commit. Över 16 000 000 byte ger ett handlingsbart 400-besked utan att ändringen förbrukar privat utkast, kvitto eller kunddata. Exakt gräns går vidare till tidigare roller, atomisk commit, CAS och övriga kontroller. Äldre restore-besked/kodningsprobe/radbudget och tidigare exakt idempotenskvittos svar behåller sina vägar. Historia kapas inte och säkert återförsök mäter om efter verklig konkurrerande tillväxt.

@@ -1,3 +1,13 @@
+# CRM114: gemensamma CRM-sparningar bevarar historikens läsargräns
+
+Om sparandet ger beskedet ”Ändringen skulle göra CRM-historiken för stor för dataexport (högst 50 000 händelser)” har just den gemensamma CRM-ändringen avvisats före commit. Bevara anteckningen/underlaget privat och kontakta ansvarig administratör. Ett separat sparat privat utkast är inget kvitto för gemensam kunduppföljning. Följ aktivitetens faktiska sparbesked; upprepa inte samma sparförsök tills underlaget har utretts.
+
+Detta skyddar gemensamma `/api/crm`-mutationers historikantal, inte varje CRM-skrivare eller hela backupens giltighet. Filuppladdningen har egen historikskrivning utanför denna grind. Filmetadata/innehåll, andra samlingars antal, historiktextens längd, JSON/base64-totalbudget, D1-/Workerkapacitet och verklig hostingåterställning återstår separat. Exakt 50 000 är läsarschemats gräns; en senare återställning behöver ytterligare kund-audits och kan därför fortfarande avvisas. Redan överstor historik ger avslag på nya gemensamma skrivningar, också utan nya events; inga poster raderas för att komma runt grinden.
+
+Vid denna källfrysning är baslinjer och riktade Node-prov verifierade. Fem obligatoriska kontroller på slutlig head, byggd kandidatruntime, kontrollerat browserprov, exakt-head CI, aktuell-bas merge, eget SOURCE-bygge/paket och samma Sites-publicering återstår. Faktisk kandidat, GitHub-main, Sites-källa och lyckad liveversion redovisas separat i PR/task efter verkliga kvitton. Syntetiska tekniska prov är ingen konto-, integrations-, kund- eller personalacceptans. Refererad Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget Codex read_thread-verktyg finns; explicit brief och färsk repo används.
+
+---
+
 # CRM113: vanliga CRM-ändringar bevarar dataexportens bytebudget
 
 När sparande ger beskedet ”Ändringen skulle göra CRM-data och historik för stora för dataexport inom 16 MB” har just den CRM-ändringen inte sparats. Bevara anteckningen/underlaget privat och kontakta ansvarig administratör. Upprepa inte sparandet tills underlaget har utretts. Ett privat utkast kan vara separat sparat; felbeskedet bekräftar inte att den gemensamma kunduppföljningen finns. Följ alltid aktivitetens faktiska sparbesked.
