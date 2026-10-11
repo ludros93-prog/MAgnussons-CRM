@@ -6,6 +6,7 @@ import {collectFileReferences} from './export-references';
 import {RuleError,emptyState,type State,type Actor} from './crm';
 
 export const BACKUP_MAX_BYTES=16000000;
+export const BACKUP_STREAM_FORMAT='magnussons-crm-backup-2';
 export type BackupExportAuthorization=()=>Promise<void>;
 export const trustedBackupExport:BackupExportAuthorization=async()=>{};
 // HTTP exports supply a server-bound check. Internal recovery tests may omit it.
@@ -30,6 +31,19 @@ const FILE_BYTES=10000000;
 export const BackupFileMeta=z.object({id:z.string().min(1).max(100),name:z.string().min(1).max(200),version:z.string().min(1).max(100),kind:z.enum(['logo','proof','document']),size:z.number().int().positive().max(5000000),at:z.string(),uploadedBy:z.string(),purpose:z.literal('production').optional(),orderId:z.string().min(1).max(100).optional(),workId:z.string().min(1).max(100).optional()});
 export const BackupFileDescriptor=z.object({customerId:z.string().min(1).max(100),metadata:BackupFileMeta});
 export type BackupFile=z.infer<typeof BackupFileDescriptor>;
+export const BackupStreamHeader=z.object({type:z.literal('header'),format:z.literal(BACKUP_STREAM_FORMAT),exportedAt:z.string(),sourceSpace:z.enum(['demo','live']),state:z.unknown(),files:z.array(BackupFileDescriptor).max(2000)}).strict();
+// Export and restore measure the same serialized UTF-8 header, excluding LF.
+export function backupStreamHeader(space:string,st:State,files:unknown[]){
+ const {viewer:_,...state}=st;
+ const header=BackupStreamHeader.parse({type:'header',format:BACKUP_STREAM_FORMAT,exportedAt:new Date().toISOString(),sourceSpace:space,state,files});
+ return {header,bytes:new TextEncoder().encode(JSON.stringify(header))};
+}
+export function validateBackupRestoreHeader(space:string,current:State,next:State,stored:StoredFile[]){
+ // Commit increments the destination version. File IDs and all references
+ // have already been remapped, so neither source bytes nor its version suffice.
+ const {bytes}=backupStreamHeader(space,{...next,version:current.version+1},stored.map(({customerId,metadata})=>({customerId,metadata})));
+ need(bytes.byteLength<=BACKUP_MAX_BYTES,'CRM-kopian lämnar inte plats för återställningens historik och filförteckning inom 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.');
+}
 const BackupSchema=z.object({format:z.literal('magnussons-crm-backup-1'),exportedAt:z.string(),sourceSpace:z.enum(['demo','live']),state:z.unknown(),files:z.array(BackupFileDescriptor.extend({content:z.string().max(6700000),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(2000)});
 export const backupNeed=(v:unknown,message:string)=>{if(!v)throw new RuleError(message)};
 const need=backupNeed;
@@ -110,6 +124,7 @@ export async function importBackup(space:string,input:unknown,requestId:string,v
  const decoded=data.files.map(file=>({file,bytes:decodeBackupFile(file.content)}));
  for(const {file,bytes} of decoded)need(bytes.length===file.metadata.size&&await checksum(bytes)===file.sha256,'Kontrollsumman stämmer inte för '+file.metadata.name+'. Inga uppgifter återställs.');
  const prepared=prepareBackupRestore(current,next,data.exportedAt,actor),stored=remapBackupFiles(space,prepared,data.files),staged:string[]=[];let finalizing=false;
+ validateBackupRestoreHeader(space,current,prepared,stored);
  try{
   for(let i=0;i<stored.length;i++){staged.push(stored[i].objectKey);await bucket().put(stored[i].objectKey,decoded[i].bytes as unknown as ArrayBuffer,{httpMetadata:{contentType:'application/octet-stream'}});}
   finalizing=true;return await finishBackupRestore(space,current,prepared,stored,staged,requestId,hash,actor);

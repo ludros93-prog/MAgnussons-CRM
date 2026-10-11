@@ -456,6 +456,7 @@ await (await import('./backup-stream.mjs')).verifyBackupStream({core,sqlite,obje
 await (await import('./backup-authorization.mjs')).verifyBackupAuthorization({core});
 await (await import('./backup-export-authorization.mjs')).verifyBackupExportAuthorization({core});
 await (await import('./backup-restore-exportability.mjs')).verifyBackupRestoreExportability({core});
+await (await import('./backup-restore-header-budget.mjs')).verifyBackupRestoreHeaderBudget({core});
 await (await import('./private-draft-copy.mjs')).verifyPrivateDraftCopy();
 await (await import('./private-api-authorization.mjs')).verifyPrivateApiAuthorization({core,sqlite,fileApi,draftApi});
 await (await import('./crm-response-authorization.mjs')).verifyCrmResponseAuthorization({core,sqlite,api,draftApi,objects});

@@ -1,3 +1,19 @@
+# CRM107: plats för återställningshistorik och filförteckning
+
+B04: kandidatens 16 MB-headerlucka efter tillagd historik och filomappning är rättad i kod och riktat provad; leverans väntar på slutkontroller.
+
+Båda återställningsformaten mäter nu den färdiga framtida NDJSON-headern efter genererad kundhistorik, UUID-omappning av filmetadata/referenser och destinationens nästa revision. Över 16 000 000 UTF-8-byte ger ett tydligt fel före första filskrivning och transaktion. Originalhistorik kapas aldrig. Ett tidigare giltigt kvitto kan fortfarande återförsökas; full fil-/slutintegritet, aktör och avsikt kontrolleras som tidigare.
+
+Detta gäller framtida NDJSON-header vid återställningsskrivningen. Det garanterar inte den äldre JSON-exportens separata total-/base64budget, stora accepterade native-commits, verklig hostingkapacitet, framtida nya data eller personal-/kontoacceptans. Format, migrationer, roller, privata data, CAS, idempotens och lagringsbindningar är oförändrade. v103-kod är kompatibel återgång men återinför det här felet; ingen återgång eller verklig hostingåterställning har utförts.
+
+Obligatorisk slutrevisionens regression, TypeScript, bygge, isolerad native-runtime och diffkontroll samt exakt-head CI, merge mot aktuell bas och samma Sites-publicering återstår vid denna dokumentfrysning. Faktiska slutresultat, separata main-/Sites-källrevisioner och liveversion redovisas i PR/leveranskvittensen. Ingen ändrad delning, miljö, kontobindning eller agentaktivering ingår.
+
+Nästa B04-del: säker verklig hostingåterställning och verifiering av dess D1-/Workerbudgetar samt separat backup för kontobindningar, Outlook och privata utkast. Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo har använts.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # B04: slutvalidering av återställningshistorik – CRM106
 
 Avgränsad del rättad i kandidat och riktade prov: genererad historik valideras tillsammans med hela slutstate före filomappning/staging/commit. Färsk oförändrad main reproducerade båda felen: datumtext gav 50 054 tecken, respektive giltig 50 000-posterskopia återställdes till 50 001 poster; båda gav senare export 400. Ingen originalhistorik kapas.

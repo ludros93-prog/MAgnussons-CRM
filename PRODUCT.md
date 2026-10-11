@@ -1,3 +1,17 @@
+# CRM107: plats för återställningshistorik och filförteckning
+
+Båda återställningsformaten mäter nu den färdiga framtida NDJSON-headern efter genererad kundhistorik, UUID-omappning av filmetadata/referenser och destinationens nästa revision. Över 16 000 000 UTF-8-byte ger ett tydligt fel före första filskrivning och transaktion. Originalhistorik kapas aldrig. Ett tidigare giltigt kvitto kan fortfarande återförsökas; full fil-/slutintegritet, aktör och avsikt kontrolleras som tidigare.
+
+Användaren kan få besked om att kopian inte lämnar plats för återställningens historik och filförteckning. Ingen befintlig historik tas bort för att passa gränsen. Detta ändrar inte Min dag, huvudmått eller kontobehörighet.
+
+Detta gäller framtida NDJSON-header vid återställningsskrivningen. Det garanterar inte den äldre JSON-exportens separata total-/base64budget, stora accepterade native-commits, verklig hostingkapacitet, framtida nya data eller personal-/kontoacceptans. Format, migrationer, roller, privata data, CAS, idempotens och lagringsbindningar är oförändrade. v103-kod är kompatibel återgång men återinför det här felet; ingen återgång eller verklig hostingåterställning har utförts.
+
+Obligatorisk slutrevisionens regression, TypeScript, bygge, isolerad native-runtime och diffkontroll samt exakt-head CI, merge mot aktuell bas och samma Sites-publicering återstår vid denna dokumentfrysning. Faktiska slutresultat, separata main-/Sites-källrevisioner och liveversion redovisas i PR/leveranskvittensen. Ingen ändrad delning, miljö, kontobindning eller agentaktivering ingår.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM106: återställning med bevarad originalhistorik
 
 CRM-kopia med kundfiler validerar nu också den historik som själva återställningen ska skapa. För stor dateringssträng eller för många originalposter för en extra post per kund stoppar handlingen med svensk feltext före filskrivning. Befintlig historik tas inte bort, datumtext kapas inte och ingen kundacceptans eller intern behörighet skapas.

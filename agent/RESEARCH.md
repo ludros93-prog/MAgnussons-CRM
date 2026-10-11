@@ -1,3 +1,22 @@
+# CRM107: plats för återställningshistorik och filförteckning
+
+Officiella källor återlästes för denna lagringsändring: sju lyckade HTTP-hämtningar och 21 exakta citat/offset/hashkontroller finns i privat arbetsbelägg.
+
+- [Cloudflare D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/): transaktionsrollback gäller SQL-batchen, inte R2.
+- [D1 limits](https://developers.cloudflare.com/d1/platform/limits/) och [Workers limits](https://developers.cloudflare.com/workers/platform/limits/): lokala prov ersätter inte verklig plan-, query-, minnes- eller CPUbudget.
+- [R2 Workers API](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/) och [consistency](https://developers.cloudflare.com/r2/reference/consistency/): avvaktade objektoperationer ersätter inte en gemensam D1/R2-transaktion.
+- [WHATWG Encoding](https://encoding.spec.whatwg.org/#dom-textencoder-encode) och [ECMA-262 JSON.stringify](https://tc39.es/ecma262/#sec-json.stringify): mät UTF-8 efter JSON-escaping; JS-teckenantal räcker inte.
+
+16 000 000 är Magnussons eget wirekontrakt, inte Cloudflares gräns. Den framtida headern mäts efter verklig förberedelse/filomappning och destinationens version+1. Tidigare verifierade Salesforce-, Lime- och Saleshub-principer om tydligt ansvar, nästa steg och granskbar historik behålls.
+
+Detta gäller framtida NDJSON-header vid återställningsskrivningen. Det garanterar inte den äldre JSON-exportens separata total-/base64budget, stora accepterade native-commits, verklig hostingkapacitet, framtida nya data eller personal-/kontoacceptans. Format, migrationer, roller, privata data, CAS, idempotens och lagringsbindningar är oförändrade. v103-kod är kompatibel återgång men återinför det här felet; ingen återgång eller verklig hostingåterställning har utförts.
+
+Nästa B04-del: säker verklig hostingåterställning och verifiering av dess D1-/Workerbudgetar samt separat backup för kontobindningar, Outlook och privata utkast. Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo har använts.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM106: officiella underlag för återställningsvalidering
 
 Sex nya officiella HTTP 200-responser och 15 exakta verifierade utdrag hämtades 11 oktober 2026. Privata råbodies/text/källhashar och kvitto SHA-256 45f34dd40f412d81e39f3fe87b5e74cd256473e5145e804f240c018fa210cad9 bevaras.
