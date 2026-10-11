@@ -1,3 +1,19 @@
+# CRM108: registrerad medlemskoppling följer produktionsansvaret
+
+Felet reproducerades med oförändrad main i isolerad SQLite och faktiska handlers/React: giltig restore 200 bevarade historiskt medlems-ID utan motsvarande destinationsmedlem, fel konto fick eget kort/”Ditt jobb”/återlämningsknapp och återlämning 200 med en faktisk mutation. Kandidatens riktade prov passerade 10 helperfall, 15 faktiska React-scenarier och 17 handler-HTTP-anrop: tre operativa roller nekas utan commit, säljare/läsare får 403, rätt koppling/äldre blank koppling/admin fungerar och exakta återförsök ger inga dubbletter. Alla 18 råtabeller, positiva privata utkast/Outlook-/R2-sentineler, arkiverad historik samt syntetiska mängd-, kassations- och delleveransfält bevaras där de ska. Separat domänprov omfattar 14 helperfall och åtta actions; oberoende källgranskning fann inga blockerare. React-kontrollerna använder kontrollerade UI-primitiver och fil-listläsningar; de är inga browser- eller personalprov.
+
+Lagringsschema, migrationer, backupformat, medlems-CRUD, roller, privat kommunikation, CAS, idempotens, mängd-/revisionsregler, kommersiellt ansvar och DB/BUCKET är oförändrade. v104-kod kan läsa samma data men återinför ägarluckan; ingen kodåtergång eller verklig hostingåterställning utförs. Historisk identitet bevisar ingen aktuell behörighet.
+
+Separat riktat nativeprov passerade med faktisk exit 0: oförändrad byggd Worker, lyssnande lokal HTTP och isolerad D1/R2, 68 anrop, två förlorade transaktionssvar och två race vid den riktiga atomiska skrivningen. Giltig native-källclaim och båda serverkopiorna återställs till tom destination med bevarad historisk medlemsidentitet. Fel medlems-ID stoppas, medlemsbyte vid commit ger CAS utan skrivning och därefter ägarfel; inaktivering vid commit ger 403. Dubbelklick, exakt återförsök, stale ansvarskontext, ändrad aktör/avsikt, namnändring, adminundantag och äldre blank medlemskoppling täcks. Alla 18 råtabeller samt positiva privata/Outlook-/R2-sentineler kontrolleras. Detta är syntetiska lokala prov, ingen verklig konto- eller hostingåterställning.
+
+Obligatorisk regression, TypeScript, bygge, isolerad native-runtime och diffkontroll på slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Faktiska slutresultat, separata GitHub-main-/Sites-källrevisioner och liveversion redovisas i PR/leveranskvittensen. Grön isolerad CI/runtime är inget konto-, integrations- eller personalprov.
+
+Isolerade fixtures innehåller enbart uttryckligt syntetiskt underlag. Tidiga baseline-försök med saknade obligatoriska fixturefält och för bred commiträknare samt första kandidatförsökets saknade väntande leveransuppgift bevaras privat; de räknas inte som gröna. Korrigerade fulla fixtures och verklig mutationsräkning kördes på nytt med faktisk exit 0 utan försvagade produktförväntningar.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM107: plats för återställningshistorik och filförteckning
 
 Felet reproducerades på oförändrad main med verkliga serverarkiv: återställning 200, nästa NDJSON-export 400. Riktad kandidatregression passerade 25 isolerade HTTP-anrop: exakt 16 000 000 byte accepteras och återexporteras, 16 000 001 stoppas före R2 put/delete/COMMIT, 9→10, Unicode/JSON-escaping, långa fil-ID:n som krymper, korrektur/aktuella och arkiverade skisser/receptreferenser samt två förlorade commitsvar med exakt återförsök. Alla 18 råtabeller och positiva privata utkast, Outlook-, medlems- och R2-sentineler kontrolleras. Gränsarkiven kommer från faktiska exporter med en giltig datering av samma längd och korrekt omräknad NDJSON-integritet; det separata baselineprovet använder oförändrade serverarkiv.

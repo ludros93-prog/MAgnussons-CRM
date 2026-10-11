@@ -1,3 +1,17 @@
+# CRM108: registrerad medlemskoppling följer produktionsansvaret
+
+Officiell dokumentation återlästes med sju lyckade HTTP 200-hämtningar och 23 exakt verifierade citat. [Lime om användare och grupper](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer stabila Object IDs från föränderliga namn/databas-ID:n och åtkomstpolicy. [Salesforce om aktiviteter](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) knyter egna öppna uppgifter och historik till kund-/affärssammanhang. Magnussons tvådelade identitetskontroll och äldre blank medlemskoppling är egna kontrakt som verifieras i repoets tester. Etablerade Saleshub-principer om verkligt nästa steg och granskningsbar historik behålls; ingen ny leverantörsfunktion eller anslutning införs.
+
+[Cloudflares D1-gränser](https://developers.cloudflare.com/d1/platform/limits/) och [SQLite-radformatet](https://www.sqlite.org/fileformat.html#record_format) används endast som underlag för nästa B04-arbete: hela raden omfattar även record-header och övriga kolumner. Den avgränsade domänbindningsmätningen bevisar ingen accepterad native-/hostad transaktion. Privata källbodies, citatens byteoffset och hashkvitton hålls utanför repot.
+
+Nästa genomförbara B04-del är faktisk lagringsbudget efter filomappning: ett giltigt syntetiskt domänunderlag växte från 1 999 700 till 2 003 235 UTF-8-byte i den verkliga SQL-byggarens JSON-bindning när 101 filreferenser ersattes med UUID:n; framtida NDJSON-header var 2 006 464 byte. SQL exekverades inte och ingen server-/hostad gränsöverträdelse påstås. D1 dokumenterar 2 000 000 byte för string/BLOB/hel rad; JSON-storlek ensam garanterar inte full rad. Förkontroll av slutligt lagringsunderlag före staging, verklig hostingåterställningsväg och separat backup för medlemskopplingar, Outlook och privata utkast återstår. B06/B07 kräver verkliga personer och konton.
+
+Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo används.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM107: plats för återställningshistorik och filförteckning
 
 Officiella källor återlästes för denna lagringsändring: sju lyckade HTTP-hämtningar och 21 exakta citat/offset/hashkontroller finns i privat arbetsbelägg.

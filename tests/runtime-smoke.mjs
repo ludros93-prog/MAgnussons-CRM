@@ -24,6 +24,7 @@ const commercialTaskAnchorNativeEvidence=await (await import('./runtime-commerci
 console.log('PASS native commercial task responsibility anchor: '+JSON.stringify(commercialTaskAnchorNativeEvidence));
 const accountIssueGuardNativeEvidence=await (await import('./runtime-account-issue-guard.mjs')).assertNativeAccountIssueGuard();
 console.log('PASS native account issue guard: '+JSON.stringify(accountIssueGuardNativeEvidence));
+console.log('PASS native production assignment membership: '+JSON.stringify(await (await import('./runtime-production-assignment-membership.mjs')).assertNativeProductionAssignmentMembership()));
 console.log('PASS native backup restore preflight: '+JSON.stringify(await (await import('./runtime-backup-restore-preflight.mjs')).assertNativeBackupRestorePreflight()));
 console.log('PASS native backup restore header budget: '+JSON.stringify(await (await import('./runtime-backup-restore-header-budget.mjs')).assertNativeBackupRestoreHeaderBudget()));
 const root = fileURLToPath(new URL('../',import.meta.url)), statePath = mkdtempSync(join(tmpdir(),'magnussons-runtime-'));

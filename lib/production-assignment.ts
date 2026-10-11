@@ -30,6 +30,11 @@ export function productionAssignmentBasis(st:State,orderId:string,purpose:Produc
  return purpose==='resolve_legacy'?recordBasis({purpose,basis}):basis;
 }
 export const isLegacyProductionAssignment=(production:Pick<State['orders'][number]['production'],'assigneeId'|'assigneeMemberId'|'assigneeName'|'assignmentHistory'>)=>!production.assigneeId&&!production.assigneeMemberId&&!!production.assigneeName.trim()&&!production.assignmentHistory.length;
+// A recorded member link remains part of the job's identity after restore.
+// Older assignments without that link retain their registered user ID scope.
+export function ownsProductionAssignment(production:Pick<State['orders'][number]['production'],'assigneeId'|'assigneeMemberId'>,actor:{id:string;memberId?:string}){
+ return !!production.assigneeId&&production.assigneeId===actor.id&&(!production.assigneeMemberId||production.assigneeMemberId===actor.memberId);
+}
 export function productionAssignmentBlockedReason(st:State,orderId:string,workId:string,purpose:ProductionAssignmentPurpose='transfer'){
  const orders=st.orders.filter(order=>order.id===orderId),order=orders.length===1?orders[0]:undefined;
  if(!orders.length)return 'Arbetsordern finns inte.';

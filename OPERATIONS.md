@@ -1,3 +1,21 @@
+# CRM108: registrerad medlemskoppling följer produktionsansvaret
+
+Färsk bas är levererad CRM107/PR #175: GitHub-main `bca64ef09484db4f1cd62a1575fbcbd7fe7a1d85`, Sites-källa `8f958c1d1aa6afdfad5fe8150700c55dd00dec92`, lyckad live v104. Alla 418 spårade filers bytes/lägen och träd `95c5264f5eba039bae47f5ce2e0f9ff319d40e0f` matchade före ändringen. Egen branch/worktree och reservation används; inga öppna PR:er eller konkurrerande publicering observerades vid öppningen.
+
+Sites-helpern hittades inte vid avgränsad installerad sökning; vissa kataloger nekade läsning. Befintlig källa öppnades före produktändringen med vanlig kortlivad Git-credential, utan publicering vid push. Token och konfidentiella nativevärden hålls utanför repo och rapporter. Samma Site, custom-delning revision 2, miljörevision 1, auth-identitet, DB/BUCKET och noll Sites-automations verifieras före och efter publicering. Overlay-fullhet hanteras med egna /dev/shm-kopior och jämförda låsta beroenden; installation av beroenden påstås inte och äldre källor/bevis bevaras. Inga riktiga kundorder, mejl, konton, åtkomstlistor, integrationer eller agentinställningar ändras i uppdraget.
+
+Lagringsschema, migrationer, backupformat, medlems-CRUD, roller, privat kommunikation, CAS, idempotens, mängd-/revisionsregler, kommersiellt ansvar och DB/BUCKET är oförändrade. v104-kod kan läsa samma data men återinför ägarluckan; ingen kodåtergång eller verklig hostingåterställning utförs. Historisk identitet bevisar ingen aktuell behörighet.
+
+Nästa genomförbara B04-del är faktisk lagringsbudget efter filomappning: ett giltigt syntetiskt domänunderlag växte från 1 999 700 till 2 003 235 UTF-8-byte i den verkliga SQL-byggarens JSON-bindning när 101 filreferenser ersattes med UUID:n; framtida NDJSON-header var 2 006 464 byte. SQL exekverades inte och ingen server-/hostad gränsöverträdelse påstås. D1 dokumenterar 2 000 000 byte för string/BLOB/hel rad; JSON-storlek ensam garanterar inte full rad. Förkontroll av slutligt lagringsunderlag före staging, verklig hostingåterställningsväg och separat backup för medlemskopplingar, Outlook och privata utkast återstår. B06/B07 kräver verkliga personer och konton.
+
+Obligatorisk regression, TypeScript, bygge, isolerad native-runtime och diffkontroll på slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Faktiska slutresultat, separata GitHub-main-/Sites-källrevisioner och liveversion redovisas i PR/leveranskvittensen. Grön isolerad CI/runtime är inget konto-, integrations- eller personalprov.
+
+Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo används.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM107: plats för återställningshistorik och filförteckning
 
 Färsk bas är levererad CRM106/PR #174: GitHub-main `3eca951806e73e95bee28029d8b388b6d816d723`, Sites-källa `c77340f68e2044e4f5b3284900bd54cb10bde221`, live v103. Alla 416 spårade filers bytes/lägen och träd `4fa104620bfcc3da910d63e0bac0aac1c4780e8d` matchade före ändringen. Egen branch/reservation; inga öppna PR:er eller pågående publicering observerades vid öppningen.

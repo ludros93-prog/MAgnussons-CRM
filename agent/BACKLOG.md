@@ -1,3 +1,17 @@
+# CRM108: registrerad medlemskoppling följer produktionsansvaret
+
+B01: bekräftad lucka i registrerat produktionsansvar är rättad i kandidat och riktat provad; slutleveransen väntar på kontroller. Full kommersiell/operativ personalöverlämning är fortsatt delvis öppen.
+
+En giltig återställning bevarar jobbets historiska användar- och medlems-ID. Om destinationens separata medlemskonto har samma användar-ID men ett annat medlems-ID ska jobbet inte visas som eget eller kunna lämnas tillbaka av det kontot. Serverns återlämning, Mitt arbete, märkningen ”Ditt jobb” och återlämningsknappen använder nu samma kontroll: användar-ID måste matcha och registrerat medlems-ID måste också matcha när det finns. Äldre tom medlemskoppling följer fortfarande sitt registrerade användar-ID; administratörens befintliga undantag behålls. Inga konton kopplas om eller skapas utifrån namn.
+
+Nästa genomförbara B04-del är faktisk lagringsbudget efter filomappning: ett giltigt syntetiskt domänunderlag växte från 1 999 700 till 2 003 235 UTF-8-byte i den verkliga SQL-byggarens JSON-bindning när 101 filreferenser ersattes med UUID:n; framtida NDJSON-header var 2 006 464 byte. SQL exekverades inte och ingen server-/hostad gränsöverträdelse påstås. D1 dokumenterar 2 000 000 byte för string/BLOB/hel rad; JSON-storlek ensam garanterar inte full rad. Förkontroll av slutligt lagringsunderlag före staging, verklig hostingåterställningsväg och separat backup för medlemskopplingar, Outlook och privata utkast återstår. B06/B07 kräver verkliga personer och konton.
+
+Obligatorisk regression, TypeScript, bygge, isolerad native-runtime och diffkontroll på slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Faktiska slutresultat, separata GitHub-main-/Sites-källrevisioner och liveversion redovisas i PR/leveranskvittensen. Grön isolerad CI/runtime är inget konto-, integrations- eller personalprov.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM107: plats för återställningshistorik och filförteckning
 
 B04: kandidatens 16 MB-headerlucka efter tillagd historik och filomappning är rättad i kod och riktat provad; leverans väntar på slutkontroller.
