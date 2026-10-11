@@ -1,3 +1,21 @@
+# CRM111: återställd kundhistorik ryms även efter nya auditposter
+
+Äldre ren dataåterställning (`/api/crm`, `type: restore`) räknar nu originalhistorik plus en ny återställningshändelse per kund före historiktillägg, kodningsprov och commit. Över 50 000 händelser ger ett tydligt svenskt avslag utan skrivning. Exakt 50 000 tillåts; originalhistorik tas inte bort. Redan sparade exakta kvitton returnerar fortfarande före den nya grinden. Exportläsarens befintliga gräns ändras inte.
+
+Vid historikgränsfel: bevara originalkopian privat; kapa inte händelser eller byt importväg för att kringgå stoppet. Ingen migrering införs. Återpublicering av granskad v107-källa ska bevara samma Site, DB/BUCKET och begränsad delning, men tar bort denna nya historikgrind. Ingen sådan återgång görs här.
+
+Ändringen omfattar två tillagda rader i en route. Lagringsschema, sex migrationer, export-/backupformat, DB/BUCKET, konton, roller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler behålls. Oberoende källgranskning verifierar oförändrad commit-funktion och SQL. v107 kan läsa samma data; återpublicering av dess källrevision är kodåtergångsvägen men återinför historikluckan. Ingen kodåtergång eller återställning av riktiga kunddata utförs.
+
+Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade. B01 är delvis öppet; B06/B07 kräver faktiska personer/konton.
+
+Nästa avgränsade B04-spår är den äldre dataåterställningens framtida exportheader: rent statiskt storleksunderlag med 160 händelser × 49 500 CJK-tecken gav 7 945 149 UTF-16-enheter i POST under dess 10M-grind, men 23 785 408 UTF-8-byte i framtida NDJSON-header över formatets 16M-gräns. Detta är endast kod-/storleksgranskning, inte schema-, handler- eller native-repro. Verklig repro och slutlig exportbudget återstår.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Faktisk kandidat, main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
 
 Färsk levererad bas är CRM109/[PR #177](https://github.com/ludros93-prog/MAgnussons-CRM/pull/177): GitHub-main `c0ab72677334a84d617ccb1be4171a6580a1c0cf`, Sites-källa `48e44ea58483c37b9554919fa54298f9c1ca8f4e`, lyckad live v106. Alla 423 spårade filers bytes och Git-lägen matchade vid öppningen, träd `f2243421c2038f4b8438130731e247af4d0c47bf`. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.

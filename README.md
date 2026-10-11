@@ -1,3 +1,19 @@
+# CRM111: återställd kundhistorik ryms även efter nya auditposter
+
+Levererad öppningsbas är CRM110/[PR #178](https://github.com/ludros93-prog/MAgnussons-CRM/pull/178): GitHub-main `ad34abc5e452420812af3a0f0b14c8752ad1116f`, Sites-källa `cd395bd31bfe788ae6f2bc0ad640c9dbcbddbddf`, lyckad live v107. Samtliga 425 spårade filers bytes och Git-lägen matchade före ändringen. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.
+
+Äldre ren dataåterställning (`/api/crm`, `type: restore`) räknar nu originalhistorik plus en ny återställningshändelse per kund före historiktillägg, kodningsprov och commit. Över 50 000 händelser ger ett tydligt svenskt avslag utan skrivning. Exakt 50 000 tillåts; originalhistorik tas inte bort. Redan sparade exakta kvitton returnerar fortfarande före den nya grinden. Exportläsarens befintliga gräns ändras inte.
+
+Ändringen omfattar två tillagda rader i en route. Lagringsschema, sex migrationer, export-/backupformat, DB/BUCKET, konton, roller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler behålls. Oberoende källgranskning verifierar oförändrad commit-funktion och SQL. v107 kan läsa samma data; återpublicering av dess källrevision är kodåtergångsvägen men återinför historikluckan. Ingen kodåtergång eller återställning av riktiga kunddata utförs.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Faktisk kandidat, main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo används.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
 
 Färsk levererad bas är CRM109/[PR #177](https://github.com/ludros93-prog/MAgnussons-CRM/pull/177): GitHub-main `c0ab72677334a84d617ccb1be4171a6580a1c0cf`, Sites-källa `48e44ea58483c37b9554919fa54298f9c1ca8f4e`, lyckad live v106. Alla 423 spårade filers bytes och Git-lägen matchade vid öppningen, träd `f2243421c2038f4b8438130731e247af4d0c47bf`. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.
