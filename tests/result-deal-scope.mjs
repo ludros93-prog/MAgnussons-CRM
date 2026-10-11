@@ -146,7 +146,9 @@ export async function verifyResultDealScope(){
  const text=node=>typeof node==='string'?node:Array.isArray(node)?node.map(text).join(''):node?.children?.map(text).join('')||'';
  const byClass=name=>renderer.root.findAll(node=>typeof node.type==='string'&&node.props.className?.split(' ').includes(name));
  const button=caption=>renderer.root.findAllByType('button').find(node=>text(node)===caption);
- const omitCurrentWork=metrics=>Object.fromEntries(Object.entries(metrics).filter(([key])=>!currentWorkKeys.includes(key)));
+ // CRM101 adds only personal current customers to the intentional changes;
+ // explicit-profile/team and the immutable inline baseline remain exact.
+ const omitCurrentWork=(metrics,mode)=>Object.fromEntries(Object.entries(metrics).filter(([key])=>!currentWorkKeys.includes(key)&&(mode!=='personal'||key!=='customers')));
  async function unmount(){if(renderer){await act(async()=>renderer.unmount());renderer=null}}
  async function scenario(label,run,{ui=false}={}){await unmount();calls=[];await run();await unmount();assert.equal(http.length,0,'No HTTP in '+label);cases++;if(ui)uiCases++;console.log('PASS Result deal scope: '+label);}
  async function click(caption){const node=button(caption);assert.ok(node,'Actual action '+caption);assert.notEqual(node.props.disabled,true);await act(async()=>node.props.onClick());}
@@ -154,7 +156,7 @@ export async function verifyResultDealScope(){
   Object.defineProperty(globalThis,'IS_REACT_ACT_ENVIRONMENT',{configurable:true,writable:true,value:true});
   Object.defineProperty(globalThis,'fetch',{configurable:true,writable:true,value:async(...args)=>{http.push(args);throw Error('Result deal scope must not perform HTTP')}});
   assert.equal(createHash('sha256').update(baselineSource).digest('hex'),'9229f33ed9b852e6aba0e9f767b05cabfb767ba81eee499964dc71d92f3cc681');
-  const core=await import(pathToFileURL(compile('lib/crm.ts')).href),dashboard=await import(pathToFileURL(compile('lib/sales-dashboard.ts')).href),orderDomain=await import(pathToFileURL(compile('lib/order-scope.ts')).href),baseline=await import(pathToFileURL(compile('lib/result-deal-baseline.ts',baselineSource)).href),{SalesDashboard}=await import(pathToFileURL(compile('components/sales-dashboard.tsx')).href);
+  const core=await import(pathToFileURL(compile('lib/crm.ts')).href),dashboard=await import(pathToFileURL(compile('lib/sales-dashboard.ts')).href),orderDomain=await import(pathToFileURL(compile('lib/order-scope.ts')).href),customerDomain=await import(pathToFileURL(compile('lib/customer-scope.ts')).href),baseline=await import(pathToFileURL(compile('lib/result-deal-baseline.ts',baselineSource)).href),{SalesDashboard}=await import(pathToFileURL(compile('components/sales-dashboard.tsx')).href);
   assert.deepEqual(core.PIPELINE.map(s=>s.id),stages);
   const source=remember('app/page.tsx'),ast=ts.createSourceFile('app/page.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),nodes=[];(function visit(node){nodes.push(node);ts.forEachChild(node,visit)})(ast);
   const variable=name=>{const matches=nodes.filter(node=>ts.isVariableDeclaration(node)&&node.name.getText(ast)===name);assert.equal(matches.length,1,'Unique actual declaration '+name);return matches[0].initializer.getText(ast);};
@@ -168,7 +170,8 @@ export function frame(st,selectedView,month,calls){const viewerReady=(${variable
    assert.deepEqual(core.normalizeState(st),st,'Accepted normalized fixture is idempotent');const before=JSON.stringify(st);freeze(st);
    const measured=dashboard.salesMetrics(st,'2026-10',scope,mode),old=baseline.salesMetrics(st,'2026-10',scope,mode);
    assert.deepEqual(measured.open.map(d=>d.id),expectedIds);assert.equal(measured.pipeline,expectedValue);assert.equal(measured.unpriced,expectedUnpriced);
-   assert.deepEqual(omitCurrentWork(measured),omitCurrentWork(old),'Every other metric, including current tasks, retains the recorded baseline');baselineComparisons++;
+   assert.deepEqual(omitCurrentWork(measured,mode),omitCurrentWork(old,mode),'Every protected metric, including current tasks and historical financial attribution, retains the recorded baseline');baselineComparisons++;
+   if(mode==='personal')assert.deepEqual(measured.customers,scope===dashboard.personalResultScope(st)&&scope!=='all'?st.customers.filter(customer=>customerDomain.customerInScope(customer,customerDomain.customerScope(st,own(st)))):[],'CRM101 personal current customers match established Mina kunder, separately from deal and financial attribution');
    if(mode==='personal')assert.deepEqual(measured.orders,scope===dashboard.personalResultScope(st)&&scope!=='all'?st.orders.filter(order=>orderDomain.orderInScope(order,orderDomain.orderScope(st,own(st)))):[],'Personal orders match the established Mina order selection, independently of financial attribution');
    if(mode==='profile')assert.deepEqual(measured,old,'Every explicit-profile/team key retains exact baseline');
    for(const month of ['2026-10','2026-08','2025-12']){assert.deepEqual(dashboard.salesYearSeries(st,month.slice(0,4),scope),baseline.salesYearSeries(st,month.slice(0,4),scope));assert.deepEqual(dashboard.teamSalesRows(st,month),baseline.teamSalesRows(st,month));}
