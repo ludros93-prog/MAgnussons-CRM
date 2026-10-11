@@ -1,3 +1,19 @@
+# CRM109: färdiga återställningsrader får plats före filskrivning
+
+En CRM-kopia kan växa när kundfiler får nya ID:n och återställningen lägger till historik. Systemet stoppar nu en kopia som då skulle innehålla en för stor databaspost, innan några filer återställs. Exakt 2 000 000 byte tillåts; större ger ett tydligt svenskt fel. Originalhistorik tas aldrig bort för att få kopian att passa. Båda befintliga formaten behålls.
+
+Om databasens textkodning inte kan verifieras stoppas också återställningen utan skrivning. Kontakta ansvarig administratör med den ofarliga feltexten; försök inte kringgå stoppet eller registrera testdata på riktiga order.
+
+Avgränsningen gäller CRM-kopia med kundfiler. Äldre rena dataåterställningen via `/api/crm` och vanliga skrivningar får ingen ny budgetgrind. Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår; lokala prov ersätter inte dessa. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade.
+
+Schema, sex migrationer, backupformat, DB/BUCKET, serverroller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler är oförändrade. Oberoende jämförelse av faktisk commit visar byteidentiska SQL-texter och bindvärden före/efter i 15 scenarier. v105-kod kan läsa samma data men tar bort denna nya förkontroll; ingen kodåtergång eller live-återställning har utförts.
+
+Obligatorisk regression, TypeScript, bygge, isolerad native-runtime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Faktisk kandidat, GitHub-main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, konton, miljö och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM108: registrerad medlemskoppling följer produktionsansvaret
 
 En giltig återställning bevarar jobbets historiska användar- och medlems-ID. Om destinationens separata medlemskonto har samma användar-ID men ett annat medlems-ID ska jobbet inte visas som eget eller kunna lämnas tillbaka av det kontot. Serverns återlämning, Mitt arbete, märkningen ”Ditt jobb” och återlämningsknappen använder nu samma kontroll: användar-ID måste matcha och registrerat medlems-ID måste också matcha när det finns. Äldre tom medlemskoppling följer fortfarande sitt registrerade användar-ID; administratörens befintliga undantag behålls. Inga konton kopplas om eller skapas utifrån namn.

@@ -27,6 +27,7 @@ console.log('PASS native account issue guard: '+JSON.stringify(accountIssueGuard
 console.log('PASS native production assignment membership: '+JSON.stringify(await (await import('./runtime-production-assignment-membership.mjs')).assertNativeProductionAssignmentMembership()));
 console.log('PASS native backup restore preflight: '+JSON.stringify(await (await import('./runtime-backup-restore-preflight.mjs')).assertNativeBackupRestorePreflight()));
 console.log('PASS native backup restore header budget: '+JSON.stringify(await (await import('./runtime-backup-restore-header-budget.mjs')).assertNativeBackupRestoreHeaderBudget()));
+console.log('PASS native backup restore row budget: '+JSON.stringify(await (await import('./runtime-backup-restore-row-budget.mjs')).assertNativeBackupRestoreRowBudget()));
 const root = fileURLToPath(new URL('../',import.meta.url)), statePath = mkdtempSync(join(tmpdir(),'magnussons-runtime-'));
 const serverRoot=root+'/dist/server';
 const moduleFiles=readdirSync(serverRoot,{recursive:true}).filter(f=>/\.m?js$/.test(f));

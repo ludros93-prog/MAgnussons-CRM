@@ -1,3 +1,23 @@
+# CRM109: färdiga återställningsrader får plats före filskrivning
+
+Färsk bas är levererad CRM108/[PR #176](https://github.com/ludros93-prog/MAgnussons-CRM/pull/176): GitHub-main `c02201adf6a600d1762ec6d1fe91d0cce7003597`, Sites-källa `d5742b825b189e95c0af9a15f3db02a072e45eae`, lyckad live v105. Alla 420 spårade filers bytes och Git-lägen matchade före ändringen, träd `69f944d6de1255a51660c903002ea3d5ce060268`. Egen branch/worktree och reservation används; inga öppna PR:er eller konkurrerande publicering observerades vid öppningen.
+
+CRM-kopia med kundfiler i JSON och NDJSON kontrollerar nu varje färdig SQLite-rad mot D1:s dokumenterade 2 000 000 byte innan första filskrivning. Beräkningen omfattar SQLite-header, alla lagrade kolumner, genererad återställningshistorik, UUID-omappade referenser, filmetadata, settings och kvitto. Den faktiska databasens textkodning läses med en liten read-only-fråga; annan eller okänd kodning ger ett tydligt avslag före staging. Vanliga skrivningar och redan genomförda exakta återförsök behåller sitt beteende.
+
+Vid radgränsfel: bevara originalkopian privat och använd feltexten för att utreda den berörda lagringsposten. Beskedet betyder att återställningen inte börjat skriva kundfiler eller uppgifter. Kapa inte historik och byt inte till den äldre dataimporten för att kringgå gränsen. Vid kodningsfel måste faktisk DB-bindning/kodning klarläggas före ett nytt försök; inga credentials eller exporter ska läggas i Git.
+
+Schema, sex migrationer, backupformat, DB/BUCKET, serverroller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler är oförändrade. Oberoende jämförelse av faktisk commit visar byteidentiska SQL-texter och bindvärden före/efter i 15 scenarier. v105-kod kan läsa samma data men tar bort denna nya förkontroll; ingen kodåtergång eller live-återställning har utförts.
+
+Avgränsningen gäller CRM-kopia med kundfiler. Äldre rena dataåterställningen via `/api/crm` och vanliga skrivningar får ingen ny budgetgrind. Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår; lokala prov ersätter inte dessa. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade.
+
+Denna leverans ändrar ingen lagrad representation och kräver ingen migrering. Återgångsmålet är tidigare v105-källa `d5742b825b189e95c0af9a15f3db02a072e45eae`; en granskad återpublicering ska behålla samma Site, DB/BUCKET och begränsade delning. Ingen återgång utförs här och gammal kod saknar radförkontrollen.
+
+Obligatorisk regression, TypeScript, bygge, isolerad native-runtime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Faktisk kandidat, GitHub-main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, konton, miljö och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM108: registrerad medlemskoppling följer produktionsansvaret
 
 Färsk bas är levererad CRM107/PR #175: GitHub-main `bca64ef09484db4f1cd62a1575fbcbd7fe7a1d85`, Sites-källa `8f958c1d1aa6afdfad5fe8150700c55dd00dec92`, lyckad live v104. Alla 418 spårade filers bytes/lägen och träd `95c5264f5eba039bae47f5ce2e0f9ff319d40e0f` matchade före ändringen. Egen branch/worktree och reservation används; inga öppna PR:er eller konkurrerande publicering observerades vid öppningen.

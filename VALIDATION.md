@@ -1,3 +1,25 @@
+# CRM109: färdiga återställningsrader får plats före filskrivning
+
+Färsk bas är levererad CRM108/[PR #176](https://github.com/ludros93-prog/MAgnussons-CRM/pull/176): GitHub-main `c02201adf6a600d1762ec6d1fe91d0cce7003597`, Sites-källa `d5742b825b189e95c0af9a15f3db02a072e45eae`, lyckad live v105. Alla 420 spårade filers bytes och Git-lägen matchade före ändringen, träd `69f944d6de1255a51660c903002ea3d5ce060268`. Egen branch/worktree och reservation används; inga öppna PR:er eller konkurrerande publicering observerades vid öppningen.
+
+Felet reproducerades på oförändrad bas i både faktiska Node-handlers och den verifierade gamla byggda Workern. En giltig native-källorder var 1 996 431 byte; UUID-omappning ökade slutraden till 2 000 001 byte och båda formaten accepterades med HTTP 200. JSON-bindningen ensam låg under gränsen. Lokal D1 avvisade alltså inte denna hela rad; någon faktisk hostingöverträdelse eller provideravvisning påstås inte.
+
+Riktat Node-prov med faktiska autentiserade handlers och migrerad SQLite passerade 104 HTTP-anrop, 42 fysiska dbstat-kontroller och 32 helperfall. 13 verkliga radlayouter provas vid exakt 2 000 000 och 2 000 001 byte. 18 avslag (tio radgränser och åtta kodningsfall) sker före R2 put/delete och restore-batch; tolv accepterade gräns-/krympfall, båda återexportformaten, exakt replay, två förlorade commitsvar och två riktiga SQLite-CAS-race passerar.
+
+Separat riktat nativeprov passerade med faktisk exit 0: oförändrad byggd Worker, lyssnande lokal HTTP och isolerad D1/R2, 64 anrop, tio avslag före staging/commit och tio faktiskt skrivna helrader på exakt 2 000 000 byte. UTF-8-proben, båda formatens återexport, filomappning, två förlorade transaktionssvar och två race vid verklig CAS täcks. Alla 18 råtabeller och positiva privata utkast, Outlook-, konto- och R2-sentineler kontrolleras. Detta är syntetiska lokala prov.
+
+Oberoende SQLite-granskning passerade 249 riktiga record-payloadfall, inklusive 39 angränsande helradsgränser, Unicode, serial-varints, integerbredder och historiska defaults. Separata commit-fångster bekräftar oförändrade SQL-bindningar och särskilda order-/uppgiftsankare. Tidiga fixture-/harnessfel och baselineförväntningen om native SQL-avslag bevaras som misslyckade försök; senare godkända prov mäter det faktiskt observerade beteendet. Ingen befintlig regression har försvagats.
+
+Schema, sex migrationer, backupformat, DB/BUCKET, serverroller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler är oförändrade. Oberoende jämförelse av faktisk commit visar byteidentiska SQL-texter och bindvärden före/efter i 15 scenarier. v105-kod kan läsa samma data men tar bort denna nya förkontroll; ingen kodåtergång eller live-återställning har utförts.
+
+Avgränsningen gäller CRM-kopia med kundfiler. Äldre rena dataåterställningen via `/api/crm` och vanliga skrivningar får ingen ny budgetgrind. Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår; lokala prov ersätter inte dessa. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade.
+
+Obligatorisk regression, TypeScript, bygge, isolerad native-runtime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Faktisk kandidat, GitHub-main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, konton, miljö och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM108: registrerad medlemskoppling följer produktionsansvaret
 
 Felet reproducerades med oförändrad main i isolerad SQLite och faktiska handlers/React: giltig restore 200 bevarade historiskt medlems-ID utan motsvarande destinationsmedlem, fel konto fick eget kort/”Ditt jobb”/återlämningsknapp och återlämning 200 med en faktisk mutation. Kandidatens riktade prov passerade 10 helperfall, 15 faktiska React-scenarier och 17 handler-HTTP-anrop: tre operativa roller nekas utan commit, säljare/läsare får 403, rätt koppling/äldre blank koppling/admin fungerar och exakta återförsök ger inga dubbletter. Alla 18 råtabeller, positiva privata utkast/Outlook-/R2-sentineler, arkiverad historik samt syntetiska mängd-, kassations- och delleveransfält bevaras där de ska. Separat domänprov omfattar 14 helperfall och åtta actions; oberoende källgranskning fann inga blockerare. React-kontrollerna använder kontrollerade UI-primitiver och fil-listläsningar; de är inga browser- eller personalprov.

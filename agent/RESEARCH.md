@@ -1,3 +1,21 @@
+# CRM109: färdiga återställningsrader får plats före filskrivning
+
+Färsk officiell dokumentation lästes 11 oktober 2026: nio HTTP 200-källor och 37 exakt återkontrollerade citat/offsetar. Privata evidensdigests är `cdf998b9ea4a011269f1145ac45d11774c7e715dc6a6e34447c8cade9fc7bf9e` och kodningssupplement `9c752c1c0d6cd439e63b2d310b655b8b8ce97dd2a3fbf8b683c0b3e40fd6aee0`; inga produktionsdata ingår.
+
+[D1 limits](https://developers.cloudflare.com/d1/platform/limits/) anger decimal gräns 2 000 000 byte för string/BLOB/hel tabellrad. [SQLite limits](https://www.sqlite.org/limits.html) och [record format](https://www.sqlite.org/fileformat.html#record_format) beskriver radens header, serial-varints och alla kolumners payload. JSON-byteantal ensamt räcker inte. B-tree-cell, rowid, sid-/index-/overflowoverhead ingår inte i den logiska record-payload som mäts här.
+
+[SQLite open](https://www.sqlite.org/c3ref/open.html) och [encoding](https://www.sqlite.org/pragma.html#pragma_encoding) gör UTF-8-defaulten beroende av öppningssätt; befintlig kodning kan inte antas. [CAST](https://www.sqlite.org/lang_expr.html#castexpr) till BLOB använder databasens textkodning och [hex](https://www.sqlite.org/lang_corefunc.html) visar dess bytes. Den lilla proben `hex(CAST(? AS BLOB))` med `A😀` måste ge `41F09F9880`; faktisk SQLite verifierade också UTF-16LE och UTF-16BE. [D1 SQL](https://developers.cloudflare.com/d1/sql-api/sql-statements/) används utan antagande om stöd för ett olistat encoding-PRAGMA.
+
+[D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/) avser SQL-transaktionen. Den rullar inte tillbaka en tidigare R2-skrivning, vilket gör förkontroll före staging relevant. De lokala Node-/native-gränsproven belägger produktens beteende, inte hostingens providergränser, CPU eller minne. Verifierade Saleshub AI-, Salesforce- och Lime-principer om ägarskap, nästa steg och spårbarhet bevaras; inga nya integrations- eller affärspåståenden tillkommer.
+
+Avgränsningen gäller CRM-kopia med kundfiler. Äldre rena dataåterställningen via `/api/crm` och vanliga skrivningar får ingen ny budgetgrind. Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår; lokala prov ersätter inte dessa. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade.
+
+Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo används.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM108: registrerad medlemskoppling följer produktionsansvaret
 
 Officiell dokumentation återlästes med sju lyckade HTTP 200-hämtningar och 23 exakt verifierade citat. [Lime om användare och grupper](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer stabila Object IDs från föränderliga namn/databas-ID:n och åtkomstpolicy. [Salesforce om aktiviteter](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) knyter egna öppna uppgifter och historik till kund-/affärssammanhang. Magnussons tvådelade identitetskontroll och äldre blank medlemskoppling är egna kontrakt som verifieras i repoets tester. Etablerade Saleshub-principer om verkligt nästa steg och granskningsbar historik behålls; ingen ny leverantörsfunktion eller anslutning införs.

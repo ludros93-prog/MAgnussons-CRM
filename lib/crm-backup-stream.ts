@@ -84,7 +84,7 @@ export async function importBackupStream(space:string,body:ReadableStream<Uint8A
    const current=previous?undefined:await backupRestoreTarget(space,version);
    const next=current?prepareBackupRestore(current,restoreState(current,{format:'magnussons-crm-1',state:header.state},true),header.exportedAt,actor):validated;
    const stored=previous?[]:remapBackupFiles(space,next,header.files);
-   if(!previous)validateBackupRestoreHeader(space,current!,next,stored);
+   if(!previous)await validateBackupRestoreHeader(space,current!,next,stored,{id:requestId,userId:actor.id,hash:'0'.repeat(64)});
    let digest=await checksum(first.value!.bytes),bytes=0;
    for(let i=0;i<header.files.length;i++){
     const item=await iterator.next();need(!item.done,'CRM-kopian är avbruten och saknar kundfiler eller slutpost.');const record=FileRecord.parse(item.value!.value),file=header.files[i];

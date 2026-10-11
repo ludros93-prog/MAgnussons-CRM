@@ -1,6 +1,7 @@
 import {database} from './crm-db';
 import {normalizeState,emptyState,seedState,type State,type Actor} from './crm';
 import {ensureReceiptTasks} from './order-work';
+import {assertStorageRowBudget,type StorageValue} from './crm-storage-budget';
 export type MutationResult={customerId?:string;dealId?:string;orderId?:string;taskId?:string;eventId?:string};
 export type CustomerAnchorAuthorization={actorMemberId:string;actorUserId:string;actorName:string;targetMemberId:string;targetUserId:string;targetEmail:string;targetName:string;targetOwner:string;targetRole:'admin'|'seller'};
 export type CommercialAnchorAuthorization=CustomerAnchorAuthorization;
@@ -10,6 +11,35 @@ export type MutationMeta={result:MutationResult;userId:string;hash:string;restor
 export type StoredFile={id:string;customerId:string;objectKey:string;metadata:Record<string,unknown>};
 export const names=['customers','deals','orders','tasks','meetings','events','articles','notices','leads','companyEvents'] as const;
 export const tables={customers:'crm_customers',deals:'crm_deals',orders:'crm_orders',tasks:'crm_tasks',meetings:'crm_meetings',events:'crm_events',articles:'crm_articles',notices:'crm_notices',leads:'crm_leads',companyEvents:'crm_company_events'};
+type CrmCollection=typeof names[number];
+type CrmEntity=State[CrmCollection][number];
+export type CrmStorageRow={table:string;columns:string[];values:StorageValue[]};
+export type RestoreReceipt={id:string;userId:string;hash:string};
+// These are the actual SQL bind values, including IDs repeated outside JSON.
+// Column order can differ from the table declaration without changing record
+// size; every column in these tables is stored (none aliases INTEGER rowid).
+export function crmEntityStorageRow(space:string,name:CrmCollection,item:CrmEntity):CrmStorageRow{
+ const row=item as unknown as {id:string;customerId:string;dealId:string},hasCustomer=!['customers','articles','notices','leads','companyEvents'].includes(name);
+ return {table:tables[name],columns:['space','id',...(hasCustomer?['customer_id']:[]),...(name==='orders'?['deal_id']:[]),'data'],values:[space,row.id,...(hasCustomer?[row.customerId]:[]),...(name==='orders'?[row.dealId]:[]),JSON.stringify(item)]};
+}
+export function crmFileStorageRow(space:string,file:StoredFile):CrmStorageRow{
+ return {table:'crm_files',columns:['id','space','customer_id','object_key','data'],values:[file.id,space,file.customerId,file.objectKey,JSON.stringify(file.metadata)]};
+}
+export function crmMutationStorageRow(space:string,id:string,mutation:Pick<MutationMeta,'result'|'userId'|'hash'>):CrmStorageRow{
+ return {table:'crm_mutations',columns:['space','id','result_json','user_id','request_hash'],values:[space,id,JSON.stringify(mutation.result),mutation.userId,mutation.hash]};
+}
+export function crmSpaceStorageRow(space:string,version:number,writeToken:string,settings:State['settings']):CrmStorageRow{
+ return {table:'crm_spaces',columns:['id','version','write_token','settings'],values:[space,version,writeToken,JSON.stringify(settings)]};
+}
+function unchangedCrmEntity(prev:State,name:CrmCollection,item:CrmEntity){return prev[name].some(old=>old.id===item.id&&JSON.stringify(old)===JSON.stringify(item));}
+export function assertBackupRestoreStorageBudget(space:string,current:State,next:State,files:StoredFile[],receipt:RestoreReceipt){
+ // crypto.randomUUID() in commit is always 36 ASCII bytes. Reserve that exact
+ // width without consuming another UUID or changing the atomic write token.
+ assertStorageRowBudget(crmSpaceStorageRow(space,current.version+1,'00000000-0000-0000-0000-000000000000',next.settings).values);
+ for(const name of names)for(const item of next[name])if(!unchangedCrmEntity(current,name,item))assertStorageRowBudget(crmEntityStorageRow(space,name,item).values);
+ for(const file of files)assertStorageRowBudget(crmFileStorageRow(space,file).values);
+ assertStorageRowBudget(crmMutationStorageRow(space,receipt.id,{result:{},userId:receipt.userId,hash:receipt.hash}).values);
+}
 const db=database;
 export async function load(space:string):Promise<State>{
  const r=await db().batch([db().prepare('SELECT version,settings FROM crm_spaces WHERE id=?').bind(space),...names.map(n=>db().prepare(`SELECT data FROM ${tables[n]} WHERE space=?`).bind(space))]);
@@ -70,9 +100,9 @@ export async function commit(space:string,prev:State,next:State,requestId:string
  const orderAnchorGate=orderAnchor?" AND EXISTS(SELECT 1 FROM crm_orders AS anchor_order WHERE space=? AND id=? AND customer_id=? AND deal_id=? AND data=? AND CASE WHEN json_valid(anchor_order.data) THEN json_type(anchor_order.data)='object' AND json_extract(anchor_order.data,'$.id')=anchor_order.id AND json_extract(anchor_order.data,'$.customerId')=anchor_order.customer_id AND json_extract(anchor_order.data,'$.dealId')=anchor_order.deal_id AND json_extract(anchor_order.data,'$.owner')=? AND NOT EXISTS(SELECT 1 FROM json_each(anchor_order.data) GROUP BY key HAVING COUNT(*)>1) ELSE 0 END)":'';
  const taskAnchorGate=taskAnchor?" AND EXISTS(SELECT 1 FROM crm_tasks AS anchor_task WHERE space=? AND id=? AND customer_id=? AND data=? AND CASE WHEN json_valid(anchor_task.data) THEN json_type(anchor_task.data)='object' AND json_extract(anchor_task.data,'$.id')=anchor_task.id AND json_extract(anchor_task.data,'$.customerId')=anchor_task.customer_id AND json_extract(anchor_task.data,'$.dealId')=? AND json_extract(anchor_task.data,'$.owner')=? AND CASE WHEN json_type(anchor_task.data,'$.kind') IS NULL THEN 'manual' ELSE json_extract(anchor_task.data,'$.kind') END=? AND NOT EXISTS(SELECT 1 FROM json_each(anchor_task.data) GROUP BY key HAVING COUNT(*)>1) ELSE 0 END)":'';
  const rawAnchor=!!(orderAnchor||taskAnchor);
- const draftGate=draft?' AND EXISTS(SELECT 1 FROM crm_drafts WHERE space=? AND user_id=? AND id=? AND revision=? AND archived=0)':'';const q=[db().prepare('UPDATE crm_spaces SET version=version+1,write_token=?'+(rawAnchor?'':',settings=?')+' WHERE id=? AND version=?'+draftGate+restoreGate+actorGate+profileGate+productionGate+anchorGate+orderAnchorGate+taskAnchorGate).bind(token,...(rawAnchor?[]:[JSON.stringify(next.settings)]),space,prev.version,...(draft?[space,draft.userId,draft.id,draft.revision]:[]),...(mutation.restoreEmpty?[space,space]:[]),...(actor?[actor.memberId,actor.userId,actor.role,actor.owner]:[]),...(authorization?[authorization.actorMemberId,authorization.actorUserId,profileActorRole,...authorization.links.flatMap(link=>[link.id,link.owner])]:[]),...(productionAuthorization?[productionAuthorization.actorMemberId,productionAuthorization.actorUserId,productionAuthorization.actorName,productionAuthorization.targetMemberId,productionAuthorization.targetUserId,productionAuthorization.targetName,productionAuthorization.targetRole,productionAuthorization.targetUserId,productionAuthorization.targetMemberId]:[]),...(anchor?[anchor.actorMemberId,anchor.actorUserId,anchor.actorName,anchor.actorUserId,anchor.actorMemberId,anchor.targetMemberId,anchor.targetUserId,anchor.targetEmail,anchor.targetName,anchor.targetOwner,anchor.targetRole,anchor.targetUserId,anchor.targetMemberId]:[]),...(orderAnchor?[space,orderAnchor.id,orderAnchor.customerId,orderAnchor.dealId,orderAnchor.rawData,orderAnchor.owner]:[]),...(taskAnchor?[space,taskAnchor.id,taskAnchor.customerId,taskAnchor.rawData,taskAnchor.dealId,taskAnchor.owner,taskAnchor.kind]:[]))];
+ const draftGate=draft?' AND EXISTS(SELECT 1 FROM crm_drafts WHERE space=? AND user_id=? AND id=? AND revision=? AND archived=0)':'';const q=[db().prepare('UPDATE crm_spaces SET version=version+1,write_token=?'+(rawAnchor?'':',settings=?')+' WHERE id=? AND version=?'+draftGate+restoreGate+actorGate+profileGate+productionGate+anchorGate+orderAnchorGate+taskAnchorGate).bind(token,...(rawAnchor?[]:[crmSpaceStorageRow(space,prev.version+1,token,next.settings).values[3]]),space,prev.version,...(draft?[space,draft.userId,draft.id,draft.revision]:[]),...(mutation.restoreEmpty?[space,space]:[]),...(actor?[actor.memberId,actor.userId,actor.role,actor.owner]:[]),...(authorization?[authorization.actorMemberId,authorization.actorUserId,profileActorRole,...authorization.links.flatMap(link=>[link.id,link.owner])]:[]),...(productionAuthorization?[productionAuthorization.actorMemberId,productionAuthorization.actorUserId,productionAuthorization.actorName,productionAuthorization.targetMemberId,productionAuthorization.targetUserId,productionAuthorization.targetName,productionAuthorization.targetRole,productionAuthorization.targetUserId,productionAuthorization.targetMemberId]:[]),...(anchor?[anchor.actorMemberId,anchor.actorUserId,anchor.actorName,anchor.actorUserId,anchor.actorMemberId,anchor.targetMemberId,anchor.targetUserId,anchor.targetEmail,anchor.targetName,anchor.targetOwner,anchor.targetRole,anchor.targetUserId,anchor.targetMemberId]:[]),...(orderAnchor?[space,orderAnchor.id,orderAnchor.customerId,orderAnchor.dealId,orderAnchor.rawData,orderAnchor.owner]:[]),...(taskAnchor?[space,taskAnchor.id,taskAnchor.customerId,taskAnchor.rawData,taskAnchor.dealId,taskAnchor.owner,taskAnchor.kind]:[]))];
  for(const n of names)for(const item of next[n]){
-  if(prev[n].some(old=>old.id===item.id&&JSON.stringify(old)===JSON.stringify(item)))continue;
+  if(unchangedCrmEntity(prev,n,item))continue;
   if(orderAnchor&&n==='orders'&&item.id===orderAnchor.id){
    const order=item as State['orders'][number];
    // Preserve absence, defaults, invoice attribution and unknown legacy fields
@@ -85,12 +115,12 @@ export async function commit(space:string,prev:State,next:State,requestId:string
    q.push(db().prepare("UPDATE crm_tasks SET data=json_set(data,'$.ownerProfileId',?,'$.responsibilityTransfers',json(?)) WHERE space=? AND id=? AND "+gate).bind(task.ownerProfileId,JSON.stringify(task.responsibilityTransfers),space,task.id,space,token));
    continue;
   }
-  const row=item as unknown as {id:string;customerId:string;dealId:string};const cols=['space','id',...(['customers','articles','notices','leads','companyEvents'].includes(n)?[]:['customer_id']),...(n==='orders'?['deal_id']:[]),'data'];const vals=[space,row.id,...(['customers','articles','notices','leads','companyEvents'].includes(n)?[]:[row.customerId]),...(n==='orders'?[row.dealId]:[]),JSON.stringify(item)];
-  q.push(db().prepare(`INSERT INTO ${tables[n]} (${cols.join(',')}) SELECT ${cols.map(()=>'?').join(',')} WHERE ${gate} ON CONFLICT(space,id) DO UPDATE SET ${cols.filter(c=>!['space','id'].includes(c)).map(c=>c+'=excluded.'+c).join(',')}`).bind(...vals,space,token));
+  const {table,columns:cols,values:vals}=crmEntityStorageRow(space,n,item);
+  q.push(db().prepare(`INSERT INTO ${table} (${cols.join(',')}) SELECT ${cols.map(()=>'?').join(',')} WHERE ${gate} ON CONFLICT(space,id) DO UPDATE SET ${cols.filter(c=>!['space','id'].includes(c)).map(c=>c+'=excluded.'+c).join(',')}`).bind(...vals,space,token));
  }
  if(draft)q.push(db().prepare('UPDATE crm_drafts SET archived=1,revision=revision+1,updated_at=? WHERE space=? AND user_id=? AND id=? AND revision=? AND '+gate).bind(new Date().toISOString(),space,draft.userId,draft.id,draft.revision,space,token));
- for(const f of files)q.push(db().prepare(`INSERT INTO crm_files(id,space,customer_id,object_key,data) SELECT ?,?,?,?,? WHERE ${gate}`).bind(f.id,space,f.customerId,f.objectKey,JSON.stringify(f.metadata),space,token));
- q.push(db().prepare(`INSERT INTO crm_mutations(space,id,result_json,user_id,request_hash) SELECT ?,?,?,?,? WHERE ${gate}`).bind(space,requestId,JSON.stringify(mutation.result),mutation.userId,mutation.hash,space,token));
+ for(const f of files)q.push(db().prepare(`INSERT INTO crm_files(id,space,customer_id,object_key,data) SELECT ?,?,?,?,? WHERE ${gate}`).bind(...crmFileStorageRow(space,f).values,space,token));
+ q.push(db().prepare(`INSERT INTO crm_mutations(space,id,result_json,user_id,request_hash) SELECT ?,?,?,?,? WHERE ${gate}`).bind(...crmMutationStorageRow(space,requestId,mutation).values,space,token));
  const result=await db().batch(q);return result[0].meta.changes===1;
 }
 
