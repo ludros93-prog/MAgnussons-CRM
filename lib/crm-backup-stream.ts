@@ -3,11 +3,10 @@ import {database,bucket} from './crm-db';
 import {load,requestHash} from './crm-store';
 import {restoreState} from './crm-restore';
 import {emptyState,type Actor,type State} from './crm';
-import {BACKUP_MAX_BYTES,BackupFileDescriptor,backupNeed as need,checksum,encodeBackupFile,decodeBackupFile,validateBackupFiles,backupMutation,backupRestoreTarget,prepareBackupRestore,remapBackupFiles,cleanupBackupFiles,finishBackupRestore,readBackupFile,trustedBackupExport,type BackupExportAuthorization} from './crm-backup';
+import {BACKUP_MAX_BYTES,BackupFileDescriptor,BackupStreamHeader as Header,backupStreamHeader,validateBackupRestoreHeader,backupNeed as need,checksum,encodeBackupFile,decodeBackupFile,validateBackupFiles,backupMutation,backupRestoreTarget,prepareBackupRestore,remapBackupFiles,cleanupBackupFiles,finishBackupRestore,readBackupFile,trustedBackupExport,type BackupExportAuthorization} from './crm-backup';
 
-export const BACKUP_STREAM_FORMAT='magnussons-crm-backup-2';
+export {BACKUP_STREAM_FORMAT} from './crm-backup';
 const FILE_RECORD_BYTES=6700000;
-const Header=z.object({type:z.literal('header'),format:z.literal(BACKUP_STREAM_FORMAT),exportedAt:z.string(),sourceSpace:z.enum(['demo','live']),state:z.unknown(),files:z.array(BackupFileDescriptor).max(2000)}).strict();
 const FileRecord=z.object({type:z.literal('file'),id:z.string().min(1).max(100),content:z.string().max(6666668),sha256:z.string().regex(/^[a-f0-9]{64}$/)}).strict();
 const End=z.object({type:z.literal('end'),files:z.number().int().nonnegative().max(2000),bytes:z.number().int().nonnegative().max(10000000000),sha256:z.string().regex(/^[a-f0-9]{64}$/)}).strict();
 const encoder=new TextEncoder();
@@ -20,9 +19,7 @@ const fileRows=async(space:string)=>(await database().prepare('SELECT id,custome
 async function prepareBackupStream(space:string,authorize:BackupExportAuthorization){
  await authorize();const st=await load(space);await authorize();const rows=await fileRows(space);await authorize();
  const files=rows.map(row=>{const file=BackupFileDescriptor.parse({customerId:row.customer_id,metadata:JSON.parse(row.data)});need(file.metadata.id===row.id,'Kundfilens metadata har ett felaktigt ID.');return file;});
- const {viewer:_,...state}=st;
- const header=Header.parse({type:'header',format:BACKUP_STREAM_FORMAT,exportedAt:new Date().toISOString(),sourceSpace:space,state,files});
- const headerBytes=recordBytes(header);need(headerBytes.byteLength<=BACKUP_MAX_BYTES,'CRM-data och filförteckning får vara högst 16 MB.');
+ const {header,bytes:headerBytes}=backupStreamHeader(space,st,files);need(headerBytes.byteLength<=BACKUP_MAX_BYTES,'CRM-data och filförteckning får vara högst 16 MB.');
  const validated=restoreState(emptyState(),{format:'magnussons-crm-1',state:header.state},true);validateBackupFiles(validated,files,Infinity);
  // Base64 and SHA256 have fixed ASCII lengths. Compute the exact wire length
  // from validated metadata without reading R2 or buffering the whole export.
@@ -87,6 +84,7 @@ export async function importBackupStream(space:string,body:ReadableStream<Uint8A
    const current=previous?undefined:await backupRestoreTarget(space,version);
    const next=current?prepareBackupRestore(current,restoreState(current,{format:'magnussons-crm-1',state:header.state},true),header.exportedAt,actor):validated;
    const stored=previous?[]:remapBackupFiles(space,next,header.files);
+   if(!previous)validateBackupRestoreHeader(space,current!,next,stored);
    let digest=await checksum(first.value!.bytes),bytes=0;
    for(let i=0;i<header.files.length;i++){
     const item=await iterator.next();need(!item.done,'CRM-kopian är avbruten och saknar kundfiler eller slutpost.');const record=FileRecord.parse(item.value!.value),file=header.files[i];

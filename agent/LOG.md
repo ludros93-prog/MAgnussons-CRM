@@ -1,3 +1,23 @@
+# CRM107: plats för återställningshistorik och filförteckning
+
+Färsk bas är levererad CRM106/PR #174: GitHub-main `3eca951806e73e95bee28029d8b388b6d816d723`, Sites-källa `c77340f68e2044e4f5b3284900bd54cb10bde221`, live v103. Alla 416 spårade filers bytes/lägen och träd `4fa104620bfcc3da910d63e0bac0aac1c4780e8d` matchade före ändringen. Egen branch/reservation; inga öppna PR:er eller pågående publicering observerades vid öppningen.
+
+Båda återställningsformaten mäter nu den färdiga framtida NDJSON-headern efter genererad kundhistorik, UUID-omappning av filmetadata/referenser och destinationens nästa revision. Över 16 000 000 UTF-8-byte ger ett tydligt fel före första filskrivning och transaktion. Originalhistorik kapas aldrig. Ett tidigare giltigt kvitto kan fortfarande återförsökas; full fil-/slutintegritet, aktör och avsikt kontrolleras som tidigare.
+
+Felet reproducerades på oförändrad main med verkliga serverarkiv: återställning 200, nästa NDJSON-export 400. Riktad kandidatregression passerade 25 isolerade HTTP-anrop: exakt 16 000 000 byte accepteras och återexporteras, 16 000 001 stoppas före R2 put/delete/COMMIT, 9→10, Unicode/JSON-escaping, långa fil-ID:n som krymper, korrektur/aktuella och arkiverade skisser/receptreferenser samt två förlorade commitsvar med exakt återförsök. Alla 18 råtabeller och positiva privata utkast, Outlook-, medlems- och R2-sentineler kontrolleras. Gränsarkiven kommer från faktiska exporter med en giltig datering av samma längd och korrekt omräknad NDJSON-integritet; det separata baselineprovet använder oförändrade serverarkiv.
+
+Preliminär TypeScript och bygge har faktisk exit 0 med oförändrade produktfiler. Oberoende källgranskning fann inget statiskt hinder. Första riktade nativeförsöket stoppade före fixtures på saknade genererade testmoduler; förutsättningen kompilerades från repoets befintliga testdefinition och ursprungligt felbelägg bevarades. Det första försöket är inte ett grönt nativeprov. Riktat nativeprov har därefter faktisk exit 0: oförändrad byggd Worker, lyssnande lokal HTTP och riktig isolerad D1/R2, 12 anrop och två förlorade commitsvar. Giltig källheader 15 999 140 byte gav framtida header 16 000 001 och avvisades före staging/commit i båda formaten. Alla 18 råtabeller och fyra R2-sentineler bevarades; små accepterade återställningar, exakt replay och återexport passerade. Stor accepterad native-gränstransaktion och verklig hostingåterställning är inte provade.
+
+Obligatorisk slutrevisionens regression, TypeScript, bygge, isolerad native-runtime och diffkontroll samt exakt-head CI, merge mot aktuell bas och samma Sites-publicering återstår vid denna dokumentfrysning. Faktiska slutresultat, separata main-/Sites-källrevisioner och liveversion redovisas i PR/leveranskvittensen. Ingen ändrad delning, miljö, kontobindning eller agentaktivering ingår.
+
+Detta gäller framtida NDJSON-header vid återställningsskrivningen. Det garanterar inte den äldre JSON-exportens separata total-/base64budget, stora accepterade native-commits, verklig hostingkapacitet, framtida nya data eller personal-/kontoacceptans. Format, migrationer, roller, privata data, CAS, idempotens och lagringsbindningar är oförändrade. v103-kod är kompatibel återgång men återinför det här felet; ingen återgång eller verklig hostingåterställning har utförts.
+
+Nästa B04-del: säker verklig hostingåterställning och verifiering av dess D1-/Workerbudgetar samt separat backup för kontobindningar, Outlook och privata utkast. Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo har använts.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM106: färdigt återställningsresultat kontrolleras före staging
 
 Färsk GitHub-main 840194740c8c66aecab65a12bc699e88b59e069a och faktiskt publicerad v102-källa 95b778a71777a045a2f7299a662070b9e0d342e4 öppnades före ändringen. Alla 414 filers bytes och Git-lägen matchade, träd 90fc46aced430c70f36b4d23d5276ffd2c6d5017. CRM105/PR #173 är levererad. Egen branch/reservation används; inga öppna PR:er eller främmande publicering sågs vid öppningen. Samma Site och begränsade custom-delning revision 2, miljörevision 1 och noll Sites-automations behålls.
