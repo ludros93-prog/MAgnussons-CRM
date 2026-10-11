@@ -1,3 +1,11 @@
+**CRM104 – även uppgiftskortets mobiltext rättad**
+
+Revision `97dfe9b9c31aa4607d98a58626aaa8e2fd5cbc70` klarade faktiskt nya femkontrollen och [exakt-head CI 38130276321](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38130276321). Browsern passerade därefter 1290 och 390 px med dubbel textstorlek, men stoppades vid 320 px på uppgiftskortets konstruerade kund-/ansvarstext: hängande mellanslagsrektangel 3,671875 px utanför textytan, medan synliga ord rymdes. Även detta stycke får normal mellanslagshantering och möjlighet att bryta långa ord; saknad kund renderas fortfarande som tomt namn. Övrig produktlogik och sparade notisers radbrytningar/läsning bevaras.
+
+De faktiska stoppade proven behålls. En separat undersökande native browser använder samma strikta geometri/urval/SQL/R2/cleanup, märks uttryckligen som otillåten slutleverans och ersätter inga slutkontroller. Den nya slutrevisionen behöver därefter alla fem kommandon, ny exakt-head CI och full slutlig APP-/SOURCE-browser. PR 172 är ännu draft; GitHub-main, Sites-källa och live är fortsatt CRM103/v100 vid denna frysning. B01 återstår delvis; verkliga konto-/personalprov och hostingåterställning är fortsatt obekräftade.
+
+---
+
 **CRM104 – browserfynd före publicering**
 
 Revision `bfb65ab556a51c71b9e399116a76ea5de9672b5e` klarade faktiskt alla fem obligatoriska lokala kontroller och [exakt-head CI 38129347706](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38129347706). Det isolerade native browserprovet passerade 1290 px med dubbel textstorlek men stoppades vid 390 px: återköpskortets `pre-wrap`-stycke gav en hängande mellanslagsrektangel 3,109375 px utanför textytan. Synliga ord/datum rymdes; ingen dold datumtext påstås. Det strikta geometriresultatet och den avslutade isolerade körningen bevaras, kraven sänks inte. Endast detta konstruerade stycke får normal mellanslagshantering och radbrytning för långa ord; meningens innehåll är detsamma. Sparade arbetsnotiser med avsiktliga radbrytningar, läs-handlers och AnnualSummary bevaras.
