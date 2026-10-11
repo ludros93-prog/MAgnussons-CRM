@@ -12,6 +12,11 @@ Inga konton, roller, kund-/orderposter, hemligheter, utskick, scheman eller agen
 
 
 Riktat slutkvitto `customer-scope-targeted.json`, SHA-256 `79026eeaa2484c82bc8f1e3dbb2808e47f47c2264ecca6b966a6b43839b2229c`, binder faktiskt 49-fallsutfall till produkt-/testbyte.
+
+Första frysta kandidaten `73cb83f1603928bfa10dfbca4aaf637a7092230d` stoppades i obligatorisk fullregression: `tests/calendar-profile-link.mjs` krävde fortfarande Kundregistrets tidigare filteralternativ. Logg SHA-256 `c18cce668436e667acc6ad489b4d8d1c464b967d72e9acc1660af308932dea33` bevaras privat. Läsgranskning fann samma gamla antagande i kundärendetestets toolbaradapter. Dessa två bevarandetester uppdateras för det avsiktliga Mina kunder/Teamets kunder-urvalet, medan prospekteringens och övriga vyers tidigare alternativ fortsatt prövas exakt. Ingen misslyckad kandidat mergas eller publiceras; ny fryst revision kräver hela slutgrinden igen.
+
+De två avgränsade toolbarregressionerna passerar efter uppdatering: Kalender 41 faktiska fall (`calendar-toolbar-targeted.json`, SHA-256 `33a0c5e16afed1ced46094da7e8b8bab9d456651c12b21beab41ecc8923e142e`) och kundärenden 45 faktiska fall (`issue-toolbar-targeted.json`, SHA-256 `9bcd9f30d5b375c1751f47570ac8254a6e1aded0044473bd7f6720bef137a4b6`), båda utan HTTP. De nya kundalternativen prövas separat; prospekteringens tidigare alternativ och kalender-/kundärendevyernas egna kontrakt bevaras. Detta ersätter inte den nya kandidatens fullregression.
+
 ---
 
 Historik före CRM100 – tidigare dokumentation bevarad nedan.

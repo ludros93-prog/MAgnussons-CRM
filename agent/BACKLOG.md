@@ -12,6 +12,9 @@ CRM99 är verifierad och publicerad: [PR #167](https://github.com/ludros93-prog/
 
 
 Riktat slutkvitto `customer-scope-targeted.json`, SHA-256 `79026eeaa2484c82bc8f1e3dbb2808e47f47c2264ecca6b966a6b43839b2229c`, binder faktiskt 49-fallsutfall till produkt-/testbyte.
+
+Första frysta kandidaten `73cb83f1603928bfa10dfbca4aaf637a7092230d` stoppades i obligatorisk fullregression: `tests/calendar-profile-link.mjs` krävde fortfarande Kundregistrets tidigare filteralternativ. Logg SHA-256 `c18cce668436e667acc6ad489b4d8d1c464b967d72e9acc1660af308932dea33` bevaras privat. Läsgranskning fann samma gamla antagande i kundärendetestets toolbaradapter. Dessa två bevarandetester uppdateras för det avsiktliga Mina kunder/Teamets kunder-urvalet, medan prospekteringens och övriga vyers tidigare alternativ fortsatt prövas exakt. Ingen misslyckad kandidat mergas eller publiceras; ny fryst revision kräver hela slutgrinden igen.
+
 ---
 
 Historik före CRM100 – tidigare dokumentation bevarad nedan.
