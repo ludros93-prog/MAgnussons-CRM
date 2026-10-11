@@ -151,7 +151,9 @@ export async function verifyResultOrderScope(){
  const text=node=>typeof node==='string'?node:Array.isArray(node)?node.map(text).join(''):node?.children?.map(text).join('')||'';
  const byClass=name=>renderer.root.findAll(node=>typeof node.type==='string'&&node.props.className?.split(' ').includes(name));
  const button=caption=>renderer.root.findAllByType('button').find(node=>text(node)===caption);
- const omitOrders=metrics=>Object.fromEntries(Object.entries(metrics).filter(([key])=>key!=='orders'));
+ // CRM101 intentionally changes only personal current customer selection;
+ // the captured pre-CRM99 baseline remains byte unchanged below.
+ const omitOrders=(metrics,mode)=>Object.fromEntries(Object.entries(metrics).filter(([key])=>key!=='orders'&&(mode!=='personal'||key!=='customers')));
  const issueRows=orders=>orders.filter(order=>['submitted','printed'].includes(order.production.status)&&order.production.issue);
  async function unmount(){if(renderer){await act(async()=>renderer.unmount());renderer=null}}
  async function scenario(label,run,{ui=false,defensive=false}={}){await unmount();calls=[];await run();await unmount();assert.equal(http.length,0,'Zero HTTP in '+label);cases++;if(ui)uiCases++;if(defensive)defensiveCases++;console.log('PASS Result order scope: '+label);}
@@ -159,7 +161,7 @@ export async function verifyResultOrderScope(){
   Object.defineProperty(globalThis,'IS_REACT_ACT_ENVIRONMENT',{configurable:true,writable:true,value:true});
   Object.defineProperty(globalThis,'fetch',{configurable:true,writable:true,value:async(...args)=>{http.push(args);throw Error('Result order scope must not perform HTTP')}});
   assert.equal(createHash('sha256').update(baselineSource).digest('hex'),'f04cba18c0f86ba9abcd6a1e367015585710f10e0ff98e97fc3dc4dea6b12e49');
-  const core=await import(pathToFileURL(compile('lib/crm.ts')).href),dashboard=await import(pathToFileURL(compile('lib/sales-dashboard.ts')).href),baseline=await import(pathToFileURL(compile('lib/result-order-baseline.ts',baselineSource)).href),domain=await import(pathToFileURL(compile('lib/order-scope.ts')).href);
+  const core=await import(pathToFileURL(compile('lib/crm.ts')).href),dashboard=await import(pathToFileURL(compile('lib/sales-dashboard.ts')).href),baseline=await import(pathToFileURL(compile('lib/result-order-baseline.ts',baselineSource)).href),domain=await import(pathToFileURL(compile('lib/order-scope.ts')).href),customerDomain=await import(pathToFileURL(compile('lib/customer-scope.ts')).href);
   const source=remember('app/page.tsx'),ast=ts.createSourceFile('app/page.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),nodes=[];(function visit(node){nodes.push(node);ts.forEachChild(node,visit)})(ast);
   const variable=name=>{const matches=nodes.filter(node=>ts.isVariableDeclaration(node)&&node.name.getText(ast)===name);assert.equal(matches.length,1,'Unique actual declaration '+name);return matches[0].initializer.getText(ast);};
   const result=nodes.filter(node=>ts.isJsxExpression(node)&&node.expression&&ts.isBinaryExpression(node.expression)&&node.expression.left.getText(ast)==="['overview','team'].includes(view)"&&node.expression.right.getText(ast).includes('<SalesDashboard '));assert.equal(result.length,1,'Whole actual Resultat parent fragment');
@@ -173,7 +175,8 @@ export function orders(st,owner,calls){const selectedView='orders',viewerReady=(
   function metrics(st,ids,{scope=dashboard.personalResultScope(st),mode='personal',month='2026-10'}={}){
    assert.deepEqual(core.normalizeState(structuredClone(st)),st,'Actual accepted normalization is idempotent');const before=JSON.stringify(st);freeze(st);
    const measured=dashboard.salesMetrics(st,month,scope,mode),old=baseline.salesMetrics(st,month,scope,mode);assert.deepEqual(measured.orders.map(order=>order.id),ids);
-   assert.deepEqual(Object.keys(measured),Object.keys(old),'No other metric field added or removed');assert.deepEqual(omitOrders(measured),omitOrders(old),'Every other metric including pipeline/tasks/customer concerns stays exact current-main');baselineComparisons++;
+   assert.deepEqual(Object.keys(measured),Object.keys(old),'No other metric field added or removed');assert.deepEqual(omitOrders(measured,mode),omitOrders(old,mode),'Every protected metric including pipeline/tasks and historical financial attribution stays exact current-main');baselineComparisons++;
+   if(mode==='personal')assert.deepEqual(measured.customers,scope===dashboard.personalResultScope(st)&&scope!=='all'?st.customers.filter(customer=>customerDomain.customerInScope(customer,customerDomain.customerScope(st,own(st)))):[],'CRM101 personal current customers match established Mina kunder, separately from order and financial attribution');
    if(mode==='profile'){assert.deepEqual(measured,old,'Entire explicit-profile/team result retains main');completeModeComparisons++;assert.deepEqual(dashboard.salesMetrics(st,month,scope),old);}
    if(mode==='personal'&&scope===dashboard.personalResultScope(st)){const expectedRows=actualOrders(st);assert.deepEqual(measured.orders,expectedRows,'Exact orderScope/orderInScope rows and data, not only counts');assert.deepEqual(issueRows(measured.orders),issueRows(expectedRows));scopeComparisons++;}
    assert.deepEqual(dashboard.salesYearSeries(st,month.slice(0,4),scope),baseline.salesYearSeries(st,month.slice(0,4),scope));assert.deepEqual(dashboard.teamSalesRows(st,month),baseline.teamSalesRows(st,month));assert.equal(JSON.stringify(st),before);return measured;

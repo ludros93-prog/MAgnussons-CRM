@@ -1,3 +1,23 @@
+# Validering – CRM101 kundrisk och Kundvård
+
+Läsande basprov på exakt main `0a9420dd` visar lika antal men fel kund-ID:n: personlig risk använde profilens historiska alias, direkt Kundvård kontots alias och ingången från Resultat profilaliaset. Sju normaliserade/renderade basfall och en separat positiv finanshistorikkorsning kördes utan HTTP eller skrivningar. Privata kvitton `baseline-customer-risk-main.json` SHA-256 `740eee02e4777ee194d033bb1c4709420904f2995d5bec07120cfd06bbfa783e` och `baseline-financial-attribution-main.json` SHA-256 `bd095ef74bb089be5b02aad3b7df9ece761cd7d312b9c1174432f84ec67789ab` binder verkliga produktionsmoduler och indata.
+
+Försäljning mot månads-/årsmål, marginal och kvalificerade nya prospects behåller registrerat historiskt ansvar. Kundärenden har fortsatt eget separat ärendeansvar; deras lista och diagnostik blandas inte med kundportföljen. Prospektering, onboarding, uppgifter, order, möten, riskdefinition och serverbehörighet behåller sina befintliga kontrakt.
+
+Obligatoriska slutkommandon: `node tests/outlook.mjs`, TypeScript utan incremental, `pnpm build`, isolerat `tests/runtime-smoke.mjs` och `git diff --check`. Fullregression ska bevara 40→45, dokumenterat syntetiskt godkännande för 50→48, kassation, delleverans, CAS och dubbelklick. Native browser ska prova verklig Resultat→Kundvård och direkt ingång med ID-jämförelser, separat ärendetabb, nollurval, sökning, roller, tangentbord och normal/dubbel text vid tre bredder.
+
+Riktat nytt prov: **40 fall PASS**, **364** kompletta jämförelser av de övriga resultatfälten, **126** hela profil-/team-/årsserie-/teamradsjämförelser, **40** bytekontrollerade produktionsmoduler och noll HTTP. Verklig normalisering, React och hela parent-callbacken prövar exakta ID:n trots lika antal, personligt/äldre/teamansvar, saknad/motstridig koppling, inaktiv profil, sex sökfält, separat ärendetabb och positiv historisk faktura-/kvalificeringsattribuering. Kvitto `customer-risk-targeted-v2.json` SHA-256 `26e8a96e26a9c7096cc490e1d31c8f74e7da2736d649b5715c9cd9d1db3ec4f5`. UI-primitiver/diagram och oöppnade skrivdestinationer är testadapters; dessa riktade prov ersätter inte native browser eller slutchecks.
+
+Fem berörda befintliga scopeprov kördes också med exit 0: Kundregister 49, kundärenden 45, Resultat-order 51, Resultat-affärer 41 och Resultat-aktiviteter 51 fall, samtliga utan HTTP. De inlinade historiska baselines bevaras; endast det avsiktligt ändrade personliga customers-fältet jämförs separat mot etablerat kundansvar. Finans-, profil-/team-, årshistorik, prospektering och separat ärendeansvar behåller sina exakta skyddsprov. Kvitto `existing-scope-tests/after.json` SHA-256 `4246a1f0b745be5b81dde9ac0e9237594fd06046d0b7bcc0a448bc91fd3e6fad`.
+
+Vid dokumentationsfrysningen är detta en separat CRM101-kandidat. Slutrevisionens fem obligatoriska checks, isolerad native APP-/SOURCE-browser, exakt-head CI, aktuell mergebas och faktisk merge/save/deploy redovisas efter körning i leverans-PR och task. Ingen kommande publicering påstås här.
+
+Syntetiska prov bekräftar inga personliga konton, verkliga uppföljningar, integrationer eller personalacceptans. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst; tillgängligt read_thread avser Slack. Explicit brief och färsk main används. Inga konton, roller, kund-/orderposter, utskick, scheman eller agentinstruktioner ändras.
+
+---
+
+Historik före CRM101 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Validering – CRM100 personligt Kundregister
 
 Kandidaten `59df3c31f6a3cb0355d5f01ac9e5bbd661c8a488` klarade alla fem obligatoriska slutkommandon och [exakt-head CI 38105466081](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38105466081). Den isolerade APP-browsern godkände normalvyn vid 1290 px men stoppade vid exakt dubbel textstorlek: Kundregistrets ansvarigfilter klippte sin fulla etikett (clientWidth 483 / scrollWidth 528). Ingen merge eller publicering skedde. Lokala processer och portar stängdes, syntetiska D1/R2-data återställdes och käll-/byggbyte bevarades. Filtret får nu lokal radbrytning och automatisk höjd under enbart Kundregistrets toolbar; etikett, ansvarsurval, data och andra vyers CSS bevaras. Ny fryst revision kräver hela slutgrinden och APP-/SOURCE-browser igen; faktisk slutleverans redovisas i PR #168 och task.

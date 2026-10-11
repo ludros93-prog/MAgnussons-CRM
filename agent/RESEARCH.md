@@ -1,3 +1,23 @@
+# Principer – crm101 personligt Kundvård och aktuell kundrisk
+
+Tre officiella artikelbodies hämtades med faktisk HTTP 200 och lästes den 11 oktober 2026 **03:20:20–03:20:22 UTC**. Privat kvitto `/workspace/.crm101-evidence/research/research.json`, SHA-256 `961b8ab491d657d033febe371a73da9c2b3474df730e3187f0bd11e4f43cba58`, binder URL, status, hämtningstid, rå body-/texthash och sex korta ordagranna utdrag till sparad text. Utdragen återkontrollerades exakt mot de sparade texterna.
+
+- [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från ägarskap. Att en kund är synlig bevisar inte att kunden ingår i personens ansvar. Källan föreskriver inga Magnussons-regler för personligt urval eller kommersiell historik.
+- [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer loginanvändare från kopplad coworker, beskriver problem med personligt affärsurval när kopplingen saknas och skiljer änderliga user-/visningsnamn från stabila user-/group Object ID:n. Limes first-match-beteende, inloggningskrav och databasspecifika ID-regler införs inte i Magnussons.
+- [Saleshub AI Funktioner](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Detta är officiellt marknadsunderlag för kundsammanhang, inget prov av Magnussons funktioner, behörighet eller anslutningar.
+
+Avgränsat produktval i CRM101 är att **Kundvårds personliga kundurval och aktuell kundrisk i Mitt resultat** följer samma etablerade ansvarsurval som Mina kunder, inom redan serverbehörig State. Registrerat kundansvar följer exakt medlemskopplad profil-ID; äldre kunder utan profil-ID följer kontots giltiga aktuella kundansvarsalias. Historiskt profilalias, namnlikhet eller runtime-user-ID ersätter inte exakt medlemskoppling. Urvalsprov behöver jämföra verkliga kund-ID:n, inte enbart antal. Saknad eller motstridig koppling ska förklaras som synligt, möjligen ofullständigt urval; noll synlig risk är då inget bevis för att allt eget kundarbete är klart. Detta är Magnussons repo-/domänkontrakt och eget produktval, ingen ny leverantörsregel, serverbehörighet, automatisk kontokoppling eller kommersiell omattribuering.
+
+Riskdefinition, nästa kundaktivitet, uppgiftsansvar, historiskt faktura-/kvalificeringsansvar, mål och marginalunderlag kräver separata domänbelägg; research ändrar dem inte. Källorna styrker ingen faktisk personlig inloggning, korrekt kontoprofilkoppling, sparad verklig uppföljning, fungerande integration, full hostad återställning eller personal-/kundacceptans. Kodkandidat, GitHub-main, Sites-källa och publicerad version redovisas separat. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; explicit brief och repo används.
+
+CRM100 är avslutad: [PR #168](https://github.com/ludros93-prog/MAgnussons-CRM/pull/168), kod `88b5149475d0185327ba2bc406829e687ceaeb55`, GitHub-main `0a9420dd7ddf6f25bc762ca256f0d83fe34280ef`, Sites-källa `333342a522cc21f80c88a871a4b5c276ea45b5f4`, **live v97**, terminal lyckad deploy. Färsk läsning bekräftar samma Site och begränsad custom-delning (revision 2). Föregående väntande kandidattexter nedan är historik.
+
+Vid dokumentationsfrysningen är detta en separat CRM101-kandidat. Slutrevisionens fem obligatoriska checks, isolerad native APP-/SOURCE-browser, exakt-head CI, aktuell mergebas och faktisk merge/save/deploy redovisas efter körning i leverans-PR och task. Ingen kommande publicering påstås här.
+
+---
+
+Historik före CRM101 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Principer – crm100 personligt kundurval
 
 Kandidaten `59df3c31f6a3cb0355d5f01ac9e5bbd661c8a488` klarade alla fem obligatoriska slutkommandon och [exakt-head CI 38105466081](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38105466081). Den isolerade APP-browsern godkände normalvyn vid 1290 px men stoppade vid exakt dubbel textstorlek: Kundregistrets ansvarigfilter klippte sin fulla etikett (clientWidth 483 / scrollWidth 528). Ingen merge eller publicering skedde. Lokala processer och portar stängdes, syntetiska D1/R2-data återställdes och käll-/byggbyte bevarades. Filtret får nu lokal radbrytning och automatisk höjd under enbart Kundregistrets toolbar; etikett, ansvarsurval, data och andra vyers CSS bevaras. Ny fryst revision kräver hela slutgrinden och APP-/SOURCE-browser igen; faktisk slutleverans redovisas i PR #168 och task.

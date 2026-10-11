@@ -1,3 +1,19 @@
+# Magnussons CRM – CRM101: samma kunder i Resultat och Kundvård
+
+**Mitt resultat → kunder som behöver kontakt → Kundvård** följer nu samma personliga kundansvar som Mina kunder: exakt medlemskopplat profil-ID för registrerat ansvar och kontots giltiga aktuella alias för äldre kunder utan profil-ID. Historiskt profilalias, namnlikhet och `_unassigned` ersätter inte kopplingen. Övergången till Kundvård behåller personligt urval. Saknad eller motstridig koppling märks som **synligt urval** på riskkortet och under Kundrelationer, även vid noll kunder.
+
+Försäljning mot månads-/årsmål, marginal och kvalificerade nya prospects behåller registrerat historiskt ansvar. Kundärenden har fortsatt eget separat ärendeansvar; deras lista och diagnostik blandas inte med kundportföljen. Prospektering, onboarding, uppgifter, order, möten, riskdefinition och serverbehörighet behåller sina befintliga kontrakt.
+
+CRM100 är avslutad: [PR #168](https://github.com/ludros93-prog/MAgnussons-CRM/pull/168), kod `88b5149475d0185327ba2bc406829e687ceaeb55`, GitHub-main `0a9420dd7ddf6f25bc762ca256f0d83fe34280ef`, Sites-källa `333342a522cc21f80c88a871a4b5c276ea45b5f4`, **live v97**, terminal lyckad deploy. Färsk läsning bekräftar samma Site och begränsad custom-delning (revision 2). Föregående väntande kandidattexter nedan är historik.
+
+Vid dokumentationsfrysningen är detta en separat CRM101-kandidat. Slutrevisionens fem obligatoriska checks, isolerad native APP-/SOURCE-browser, exakt-head CI, aktuell mergebas och faktisk merge/save/deploy redovisas efter körning i leverans-PR och task. Ingen kommande publicering påstås här.
+
+Se [VALIDATION](VALIDATION.md) och leverans-PR för faktisk slutverifiering.
+
+---
+
+Historik före CRM101 – tidigare dokumentation bevarad byteoförändrad nedan.
+
 # Magnussons CRM – CRM100: rätt personligt kundregister
 
 Kandidaten `59df3c31f6a3cb0355d5f01ac9e5bbd661c8a488` klarade alla fem obligatoriska slutkommandon och [exakt-head CI 38105466081](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38105466081). Den isolerade APP-browsern godkände normalvyn vid 1290 px men stoppade vid exakt dubbel textstorlek: Kundregistrets ansvarigfilter klippte sin fulla etikett (clientWidth 483 / scrollWidth 528). Ingen merge eller publicering skedde. Lokala processer och portar stängdes, syntetiska D1/R2-data återställdes och käll-/byggbyte bevarades. Filtret får nu lokal radbrytning och automatisk höjd under enbart Kundregistrets toolbar; etikett, ansvarsurval, data och andra vyers CSS bevaras. Ny fryst revision kräver hela slutgrinden och APP-/SOURCE-browser igen; faktisk slutleverans redovisas i PR #168 och task.

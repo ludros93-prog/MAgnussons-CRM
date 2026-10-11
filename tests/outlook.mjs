@@ -97,3 +97,5 @@ await (await import('./order-scope.mjs')).verifyOrderScope();
 await (await import('./yearwheel-scope.mjs')).verifyYearwheelScope();
 await (await import('./result-deal-scope.mjs')).verifyResultDealScope();
 await (await import('./result-order-scope.mjs')).verifyResultOrderScope();
+// Personal current customer risk and its Care destination share exact responsibility.
+await (await import('./customer-risk-scope.mjs')).verifyCustomerRiskScope();
