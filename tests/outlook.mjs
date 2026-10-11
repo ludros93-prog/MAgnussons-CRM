@@ -99,3 +99,6 @@ await (await import('./result-deal-scope.mjs')).verifyResultDealScope();
 await (await import('./result-order-scope.mjs')).verifyResultOrderScope();
 // Personal current customer risk and its Care destination share exact responsibility.
 await (await import('./customer-risk-scope.mjs')).verifyCustomerRiskScope();
+
+// Personal current prospect portfolio shares exact customer responsibility and honest diagnostics.
+await (await import('./prospect-customer-scope.mjs')).verifyProspectCustomerScope();
