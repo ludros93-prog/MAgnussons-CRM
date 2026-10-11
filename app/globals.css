@@ -417,3 +417,9 @@ body {
 .visual-day[data-profile-diagnostic] .day-task-panel .panel-head>div{min-width:0;max-width:100%}
 .visual-day[data-profile-diagnostic] .panel-head h2{flex-wrap:wrap}
 .visual-day[data-profile-diagnostic] .day-month-card p{overflow-wrap:anywhere;min-width:0}
+
+/* Keep the full customer responsibility readable at larger text sizes. */
+main[data-view="customers"] .toolbar{flex-wrap:wrap}
+main[data-view="customers"] .toolbar .search{min-width:min(180px,100%)}
+main[data-view="customers"] .toolbar [data-slot=select-trigger]{min-width:min(160px,100%);max-width:100%;height:auto;min-height:2.25rem;white-space:normal}
+main[data-view="customers"] .toolbar [data-slot=select-value]{min-width:0;display:block;white-space:normal;overflow:visible;overflow-wrap:anywhere;-webkit-line-clamp:unset;line-clamp:unset}
