@@ -1,3 +1,25 @@
+# CRM109: färdiga återställningsrader får plats före filskrivning
+
+B04: förkontroll av färdiga lagringsrader efter audit och filomappning är implementerad och riktat verifierad i kandidat. Leverans väntar på den frysta slutrevisionens kontroller.
+
+CRM-kopia med kundfiler i JSON och NDJSON kontrollerar nu varje färdig SQLite-rad mot D1:s dokumenterade 2 000 000 byte innan första filskrivning. Beräkningen omfattar SQLite-header, alla lagrade kolumner, genererad återställningshistorik, UUID-omappade referenser, filmetadata, settings och kvitto. Den faktiska databasens textkodning läses med en liten read-only-fråga; annan eller okänd kodning ger ett tydligt avslag före staging. Vanliga skrivningar och redan genomförda exakta återförsök behåller sitt beteende.
+
+Riktat Node-prov med faktiska autentiserade handlers och migrerad SQLite passerade 104 HTTP-anrop, 42 fysiska dbstat-kontroller och 32 helperfall. 13 verkliga radlayouter provas vid exakt 2 000 000 och 2 000 001 byte. 18 avslag (tio radgränser och åtta kodningsfall) sker före R2 put/delete och restore-batch; tolv accepterade gräns-/krympfall, båda återexportformaten, exakt replay, två förlorade commitsvar och två riktiga SQLite-CAS-race passerar.
+
+Separat riktat nativeprov passerade med faktisk exit 0: oförändrad byggd Worker, lyssnande lokal HTTP och isolerad D1/R2, 64 anrop, tio avslag före staging/commit och tio faktiskt skrivna helrader på exakt 2 000 000 byte. UTF-8-proben, båda formatens återexport, filomappning, två förlorade transaktionssvar och två race vid verklig CAS täcks. Alla 18 råtabeller och positiva privata utkast, Outlook-, konto- och R2-sentineler kontrolleras. Detta är syntetiska lokala prov.
+
+Nästa B04-del är den äldre data-only-vägens återställningsbudget och verklig hostingkapacitet/återställning, samt separat återställningsväg för kontobindningar, Outlook och privata utkast. B01 kommersiell/operativ personalöverlämning är fortsatt delvis öppen; B06/B07 kräver personernas verkliga konto-/arbetsprov. Ingen introduktionsagent eller personkontakt startas av detta byggarbete.
+
+Avgränsningen gäller CRM-kopia med kundfiler. Äldre rena dataåterställningen via `/api/crm` och vanliga skrivningar får ingen ny budgetgrind. Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår; lokala prov ersätter inte dessa. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade.
+
+Obligatorisk regression, TypeScript, bygge, isolerad native-runtime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Faktisk kandidat, GitHub-main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, konton, miljö och agentaktivering ändras inte.
+
+Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo används.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM108: registrerad medlemskoppling följer produktionsansvaret
 
 B01: bekräftad lucka i registrerat produktionsansvar är rättad i kandidat och riktat provad; slutleveransen väntar på kontroller. Full kommersiell/operativ personalöverlämning är fortsatt delvis öppen.
