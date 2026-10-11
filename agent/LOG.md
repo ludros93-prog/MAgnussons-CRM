@@ -1,3 +1,11 @@
+**CRM104 – browserfynd före publicering**
+
+Revision `bfb65ab556a51c71b9e399116a76ea5de9672b5e` klarade faktiskt alla fem obligatoriska lokala kontroller och [exakt-head CI 38129347706](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38129347706). Det isolerade native browserprovet passerade 1290 px med dubbel textstorlek men stoppades vid 390 px: återköpskortets `pre-wrap`-stycke gav en hängande mellanslagsrektangel 3,109375 px utanför textytan. Synliga ord/datum rymdes; ingen dold datumtext påstås. Det strikta geometriresultatet och den avslutade isolerade körningen bevaras, kraven sänks inte. Endast detta konstruerade stycke får normal mellanslagshantering och radbrytning för långa ord; meningens innehåll är detsamma. Sparade arbetsnotiser med avsiktliga radbrytningar, läs-handlers och AnnualSummary bevaras.
+
+En ny kodrevision kräver nya femkontroller, exakt-head CI och full APP-/SOURCE-browser. PR 172 är ännu draft och main/source/live är fortfarande CRM103/v100 vid denna dokumentfrysning. Ingen merge eller publicering räknas som utförd här. B01 är fortsatt delvis löst; verkliga konto-/personalprov och hostingåterställning kvarstår.
+
+---
+
 # CRM104: färsk källa öppnad och Notiser avgränsad
 
 Läsning av färsk main och Sites v100 bekräftade faktisk CRM103-leverans: main19b90391b38960e218ce4e9f2fe796530e57207f/sourcef8ac99d05fc4adae952527ae5034e348286414d0, samma träd30a1eaca52372f55c2c25fe5c1ae33cefca35a06. Egen branch/worktree och reservation används. Ingen främmande körning eller öppen PR upptäcktes vid öppningen. Sites-källan öppnades med vanlig autentiserad Git före produktändringen; begränsad delning/miljö behölls. Den officiella Sites-källhjälparen hittades inte i en begränsad sökning, så den påstås inte körd.

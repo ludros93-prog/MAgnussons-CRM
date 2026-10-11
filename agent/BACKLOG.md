@@ -1,3 +1,11 @@
+**CRM104 – browserfynd före publicering**
+
+Revision `bfb65ab556a51c71b9e399116a76ea5de9672b5e` klarade faktiskt alla fem obligatoriska lokala kontroller och [exakt-head CI 38129347706](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38129347706). Det isolerade native browserprovet passerade 1290 px med dubbel textstorlek men stoppades vid 390 px: återköpskortets `pre-wrap`-stycke gav en hängande mellanslagsrektangel 3,109375 px utanför textytan. Synliga ord/datum rymdes; ingen dold datumtext påstås. Det strikta geometriresultatet och den avslutade isolerade körningen bevaras, kraven sänks inte. Endast detta konstruerade stycke får normal mellanslagshantering och radbrytning för långa ord; meningens innehåll är detsamma. Sparade arbetsnotiser med avsiktliga radbrytningar, läs-handlers och AnnualSummary bevaras.
+
+En ny kodrevision kräver nya femkontroller, exakt-head CI och full APP-/SOURCE-browser. PR 172 är ännu draft och main/source/live är fortfarande CRM103/v100 vid denna dokumentfrysning. Ingen merge eller publicering räknas som utförd här. B01 är fortsatt delvis löst; verkliga konto-/personalprov och hostingåterställning kvarstår.
+
+---
+
 # B01/T04/T19: personligt ansvar i Notiser – CRM104-kandidat
 
 Notisers uppgiftsdeadlines, orderdeadlines, återköpsförslag och kundkontaktsignaler hade kvar namnfilter trots etablerade stabila profil-ID:n i motsvarande arbetsvyer. Rättningen återanvänder Kalender-/Order-/Kunders faktiska urval och visar saknad eller motstridig koppling som synligt urval. Detta är en avgränsad B01-del; sparade arbetsnotiser och mottagarnas läsmarkeringar följer sitt tidigare kontrakt.

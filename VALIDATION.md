@@ -1,3 +1,11 @@
+**CRM104 – browserfynd före publicering**
+
+Revision `bfb65ab556a51c71b9e399116a76ea5de9672b5e` klarade faktiskt alla fem obligatoriska lokala kontroller och [exakt-head CI 38129347706](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38129347706). Det isolerade native browserprovet passerade 1290 px med dubbel textstorlek men stoppades vid 390 px: återköpskortets `pre-wrap`-stycke gav en hängande mellanslagsrektangel 3,109375 px utanför textytan. Synliga ord/datum rymdes; ingen dold datumtext påstås. Det strikta geometriresultatet och den avslutade isolerade körningen bevaras, kraven sänks inte. Endast detta konstruerade stycke får normal mellanslagshantering och radbrytning för långa ord; meningens innehåll är detsamma. Sparade arbetsnotiser med avsiktliga radbrytningar, läs-handlers och AnnualSummary bevaras.
+
+En ny kodrevision kräver nya femkontroller, exakt-head CI och full APP-/SOURCE-browser. PR 172 är ännu draft och main/source/live är fortfarande CRM103/v100 vid denna dokumentfrysning. Ingen merge eller publicering räknas som utförd här. B01 är fortsatt delvis löst; verkliga konto-/personalprov och hostingåterställning kvarstår.
+
+---
+
 # Verifieringsgränser för Notisers ansvarsurval – CRM104
 
 Färsk main19b90391 och publicerad v100-sourcef8ac99d0 öppnades och jämfördes före produktändringen: samma träd, alla 412 filers bytes och Git-lägen. Produktfilens arbetsnotisfilter, notiskort/tomtext/läs-handlers och hela AnnualSummary har jämförts och är byteoförändrade. Ny regression har faktiskt passerat 38 namngivna React-fall med normaliserat syntetiskt underlag och noll HTTP-anrop. Återspelning av oföränderlig tidigare komponent bekräftade lika antal men fel A-ID:n i alla fyra köer; rättningen visar kopplad profil B samt giltiga äldre A-poster. Fallen omfattar tomma/borttagna alias, saknad medlemskoppling, teamurval, rollgränser, självständigt uppgifts-/order-/kundansvar, datum-/artikelhistorik och oförändrat läskontrakt. 18 jämförelser av arbetsnotiskorten och tre jämförelser av hela AnnualSummary passerade. Visuella primitiver är adapters; faktisk CRMNotices, Kalenderurval och domänmoduler körs. Källfiler och hela normaliserade state är oförändrade efter prov.
