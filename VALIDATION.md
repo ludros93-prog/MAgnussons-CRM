@@ -1,3 +1,11 @@
+**CRM102 – andra browserstoppet före leverans**
+
+Den korrigerade kandidaten `37ae97cdeb78af6c040f5acde7611deab8979344` klarade återigen alla fem slutkommandon (kvitto SHA-256 `2afccc9ff25ddc6e831de8c38275a4e71d4908423f0fd28574fabfcc94563035`) och [exakt-head CI 38116332540](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38116332540). Desktopfallet vid 1290 px och dubbel text passerade; ansvarsetiketten var då läsbar. Nästa faktiska browserfall vid 390 px och dubbel text stoppade på horisontellt överflöde: dokumentbredd 592 px. Rågeometri visar sidrubrikens block till x592,4 samt knappen Skapa affär från sparat behov till x475,1 i en 390 px viewport. Ingen merge eller publicering skedde; samtliga tidigare kvitton/loggar/bilder bevaras.
+
+Tre ytterligare CSS-regler, enbart under prospectvyn, begränsar rubrik-/knappblock till tillgänglig bredd, tillåter radbrytning och ger huvudrubrikens textrader större höjd. Fontstorlek, text, kontrolltyp, data och callbacks behålls. Nästa frysta revision ska klara en helt ny femkommandogrind, exakt-head CI och full APP-/SOURCE-browser; tidigare resultat gäller bara de angivna revisionerna. Uppgiften om 313 byteidentiska övriga produktfiler längre ned är historiskt v1-bevis; aktuell ändringsmängd är 19 filer med 392 skyddade filer. Main/live är fortsatt CRM101/v98 vid denna frysning. Slututfall redovisas i PR #170 och task.
+
+---
+
 **CRM102 – faktiskt browserstopp och avgränsad korrigering**
 
 Kandidat `44a7a069bbacba35bc3eca1fb5f0bcf902dd4bfd` klarade alla fem obligatoriska slutkommandon: regressioner, TypeScript, bygge, isolerad runtime och diffkontroll. Privat slutkvitto SHA-256 `411de9ff8d7880791cf242a742cb76091c72c13a6ff24ae16b068ff9f9c09abc`. Native APP-browser stoppade därefter vid 1290 px och exakt dubbel textstorlek: prospectansvarets etikett hade 551 px text i 479 px tillgängligt utrymme och klipptes. Bara första browserfallet nåddes; inget fullständigt browser-PASS, merge eller publicering skedde. Diagnoskvitto SHA-256 `e017d7329113561f592443600e4bba8a891eef0288931210e8e77fc69d8b169d`. Syntetiska rådata, återställning och processstädning verifierades, noll browserskrivningar.
