@@ -1,3 +1,13 @@
+# B01/T04/T19: personligt ansvar i Notiser – CRM104-kandidat
+
+Notisers uppgiftsdeadlines, orderdeadlines, återköpsförslag och kundkontaktsignaler hade kvar namnfilter trots etablerade stabila profil-ID:n i motsvarande arbetsvyer. Rättningen återanvänder Kalender-/Order-/Kunders faktiska urval och visar saknad eller motstridig koppling som synligt urval. Detta är en avgränsad B01-del; sparade arbetsnotiser och mottagarnas läsmarkeringar följer sitt tidigare kontrakt.
+
+Slutkontroller, exakt-head CI, merge och samma Sites-publicering återstår vid dokumentfrysningen. Full B01-personalöverlämning, återstående operativa urval, separat konto-/privat-utkast-/Outlookbackup och faktisk hostingåterställning kvarstår. B06/B07 kräver verkliga konton och observerat arbete; denna leverans uppfinner ingen personalacceptans. Nästa oberoende byggsteg är källgrundad inventering av återstående personliga urval och återställningsväg, utifrån färsk main/live.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Slutrevisionens kontroller, PR, GitHub-main och publicering redovisas separat i leveranskvittensen; denna notis är kandidatens verifierade förfrysningsläge.
+
+---
+
 **CRM103 – placeringskontrollen stoppade föregående slutkandidat**
 
 Den strikta kompatibilitetsgrinden stoppade `42519634e4a91418f406e3a2952b77e991a56206`: CSS-tilläggets 310 byte låg mitt i filen, så tidigare bytes fanns kvar men utgjorde inte hela prefixet som scope kräver. Samma tre regler har nu flyttats till faktiskt filslut; filen är exakt tidigare main-CSS plus det oförändrade tillägget, Git-läget oförändrat. Privat korrigeringsbevis `stylesheet-placement-correction.json` binder före-/efterbytes; aktuell CSS SHA-256 `631787a2a7c311fac97dce33202a8c5939aa099339110c6dd8b9cfbc7b8ae590`. Kravet och scopekvittot behålls. Ett statiskt delprov som endast kontrollerade att gamla bytes gick att återfå räcker inte för detta prefixkrav och kvalificerar inte leverans.

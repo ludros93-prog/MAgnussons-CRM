@@ -1,3 +1,17 @@
+# Källor för eget uppföljningsarbete och stabil identitet – CRM104
+
+Tre officiella läsbara HTTP 200-källor hämtades 11 oktober 2026 kl. 09:32:32 UTC. Sju ordagranna citat kontrollerades mot sparade bodies och återbyggd text. Privat verifieringskvitto SHA-256 e4b173c5fa17ed4b194c784252acda30ae9aa8fb873371d5760eca5d759a0527.
+
+- [Salesforce Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) beskriver egna öppna uppgifter och aktivitet i kund-/affärssammanhang. Tillämpning: personligt uppföljningsarbete behåller sin ursprungliga post och nästa handling.
+- [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) beskriver föränderliga namn, oföränderliga user/group Object IDs och ansvarsurvalsproblem när coworker-koppling saknas. Det belägger inte alla coworker-ID:n eller Magnussons profilmodell.
+- [Saleshub Funktioner](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Detta är offentlig marknadsbeskrivning, inget inloggat produktprov.
+
+Magnussons exakta medlemskoppling, äldre alias, datum-/återköpsregler, roller och ingen automatisk teamfallback är egna etablerade kontrakt som kräver egna prov. Källorna verifierar inga anslutningar, privata lagringsgarantier eller personalresultat.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Slutrevisionens kontroller, PR, GitHub-main och publicering redovisas separat i leveranskvittensen; denna notis är kandidatens verifierade förfrysningsläge.
+
+---
+
 **CRM103 – placeringskontrollen stoppade föregående slutkandidat**
 
 Den strikta kompatibilitetsgrinden stoppade `42519634e4a91418f406e3a2952b77e991a56206`: CSS-tilläggets 310 byte låg mitt i filen, så tidigare bytes fanns kvar men utgjorde inte hela prefixet som scope kräver. Samma tre regler har nu flyttats till faktiskt filslut; filen är exakt tidigare main-CSS plus det oförändrade tillägget, Git-läget oförändrat. Privat korrigeringsbevis `stylesheet-placement-correction.json` binder före-/efterbytes; aktuell CSS SHA-256 `631787a2a7c311fac97dce33202a8c5939aa099339110c6dd8b9cfbc7b8ae590`. Kravet och scopekvittot behålls. Ett statiskt delprov som endast kontrollerade att gamla bytes gick att återfå räcker inte för detta prefixkrav och kvalificerar inte leverans.

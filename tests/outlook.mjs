@@ -105,3 +105,6 @@ await (await import('./customer-risk-scope.mjs')).verifyCustomerRiskScope();
 
 // Personal current prospect portfolio shares exact customer responsibility and honest diagnostics.
 await (await import('./prospect-customer-scope.mjs')).verifyProspectCustomerScope();
+
+// Personal Notiser read queues follow their exact task/order/customer responsibility.
+await (await import('./notice-work-scope.mjs')).verifyNoticeWorkScope();
