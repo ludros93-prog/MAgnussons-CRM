@@ -1,3 +1,29 @@
+**CRM104 – även uppgiftskortets mobiltext rättad**
+
+Revision `97dfe9b9c31aa4607d98a58626aaa8e2fd5cbc70` klarade faktiskt nya femkontrollen och [exakt-head CI 38130276321](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38130276321). Browsern passerade därefter 1290 och 390 px med dubbel textstorlek, men stoppades vid 320 px på uppgiftskortets konstruerade kund-/ansvarstext: hängande mellanslagsrektangel 3,671875 px utanför textytan, medan synliga ord rymdes. Även detta stycke får normal mellanslagshantering och möjlighet att bryta långa ord; saknad kund renderas fortfarande som tomt namn. Övrig produktlogik och sparade notisers radbrytningar/läsning bevaras.
+
+De faktiska stoppade proven behålls. En separat undersökande native browser använder samma strikta geometri/urval/SQL/R2/cleanup, märks uttryckligen som otillåten slutleverans och ersätter inga slutkontroller. Den nya slutrevisionen behöver därefter alla fem kommandon, ny exakt-head CI och full slutlig APP-/SOURCE-browser. PR 172 är ännu draft; GitHub-main, Sites-källa och live är fortsatt CRM103/v100 vid denna frysning. B01 återstår delvis; verkliga konto-/personalprov och hostingåterställning är fortsatt obekräftade.
+
+---
+
+**CRM104 – browserfynd före publicering**
+
+Revision `bfb65ab556a51c71b9e399116a76ea5de9672b5e` klarade faktiskt alla fem obligatoriska lokala kontroller och [exakt-head CI 38129347706](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38129347706). Det isolerade native browserprovet passerade 1290 px med dubbel textstorlek men stoppades vid 390 px: återköpskortets `pre-wrap`-stycke gav en hängande mellanslagsrektangel 3,109375 px utanför textytan. Synliga ord/datum rymdes; ingen dold datumtext påstås. Det strikta geometriresultatet och den avslutade isolerade körningen bevaras, kraven sänks inte. Endast detta konstruerade stycke får normal mellanslagshantering och radbrytning för långa ord; meningens innehåll är detsamma. Sparade arbetsnotiser med avsiktliga radbrytningar, läs-handlers och AnnualSummary bevaras.
+
+En ny kodrevision kräver nya femkontroller, exakt-head CI och full APP-/SOURCE-browser. PR 172 är ännu draft och main/source/live är fortfarande CRM103/v100 vid denna dokumentfrysning. Ingen merge eller publicering räknas som utförd här. B01 är fortsatt delvis löst; verkliga konto-/personalprov och hostingåterställning kvarstår.
+
+---
+
+# B01/T04/T19: personligt ansvar i Notiser – CRM104-kandidat
+
+Notisers uppgiftsdeadlines, orderdeadlines, återköpsförslag och kundkontaktsignaler hade kvar namnfilter trots etablerade stabila profil-ID:n i motsvarande arbetsvyer. Rättningen återanvänder Kalender-/Order-/Kunders faktiska urval och visar saknad eller motstridig koppling som synligt urval. Detta är en avgränsad B01-del; sparade arbetsnotiser och mottagarnas läsmarkeringar följer sitt tidigare kontrakt.
+
+Slutkontroller, exakt-head CI, merge och samma Sites-publicering återstår vid dokumentfrysningen. Full B01-personalöverlämning, återstående operativa urval, separat konto-/privat-utkast-/Outlookbackup och faktisk hostingåterställning kvarstår. B06/B07 kräver verkliga konton och observerat arbete; denna leverans uppfinner ingen personalacceptans. Nästa oberoende byggsteg är källgrundad inventering av återstående personliga urval och återställningsväg, utifrån färsk main/live.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Slutrevisionens kontroller, PR, GitHub-main och publicering redovisas separat i leveranskvittensen; denna notis är kandidatens verifierade förfrysningsläge.
+
+---
+
 **CRM103 – placeringskontrollen stoppade föregående slutkandidat**
 
 Den strikta kompatibilitetsgrinden stoppade `42519634e4a91418f406e3a2952b77e991a56206`: CSS-tilläggets 310 byte låg mitt i filen, så tidigare bytes fanns kvar men utgjorde inte hela prefixet som scope kräver. Samma tre regler har nu flyttats till faktiskt filslut; filen är exakt tidigare main-CSS plus det oförändrade tillägget, Git-läget oförändrat. Privat korrigeringsbevis `stylesheet-placement-correction.json` binder före-/efterbytes; aktuell CSS SHA-256 `631787a2a7c311fac97dce33202a8c5939aa099339110c6dd8b9cfbc7b8ae590`. Kravet och scopekvittot behålls. Ett statiskt delprov som endast kontrollerade att gamla bytes gick att återfå räcker inte för detta prefixkrav och kvalificerar inte leverans.

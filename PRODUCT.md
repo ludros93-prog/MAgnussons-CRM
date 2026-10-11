@@ -1,3 +1,13 @@
+# Personlig uppföljning i Notiser – CRM104
+
+Fyra läsköer återanvänder etablerat ansvarsurval: öppna uppgifter med deadline till nästa vecka, aktiva order som ska skickas, fakturabaserade återköpsförslag och kundsignaler för kontakt. Uppgiftens, orderns och kundens ansvar bedöms var för sig. Ett kopplat profil-ID får inte ersättas av ett liknande namn, konto-ID eller den länkade kundens ansvar. Ett registrerat främmande profil-ID faller inte tillbaka till sitt namn.
+
+Saknad, ogiltig eller motstridig konto-/profilkoppling får ett synligt besked för admin/säljare. Teamurval och övriga rollers arbetsnotiser ligger kvar. Intervall, sortering, max 30 uppgiftsdeadlines, artikelgruppering, senaste fakturadatum och kontaktvillkor är oförändrade. Återköpsförslag bevisar fortfarande inget aktuellt köpbehov. AnnualSummary och försäljnings-/marginal-/prospektdefinitioner ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Slutrevisionens kontroller, PR, GitHub-main och publicering redovisas separat i leveranskvittensen; denna notis är kandidatens verifierade förfrysningsläge.
+
+---
+
 **CRM103 – placeringskontrollen stoppade föregående slutkandidat**
 
 Den strikta kompatibilitetsgrinden stoppade `42519634e4a91418f406e3a2952b77e991a56206`: CSS-tilläggets 310 byte låg mitt i filen, så tidigare bytes fanns kvar men utgjorde inte hela prefixet som scope kräver. Samma tre regler har nu flyttats till faktiskt filslut; filen är exakt tidigare main-CSS plus det oförändrade tillägget, Git-läget oförändrat. Privat korrigeringsbevis `stylesheet-placement-correction.json` binder före-/efterbytes; aktuell CSS SHA-256 `631787a2a7c311fac97dce33202a8c5939aa099339110c6dd8b9cfbc7b8ae590`. Kravet och scopekvittot behålls. Ett statiskt delprov som endast kontrollerade att gamla bytes gick att återfå räcker inte för detta prefixkrav och kvalificerar inte leverans.

@@ -1,3 +1,29 @@
+**CRM104 – även uppgiftskortets mobiltext rättad**
+
+Revision `97dfe9b9c31aa4607d98a58626aaa8e2fd5cbc70` klarade faktiskt nya femkontrollen och [exakt-head CI 38130276321](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38130276321). Browsern passerade därefter 1290 och 390 px med dubbel textstorlek, men stoppades vid 320 px på uppgiftskortets konstruerade kund-/ansvarstext: hängande mellanslagsrektangel 3,671875 px utanför textytan, medan synliga ord rymdes. Även detta stycke får normal mellanslagshantering och möjlighet att bryta långa ord; saknad kund renderas fortfarande som tomt namn. Övrig produktlogik och sparade notisers radbrytningar/läsning bevaras.
+
+De faktiska stoppade proven behålls. En separat undersökande native browser använder samma strikta geometri/urval/SQL/R2/cleanup, märks uttryckligen som otillåten slutleverans och ersätter inga slutkontroller. Den nya slutrevisionen behöver därefter alla fem kommandon, ny exakt-head CI och full slutlig APP-/SOURCE-browser. PR 172 är ännu draft; GitHub-main, Sites-källa och live är fortsatt CRM103/v100 vid denna frysning. B01 återstår delvis; verkliga konto-/personalprov och hostingåterställning är fortsatt obekräftade.
+
+---
+
+**CRM104 – browserfynd före publicering**
+
+Revision `bfb65ab556a51c71b9e399116a76ea5de9672b5e` klarade faktiskt alla fem obligatoriska lokala kontroller och [exakt-head CI 38129347706](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38129347706). Det isolerade native browserprovet passerade 1290 px med dubbel textstorlek men stoppades vid 390 px: återköpskortets `pre-wrap`-stycke gav en hängande mellanslagsrektangel 3,109375 px utanför textytan. Synliga ord/datum rymdes; ingen dold datumtext påstås. Det strikta geometriresultatet och den avslutade isolerade körningen bevaras, kraven sänks inte. Endast detta konstruerade stycke får normal mellanslagshantering och radbrytning för långa ord; meningens innehåll är detsamma. Sparade arbetsnotiser med avsiktliga radbrytningar, läs-handlers och AnnualSummary bevaras.
+
+En ny kodrevision kräver nya femkontroller, exakt-head CI och full APP-/SOURCE-browser. PR 172 är ännu draft och main/source/live är fortfarande CRM103/v100 vid denna dokumentfrysning. Ingen merge eller publicering räknas som utförd här. B01 är fortsatt delvis löst; verkliga konto-/personalprov och hostingåterställning kvarstår.
+
+---
+
+# Verifieringsgränser för Notisers ansvarsurval – CRM104
+
+Färsk main19b90391 och publicerad v100-sourcef8ac99d0 öppnades och jämfördes före produktändringen: samma träd, alla 412 filers bytes och Git-lägen. Produktfilens arbetsnotisfilter, notiskort/tomtext/läs-handlers och hela AnnualSummary har jämförts och är byteoförändrade. Ny regression har faktiskt passerat 38 namngivna React-fall med normaliserat syntetiskt underlag och noll HTTP-anrop. Återspelning av oföränderlig tidigare komponent bekräftade lika antal men fel A-ID:n i alla fyra köer; rättningen visar kopplad profil B samt giltiga äldre A-poster. Fallen omfattar tomma/borttagna alias, saknad medlemskoppling, teamurval, rollgränser, självständigt uppgifts-/order-/kundansvar, datum-/artikelhistorik och oförändrat läskontrakt. 18 jämförelser av arbetsnotiskorten och tre jämförelser av hela AnnualSummary passerade. Visuella primitiver är adapters; faktisk CRMNotices, Kalenderurval och domänmoduler körs. Källfiler och hela normaliserade state är oförändrade efter prov.
+
+Slutkandidaten måste fortfarande passera repoets fem obligatoriska kommandon, exakt-head CI med aktuell bas samt isolerad byggd Worker/Chromium för APP och publiceringskälla. Dessa framtida kontroller påstås inte körda här. Alla prov använder syntetiskt isolerat underlag. Mock/CI/browser är inga verkliga konto-, kund-, personal-, integrations- eller hostingåterställningsprov. Ingen ny lagringsmodell införs; v100 är datakompatibel UI-återgång, inte en genomförd rollback.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Slutrevisionens kontroller, PR, GitHub-main och publicering redovisas separat i leveranskvittensen; denna notis är kandidatens verifierade förfrysningsläge.
+
+---
+
 **CRM103 – placeringskontrollen stoppade föregående slutkandidat**
 
 Den strikta kompatibilitetsgrinden stoppade `42519634e4a91418f406e3a2952b77e991a56206`: CSS-tilläggets 310 byte låg mitt i filen, så tidigare bytes fanns kvar men utgjorde inte hela prefixet som scope kräver. Samma tre regler har nu flyttats till faktiskt filslut; filen är exakt tidigare main-CSS plus det oförändrade tillägget, Git-läget oförändrat. Privat korrigeringsbevis `stylesheet-placement-correction.json` binder före-/efterbytes; aktuell CSS SHA-256 `631787a2a7c311fac97dce33202a8c5939aa099339110c6dd8b9cfbc7b8ae590`. Kravet och scopekvittot behålls. Ett statiskt delprov som endast kontrollerade att gamla bytes gick att återfå räcker inte för detta prefixkrav och kvalificerar inte leverans.
