@@ -1,5 +1,5 @@
 import {productionIssueResponsibility,ownsProductionIssue,validateProductionIssueResponsibilityReferences} from './production-issue-responsibility';
-import {recordProductionAssignment,validateProductionAssignmentReferences} from './production-assignment';
+import {recordProductionAssignment,ownsProductionAssignment,validateProductionAssignmentReferences} from './production-assignment';
 import {recordBasis} from './record-conflicts';
 import {applyOrderRevision} from './order-revisions';
 import {DirectShipmentSchema,directRows,directBasis,deliveryVerified,latestDispatch} from './direct-delivery';
@@ -68,7 +68,7 @@ export function applyOperations(st:State,action:Action,actor:Actor):State{
   must(v.assigneeId||!v.assigneeName,'Jobbet har ett tidigare ansvarigt namn utan användaridentitet. Granska den äldre ansvarskopplingen innan arbetsansvaret ändras.');
   must(['submitted','printed'].includes(v.status),'Arbetsordern är inte aktiv.');must(p.expectedAssignment===assignmentBasis(v),'Arbetsansvaret har ändrats. Läs in aktuellt jobb.');
   if(action.type==='production_claim'){must(!v.assigneeId,'Jobbet har redan en ansvarig.');recordProductionAssignment(o,actor,{userId:actor.id,memberId:actor.memberId||'',name:actor.name},'claim','Jag tog ansvar för arbetsordern.',now);event(o.customerId,o.dealId,actor.name+' tog ansvar för arbetsordern.');}
-  else {must(v.assigneeId,'Jobbet saknar ansvarig.');must(v.assigneeId===actor.id||actor.role==='admin','Bara den ansvariga eller administratören kan lämna tillbaka jobbet.');event(o.customerId,o.dealId,'Arbetsordern lämnades tillbaka till gemensam kö. Tidigare ansvarig: '+v.assigneeName);recordProductionAssignment(o,actor,{userId:'',memberId:'',name:''},'release','Arbetsordern lämnades tillbaka till gemensam kö.',now);}
+  else {must(v.assigneeId,'Jobbet saknar ansvarig.');must(ownsProductionAssignment(v,actor)||actor.role==='admin','Bara den ansvariga eller administratören kan lämna tillbaka jobbet.');event(o.customerId,o.dealId,'Arbetsordern lämnades tillbaka till gemensam kö. Tidigare ansvarig: '+v.assigneeName);recordProductionAssignment(o,actor,{userId:'',memberId:'',name:''},'release','Arbetsordern lämnades tillbaka till gemensam kö.',now);}
   validateProductionAssignmentReferences(st);
  }else if(action.type==='order_shortfall'){
   must(['admin','seller'].includes(actor.role),'Kundens ändrade beställning registreras av säljare eller administratör.');

@@ -1,3 +1,19 @@
+# CRM108: registrerad medlemskoppling följer produktionsansvaret
+
+Färsk bas är levererad CRM107/PR #175: GitHub-main `bca64ef09484db4f1cd62a1575fbcbd7fe7a1d85`, Sites-källa `8f958c1d1aa6afdfad5fe8150700c55dd00dec92`, lyckad live v104. Alla 418 spårade filers bytes/lägen och träd `95c5264f5eba039bae47f5ce2e0f9ff319d40e0f` matchade före ändringen. Egen branch/worktree och reservation används; inga öppna PR:er eller konkurrerande publicering observerades vid öppningen.
+
+En giltig återställning bevarar jobbets historiska användar- och medlems-ID. Om destinationens separata medlemskonto har samma användar-ID men ett annat medlems-ID ska jobbet inte visas som eget eller kunna lämnas tillbaka av det kontot. Serverns återlämning, Mitt arbete, märkningen ”Ditt jobb” och återlämningsknappen använder nu samma kontroll: användar-ID måste matcha och registrerat medlems-ID måste också matcha när det finns. Äldre tom medlemskoppling följer fortfarande sitt registrerade användar-ID; administratörens befintliga undantag behålls. Inga konton kopplas om eller skapas utifrån namn.
+
+Lagringsschema, migrationer, backupformat, medlems-CRUD, roller, privat kommunikation, CAS, idempotens, mängd-/revisionsregler, kommersiellt ansvar och DB/BUCKET är oförändrade. v104-kod kan läsa samma data men återinför ägarluckan; ingen kodåtergång eller verklig hostingåterställning utförs. Historisk identitet bevisar ingen aktuell behörighet.
+
+Obligatorisk regression, TypeScript, bygge, isolerad native-runtime och diffkontroll på slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Faktiska slutresultat, separata GitHub-main-/Sites-källrevisioner och liveversion redovisas i PR/leveranskvittensen. Grön isolerad CI/runtime är inget konto-, integrations- eller personalprov.
+
+Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo används.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM107: plats för återställningshistorik och filförteckning
 
 Färsk bas är levererad CRM106/PR #174: GitHub-main `3eca951806e73e95bee28029d8b388b6d816d723`, Sites-källa `c77340f68e2044e4f5b3284900bd54cb10bde221`, live v103. Alla 416 spårade filers bytes/lägen och träd `4fa104620bfcc3da910d63e0bac0aac1c4780e8d` matchade före ändringen. Egen branch/reservation; inga öppna PR:er eller pågående publicering observerades vid öppningen.

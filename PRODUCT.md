@@ -1,3 +1,17 @@
+# CRM108: registrerad medlemskoppling följer produktionsansvaret
+
+En giltig återställning bevarar jobbets historiska användar- och medlems-ID. Om destinationens separata medlemskonto har samma användar-ID men ett annat medlems-ID ska jobbet inte visas som eget eller kunna lämnas tillbaka av det kontot. Serverns återlämning, Mitt arbete, märkningen ”Ditt jobb” och återlämningsknappen använder nu samma kontroll: användar-ID måste matcha och registrerat medlems-ID måste också matcha när det finns. Äldre tom medlemskoppling följer fortfarande sitt registrerade användar-ID; administratörens befintliga undantag behålls. Inga konton kopplas om eller skapas utifrån namn.
+
+Aktiva jobb med olöst historisk medlemskoppling ligger kvar i gemensam kö med sitt registrerade namn och historia. De tas inte automatiskt över av samma autentiserade användare i ett nytt medlemskonto. Öppna hinder följer sin separata etablerade ansvarskontroll. Mängder, tryck, lager, leverans, kundgodkännande, faktura och försäljningsmått får ingen ny betydelse.
+
+Lagringsschema, migrationer, backupformat, medlems-CRUD, roller, privat kommunikation, CAS, idempotens, mängd-/revisionsregler, kommersiellt ansvar och DB/BUCKET är oförändrade. v104-kod kan läsa samma data men återinför ägarluckan; ingen kodåtergång eller verklig hostingåterställning utförs. Historisk identitet bevisar ingen aktuell behörighet.
+
+Obligatorisk regression, TypeScript, bygge, isolerad native-runtime och diffkontroll på slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Faktiska slutresultat, separata GitHub-main-/Sites-källrevisioner och liveversion redovisas i PR/leveranskvittensen. Grön isolerad CI/runtime är inget konto-, integrations- eller personalprov.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM107: plats för återställningshistorik och filförteckning
 
 Båda återställningsformaten mäter nu den färdiga framtida NDJSON-headern efter genererad kundhistorik, UUID-omappning av filmetadata/referenser och destinationens nästa revision. Över 16 000 000 UTF-8-byte ger ett tydligt fel före första filskrivning och transaktion. Originalhistorik kapas aldrig. Ett tidigare giltigt kvitto kan fortfarande återförsökas; full fil-/slutintegritet, aktör och avsikt kontrolleras som tidigare.
