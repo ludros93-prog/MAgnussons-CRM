@@ -444,3 +444,18 @@ main[data-view="care"] .wf-card{min-width:0;overflow-wrap:anywhere}
 main[data-view="care"] .wf-card-top{flex-wrap:wrap;align-items:flex-start}
 main[data-view="care"] .wf-card-top>span,main[data-view="care"] .wf-route>span{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 @media(max-width:1100px){main[data-view="care"] .wf-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Keep prospect responsibility, filters and cards readable as text grows. */
+main[data-view="prospects"] .toolbar{flex-wrap:wrap}
+main[data-view="prospects"] .toolbar .search{min-width:min(180px,100%)}
+main[data-view="prospects"] .toolbar [data-slot=select-trigger]{min-width:min(160px,100%);max-width:100%;height:auto;min-height:2.25rem;white-space:normal}
+main[data-view="prospects"] .toolbar [data-slot=select-value],main[data-view="prospects"] .wf-controls [data-slot=select-value]{min-width:0;display:block;white-space:normal;overflow:visible;overflow-wrap:anywhere;-webkit-line-clamp:unset;line-clamp:unset}
+main[data-view="prospects"] .wf-controls [data-slot=select-trigger]{min-width:0;max-width:100%;height:auto;min-height:2.25rem;white-space:normal}
+main[data-view="prospects"] .wf-card{min-width:0;overflow-wrap:anywhere}
+main[data-view="prospects"] .wf-card-top{flex-wrap:wrap;align-items:flex-start}
+main[data-view="prospects"] .wf-card-top>span,main[data-view="prospects"] .wf-route>span{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:1100px){main[data-view="prospects"] .wf-grid{grid-template-columns:minmax(0,1fr)}}
+
+main[data-view="prospects"] .page-heading>div{min-width:0;max-width:100%;overflow-wrap:anywhere}
+main[data-view="prospects"] .page-heading h1{line-height:1.4}
+main[data-view="prospects"] .wf-buttons button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}

@@ -1,3 +1,39 @@
+**CRM102 – andra browserstoppet före leverans**
+
+Den korrigerade kandidaten `37ae97cdeb78af6c040f5acde7611deab8979344` klarade återigen alla fem slutkommandon (kvitto SHA-256 `2afccc9ff25ddc6e831de8c38275a4e71d4908423f0fd28574fabfcc94563035`) och [exakt-head CI 38116332540](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38116332540). Desktopfallet vid 1290 px och dubbel text passerade; ansvarsetiketten var då läsbar. Nästa faktiska browserfall vid 390 px och dubbel text stoppade på horisontellt överflöde: dokumentbredd 592 px. Rågeometri visar sidrubrikens block till x592,4 samt knappen Skapa affär från sparat behov till x475,1 i en 390 px viewport. Ingen merge eller publicering skedde; samtliga tidigare kvitton/loggar/bilder bevaras.
+
+Tre ytterligare CSS-regler, enbart under prospectvyn, begränsar rubrik-/knappblock till tillgänglig bredd, tillåter radbrytning och ger huvudrubrikens textrader större höjd. Fontstorlek, text, kontrolltyp, data och callbacks behålls. Nästa frysta revision ska klara en helt ny femkommandogrind, exakt-head CI och full APP-/SOURCE-browser; tidigare resultat gäller bara de angivna revisionerna. Uppgiften om 313 byteidentiska övriga produktfiler längre ned är historiskt v1-bevis; aktuell ändringsmängd är 19 filer med 392 skyddade filer. Main/live är fortsatt CRM101/v98 vid denna frysning. Slututfall redovisas i PR #170 och task.
+
+---
+
+**CRM102 – faktiskt browserstopp och avgränsad korrigering**
+
+Kandidat `44a7a069bbacba35bc3eca1fb5f0bcf902dd4bfd` klarade alla fem obligatoriska slutkommandon: regressioner, TypeScript, bygge, isolerad runtime och diffkontroll. Privat slutkvitto SHA-256 `411de9ff8d7880791cf242a742cb76091c72c13a6ff24ae16b068ff9f9c09abc`. Native APP-browser stoppade därefter vid 1290 px och exakt dubbel textstorlek: prospectansvarets etikett hade 551 px text i 479 px tillgängligt utrymme och klipptes. Bara första browserfallet nåddes; inget fullständigt browser-PASS, merge eller publicering skedde. Diagnoskvitto SHA-256 `e017d7329113561f592443600e4bba8a891eef0288931210e8e77fc69d8b169d`. Syntetiska rådata, återställning och processstädning verifierades, noll browserskrivningar.
+
+Korrigeringen tillför enbart prospectavgränsad CSS för radbrytning och växande höjd i ansvar/filter samt flexibla kort/statusrader. Befintliga CSS-bytes bevaras som prefix; fontstorlek, kontrolltyp, värden, eventhandlers och urvals-/historikregler ändras inte. Övriga möjliga textfel var inte belagda vid första stoppet och ska avgöras i nästa fulla browserprov. Fyra färska officiella MDN/W3C-artiklar med 13 byteverifierade citat stödjer läsbarhet vid textförstoring och reflow; privat researchkvitto SHA-256 `5cba2dbd23ec9486153a3beeaaa31496ddb974bf5321b48ad6117e2d45be04c7`. Lokal CSS och Chromium-prov är inte generell tillgänglighets- eller personalacceptans.
+
+Ny fryst kandidat måste klara samtliga fem slutkommandon, exakt-head CI och separata APP-/SOURCE-browserprov före leverans. Vid denna dokumentationsfrysning ligger CRM102 i PR #170 och **main/live är fortsatt CRM101/v98**. Faktiska slutrevisioner och publiceringsutfall redovisas efter körning i PR/task. Ingen lagring/migrering ändras; v98 är kompatibelt UI-återgångsmål, inte ett utfört hostat återställningsprov. Nästa arbete följer verkliga kvarstående konto-/operativa ansvarshinder; B04/B06/B07 och personlig användning markeras inte klara.
+
+---
+
+**CRM102 – riktade prov före slutgrind**
+
+41 nya normalizer-/AST-/Reactfall PASS; 3 456 kompletta historiska metricfält, 208 hela metric-/profil-/team-/årsjämförelser och sju jämförelser mot verklig tidigare workflow-kod. Tillsammans med de berörda och skyddade befintliga proven: 432 fall PASS, oförändrade produkt-/testbytes och noll HTTP. Privat riktat kvitto SHA-256 `63d4cedb355798f5ab2350bb36504baa169a6a0777426077140a1b7775de32cf`. Separat oberoende granskning gav 26 fall och 15 historikjämförelser PASS samt 25 bevarade verkliga AST-klausuler; 313 övriga produktfiler är byte-identiska med main. Två privata testadapterstopp rättades utan produktändring och deras råloggar bevaras. Dessa riktade prov är inte den slutliga kandidatens fem obligatoriska kommandon, CI, browser, personlig inloggning eller personalacceptans.
+
+---
+
+# CRM102 – samma kundansvar i Nykundsbearbetning
+
+Nykundsbearbetning använder nu samma aktuella kundansvar som Mina kunder. Direkt ingång och personligt Resultat → Bearbeta företag återanvänder exakt medlemskopplad profil för registrerade kunder och kontots giltiga aktuella alias för äldre kunder utan profil-ID. Teamurval och uttryckligt valt annat ansvar behålls. Saknad eller motstridig koppling visas som ett synligt, möjligen ofullständigt urval; noll prospekt bevisar då inte att arbetet saknas. Kvalificeringshistorik, affärsdefinitioner, mål, fakturaägare och marginalmått ändras inte.
+
+Färsk läsning 11 oktober löser föregående leveransstatus: [CRM101 PR #169](https://github.com/ludros93-prog/MAgnussons-CRM/pull/169) är merged. Kod `bade8f9132cbf07275974170b2563995d4ad525a`, GitHub-main `4b60d1e77fcd0573379da2ffcd99ca3c4b4dfa35`, Sites-källa `78cacb25d02f9039560d9f8333c01523398fce73`, **live v98**, terminal lyckad deploy på samma begränsade Site. CRM101:s fem slutkommandon, [CI 38110950908](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38110950908) och separata APP-/SOURCE-browserprov är verifierade för den revisionen. Privat slutkvitto SHA-256 `58fa459794295ea43fb298349dcc11a5bbef6c41b41975c8258e3ff17b378dde`. Äldre stopp och väntande texter nedan gäller föregående kandidater.
+
+CRM102 är en ny kandidat. Läsande basprov på main gav 12 faktiska syntetiska PASS-fall och 40 bytekontrollerade produktmoduler: direkt prospektering, Mina kunder och Resultat-ingången hade samma antal men olika kund-ID:n; `_unassigned` kunde felaktigt bli kundalias. Privat baskvitto SHA-256 `735a58a2723550bc8826ded025d1dfd61c0680a76eed4892759f1090b8bf4bf8`. Produktändringen gäller två presentationsfiler och återanvänder etablerad kundurvalslogik, inte nya serverrättigheter. CRM102:s slutregressioner, TypeScript, bygge, isolerad runtime/browser, exakt-head CI, merge och publicering återstår här; deras slutliga faktiska revisioner redovisas i PR och task. Tidigare gröna kvitton ersätter inte dessa.
+
+B01/T04/T19: avgränsad rättning av aktuellt prospectkundansvar är implementerad och väntar slutgrind. Högsta oberoende nästa granskning efter verifierad leverans är order-/leveransportföljens kommersiella ansvar och kopplingsdiagnostik. B04 hostad återställning och B06/B07 verklig personlig införandeacceptans är fortfarande öppna; lokala syntetiska prov räcker inte. Fortnox/Outlook-konton och affärsunderlag får inte uppfinnas.
+
+---
+
 **CRM101 – browserkorrigering före leverans**
 
 Kandidaten `5da07a412dd65dcec9bf43bb7a6161f68caef8e9` klarade faktiskt alla fem obligatoriska slutkommandon och [exakt-head CI 38109472085](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38109472085). Native Chromium-browser stoppade därefter på verklig textklippning vid exakt dubbel textstorlek: Rapportmånad dolde året, två Kundvårdsfilter dolde delar av valtexten, kundkortens statusrad växte utanför mobilen och Resultats diagramförklaring klipptes vid 320 px. Ingen merge eller publicering skedde. De första två browserstoppen berodde på privat navigator respektive dekorationsmätning; verkliga text-/kontroll-/ancestor-klippkrav behålls. Samtliga tidigare kvitton och bilder finns kvar privat.
