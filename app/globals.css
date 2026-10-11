@@ -420,7 +420,7 @@ body {
 /* Keep full customer signals readable in Min dag at larger text sizes. */
 .visual-day .day-contacts .daily-row>div:first-child{min-width:0;max-width:100%}
 .visual-day .day-contacts .daily-row small{max-width:100%;overflow-wrap:anywhere}
-.visual-day .count{height:auto;min-height:26px;line-height:1.5}
+.my-day.visual-day .count{height:auto;min-height:26px;line-height:1.5}
 .visual-day[data-profile-diagnostic] .day-month-card p{overflow-wrap:anywhere;min-width:0}
 
 /* Keep the full customer responsibility readable at larger text sizes. */
