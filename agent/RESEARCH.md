@@ -1,3 +1,18 @@
+# CRM106: officiella underlag för återställningsvalidering
+
+Sex nya officiella HTTP 200-responser och 15 exakta verifierade utdrag hämtades 11 oktober 2026. Privata råbodies/text/källhashar och kvitto SHA-256 45f34dd40f412d81e39f3fe87b5e74cd256473e5145e804f240c018fa210cad9 bevaras.
+
+- [Cloudflare D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/) beskriver rollback av hela SQL-batchen när en ingående statement misslyckas. Tidigare R2-put ingår inte i detta löfte.
+- [R2 Worker API](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/) och [consistency](https://developers.cloudflare.com/r2/reference/consistency/) beskriver stark konsistens efter lyckad väntad put/delete. Detta är inte en gemensam D1/R2-transaktion.
+- [Zod 3](https://v3.zod.dev/home.md) validerar det faktiskt överlämnade värdet och returnerar en djup kopia; array max är inkluderande. Efterhandsappend omfattas inte av en tidigare parse.
+- [D1 limits](https://developers.cloudflare.com/d1/platform/limits/) beskriver separata query-, statement- och batchbudgetar. Lokal acceptans av 50 000 historikposter verifierar inte Magnussons hostingplan eller faktisk återställningskapacitet.
+
+Magnussons val är full validering av genererade historikposter före första R2-put utan ändring av befintlig CAS/idempotens, format eller schemagränser. Senaste verifierade Salesforce-/Lime-/Saleshub-principer nedan om personligt arbete, stabil identitet och nästa aktivitet behålls; de har inte återhämtats i denna lagringsrättning och innebär inga konton/integrationer/personresultat.
+
+Slutlig obligatorisk regression, TypeScript, bygge, isolerad runtime, diffkontroll, exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Källkod, GitHub-main och live redovisas separat i PR/leveranskvittensen efter faktisk körning. Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # Färska principkällor för kundfokus och stabil identitet – CRM105
 
 Tre nya officiella HTTP 200-responser hämtades 11 oktober 2026 kl. 11:30:05 UTC; sju exakta citat verifierades mot råbodies/UTF-8-text. Privat kvitto SHA-256 10286210edf8cc0f6b1b8655364e66b96a26e265e11a2ebadfcc8e09ed3ac66b.

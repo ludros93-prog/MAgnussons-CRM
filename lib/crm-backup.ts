@@ -51,6 +51,15 @@ export async function backupRestoreTarget(space:string,version:number){
  need(!await database().prepare('SELECT id FROM crm_drafts WHERE space=? AND archived=0 LIMIT 1').bind(space).first(),'Återställningen kräver en arbetsyta utan öppna privata utkast.');
  return current;
 }
+// Validate generated history as well as the source, before either format can
+// stage files. Existing request receipts bypass this first-write preparation.
+export function prepareBackupRestore(current:State,next:State,exportedAt:string,actor:Actor):State{
+ const text='CRM-data och kundfiler återställda från kopia daterad '+exportedAt;
+ need(next.events.length+next.customers.length<=50000,'CRM-kopian lämnar inte plats för återställningens historik. Inga uppgifter återställs och befintlig historik tas inte bort.');
+ need(!next.customers.length||text.length<=50000,'CRM-kopians datering är för lång för återställningshistoriken. Inga uppgifter återställs.');
+ const now=new Date().toISOString(),events=next.customers.map(c=>({id:crypto.randomUUID(),customerId:c.id,dealId:'',kind:'restore',at:now,text,actor:{id:actor.id,name:actor.name}}));
+ return restoreState(current,{format:'magnussons-crm-1',state:{...next,events:[...next.events,...events]}},true);
+}
 export function remapBackupFiles(space:string,next:State,files:BackupFile[]):StoredFile[]{
  const ids=new Map(files.map(f=>[f.metadata.id,crypto.randomUUID()]));
  for(const o of next.orders){if(o.proofFileId)o.proofFileId=ids.get(o.proofFileId)!;for(const p of [o.production,...o.productionHistory])if(p.sketchFileId)p.sketchFileId=ids.get(p.sketchFileId)!;}
@@ -59,10 +68,9 @@ export function remapBackupFiles(space:string,next:State,files:BackupFile[]):Sto
 }
 export async function cleanupBackupFiles(keys:string[]){for(const key of keys)try{await bucket().delete(key)}catch{console.error('Could not remove staged recovery object',key)}}
 // Both formats use the same atomic CAS, empty-target gate and uncertain-commit protection.
-export async function finishBackupRestore(space:string,current:State,next:State,stored:StoredFile[],staged:string[],requestId:string,hash:string,exportedAt:string,actor:Actor){
+export async function finishBackupRestore(space:string,current:State,next:State,stored:StoredFile[],staged:string[],requestId:string,hash:string,actor:Actor){
  let committed=false,uncertain=false,replayed=false;
  try{
-  const now=new Date().toISOString();for(const c of next.customers)next.events.push({id:crypto.randomUUID(),customerId:c.id,dealId:'',kind:'restore',at:now,text:'CRM-data och kundfiler återställda från kopia daterad '+exportedAt,actor:{id:actor.id,name:actor.name}});
   // HTTP restore supplies both server-read IDs. Trusted internal helpers that
   // do not carry a member snapshot retain their existing calling contract.
   const actorAuthorization=actor.memberId?{memberId:actor.memberId,userId:actor.id,role:'admin' as const,owner:actor.owner}:undefined;
@@ -101,9 +109,9 @@ export async function importBackup(space:string,input:unknown,requestId:string,v
  const current=await backupRestoreTarget(space,version),next=restoreState(current,{format:'magnussons-crm-1',state:data.state},true);validateBackupFiles(next,data.files);
  const decoded=data.files.map(file=>({file,bytes:decodeBackupFile(file.content)}));
  for(const {file,bytes} of decoded)need(bytes.length===file.metadata.size&&await checksum(bytes)===file.sha256,'Kontrollsumman stämmer inte för '+file.metadata.name+'. Inga uppgifter återställs.');
- const stored=remapBackupFiles(space,next,data.files),staged:string[]=[];let finalizing=false;
+ const prepared=prepareBackupRestore(current,next,data.exportedAt,actor),stored=remapBackupFiles(space,prepared,data.files),staged:string[]=[];let finalizing=false;
  try{
   for(let i=0;i<stored.length;i++){staged.push(stored[i].objectKey);await bucket().put(stored[i].objectKey,decoded[i].bytes as unknown as ArrayBuffer,{httpMetadata:{contentType:'application/octet-stream'}});}
-  finalizing=true;return await finishBackupRestore(space,current,next,stored,staged,requestId,hash,data.exportedAt,actor);
+  finalizing=true;return await finishBackupRestore(space,current,prepared,stored,staged,requestId,hash,actor);
  }finally{if(!finalizing)await cleanupBackupFiles(staged);}
 }

@@ -1,3 +1,15 @@
+# CRM106: återställning med bevarad originalhistorik
+
+CRM-kopia med kundfiler validerar nu också den historik som själva återställningen ska skapa. För stor dateringssträng eller för många originalposter för en extra post per kund stoppar handlingen med svensk feltext före filskrivning. Befintlig historik tas inte bort, datumtext kapas inte och ingen kundacceptans eller intern behörighet skapas.
+
+Vanliga mindre kopior återställs enligt befintligt flöde, med omappade filer och avsiktligt frikopplade aktuella medlemslänkar. Exakt återförsök av tidigare registrerad begäran använder sitt ursprungliga kvitto utan en ny audit eller filskrivning. Riktade kandidatprov passerade: verkliga JSON-/NDJSON-handlers med migrerad minnes-SQLite, angränsande datumtextgränser inklusive Unicode, giltiga serverkopior med 50 000+1 respektive 49 999+2 historik-/kundantal som avvisas före första filskrivning och commit. 49 998 ursprungliga poster plus två återställningsposter passerar, med varje originalpost bevarad och giltig återexport i båda formaten. Förlorat commitsvar, exakt replay och äldre registrerade datum-/kapacitetskvitton täcks. Ett separat byggt Worker-prov med faktisk lyssnande HTTP, lokal D1/R2 och 28 anrop passerade: samma stopp utan staging/commit, verkliga filreferenser/bytes, återexport, medlemsfrikoppling och förlorat transaktionssvar. Alla 18 råtabeller samt positiva privata utkast, Outlook-, medlems- och R2-sentineler kontrolleras. Detta är isolerade syntetiska prov, inte verkliga konton, personalacceptans eller hostingåterställning.
+
+Rättningen skyddar genererad historiks text-/antalgränser och fulla befintliga schema. Den reparerar inte redan ogiltiga historiska återställningar och garanterar inte alla separata byte-/runtimegränser. Nästa B04-del är 16 MB-headerns utrymme efter genererad historik/filomappning samt en säker verklig hostingåterställningsväg. D1:s dokumenterade budgetar kräver separat verifiering; ett lokalt 50 000-postersprov bevisar inte sådan hosted kapacitet. Separat backup för kontobindningar, Outlook och privata utkast samt verkliga konto-/personalprov återstår.
+
+Slutlig obligatorisk regression, TypeScript, bygge, isolerad runtime, diffkontroll, exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Källkod, GitHub-main och live redovisas separat i PR/leveranskvittensen efter faktisk körning. Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # Global kundsökning med korrekt personligt fokus – CRM105
 
 ”Din kund” betyder etablerat kundansvar: registrerad kund följer säljarprofilens stabila ID via exakt medlemskoppling; äldre kund utan profil-ID följer ett giltigt aktuellt kontoalias. Likadana visningsnamn eller namnlikhet är inget medlemsbevis. Prioriteringen sker före det oförändrade taket 30 träffar, så en faktiskt egen B-kund inte trängs undan av 30 registrerade A-kunder vid motstridig koppling.
