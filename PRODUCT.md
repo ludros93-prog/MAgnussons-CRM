@@ -1,3 +1,15 @@
+# CRM111: återställd kundhistorik ryms även efter nya auditposter
+
+Om ”Återställ CRM-data i en tom arbetsyta” ger besked att återställningshistoriken inte får plats, har denna återställning inte skrivit några uppgifter. Systemet behöver plats för en ny historikhändelse per kund inom kopians befintliga gräns. Bevara originalfilen privat och låt ansvarig administratör utreda den ofarliga feltexten. Historik kapas inte för att få kopian att passa.
+
+Ändringen omfattar två tillagda rader i en route. Lagringsschema, sex migrationer, export-/backupformat, DB/BUCKET, konton, roller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler behålls. Oberoende källgranskning verifierar oförändrad commit-funktion och SQL. v107 kan läsa samma data; återpublicering av dess källrevision är kodåtergångsvägen men återinför historikluckan. Ingen kodåtergång eller återställning av riktiga kunddata utförs.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Faktisk kandidat, main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
 
 Även ”Återställ CRM-data i en tom arbetsyta” stoppar nu en kopia vars färdiga databaspost blir för stor. Ett tydligt svenskt fel betyder att denna återställning inte skrivit några uppgifter. Exakt 2 000 000 byte tillåts. Historik kapas inte för att få kopian att passa.

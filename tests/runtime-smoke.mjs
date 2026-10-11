@@ -29,6 +29,7 @@ console.log('PASS native backup restore preflight: '+JSON.stringify(await (await
 console.log('PASS native backup restore header budget: '+JSON.stringify(await (await import('./runtime-backup-restore-header-budget.mjs')).assertNativeBackupRestoreHeaderBudget()));
 console.log('PASS native backup restore row budget: '+JSON.stringify(await (await import('./runtime-backup-restore-row-budget.mjs')).assertNativeBackupRestoreRowBudget()));
 console.log('PASS native data-only restore row budget: '+JSON.stringify(await (await import('./runtime-data-restore-row-budget.mjs')).assertNativeDataRestoreRowBudget()));
+console.log('PASS native data-only restore history budget: '+JSON.stringify(await (await import('./runtime-data-restore-history-budget.mjs')).assertNativeDataRestoreHistoryBudget()));
 const root = fileURLToPath(new URL('../',import.meta.url)), statePath = mkdtempSync(join(tmpdir(),'magnussons-runtime-'));
 const serverRoot=root+'/dist/server';
 const moduleFiles=readdirSync(serverRoot,{recursive:true}).filter(f=>/\.m?js$/.test(f));

@@ -1,3 +1,19 @@
+# CRM111: återställd kundhistorik ryms även efter nya auditposter
+
+På oförändrad öppningsbas gav faktiska autentiserade Node-handlers både 50 000 + 1 och 49 999 + 2 HTTP 200 och sparade 50 001 händelser. Därefter avvisade läsarschemat och båda backupformaten denna sparade historik. Tio Node-anrop verifierades. Den oförändrade tidigare paketerade Workern reproducerade 50 000 + 1 → 50 001 via tre verkliga lokala HTTP-anrop och isolerad D1/R2; alla 105 återanvända byggfiler verifierades mot v107-källans eget paketmanifest. Detta var lokala syntetiska prov.
+
+Kandidatens riktade Node-prov passerade 25 autentiserade handleranrop mot migrerad SQLite på 8,273 sekunder: båda övergränsfallen avvisas före kodningsprobe/commit/R2, medan 49 999 + 1 och 49 998 + 2 faktiskt sparar exakt 50 000 med hela originalhistoriken bevarad. Data-, JSON- och NDJSON-läsning av gränsfallet passerar. Tio avslag bevarar 18 råtabeller och positiva privata konto-/utkast-/Outlook-/R2-sentineler. Fem nekade roller, faktisk CAS-förlust, återkallad aktör, förlorat commitsvar och exakta återförsök täcks. Ett uttryckligen syntetiskt äldre kvitto för ett övergränsunderlag returnerar 200 utan ny probe eller skrivning; det är ingen ny acceptans av 50 001.
+
+Riktat nativeprov passerade 16 verkliga lokala HTTP-anrop på 38,161 sekunder mot oförändrad byggd kandidat-Worker och isolerad faktisk D1/R2. Båda övergränsfallen stoppas före probe/commit/R2. Exakt 50 000 sparas med originalhistorik, aktörer och personliga profil-ID:n bevarade; kontobindningar lossas enligt befintligt återställningskontrakt. Alla tre exportformat läses åter, och kvitto/aktör/roll, dubbelklick, förlorat commitsvar och syntetiskt äldre övergränskvitto provas. Alla 18 positiva råtabeller och två privata R2-sentineler skyddas. Inget hosting- eller personalprov påstås.
+
+Ändringen omfattar två tillagda rader i en route. Lagringsschema, sex migrationer, export-/backupformat, DB/BUCKET, konton, roller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler behålls. Oberoende källgranskning verifierar oförändrad commit-funktion och SQL. v107 kan läsa samma data; återpublicering av dess källrevision är kodåtergångsvägen men återinför historikluckan. Ingen kodåtergång eller återställning av riktiga kunddata utförs.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Faktisk kandidat, main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
 
 Färsk levererad bas är CRM109/[PR #177](https://github.com/ludros93-prog/MAgnussons-CRM/pull/177): GitHub-main `c0ab72677334a84d617ccb1be4171a6580a1c0cf`, Sites-källa `48e44ea58483c37b9554919fa54298f9c1ca8f4e`, lyckad live v106. Alla 423 spårade filers bytes och Git-lägen matchade vid öppningen, träd `f2243421c2038f4b8438130731e247af4d0c47bf`. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.

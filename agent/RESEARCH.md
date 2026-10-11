@@ -1,3 +1,21 @@
+# CRM111: återställd kundhistorik ryms även efter nya auditposter
+
+Fyra sakligt relevanta officiella HTTP 200-källor och nio exakt återkontrollerade citat granskas privat: [Zod v3](https://v3.zod.dev/home.md) om parser/max, [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/) om atomisk transaktion, [D1 limits](https://developers.cloudflare.com/d1/platform/limits/) och [SQLite record format](https://www.sqlite.org/fileformat.html#record_format). 50 000 är produktens interna exportschemakontrakt, inte en dokumenterad D1-antalsgräns. Verifierade Saleshub AI-, Salesforce- och Lime-principer om ansvar, nästa steg och granskningsbar historik behålls. Inga nya integrations- eller affärspåståenden införs.
+
+På oförändrad öppningsbas gav faktiska autentiserade Node-handlers både 50 000 + 1 och 49 999 + 2 HTTP 200 och sparade 50 001 händelser. Därefter avvisade läsarschemat och båda backupformaten denna sparade historik. Tio Node-anrop verifierades. Den oförändrade tidigare paketerade Workern reproducerade 50 000 + 1 → 50 001 via tre verkliga lokala HTTP-anrop och isolerad D1/R2; alla 105 återanvända byggfiler verifierades mot v107-källans eget paketmanifest. Detta var lokala syntetiska prov.
+
+Ändringen omfattar två tillagda rader i en route. Lagringsschema, sex migrationer, export-/backupformat, DB/BUCKET, konton, roller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler behålls. Oberoende källgranskning verifierar oförändrad commit-funktion och SQL. v107 kan läsa samma data; återpublicering av dess källrevision är kodåtergångsvägen men återinför historikluckan. Ingen kodåtergång eller återställning av riktiga kunddata utförs.
+
+Nästa avgränsade B04-spår är den äldre dataåterställningens framtida exportheader: rent statiskt storleksunderlag med 160 händelser × 49 500 CJK-tecken gav 7 945 149 UTF-16-enheter i POST under dess 10M-grind, men 23 785 408 UTF-8-byte i framtida NDJSON-header över formatets 16M-gräns. Detta är endast kod-/storleksgranskning, inte schema-, handler- eller native-repro. Verklig repro och slutlig exportbudget återstår.
+
+Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade. B01 är delvis öppet; B06/B07 kräver faktiska personer/konton.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Faktisk kandidat, main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
 
 Officiell dokumentation kontrollerades på nytt: [Cloudflare D1 limits](https://developers.cloudflare.com/d1/platform/limits/) anger 2 000 000 byte för sträng/BLOB/tabellrad; [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/#batch) beskriver transaktionsåtergång vid SQL-fel. [SQLite record format](https://www.sqlite.org/fileformat2.html#record_format) beskriver header/kolumnpayload och [SQLite CAST](https://www.sqlite.org/lang_expr.html#cast_expressions) kopplar text → BLOB till databasens kodning. Fyra faktiska HTTP 200-källor och tolv citatkontroller bevaras privat. Placering, kvitto, replay och CAS stöds av egna kontraktprov; inga officiella källor används som bevis för hostingkapacitet.
