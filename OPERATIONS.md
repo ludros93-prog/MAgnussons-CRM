@@ -1,3 +1,15 @@
+# Oförändrad lagring och åtkomst – CRM105
+
+Ändringen gäller kundväljarens läsprioritering, etikett och förklaring. API, SQL-migrationer, lagringsmoduler, privat kommunikation/utkast, paketinputs, hostingbindningar, CAS och idempotens ingår inte i ändringsmängden. Ingen datakonvertering behövs. Sparad Site v101 är planerad datakompatibel UI-återgång; ingen faktisk live-rollback eller hostingåterställning har provats.
+
+Samma Site appgprj_6aa71b309d90819181a32a9af6e6baf2, URL, begränsad custom-delning revision 2 och miljörevision 1 behålls. Öppningen fann inga öppna PR:er eller pågående publicering. Egen isolerad APP/SOURCE och privat provyta ligger på /dev/shm eftersom workspace-overlay är full; inga äldre källor/bevis raderades. Identiska låsta paketinputs medgav faktisk APP-kopia och SOURCE-hardlinks, inte en ny installation. Den officiella Sites-källhjälparen saknas efter begränsad sökning; vanlig autentiserad Git öppnade färsk källa före produktändringen.
+
+B04 behöver en separat rättning: syntetiska verkliga import-/exporthandlers visar att obegränsad exportedAt kan skapa för lång återställningshistorik, och att ett giltigt servergenererat arkiv med 50 000 historikposter får 50 001 efter återställning av en kund. Båda kan därefter ge export 400. Detta har inte åtgärdats i CRM105 och är inget hostingprov. En kommande rättning ska validera hela resulterande tillståndet före staging/commit, bevara historik och täcka båda formatens gränser/replay.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Detta är kandidatens verifierade läge före slutkontroller; slutrevision, CI, PR, main och publicering redovisas separat i leveranskvittensen.
+
+---
+
 # Använd Notisers personliga uppföljning – CRM104
 
 Välj **Notiser** för din uppföljning. **Mina** betyder registrerade uppgifter och order för din kopplade säljarprofil samt kundsignaler inom ditt kundansvarsurval. Äldre poster utan profilansvar kan visas genom ditt giltiga kundansvar. Behörig administratör kan välja **Hela teamet**. Varje rad behåller sin befintliga handling **Öppna kund**, **Öppna order** eller **Planera kontakt**.

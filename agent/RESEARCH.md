@@ -1,3 +1,17 @@
+# Färska principkällor för kundfokus och stabil identitet – CRM105
+
+Tre nya officiella HTTP 200-responser hämtades 11 oktober 2026 kl. 11:30:05 UTC; sju exakta citat verifierades mot råbodies/UTF-8-text. Privat kvitto SHA-256 10286210edf8cc0f6b1b8655364e66b96a26e265e11a2ebadfcc8e09ed3ac66b.
+
+- [Salesforce Activities](https://trailhead.salesforce.com/content/learn/modules/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1): egna uppgifter/aktivitet i kund-/kontakt-/affärssammanhang; definierar inte Magnussons urval.
+- [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/): ”Usernames and display names can change, making them unsuitable for long-term references.” Oföränderliga Object IDs gäller uttryckligen users/groups; åtkomstpolicy och personligt ansvar behandlas separat, liksom problem utan kopplad coworker. Detta belägger inte alla coworker-ID:n eller vårt profilschema.
+- [Saleshub Funktioner](https://saleshubai.se/funktioner): ”Kundkort med kontakter, filer, mail, samtal och nästa aktivitet”. Offentlig marknadsbeskrivning, inget inloggat integrationstest.
+
+Magnussons medlemskopplade profil-ID, giltiga äldre alias, prioritet före 30-raderstaket och global server-tillgänglig kundsökning är lokala etablerade kontrakt. Källorna stödjer principerna men ersätter inga egna urvals-/roll-/callbackprov och verifierar inga personalresultat eller anslutningar.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Detta är kandidatens verifierade läge före slutkontroller; slutrevision, CI, PR, main och publicering redovisas separat i leveranskvittensen.
+
+---
+
 # Källor för eget uppföljningsarbete och stabil identitet – CRM104
 
 Tre officiella läsbara HTTP 200-källor hämtades 11 oktober 2026 kl. 09:32:32 UTC. Sju ordagranna citat kontrollerades mot sparade bodies och återbyggd text. Privat verifieringskvitto SHA-256 e4b173c5fa17ed4b194c784252acda30ae9aa8fb873371d5760eca5d759a0527.

@@ -1,3 +1,13 @@
+# Kundväljaren följer faktiskt kundansvar – CRM105
+
+Vid kopplad säljarprofil B och aktuellt kontoalias A kunde kundväljaren märka registrerade A-kunder som ”Din kund” och placera dem före egna B-kunder. Kundväljaren använder nu samma etablerade medlems-/profilurval som Kundvård för personlig prioritering och märkning. Äldre kunder utan profilansvar följer ett giltigt aktuellt alias. Alla server-tillgängliga kunder kan fortfarande sökas; fyra sökfält, 30-radersgräns och val av kundkort/aktivitet bevaras.
+
+Saknad eller motstridig koppling får en förklaring om just märkning/prioritering och rätt administratörshjälp. Ingen behörighet, kontokoppling eller lagring ändras. Ny faktisk React-regression passerar 39 fall; befintlig kundurvalsregression passerar 49 fall. Full slutkontroll och publicering återstår vid denna dokumentfrysning. Färsk bas är CRM104: main 2e8fca77, Sites-källa 66cf3fd2 och live v101.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Detta är kandidatens verifierade läge före slutkontroller; slutrevision, CI, PR, main och publicering redovisas separat i leveranskvittensen.
+
+---
+
 # Notiser: personligt ansvar i uppföljningsköerna – CRM104
 
 **Mina** använder nu kontots registrerade säljarprofil för uppgiftsdeadlines, order som ska skickas och kundernas återköps-/kontaktförslag. Äldre poster utan profilansvar använder fortfarande kontots giltiga kundansvar. När dessa kopplingar saknas eller skiljer sig åt visas **synligt urval** och konkret administrativ hjälp. Det innebär ingen bekräftad fullständig arbetslista.
