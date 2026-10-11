@@ -7,7 +7,7 @@ import React,{act} from 'react';
 import {create} from 'react-test-renderer';
 
 // Immutable actual pre-change source, captured from main 96936a26105d6434ea59fe6aecc56bb6e6232e4a.
-// SHA-256 2dd94e0335f5b0d151d3816df26550bc0e0dc1e5ff5c5136e8d941fe1fc44529. Compile it to compare every non-task metric;
+// SHA-256 2dd94e0335f5b0d151d3816df26550bc0e0dc1e5ff5c5136e8d941fe1fc44529. Compile it to compare every protected non-task metric;
 // no rewritten financial formula, synthetic provider, or text-search assertion is used.
 const baselineSource=String.raw`import {type State,day,isOpen,margin} from './crm';
 import {legacySellerNames,personalSellerId,sellerProfileById} from './seller-profiles';
@@ -108,7 +108,7 @@ export const SalesTrend=()=>null;
   });mkdirSync(dirname(target),{recursive:true});writeFileSync(target,output);return target;
  }
  const fetchDescriptor=Object.getOwnPropertyDescriptor(globalThis,'fetch'),actDescriptor=Object.getOwnPropertyDescriptor(globalThis,'IS_REACT_ACT_ENVIRONMENT');
- let renderer,calls=[],fetchCalls=[],acceptedCases=0,defensiveCases=0,financialComparisons=0,uiCases=0;
+ let renderer,calls=[],fetchCalls=[],acceptedCases=0,defensiveCases=0,financialComparisons=0,pipelineComparisons=0,uiCases=0;
  const text=node=>typeof node==='string'?node:Array.isArray(node)?node.map(text).join(''):node?.children?.map(text).join('')||'';
  const freeze=value=>{if(value&&typeof value==='object'){for(const child of Object.values(value))freeze(child);Object.freeze(value);}return value;};
  const content=()=>text(renderer.toJSON()),byClass=name=>renderer.root.findAll(node=>typeof node.type==='string'&&node.props.className?.split(' ').includes(name));
@@ -169,7 +169,10 @@ export const SalesTrend=()=>null;
   await isolated('unknown anchored ID with own alias is rejected and cannot fall back to legacy ownership',async()=>{const st=work(fixture());st.tasks.push(task('unknown-id',unknown));selected(st,['own-id','legacy-own'],a,'personal',{defensive:true});},{defensive:true});
   await isolated('pre-initialization nonempty anchored IDs are rejected and cannot enter alias-only selection',async()=>{const st=fixture({initialized:false});st.tasks=[task('legacy-own'),task('uninitialized-id',a)];selected(st,['legacy-own'],nameA,'personal',{defensive:true});},{defensive:true});
 
-  // Compare every returned key except the intentionally changed task selection.
+  // Compare every returned key except the previously changed task selection.
+  // CRM98 intentionally changes ONLY personal open/pipeline/unpriced. Those
+  // three fields get independent fixture expectations; explicit/profile mode
+  // still compares them exactly to baseline. All other keys remain protected.
   // The complete captured baseline function also checks untouched helpers,
   // financial attribution, yearly trends and profile rows against real code.
   const invoice=(id,owner,profile,value,cost,date,extra={})=>core.OrderSchema.parse({id,customerId:'synthetic-customer',dealId:'synthetic-deal-'+id,owner,stage:'handover',proofRequired:false,proofApproved:false,supplierConfirmed:false,deliveryDate:'',deliveredDate:'',invoiceDate:date,invoiceRef:'Syntetisk referens '+id,invoiceValue:value,actualCost:cost,notes:'',invoiceOwner:owner,invoiceOwnerId:profile,invoiceOwnerSource:'recorded',...extra});
@@ -191,9 +194,27 @@ export const SalesTrend=()=>null;
    return st;
   }
   const omit=(object,...keys)=>Object.fromEntries(Object.entries(object).filter(([key])=>!keys.includes(key)));
-  for(let variant=0;variant<6;variant++)await isolated('every non-task metric equals actual baseline for financial fixture '+variant,async()=>{
+  for(let variant=0;variant<6;variant++)await isolated('protected metrics equal actual baseline and personal live pipeline follows current responsibility for financial fixture '+variant,async()=>{
    const st=financialFixture(variant);validate(st);freeze(st);const before=JSON.stringify(st),scopes=st.settings.sellerProfilesInitialized?[a,b,'all','','unknown']:[nameA,nameB,'all','','unknown'];
-   for(const reportMonth of ['2026-09','2026-08','2025-12'])for(const scope of scopes){const old=baseline.salesMetrics(st,reportMonth,scope);for(const activityMode of ['profile','personal']){const current=dashboard.salesMetrics(st,reportMonth,scope,activityMode);assert.deepEqual(omit(current,'tasks'),omit(old,'tasks'));financialComparisons++;}assert.deepEqual(dashboard.salesYearSeries(st,reportMonth.slice(0,4),scope),baseline.salesYearSeries(st,reportMonth.slice(0,4),scope));}
+   for(const reportMonth of ['2026-09','2026-08','2025-12'])for(const scope of scopes){
+    const old=baseline.salesMetrics(st,reportMonth,scope);
+    for(const activityMode of ['profile','personal']){
+     const current=dashboard.salesMetrics(st,reportMonth,scope,activityMode);
+     if(activityMode==='profile')assert.deepEqual(omit(current,'tasks'),omit(old,'tasks'),'All explicit-profile/team non-task keys retain baseline');
+     else{
+      assert.deepEqual(omit(current,'tasks','open','pipeline','unpriced'),omit(old,'tasks','open','pipeline','unpriced'),'Every remaining personal non-task key retains baseline');
+      // These fixture deals ALL have blank profile IDs. Their known IDs/values
+      // make current-alias expectation independent of the production selector.
+      const validPersonal=scope===dashboard.personalResultScope(st),alias=validPersonal&&st.settings.owners.includes(st.viewer.owner)?st.viewer.owner:'';
+      const expectedIds=alias===nameA?['synthetic-open','synthetic-unpriced']:alias===nameB?['synthetic-other']:[];
+      assert.deepEqual(current.open.map(deal=>deal.id),expectedIds);
+      assert.equal(current.pipeline,alias===nameA?500:alias===nameB?900:0);
+      assert.equal(current.unpriced,alias===nameA?1:0);pipelineComparisons++;
+     }
+     financialComparisons++;
+    }
+    assert.deepEqual(dashboard.salesYearSeries(st,reportMonth.slice(0,4),scope),baseline.salesYearSeries(st,reportMonth.slice(0,4),scope));
+   }
    assert.deepEqual(dashboard.teamSalesRows(st,month).map(row=>omit(row,'late')),baseline.teamSalesRows(st,month).map(row=>omit(row,'late')));assert.equal(JSON.stringify(st),before);
    if(variant===1){const stats=dashboard.salesMetrics(st,month,a,'personal');assert.equal(stats.margin,null);assert.equal(stats.profit,null);assert.equal(stats.known.length,0);}
    if(variant===4)assert.equal(dashboard.salesMetrics(st,month,a,'personal').margin,-100);
@@ -220,6 +241,6 @@ export const SalesTrend=()=>null;
   const parentTarget=resolve(directory,'actual-result-parent.mjs');writeFileSync(parentTarget,ts.transpileModule('export function callbacks(st,personalOwner,setOwner,setSearch,setFilter,setView,openActivity){return {onView:('+contracts[0].onView+'),onTask:('+contracts[0].onTask+')};}',{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);const parent=await import(pathToFileURL(parentTarget).href);
   await isolated('entire actual parent onTask expression passes the exact selected task to existing follow-up entry',async()=>{const st=work(fixture({owner:''})),record=(...args)=>calls.push({kind:'activity',args}),noop=()=>{},callbacks=parent.callbacks(st,dashboard.personalOwner,noop,noop,noop,noop,record),unchanged=await render(st,{onTask:callbacks.onTask});await act(async()=>taskButtons()[0].props.onClick());assert.equal(calls.length,1);assert.equal(calls[0].args[0],st.tasks[0]);unchanged();},{ui:true});
   await isolated('entire actual result-to-Min day parent navigation chooses current account alias instead of historical result alias',async()=>{const st=work(fixture({owner:nameB})),selected={},setter=key=>value=>{selected[key]=value;},callbacks=parent.callbacks(st,dashboard.personalOwner,setter('owner'),setter('search'),setter('filter'),setter('view'),()=>{});validate(st);freeze(st);callbacks.onView('today',dashboard.resultOperationalOwner(st,a));assert.deepEqual(selected,{owner:nameB,search:'',view:'today'});});
-  const count=acceptedCases+defensiveCases;console.log('PASS Sales task profile: '+count+' cases ('+acceptedCases+' accepted-reference, '+defensiveCases+' defensive), '+uiCases+' actual React/parent UI cases; '+financialComparisons+' exact non-task baseline metric comparisons; immutable input, zero HTTP. Synthetic fixtures/visual observations; no browser, account, integration or staff acceptance claimed.');return {cases:count,acceptedCases,defensiveCases,uiCases,financialComparisons,httpRequests:fetchCalls.length};
+  const count=acceptedCases+defensiveCases;console.log('PASS Sales task profile: '+count+' cases ('+acceptedCases+' accepted-reference, '+defensiveCases+' defensive), '+uiCases+' actual React/parent UI cases; '+financialComparisons+' exact protected non-task baseline metric comparisons, '+pipelineComparisons+' independently checked personal live pipelines; immutable input, zero HTTP. Synthetic fixtures/visual observations; no browser, account, integration or staff acceptance claimed.');return {cases:count,acceptedCases,defensiveCases,uiCases,financialComparisons,pipelineComparisons,httpRequests:fetchCalls.length};
  }finally{await unmount();rmSync(directory,{recursive:true,force:true});for(const [key,descriptor] of [['fetch',fetchDescriptor],['IS_REACT_ACT_ENVIRONMENT',actDescriptor]]){if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];}}
 }

@@ -92,3 +92,4 @@ await (await import('./deal-scope.mjs')).verifyDealScope();
 // Personal Orders and receipt work follow the order's exact member-linked responsibility.
 await (await import('./order-scope.mjs')).verifyOrderScope();
 await (await import('./yearwheel-scope.mjs')).verifyYearwheelScope();
+await (await import('./result-deal-scope.mjs')).verifyResultDealScope();
