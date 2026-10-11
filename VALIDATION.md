@@ -1,3 +1,23 @@
+# CRM112: äldre dataåterställning lämnar plats för återexport
+
+Felet reproducerades på oförändrad öppningsbas i fem autentiserade Node-handleranrop mot migrerad SQLite: en POST på 7 945 603 UTF-16-enheter sparade 161 händelser och en framtida header på 23 785 897 UTF-8-byte. Dataläsning och exakt återförsök gav 200, medan både JSON- och NDJSON-backup gav 400. Den tidigare faktiskt paketerade v108-Workern reproducerade samma lucka med en separat fixture via två lokala HTTP-anrop mot isolerad D1/R2: restore 200, header 23 800 541 byte, NDJSON-export 400. Alla 105 oförändrade byggfiler verifierades mot v108-källans eget paketmanifest.
+
+Kandidatens riktade Node-prov passerade 35 autentiserade HTTP-anrop mot migrerad SQLite på 8,409 sekunder. Både CJK- och emojiunderlag med exakt 16 000 000-byte slutheader sparas och återläses som data, JSON och NDJSON; en byte över gränsen avvisas före probe/commit/R2. Destinationens 9 → 10 mäts även när källversionen är en annan. ASCII och JSON-escaping, bevarad originalhistorik, fem nekade roller, CAS-förlust, återkallad aktör, förlorat commitsvar och exakta återförsök täcks. Ett uttryckligen syntetiskt äldre övergränskvitto returnerar 200 utan ny probe eller skrivning; det är ingen ny acceptans av för stort underlag. Alla 18 positiva råtabeller och privata konto-/utkast-/Outlook-/R2-sentineler bevaras vid avslag.
+
+Riktat nativeprov passerade 12 verkliga lokala HTTP-anrop på 8,608 sekunder mot byggd kandidat-Worker och isolerad D1/R2. Exakt 16 000 000-byte header ger restore 200 och giltig återläsning som data, JSON och NDJSON; 16 000 001 stoppas före probe/commit/R2. Exakt återförsök med gammalt underlag, syntetiskt äldre övergränskvitto, förlorat commitsvar 503 → kvitto 200, ändrad aktör/avsikt och nekad säljarroll täcks. Originalhistorik och 18 positiva råtabeller samt två privata R2-sentineler kontrolleras. Alla 105 byggfiler och 34 oförändrade pinnade fixturmoduler binds till faktiskt provat underlag. Detta är ett lokalt syntetiskt prov. Giltig återexport och parsning är inte ett andra fullständigt återställningsprov av samma 16 MB-kopia; nästa återställning skapar ny historik och kan kräva mer utrymme.
+
+Grinden gäller dataheadern vid första äldre dataåterställningen, med tom filförteckning (`files: []`). Källans filreferenser förbjuds som tidigare, men rutten bevisar inte att destinationens separata filtabell är tom. Full framtida backup med kvarvarande filmetadata, senare vanliga skrivningar och JSON-formatets egen total-/base64budget garanteras inte av denna kontroll. Befintlig SQL-radgrind på 2 000 000 byte och 50 000-händelsegrind behålls separat. Klientens oförändrade filgräns är 10 000 000 byte; POST-ruttens teckengräns räknar UTF-16-enheter och är ett annat mått.
+
+Ingen lagringsvariant, migration, formatändring eller ändring av commit-SQL införs. Serverroller, privata data, CAS, idempotens, mängd-/revisionsregler och DB/BUCKET behålls. v108-kod kan läsa samma accepterade data. Återpublicering av granskad Sites-källa `946d38dc62f6784a9cfd5931a74236b7fe75332d` är kodåtergångsvägen men tar bort den nya exportbudgetgrinden; ingen sådan återgång eller verklig hostingåterställning har utförts.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Kontrollerat browserprov återstår; den stora avvisade serverfixturen passerar inte klientens filgräns. Eventuellt UI-prov med liten syntetisk fil och injicerad serverfeltext redovisas separat från verkligt handler-/nativeavslag. Faktisk kandidat, GitHub-main, Sites-källrevision, lyckad liveversion och slutkontroller redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Syntetiska lokala Node-/Worker-/browserprov och grön CI bevisar inga riktiga kontoinloggningar, första verkliga sparningar, personalacceptanser, Fortnox-/Outlook-anslutningar eller verklig hostingåterställning. Inga riktiga kundorder används för skrivprov.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM111: återställd kundhistorik ryms även efter nya auditposter
 
 På oförändrad öppningsbas gav faktiska autentiserade Node-handlers både 50 000 + 1 och 49 999 + 2 HTTP 200 och sparade 50 001 händelser. Därefter avvisade läsarschemat och båda backupformaten denna sparade historik. Tio Node-anrop verifierades. Den oförändrade tidigare paketerade Workern reproducerade 50 000 + 1 → 50 001 via tre verkliga lokala HTTP-anrop och isolerad D1/R2; alla 105 återanvända byggfiler verifierades mot v107-källans eget paketmanifest. Detta var lokala syntetiska prov.

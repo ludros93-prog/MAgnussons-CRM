@@ -1,3 +1,23 @@
+# CRM112: äldre dataåterställning lämnar plats för återexport
+
+B04: CRM111:s slutliga historikantal är levererat på main/live v108. CRM112:s färdiga UTF-8-dataheadergrind för äldre dataåterställning är implementerad och riktat Node- och native-verifierad i kandidat; frysta slutkontroller återstår.
+
+Levererad öppningsbas är CRM111/[PR #179](https://github.com/ludros93-prog/MAgnussons-CRM/pull/179): GitHub-main `bd7a22b1d14d85bdea45902e56356bf523991d37`, Sites-källa `946d38dc62f6784a9cfd5931a74236b7fe75332d`, lyckad live v108. Alla 427 spårade filers bytes och Git-lägen samt träd `dfa4a3a6ef11c9f1cd24b6269136f5a242849aae` matchade vid öppningen. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.
+
+Äldre ren dataåterställning (`/api/crm`, `type: restore`) mäter nu den färdiga dataheadern i UTF-8 efter genererad kundhistorik och med destinationens nästa revision. Över 16 000 000 byte stoppas före kodningsprobe, commit och R2; exakt gräns tillåts av denna grind och övriga kontroller krävs som tidigare. Samma serializer och gräns används av NDJSON-exporten. Historik kapas inte. Ett tidigare sparat exakt kvitto returneras fortfarande före förkontrollen; aktör och avsikt kontrolleras som tidigare.
+
+Grinden gäller dataheadern vid första äldre dataåterställningen, med tom filförteckning (`files: []`). Källans filreferenser förbjuds som tidigare, men rutten bevisar inte att destinationens separata filtabell är tom. Full framtida backup med kvarvarande filmetadata, senare vanliga skrivningar och JSON-formatets egen total-/base64budget garanteras inte av denna kontroll. Befintlig SQL-radgrind på 2 000 000 byte och 50 000-händelsegrind behålls separat. Klientens oförändrade filgräns är 10 000 000 byte; POST-ruttens teckengräns räknar UTF-16-enheter och är ett annat mått.
+
+Nästa avgränsade B04-spår är senare vanliga skrivningar efter en återställning vid exakt 16 MB: återställningsgrinden ger ingen framtida marginal för en ny anteckning. Detta är ett statiskt identifierat spår; separat handler-/native-reproduktion och åtgärd återstår. Total D1-batch-/databasbudget, hostingens CPU/minne, verklig hostingåterställning och separat backup för kontobindningar, Outlook och privata utkast återstår också. B01 är delvis öppet; B06/B07 kräver verkliga personer och konton.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Kontrollerat browserprov återstår; den stora avvisade serverfixturen passerar inte klientens filgräns. Eventuellt UI-prov med liten syntetisk fil och injicerad serverfeltext redovisas separat från verkligt handler-/nativeavslag. Faktisk kandidat, GitHub-main, Sites-källrevision, lyckad liveversion och slutkontroller redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Syntetiska lokala Node-/Worker-/browserprov och grön CI bevisar inga riktiga kontoinloggningar, första verkliga sparningar, personalacceptanser, Fortnox-/Outlook-anslutningar eller verklig hostingåterställning. Inga riktiga kundorder används för skrivprov.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM111: återställd kundhistorik ryms även efter nya auditposter
 
 B04: slutligt historikantal för äldre dataåterställning är implementerat och riktat verifierat i kandidat. CRM110:s radbudget är levererad på main/live v107; CRM111 väntar på frysta slutkontroller.

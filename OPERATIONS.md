@@ -1,3 +1,23 @@
+# CRM112: äldre dataåterställning lämnar plats för återexport
+
+Äldre ren dataåterställning (`/api/crm`, `type: restore`) mäter nu den färdiga dataheadern i UTF-8 efter genererad kundhistorik och med destinationens nästa revision. Över 16 000 000 byte stoppas före kodningsprobe, commit och R2; exakt gräns tillåts av denna grind och övriga kontroller krävs som tidigare. Samma serializer och gräns används av NDJSON-exporten. Historik kapas inte. Ett tidigare sparat exakt kvitto returneras fortfarande före förkontrollen; aktör och avsikt kontrolleras som tidigare.
+
+Vid budgetfel: bevara originalkopian privat och utred den minimala feltexten. Kapa inte historik och byt inte importväg för att kringgå stoppet. Återställningen ersätter inte konton, medlemskopplingar, Outlook eller privata utkast. Kontrollera backupens faktiska omfattning och destinationsfilernas status före en verklig återställning.
+
+Grinden gäller dataheadern vid första äldre dataåterställningen, med tom filförteckning (`files: []`). Källans filreferenser förbjuds som tidigare, men rutten bevisar inte att destinationens separata filtabell är tom. Full framtida backup med kvarvarande filmetadata, senare vanliga skrivningar och JSON-formatets egen total-/base64budget garanteras inte av denna kontroll. Befintlig SQL-radgrind på 2 000 000 byte och 50 000-händelsegrind behålls separat. Klientens oförändrade filgräns är 10 000 000 byte; POST-ruttens teckengräns räknar UTF-16-enheter och är ett annat mått.
+
+Ingen lagringsvariant, migration, formatändring eller ändring av commit-SQL införs. Serverroller, privata data, CAS, idempotens, mängd-/revisionsregler och DB/BUCKET behålls. v108-kod kan läsa samma accepterade data. Återpublicering av granskad Sites-källa `946d38dc62f6784a9cfd5931a74236b7fe75332d` är kodåtergångsvägen men tar bort den nya exportbudgetgrinden; ingen sådan återgång eller verklig hostingåterställning har utförts.
+
+Nästa avgränsade B04-spår är senare vanliga skrivningar efter en återställning vid exakt 16 MB: återställningsgrinden ger ingen framtida marginal för en ny anteckning. Detta är ett statiskt identifierat spår; separat handler-/native-reproduktion och åtgärd återstår. Total D1-batch-/databasbudget, hostingens CPU/minne, verklig hostingåterställning och separat backup för kontobindningar, Outlook och privata utkast återstår också. B01 är delvis öppet; B06/B07 kräver verkliga personer och konton.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Kontrollerat browserprov återstår; den stora avvisade serverfixturen passerar inte klientens filgräns. Eventuellt UI-prov med liten syntetisk fil och injicerad serverfeltext redovisas separat från verkligt handler-/nativeavslag. Faktisk kandidat, GitHub-main, Sites-källrevision, lyckad liveversion och slutkontroller redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Syntetiska lokala Node-/Worker-/browserprov och grön CI bevisar inga riktiga kontoinloggningar, första verkliga sparningar, personalacceptanser, Fortnox-/Outlook-anslutningar eller verklig hostingåterställning. Inga riktiga kundorder används för skrivprov.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM111: återställd kundhistorik ryms även efter nya auditposter
 
 Äldre ren dataåterställning (`/api/crm`, `type: restore`) räknar nu originalhistorik plus en ny återställningshändelse per kund före historiktillägg, kodningsprov och commit. Över 50 000 händelser ger ett tydligt svenskt avslag utan skrivning. Exakt 50 000 tillåts; originalhistorik tas inte bort. Redan sparade exakta kvitton returnerar fortfarande före den nya grinden. Exportläsarens befintliga gräns ändras inte.

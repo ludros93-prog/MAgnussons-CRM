@@ -1,3 +1,17 @@
+# CRM112: äldre dataåterställning lämnar plats för återexport
+
+Om ”Återställ CRM-data i en tom arbetsyta” ger besked att data och återställningshistorik inte ryms inom 16 MB, har den nya återställningen inte skrivit några uppgifter. Bevara originalkopian privat och låt ansvarig administratör utreda feltexten; befintlig historik tas inte bort för att få kopian att passa. Filväljaren tillåter fortfarande högst 10 MB. Kopior som hänvisar till kundfiler behöver den separata funktionen ”CRM-kopia med kundfiler”. Detta ändrar inte behörigheten eller vilka uppgifter kopian omfattar.
+
+Ingen lagringsvariant, migration, formatändring eller ändring av commit-SQL införs. Serverroller, privata data, CAS, idempotens, mängd-/revisionsregler och DB/BUCKET behålls. v108-kod kan läsa samma accepterade data. Återpublicering av granskad Sites-källa `946d38dc62f6784a9cfd5931a74236b7fe75332d` är kodåtergångsvägen men tar bort den nya exportbudgetgrinden; ingen sådan återgång eller verklig hostingåterställning har utförts.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Kontrollerat browserprov återstår; den stora avvisade serverfixturen passerar inte klientens filgräns. Eventuellt UI-prov med liten syntetisk fil och injicerad serverfeltext redovisas separat från verkligt handler-/nativeavslag. Faktisk kandidat, GitHub-main, Sites-källrevision, lyckad liveversion och slutkontroller redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Syntetiska lokala Node-/Worker-/browserprov och grön CI bevisar inga riktiga kontoinloggningar, första verkliga sparningar, personalacceptanser, Fortnox-/Outlook-anslutningar eller verklig hostingåterställning. Inga riktiga kundorder används för skrivprov.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM111: återställd kundhistorik ryms även efter nya auditposter
 
 Om ”Återställ CRM-data i en tom arbetsyta” ger besked att återställningshistoriken inte får plats, har denna återställning inte skrivit några uppgifter. Systemet behöver plats för en ny historikhändelse per kund inom kopians befintliga gräns. Bevara originalfilen privat och låt ansvarig administratör utreda den ofarliga feltexten. Historik kapas inte för att få kopian att passa.
