@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import {database,bucket} from './crm-db';
-import {load,commit,initialize,requestHash,assertBackupRestoreStorageBudget,type StoredFile,type RestoreReceipt} from './crm-store';
+import {load,commit,initialize,requestHash,assertRestoreDatabaseEncoding,assertBackupRestoreStorageBudget,type StoredFile,type RestoreReceipt} from './crm-store';
 import {restoreState} from './crm-restore';
 import {collectFileReferences} from './export-references';
 import {RuleError,emptyState,type State,type Actor} from './crm';
@@ -43,12 +43,7 @@ export async function validateBackupRestoreHeader(space:string,current:State,nex
  // have already been remapped, so neither source bytes nor its version suffice.
  const {bytes}=backupStreamHeader(space,{...next,version:current.version+1},stored.map(({customerId,metadata})=>({customerId,metadata})));
  need(bytes.byteLength<=BACKUP_MAX_BYTES,'CRM-kopian lämnar inte plats för återställningens historik och filförteckning inom 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.');
- // Measure the actual binding's TEXT encoding, without PRAGMA or a cached
- // assumption. The exact record calculator below supports UTF-8; an unknown
- // or different encoding must fail before any object can be staged.
- let encoding:{storage_probe:string}|null=null;
- try{encoding=await database().prepare('SELECT hex(CAST(? AS BLOB)) AS storage_probe').bind('A😀').first<{storage_probe:string}>();}catch{/* Unknown encoding must not permit staging. */}
- need(encoding?.storage_probe==='41F09F9880','Databasens textkodning kunde inte verifieras för säker återställning. Inga uppgifter återställs.');
+ await assertRestoreDatabaseEncoding();
  assertBackupRestoreStorageBudget(space,current,next,stored,receipt);
 }
 const BackupSchema=z.object({format:z.literal('magnussons-crm-backup-1'),exportedAt:z.string(),sourceSpace:z.enum(['demo','live']),state:z.unknown(),files:z.array(BackupFileDescriptor.extend({content:z.string().max(6700000),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(2000)});

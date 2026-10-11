@@ -1,3 +1,19 @@
+# CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
+
+Färsk levererad bas är CRM109/[PR #177](https://github.com/ludros93-prog/MAgnussons-CRM/pull/177): GitHub-main `c0ab72677334a84d617ccb1be4171a6580a1c0cf`, Sites-källa `48e44ea58483c37b9554919fa54298f9c1ca8f4e`, lyckad live v106. Alla 423 spårade filers bytes och Git-lägen matchade vid öppningen, träd `f2243421c2038f4b8438130731e247af4d0c47bf`. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.
+
+Den äldre rena dataåterställningen (`/api/crm`, `type: restore`) kontrollerar nu samma dokumenterade 2 000 000-bytegräns som CRM-kopia med kundfiler. Hela slutliga SQLite-posten räknas: header, alla kolumner, genererad kundhistorik och denna routes faktiska mutationsresultat i kvittot. Kontrollen görs efter historiktillägget och före commit. Den faktiska DB-bindningen måste visa UTF-8; okänd eller annan textkodning ger avslag före skrivning. Vanliga skrivningar och redan genomförda exakta återförsök behåller sitt beteende.
+
+Lagringsschema, sex migrationer, data-/backupformat, DB/BUCKET, serverroller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler ändras inte. Oberoende källjämförelse visar byteidentisk commit-funktion med dess SQL och bindvärden. v106-kod kan läsa samma data men saknar den nya grinden för äldre dataåterställning; ingen kodåtergång eller återställning av riktiga kunddata har utförts.
+
+Vid denna dokumentfrysning återstår den frysta slutrevisionens obligatoriska regression, TypeScript, bygge, isolerade fullruntime, diffkontroll, exakt-head CI, aktuell-bas merge och publicering på samma Site. Faktisk kandidat, GitHub-main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö, konton och agentaktivering ändras inte.
+
+Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo används.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM109: färdiga återställningsrader får plats före filskrivning
 
 Färsk bas är levererad CRM108/[PR #176](https://github.com/ludros93-prog/MAgnussons-CRM/pull/176): GitHub-main `c02201adf6a600d1762ec6d1fe91d0cce7003597`, Sites-källa `d5742b825b189e95c0af9a15f3db02a072e45eae`, lyckad live v105. Alla 420 spårade filers bytes och Git-lägen matchade före ändringen, träd `69f944d6de1255a51660c903002ea3d5ce060268`. Egen branch/worktree och reservation används; inga öppna PR:er eller konkurrerande publicering observerades vid öppningen.

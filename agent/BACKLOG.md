@@ -1,3 +1,19 @@
+# CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
+
+B04: färdig radbudget för den äldre dataåterställningen är implementerad och riktat verifierad i kandidat. CRM109:s motsvarande skydd för CRM-kopia med kundfiler är levererat på main och live v106. CRM110:s leverans väntar på frysta slutkontroller. B01 är fortsatt delvis och B06/B07 kräver faktiska konton/personer.
+
+Den äldre rena dataåterställningen (`/api/crm`, `type: restore`) kontrollerar nu samma dokumenterade 2 000 000-bytegräns som CRM-kopia med kundfiler. Hela slutliga SQLite-posten räknas: header, alla kolumner, genererad kundhistorik och denna routes faktiska mutationsresultat i kvittot. Kontrollen görs efter historiktillägget och före commit. Den faktiska DB-bindningen måste visa UTF-8; okänd eller annan textkodning ger avslag före skrivning. Vanliga skrivningar och redan genomförda exakta återförsök behåller sitt beteende.
+
+Nästa B04-lucka: källschemat tillåter 50 000 historikhändelser, varefter dataåterställningen lägger till en per kund. Statisk kodgranskning visar att 50 000 + 1 eller 49 999 + 2 kan överskrida exportschemats gräns. Detta är ännu inte ett genomfört 50k-handler-/runtimeprov; repro och slutlig historikgrind återstår. Radgrinden i CRM110 löser inte händelseantalet.
+
+Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade. Grön lokal/CI-verifiering ersätter inte dessa.
+
+Vid denna dokumentfrysning återstår den frysta slutrevisionens obligatoriska regression, TypeScript, bygge, isolerade fullruntime, diffkontroll, exakt-head CI, aktuell-bas merge och publicering på samma Site. Faktisk kandidat, GitHub-main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö, konton och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM109: färdiga återställningsrader får plats före filskrivning
 
 B04: förkontroll av färdiga lagringsrader efter audit och filomappning är implementerad och riktat verifierad i kandidat. Leverans väntar på den frysta slutrevisionens kontroller.
