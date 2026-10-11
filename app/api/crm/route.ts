@@ -341,10 +341,13 @@ export async function POST(req:Request){try{
 const result=mutationResult(current,next,p.type,p.data);
  // Generated history and the actual result receipt are part of the write.
  // Completed request receipts have already returned before this first-write gate.
+ // Include the final audit and destination revision in the data-only export
+ // header. File metadata/content and database row limits have separate gates.
+ const {bytes}=backupStreamHeader(p.space,{...next,version:persisted.version+1},[]);
+ if(bytes.byteLength>BACKUP_MAX_BYTES)throw new RuleError(p.type==='restore'
+  ?'CRM-kopian lämnar inte plats för återställningens data och historik inom 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.'
+  :'Ändringen skulle göra CRM-data och historik för stora för dataexport inom 16 MB. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');
  if(p.type==='restore'){
-  // The restored data, including its audit and destination version, must fit the export header.
-  const {bytes}=backupStreamHeader(p.space,{...next,version:persisted.version+1},[]);
-  if(bytes.byteLength>BACKUP_MAX_BYTES)throw new RuleError('CRM-kopian lämnar inte plats för återställningens data och historik inom 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.');
   await assertRestoreDatabaseEncoding();assertRestoreStorageBudget(p.space,persisted,next,[],p.requestId,{result,userId:user.user_id!,hash});
  }
  if(!await commit(p.space,persisted,next,p.requestId,draft,{result,userId:user.user_id!,hash,actorAuthorization:{memberId:user.id,userId:user.user_id!,role:user.role,owner:user.owner},sellerProfileAuthorization,productionAssignmentAuthorization,customerAnchorAuthorization,commercialAnchorAuthorization,orderAnchorRecord,taskAnchorRecord})){user=await member(req,true);authorizeAction(user.role,p.type);if(p.type==='year_need'&&sellerProfileAuthorization)await profileAuthorization(req,current,p.type,actionData);if(safe)continue;return await checkedStateReply(req,user,projectState(await load(p.space),p.space),state=>({error:'Underlaget har ändrats. Dina uppgifter finns kvar.',state}),409);}

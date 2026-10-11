@@ -1,3 +1,13 @@
+# CRM113: vanliga CRM-ändringar bevarar dataexportens bytebudget
+
+B04: vanliga CRM-mutationers slutliga UTF-8-dataheadergrind är implementerad och riktat Node/native-verifierad i kandidat; frysta slutkontroller och leverans återstår.
+
+Nästa oberoende prioritet: granska vanliga mutationers kompatibilitet med backupens schema-/historikgränser och filmetadatabudget, med serverroller, positiva privata sentineler, atomisk commit/CAS/idempotens och återställningsväg bevarade. Personliga kontoprov, verkligt införande, hostingkapacitet och externa integrationer är fortfarande separata obekräftade frågor; införandeagenten ansvarar för Sebbes dialog.
+
+Vid denna källfrysning är riktade prov och eget preliminärt bygge gröna; fem obligatoriska kontroller på slutlig head, aktuell CI, merge, eget SOURCE-bygge/paket och samma Sites publicering återstår. Kandidat, GitHub-main, Sites-källa och live redovisas separat i PR/task efter faktiska kvitton. Den refererade Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget Codex read_thread-verktyg finns; explicit brief och färsk repo används.
+
+---
+
 # CRM112: äldre dataåterställning lämnar plats för återexport
 
 B04: CRM111:s slutliga historikantal är levererat på main/live v108. CRM112:s färdiga UTF-8-dataheadergrind för äldre dataåterställning är implementerad och riktat Node- och native-verifierad i kandidat; frysta slutkontroller återstår.
