@@ -3,7 +3,7 @@ import {database,bucket} from './crm-db';
 import {load,requestHash} from './crm-store';
 import {restoreState} from './crm-restore';
 import {emptyState,type Actor,type State} from './crm';
-import {BACKUP_MAX_BYTES,BackupFileDescriptor,backupNeed as need,checksum,encodeBackupFile,decodeBackupFile,validateBackupFiles,backupMutation,backupRestoreTarget,remapBackupFiles,cleanupBackupFiles,finishBackupRestore,readBackupFile,trustedBackupExport,type BackupExportAuthorization} from './crm-backup';
+import {BACKUP_MAX_BYTES,BackupFileDescriptor,backupNeed as need,checksum,encodeBackupFile,decodeBackupFile,validateBackupFiles,backupMutation,backupRestoreTarget,prepareBackupRestore,remapBackupFiles,cleanupBackupFiles,finishBackupRestore,readBackupFile,trustedBackupExport,type BackupExportAuthorization} from './crm-backup';
 
 export const BACKUP_STREAM_FORMAT='magnussons-crm-backup-2';
 const FILE_RECORD_BYTES=6700000;
@@ -85,7 +85,7 @@ export async function importBackupStream(space:string,body:ReadableStream<Uint8A
    const first=await iterator.next();need(!first.done,'Kopian saknas.');const header=Header.parse(first.value!.value);
    const validated=restoreState(emptyState(),{format:'magnussons-crm-1',state:header.state},true);validateBackupFiles(validated,header.files,Infinity);
    const current=previous?undefined:await backupRestoreTarget(space,version);
-   const next=current?restoreState(current,{format:'magnussons-crm-1',state:header.state},true):validated;
+   const next=current?prepareBackupRestore(current,restoreState(current,{format:'magnussons-crm-1',state:header.state},true),header.exportedAt,actor):validated;
    const stored=previous?[]:remapBackupFiles(space,next,header.files);
    let digest=await checksum(first.value!.bytes),bytes=0;
    for(let i=0;i<header.files.length;i++){
@@ -100,7 +100,7 @@ export async function importBackupStream(space:string,body:ReadableStream<Uint8A
    need((await iterator.next()).done,'CRM-kopian innehåller uppgifter efter slutposten.');
    const hash=await requestHash('backup_restore_stream',{sha256:digest});
    if(previous){need(previous.user_id===actor.id&&previous.request_hash===hash,'Begäran används redan för en annan återställning.');return await load(space);}
-   finalizing=true;return await finishBackupRestore(space,current!,next,stored,staged,requestId,hash,header.exportedAt,actor);
+   finalizing=true;return await finishBackupRestore(space,current!,next,stored,staged,requestId,hash,actor);
   }finally{await iterator.return?.();}
  }finally{if(!finalizing)await cleanupBackupFiles(staged);}
 }

@@ -1,3 +1,17 @@
+# CRM106: återställning stoppar för stor tillagd historik
+
+Färsk GitHub-main 840194740c8c66aecab65a12bc699e88b59e069a och faktiskt publicerad v102-källa 95b778a71777a045a2f7299a662070b9e0d342e4 öppnades före ändringen. Alla 414 filers bytes och Git-lägen matchade, träd 90fc46aced430c70f36b4d23d5276ffd2c6d5017. CRM105/PR #173 är levererad. Egen branch/reservation används; inga öppna PR:er eller främmande publicering sågs vid öppningen. Samma Site och begränsade custom-delning revision 2, miljörevision 1 och noll Sites-automations behålls.
+
+CRM-kopia med kundfiler validerar nu det färdiga återställningsresultatet innan filer börjar skrivas. För stor datering eller otillräckligt utrymme för en historikpost per kund ger ett tydligt fel; originalhistorik tas aldrig bort för att få plats. Båda befintliga formaten och redan genomförda återförsök behålls.
+
+Riktade kandidatprov passerade: verkliga JSON-/NDJSON-handlers med migrerad minnes-SQLite, angränsande datumtextgränser inklusive Unicode, giltiga serverkopior med 50 000+1 respektive 49 999+2 historik-/kundantal som avvisas före första filskrivning och commit. 49 998 ursprungliga poster plus två återställningsposter passerar, med varje originalpost bevarad och giltig återexport i båda formaten. Förlorat commitsvar, exakt replay och äldre registrerade datum-/kapacitetskvitton täcks. Ett separat byggt Worker-prov med faktisk lyssnande HTTP, lokal D1/R2 och 28 anrop passerade: samma stopp utan staging/commit, verkliga filreferenser/bytes, återexport, medlemsfrikoppling och förlorat transaktionssvar. Alla 18 råtabeller samt positiva privata utkast, Outlook-, medlems- och R2-sentineler kontrolleras. Detta är isolerade syntetiska prov, inte verkliga konton, personalacceptans eller hostingåterställning.
+
+Rättningen skyddar genererad historiks text-/antalgränser och fulla befintliga schema. Den reparerar inte redan ogiltiga historiska återställningar och garanterar inte alla separata byte-/runtimegränser. Nästa B04-del är 16 MB-headerns utrymme efter genererad historik/filomappning samt en säker verklig hostingåterställningsväg. D1:s dokumenterade budgetar kräver separat verifiering; ett lokalt 50 000-postersprov bevisar inte sådan hosted kapacitet. Separat backup för kontobindningar, Outlook och privata utkast samt verkliga konto-/personalprov återstår.
+
+Slutlig obligatorisk regression, TypeScript, bygge, isolerad runtime, diffkontroll, exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Källkod, GitHub-main och live redovisas separat i PR/leveranskvittensen efter faktisk körning. Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # Kundväljaren följer faktiskt kundansvar – CRM105
 
 Vid kopplad säljarprofil B och aktuellt kontoalias A kunde kundväljaren märka registrerade A-kunder som ”Din kund” och placera dem före egna B-kunder. Kundväljaren använder nu samma etablerade medlems-/profilurval som Kundvård för personlig prioritering och märkning. Äldre kunder utan profilansvar följer ett giltigt aktuellt alias. Alla server-tillgängliga kunder kan fortfarande sökas; fyra sökfält, 30-radersgräns och val av kundkort/aktivitet bevaras.

@@ -1,3 +1,15 @@
+# B04: slutvalidering av återställningshistorik – CRM106
+
+Avgränsad del rättad i kandidat och riktade prov: genererad historik valideras tillsammans med hela slutstate före filomappning/staging/commit. Färsk oförändrad main reproducerade båda felen: datumtext gav 50 054 tecken, respektive giltig 50 000-posterskopia återställdes till 50 001 poster; båda gav senare export 400. Ingen originalhistorik kapas.
+
+Riktade kandidatprov passerade: verkliga JSON-/NDJSON-handlers med migrerad minnes-SQLite, angränsande datumtextgränser inklusive Unicode, giltiga serverkopior med 50 000+1 respektive 49 999+2 historik-/kundantal som avvisas före första filskrivning och commit. 49 998 ursprungliga poster plus två återställningsposter passerar, med varje originalpost bevarad och giltig återexport i båda formaten. Förlorat commitsvar, exakt replay och äldre registrerade datum-/kapacitetskvitton täcks. Ett separat byggt Worker-prov med faktisk lyssnande HTTP, lokal D1/R2 och 28 anrop passerade: samma stopp utan staging/commit, verkliga filreferenser/bytes, återexport, medlemsfrikoppling och förlorat transaktionssvar. Alla 18 råtabeller samt positiva privata utkast, Outlook-, medlems- och R2-sentineler kontrolleras. Detta är isolerade syntetiska prov, inte verkliga konton, personalacceptans eller hostingåterställning.
+
+Rättningen skyddar genererad historiks text-/antalgränser och fulla befintliga schema. Den reparerar inte redan ogiltiga historiska återställningar och garanterar inte alla separata byte-/runtimegränser. Nästa B04-del är 16 MB-headerns utrymme efter genererad historik/filomappning samt en säker verklig hostingåterställningsväg. D1:s dokumenterade budgetar kräver separat verifiering; ett lokalt 50 000-postersprov bevisar inte sådan hosted kapacitet. Separat backup för kontobindningar, Outlook och privata utkast samt verkliga konto-/personalprov återstår. B01 är fortsatt delvis löst; stabilt kommersiellt ansvar och operativa roller/personliga arbetsvyer fortsätter enligt faktisk evidens. B06/B07 kräver verkliga konton och observerat arbete.
+
+Slutlig obligatorisk regression, TypeScript, bygge, isolerad runtime, diffkontroll, exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår vid denna dokumentfrysning. Källkod, GitHub-main och live redovisas separat i PR/leveranskvittensen efter faktisk körning. Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # B01: korrekt personligt fokus i global kundväljare – CRM105
 
 Verifierad lucka: kopplad profil B/alias A gav lika eget antal men fel registrerade A-kunder; vid 31 träffar gömdes egen B-kund bakom 30 A-kunder. Kandidaten återanvänder canonical customerScope för prioritet/”Din kund”, behåller alla server-tillgängliga kunder och förklarar saknad/motstridig koppling. Ny faktisk regression 39 och befintlig 49 PASS; slutkontroller/exakt-head CI/merge/publicering återstår vid frysningen. Full B01-personalöverlämning och operativa urval är fortsatt öppna.
