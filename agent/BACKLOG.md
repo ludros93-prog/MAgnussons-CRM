@@ -1,3 +1,17 @@
+# Backlog – CRM99 avgränsat steg i B01
+
+**B01, personliga aktuella orderhinder:** kod och riktade prov färdiga; slutliga checks/CI/merge/deploy återstår vid dokumentationsfrysning. Mitt resultats orderhinder följer samma personliga ansvarsurval som **Mina order**: exakt medlemskopplat profil-ID för registrerade order och kontots giltiga aktuella alias för äldre order utan profil-ID. Historiskt profilalias ska inte ersätta det aktuella kontots alias. Saknad eller motstridig koppling får märkningen **synligt urval**; noll synliga hinder kan då vara en ofullständig lista. Detta ändrar inte serverbehörighet, kund-/affärsansvar eller fakturahistorik.
+
+Riktat nytt prov: **51 PASS** (50 accepterade normaliserade fall, 1 faktiskt avvisad motsägande profil-/aliaskoppling), **23** hela React-/parentfall, **115** kompletta jämförelser av de 26 övriga resultatfälten, **72** fulla profil-/teamjämförelser och **39** exakta jämförelser med verklig `orderScope`/`orderInScope`. **37** produktionsmodulers källbyte kontrolleras och inga HTTP-anrop sker. Kvitto `result-order-targeted.json` SHA-256 `542eb30b5ef6fd8b90c5bdef8679fc3bd0d2c3b188cbd2b7e189e8c05994ea5b` binder källor/test och faktiskt utfall. Även de ändrade befintliga Resultat-/aktivitetsproven kördes separat med exit 0; kvitto `existing-targeted.json` SHA-256 `d2ca81c88784fc6a07700a97030279a39826d775cb38be2e987f072369f7184e`. Dessa riktade prov ersätter inte kandidatens fem obligatoriska slutkontroller eller isolerad native webbläsare.
+
+B01 är inte generellt avslutad: personliga kund-/mötesurval och den större operativa ID-migreringen behöver egna avgränsade beslut/prov. Konto-/profilunderlag och faktisk personalinloggning (B02), hosted backup/restore (B04), privata utkast (B05) och verklig vardagsuppföljning (B07) kräver fortsatt sitt dokumenterade underlag. Integrationer ska inte markeras fungerande utan riktiga konton.
+
+Föregående leverans CRM98 är verifierad: PR #166, GitHub-main `b638c72593724fbbb842e9820b5c49ff85f570f7`, Sites-source `fe4f55209acb9703ecff8dc59ef6eade345cd9ac`, live **v95**. De 405 då spårade filerna har samma tree `9d3d061cd58ce9fefc8aee2af4a31b64a1cb332a` och byte. CRM99 är en separat kandidat; slutliga checks, CI, merge och publicering redovisas i dess PR och task efter faktisk verifiering.
+
+---
+
+Historik fore CRM99: tidigare dokumentation bevarad byteoforandrad nedan.
+
 # Arbetskö – crm98 personlig Resultat-pipeline, kandidat
 
 Femte kandidaten `5e996b60bacf2faa04e85d4a1b82e1651e201a85` klarade alla fem slutkommandon (kvitto SHA-256 `18580632598862ed704638866555edc7b91929b8e443ff336a7fb0b14ed27cf3`) och [exakt-head CI 38099348916](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38099348916). Den isolerade appbrowsern klarade faktiskt samtliga 11 fall, tre bredder/sex normal- och dubbeltextlägen, native Offerter-jämförelse, klippningskontroller, 18 syntetiska D1-tabeller/två R2-objekts bevarande/återställning och cleanup utan skrivningar/externanrop (execution SHA-256 `2d1edff7ca9213c4ca5975cc90f8960fd294b45ec09e1b490a082a60115f1436`). Rootbildgranskningen upptäckte därefter överlappande X-axeltext i dubbeltextläget trots dessa PASS; textseparation hade inte ingått. Faktiska överlapp mättes i alla tre bredder (rootkvitto SHA-256 `051b419cb5e597ae16626f8d958af855de84bb8d48b086ae980efd1deda2402a`). Ingen merge/source/save/deploy skedde.

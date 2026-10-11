@@ -93,3 +93,4 @@ await (await import('./deal-scope.mjs')).verifyDealScope();
 await (await import('./order-scope.mjs')).verifyOrderScope();
 await (await import('./yearwheel-scope.mjs')).verifyYearwheelScope();
 await (await import('./result-deal-scope.mjs')).verifyResultDealScope();
+await (await import('./result-order-scope.mjs')).verifyResultOrderScope();

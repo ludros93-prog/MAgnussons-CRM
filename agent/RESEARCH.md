@@ -1,3 +1,21 @@
+# Principer – crm99 personliga orderhinder i Mitt resultat
+
+Tre officiella artikelbodies med faktisk HTTP 200 lästes och hashades den 11 oktober 2026 omkring **01:25:49 UTC**. Privat kvitto `/workspace/.crm99-evidence/research-new.json`, SHA-256 `9b4c295a7fdc7cd93f0c204b65768ea4e9cd232f2e6ab305c4fa0e00491af805`, binder URL, status, hämtningstid, rå body-/texthash och sex korta ordagranna utdrag till sparad text. Utdragen återkontrollerades efter att kvittot skrivits; sammanlagt 30 citerade ord från Salesforce och 54 från Lime.
+
+- [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) beskriver poståtkomst till poster användaren inte äger. Synlighet bevisar därför inte personligt ansvar. [Path/Kanban](https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience/visualize-success-with-path-and-kanban) beskriver diagram som sammanfattar data i den valda listvyn. Det stödjer listans sammanhang; det föreskriver inte Magnussons order- eller resultatregler.
+- [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer loginanvändare från kopplad coworker, beskriver personliga affärsurvalsproblem när kopplingen saknas och skiljer stabilt Object ID från änderliga user-/visningsnamn. Limes first-match-beteende och databasspecifika ID-regler införs inte i Magnussons.
+- Den tidigare verifierade [Saleshub AI-principen](https://saleshubai.se/funktioner) om kundsammanhang och nästa aktivitet behålls från den daterade crm95-historiken: faktisk hämtning **10 oktober 2026 17:25 UTC**, kvitto SHA-256 `3caebeec54706906404d83f2114a5faddfd50fcf4967bc77da2cf2910ee890ab`. Ingen färsk Saleshub-bodyhämtning påstås i crm99.
+
+Magnussons befintliga orderkontrakt skiljer exakt medlemskopplad säljarprofil från det aktuella giltiga kundansvarsnamnet i kontot. Registrerat orderansvar följer profil-ID; äldre order utan profil-ID följer kontots giltiga aktuella alias. Detta urval gäller inom redan serverbehörig State. Historiskt profilalias, namnlikhet eller runtime-user-ID ersätter inte den exakta medlemskopplingen. Saknad eller motstridig koppling kan ge ett ofullständigt synligt urval; noll synliga hinder är då inget bevis för att allt eget arbete är klart.
+
+Avgränsad tillämpning i crm99 är att **personliga aktuella orderhinder i Mitt resultat** använder samma etablerade ansvarsurval som Mina order. Vilka order-ID:n som ingår behöver kontrolleras, inte bara att antalet är lika. Historiskt faktura-/kvalificeringsansvar, mål, marginalunderlag och uttrycklig profil-/teamrapportering behålls separat. Detta är Magnussons repo-/produktkontrakt, ingen föreskriven leverantörsregel och ingen ny affärsdefinition eller behörighet.
+
+Officiell dokumentation styrker ingen faktisk Magnussons-inloggning, konto-/profilkoppling, sparad verklig uppföljning, fungerande integration eller personal-/kundacceptans. Kandidatens tekniska tester och publiceringskedja kräver separata belägg. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; explicit brief och repo används.
+
+---
+
+Historik fore CRM99: tidigare dokumentation bevarad byteoforandrad nedan.
+
 # Principer – crm98 personligt offertvärde i Mitt resultat
 
 Etikettavståndet kontrollerades mot fyra färska officiella bodies med HTTP200 den 11 oktober 2026 00:57:42 UTC. [XAxis API](https://recharts.github.io/en-US/api/XAxis/) beskriver minTickGap: ”The minimum gap between two adjacent tick labels”. [v3.8.0 getTicks](https://github.com/recharts/recharts/blob/v3.8.0/src/cartesian/getTicks.ts) använder uppmätt halvbredd plus minTickGap för nästa synliga etikett. [v3.8.0 CartesianAxis](https://github.com/recharts/recharts/blob/v3.8.0/src/cartesian/CartesianAxis.tsx) uppdaterar sin mätande ref med fontSize/letterSpacing-beroenden; kvarstående state-mått kan därför skilja sig från senare CSS-förstoring. Numeriskt 40 stöds, men är vårt val för faktisk layout. Kvitto SHA-256 `cd11de2b63f4d313c0714bd4206c9a022edaa111f4f74b37148c1bd8045a36e9` innehåller fem exakt kontrollerade citat. Verklig glyfseparation måste fortsatt provas i slutbrowsern.
