@@ -1,3 +1,15 @@
+# Magnussons CRM – CRM99: samma personliga orderurval
+
+Mitt resultats orderhinder följer samma personliga ansvarsurval som **Mina order**: exakt medlemskopplat profil-ID för registrerade order och kontots giltiga aktuella alias för äldre order utan profil-ID. Historiskt profilalias ska inte ersätta det aktuella kontots alias. Saknad eller motstridig koppling får märkningen **synligt urval**; noll synliga hinder kan då vara en ofullständig lista. Detta ändrar inte serverbehörighet, kund-/affärsansvar eller fakturahistorik.
+
+Föregående leverans CRM98 är verifierad: PR #166, GitHub-main `b638c72593724fbbb842e9820b5c49ff85f570f7`, Sites-source `fe4f55209acb9703ecff8dc59ef6eade345cd9ac`, live **v95**. De 405 då spårade filerna har samma tree `9d3d061cd58ce9fefc8aee2af4a31b64a1cb332a` och byte. CRM99 är en separat kandidat; slutliga checks, CI, merge och publicering redovisas i dess PR och task efter faktisk verifiering.
+
+Försäljning mot månads-/årsmål, marginal och nya prospects behåller sina befintliga definitioner. Registrerat fakturaansvar, mål, årsserier och teamrapportering påverkas inte. Se aktuell validering nedan och CRM99:s PR för slutlig publiceringsstatus.
+
+---
+
+Historik fore CRM99: tidigare dokumentation bevarad byteoforandrad nedan.
+
 # Magnussons CRM – crm98 rätt affärsurval i Mitt resultat
 
 Femte kandidaten `5e996b60bacf2faa04e85d4a1b82e1651e201a85` klarade alla fem slutkommandon (kvitto SHA-256 `18580632598862ed704638866555edc7b91929b8e443ff336a7fb0b14ed27cf3`) och [exakt-head CI 38099348916](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38099348916). Den isolerade appbrowsern klarade faktiskt samtliga 11 fall, tre bredder/sex normal- och dubbeltextlägen, native Offerter-jämförelse, klippningskontroller, 18 syntetiska D1-tabeller/två R2-objekts bevarande/återställning och cleanup utan skrivningar/externanrop (execution SHA-256 `2d1edff7ca9213c4ca5975cc90f8960fd294b45ec09e1b490a082a60115f1436`). Rootbildgranskningen upptäckte därefter överlappande X-axeltext i dubbeltextläget trots dessa PASS; textseparation hade inte ingått. Faktiska överlapp mättes i alla tre bredder (rootkvitto SHA-256 `051b419cb5e597ae16626f8d958af855de84bb8d48b086ae980efd1deda2402a`). Ingen merge/source/save/deploy skedde.

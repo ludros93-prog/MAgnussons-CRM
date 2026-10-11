@@ -202,10 +202,13 @@ export const SalesTrend=()=>null;
      const current=dashboard.salesMetrics(st,reportMonth,scope,activityMode);
      if(activityMode==='profile')assert.deepEqual(omit(current,'tasks'),omit(old,'tasks'),'All explicit-profile/team non-task keys retain baseline');
      else{
-      assert.deepEqual(omit(current,'tasks','open','pipeline','unpriced'),omit(old,'tasks','open','pipeline','unpriced'),'Every remaining personal non-task key retains baseline');
+      assert.deepEqual(omit(current,'tasks','open','pipeline','unpriced','orders'),omit(old,'tasks','open','pipeline','unpriced','orders'),'Every remaining personal non-task key retains baseline');
       // These fixture deals ALL have blank profile IDs. Their known IDs/values
       // make current-alias expectation independent of the production selector.
       const validPersonal=scope===dashboard.personalResultScope(st),alias=validPersonal&&st.settings.owners.includes(st.viewer.owner)?st.viewer.owner:'';
+      // These order fixtures also all have blank profile IDs. Assert the exact
+      // current-alias order IDs separately from immutable invoice attribution.
+      assert.deepEqual(current.orders.map(order=>order.id),alias?st.orders.filter(order=>order.owner===alias).map(order=>order.id):[]);
       const expectedIds=alias===nameA?['synthetic-open','synthetic-unpriced']:alias===nameB?['synthetic-other']:[];
       assert.deepEqual(current.open.map(deal=>deal.id),expectedIds);
       assert.equal(current.pipeline,alias===nameA?500:alias===nameB?900:0);

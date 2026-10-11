@@ -1,3 +1,19 @@
+# Drift – CRM99 releaseförberedelse
+
+Föregående leverans CRM98 är verifierad: PR #166, GitHub-main `b638c72593724fbbb842e9820b5c49ff85f570f7`, Sites-source `fe4f55209acb9703ecff8dc59ef6eade345cd9ac`, live **v95**. De 405 då spårade filerna har samma tree `9d3d061cd58ce9fefc8aee2af4a31b64a1cb332a` och byte. CRM99 är en separat kandidat; slutliga checks, CI, merge och publicering redovisas i dess PR och task efter faktisk verifiering.
+
+Egen branch `feat/crm99-result-order-owner`, separat app-/sourcecheckout och ägarbunden byggreservation används. Färsk native metadata visade v95 och samma begränsade audience/policy; ingen annan öppen PR eller pågående publicering observerades vid öppningen. Source öppnades som egen detached clone och autentiserad fjärrläsning verifierade exakt source-main; ingen fjärrskrivning gjordes där. Ordinary credential används utan accepterat publish-on-push. Hemligheter stannar i minne/hidden PTY och sparas inte i kvitton.
+
+Lokal dependency reuse är faktiska hardlinks från föregående verifierade checkout efter exakt jämförelse av `package.json`, `pnpm-lock.yaml`, `.npmrc` och packagefiler. Ingen installation kördes för detta och inga paket tillkommer; CI gör fortsatt locked install.
+
+Produktdiffen är bara två läsande resultatfiler. Backend, API, serverroller, schemas, D1/R2, migrationer, atomiska skrivningar, CAS, idempotens, privat kommunikation och lagring är byteoförändrade mot v95. Ingen datamigration behövs. Den tidigare verifierade v95-versionen är rollbackkandidat vid en UI-regression; faktisk live rollback utförs inte som prov och hosted datarestore är kvar som separat drifthinder. Före publicering läses den aktuella Site-policyn/source/basen igen; dela inte bredare och ändra inga runtimevariabler/tunnelbindings.
+
+Slutkandidatens faktiskt körda checks, native browser, sourcepush, arkiv, opaque saved version, deploy och policyreadback blir privata bytebundna kvitton samt slutlig PR/task. Här står inga påstådda framtida resultat.
+
+---
+
+Historik fore CRM99: tidigare dokumentation bevarad byteoforandrad nedan.
+
 # Drift – crm97 avslutad live v94; crm98 Resultat-kandidat
 
 Femte kandidaten `5e996b60bacf2faa04e85d4a1b82e1651e201a85` klarade alla fem slutkommandon (kvitto SHA-256 `18580632598862ed704638866555edc7b91929b8e443ff336a7fb0b14ed27cf3`) och [exakt-head CI 38099348916](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38099348916). Den isolerade appbrowsern klarade faktiskt samtliga 11 fall, tre bredder/sex normal- och dubbeltextlägen, native Offerter-jämförelse, klippningskontroller, 18 syntetiska D1-tabeller/två R2-objekts bevarande/återställning och cleanup utan skrivningar/externanrop (execution SHA-256 `2d1edff7ca9213c4ca5975cc90f8960fd294b45ec09e1b490a082a60115f1436`). Rootbildgranskningen upptäckte därefter överlappande X-axeltext i dubbeltextläget trots dessa PASS; textseparation hade inte ingått. Faktiska överlapp mättes i alla tre bredder (rootkvitto SHA-256 `051b419cb5e597ae16626f8d958af855de84bb8d48b086ae980efd1deda2402a`). Ingen merge/source/save/deploy skedde.
