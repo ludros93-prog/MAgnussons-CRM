@@ -62,6 +62,9 @@ await import('./crm-poll.mjs');
 // Actual MyDay profile diagnostics must not change selection, rights or data.
 await (await import('./my-day-profile-link.mjs')).verifyMyDayProfileLink();
 
+// Actual normalized personal customer contact scope, historical comparison and callbacks.
+await (await import('./my-day-customer-scope.mjs')).verifyMyDayCustomerScope();
+
 // Account identity assessment stays separate from login proof and owner writes.
 await (await import('./account-identity-details.mjs')).verifyAccountIdentityDetails();
 

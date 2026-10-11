@@ -1,3 +1,19 @@
+# CRM103 – drift- och kompatibilitetsgräns
+
+Sites-källan öppnades faktiskt före produktändringen i en separat egen SOURCE. Alla 411 committed bytes och Git-lägen motsvarade färsk main; ursprunglig fysisk SOURCE bevarades. Ordinarie kortlivad credential hanterades i dolt stdin utan persistens eller publish-on-push. En avgränsad hjälparsökning hittade ingen officiell Sites-workflowhelper; vanlig verifierad Git-/arkivväg används med `helper_run=false`, inte ett påstått helperprov. Samma befintliga Site och begränsade custom-delning revision 2, runtime revision 1 och noll automations bevaras.
+
+Ändringen gäller endast `components/my-day.tsx` samt tre regressionstestfiler och åtta dokument. Inga lib-/backend-/API-/schema-/migrerings-/package-/hosting-/CSS-ändringar. Oförändrad lagring och samma backend som v99 ska beläggas med faktisk byte-/Git-lägejämförelse för slutkandidaten. Sparad v99 är ett kompatibelt UI-återgångsmål när jämförelsen passerar; inget hostat återställningsprov eller live-rollback är utfört.
+
+CRM102 är avslutad: [PR #170](https://github.com/ludros93-prog/MAgnussons-CRM/pull/170), kod `8526084077667547a94943306d907463d49a679b`, GitHub-main `b20e018cb4aff3315f40408d73902f331dcbda43`, Sites-källa `bcd2fb7e87c798a93d2d1b2a41f49ba31f47002e`, **live v99**, lyckad terminal deploy `appgdep_6acb2cbcfa8881919499e4da480af1cc`. Färsk Site-/main-läsning och tidigare slutkvitto SHA-256 `38c0f7d42f29b829aab0f7302477c19e983301ee206cc1583a5c441fbd9d9d25` belägger detta. Äldre väntande kandidat- och stopptexter nedan är bevarad historik.
+
+Inga skrivtester görs på riktiga kunder/order. Isolerad runtime/browser använder egna syntetiska D1-/R2-stores och återställnings-/städbevis. Konto-/profilåtgärder och verkligt personalprov kräver faktiska personers underlag; gröna mock-/CI-prov ersätter dem inte. Codex-referensen `01a104c7-a5c5-7350-8577-a4f941138061` är oläst eftersom tillgänglig read_thread gäller Slack, inte Codex. Uppdraget bygger på uttrycklig brief och färsk main.
+
+CRM103 är vid denna dokumentationsfrysning en separat kandidat. Slutkandidatens fem obligatoriska kommandon, exakta head-CI, native APP-/SOURCE-browser, aktuell mergebas och faktisk merge/save/deploy redovisas efter utförd verifiering i leverans-PR och task. Ingen framtida leverans, personlig inloggning, verklig sparning, integration, personalacceptans eller hostad återställning påstås.
+
+---
+
+Historik före CRM103 bevarad byteoförändrad nedan.
+
 **CRM102 – andra browserstoppet före leverans**
 
 Den korrigerade kandidaten `37ae97cdeb78af6c040f5acde7611deab8979344` klarade återigen alla fem slutkommandon (kvitto SHA-256 `2afccc9ff25ddc6e831de8c38275a4e71d4908423f0fd28574fabfcc94563035`) och [exakt-head CI 38116332540](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38116332540). Desktopfallet vid 1290 px och dubbel text passerade; ansvarsetiketten var då läsbar. Nästa faktiska browserfall vid 390 px och dubbel text stoppade på horisontellt överflöde: dokumentbredd 592 px. Rågeometri visar sidrubrikens block till x592,4 samt knappen Skapa affär från sparat behov till x475,1 i en 390 px viewport. Ingen merge eller publicering skedde; samtliga tidigare kvitton/loggar/bilder bevaras.

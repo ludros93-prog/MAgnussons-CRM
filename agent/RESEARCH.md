@@ -1,3 +1,20 @@
+**CRM103 – officiella principer för personligt kundfokus i Min dag**
+
+Tre färska substantiella officiella artiklar hämtades den 11 oktober 2026 med HTTP 200. Sju korta ordagranna utdrag är återkontrollerade mot sparade råbodies, UTF-8-texter, SHA-256 och byteoffset. Privat researchkvitto SHA-256 `f6a79daf5075a71e0bc36db9622f4a61c8ad607ffa2b7cd1c918abfee8b18bc1`; tidigare CRM102-research och samtliga tio tidigare citat är också återkontrollerade utan ändring.
+
+Salesforce [Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från ägarskap. Lime [Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer loginanvändare från kopplad coworker och beskriver problem med personligt affärsurval när kopplingen saknas. Änderliga user-/visningsnamn skiljs från stabila **user-/group** Object ID:n; detta belägger inte alla coworkerreferenser eller Magnussons profilschema. Saleshub [Funktioner](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet, som offentligt marknadsunderlag.
+
+Magnussons avgränsade produktval är att Min dags kundkontaktlista och dess kundbaserade fokus följer samma etablerade aktuella kundurval som Mina kunder, inom redan serverbehörig State. Exakt medlemskopplad profil-ID för registrerat kundansvar och giltigt aktuellt kontoalias för äldre kunder är repokontrakt, inte införda leverantörsregler. Saknad eller motstridig koppling innebär ett synligt, möjligen ofullständigt urval; noll rader bevisar inte att personens kundarbete är klart. Uppgifts-, order-, mötes-, signal- och resultatkontrakt ska beläggas separat och ändras inte genom research. Ingen faktisk inloggning, sparad verklig uppföljning, integration, personalacceptans eller hostad återställning påstås.
+
+
+CRM102 är avslutad: [PR #170](https://github.com/ludros93-prog/MAgnussons-CRM/pull/170), kod `8526084077667547a94943306d907463d49a679b`, GitHub-main `b20e018cb4aff3315f40408d73902f331dcbda43`, Sites-källa `bcd2fb7e87c798a93d2d1b2a41f49ba31f47002e`, **live v99**, lyckad terminal deploy `appgdep_6acb2cbcfa8881919499e4da480af1cc`. Färsk Site-/main-läsning och tidigare slutkvitto SHA-256 `38c0f7d42f29b829aab0f7302477c19e983301ee206cc1583a5c441fbd9d9d25` belägger detta. Äldre väntande kandidat- och stopptexter nedan är bevarad historik.
+
+CRM103 är vid denna dokumentationsfrysning en separat kandidat. Slutkandidatens fem obligatoriska kommandon, exakta head-CI, native APP-/SOURCE-browser, aktuell mergebas och faktisk merge/save/deploy redovisas efter utförd verifiering i leverans-PR och task. Ingen framtida leverans, personlig inloggning, verklig sparning, integration, personalacceptans eller hostad återställning påstås.
+
+---
+
+Historik före CRM103 bevarad byteoförändrad nedan.
+
 **CRM102 – andra browserstoppet före leverans**
 
 Den korrigerade kandidaten `37ae97cdeb78af6c040f5acde7611deab8979344` klarade återigen alla fem slutkommandon (kvitto SHA-256 `2afccc9ff25ddc6e831de8c38275a4e71d4908423f0fd28574fabfcc94563035`) och [exakt-head CI 38116332540](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38116332540). Desktopfallet vid 1290 px och dubbel text passerade; ansvarsetiketten var då läsbar. Nästa faktiska browserfall vid 390 px och dubbel text stoppade på horisontellt överflöde: dokumentbredd 592 px. Rågeometri visar sidrubrikens block till x592,4 samt knappen Skapa affär från sparat behov till x475,1 i en 390 px viewport. Ingen merge eller publicering skedde; samtliga tidigare kvitton/loggar/bilder bevaras.

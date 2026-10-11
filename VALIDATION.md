@@ -1,3 +1,31 @@
+**CRM103 – riktade prov och oberoende källgranskning**
+
+121 riktade fall PASS: 31 nya kundurvalsfall, 58 berörda orderfall och 32 byteoförändrade MyDay-profilfall. 5 184 hela metricfält, 312 historiska metric-/profil-/team-/årsjämförelser och åtta hela icke-kundsektioner inklusive faktiska callbacks jämfördes mot verklig oförändrad main. 48 produktmoduler byteverifierade, noll HTTP. Privat riktat kvitto SHA-256 `896171845e9295e833cb1bc6f1796b3321ffdfb8591dd161328729aaea34042d`. Hela äldre ordersviten ändrades endast i ett kundurvalsfall; äldre Outlook-anrop behölls med ett nytt obligatoriskt testanrop. Misslyckade adapter-/basprov bevaras.
+
+Separat faktisk källgranskning kontrollerade 400 skyddade tracked-filer, 57 oförändrade MyDay-initializers, bevarad fokusordning/åtgärder, taskRows, offentliga props och hela övriga return-trädet utanför tillåtna diagnostiktexter. Inga produkt-/säkerhetsfynd; privat granskningskvitto SHA-256 `d9d9ecb78db11bae677c46283168e55c448955b000fca3356346f2f46faf8dfd`. Detta är riktade/static bevis före slutkandidatens fem kommandon, CI, browser och publicering, inga person-/integrationsprov.
+
+---
+
+# CRM103 – faktiskt basprov och planerad slutgrind
+
+Ett faktiskt läsande basprov på main gav **19 fall, 43 kompilerade produktmoduler och 411 oförändrade tracked-filer**, noll HTTP och frysta syntetiska indata. Lika antal dolde fel kund-ID:n och fel fokus: kopplad profil B/aktuellt alias A gav registrerad A + äldre A där det etablerade kundurvalet kräver registrerad B + äldre A. Saknat eller borttaget alias dolde kopplad B helt. Separata uppgifts-/hinderansvar och positiv registrerad faktura-/kvalificeringshistorik kontrollerades. Baskvitto SHA-256 `147922403c050a2c3a0c940e5233cf29c28155eb4fe85ba1b9e074b9aa5f6fea`; fyra privata adapterstopp bevaras och räknas inte som produktfel eller godkända prov.
+
+Sites-källan öppnades faktiskt före produktändringen i en separat egen SOURCE. Alla 411 committed bytes och Git-lägen motsvarade färsk main; ursprunglig fysisk SOURCE bevarades. Ordinarie kortlivad credential hanterades i dolt stdin utan persistens eller publish-on-push. En avgränsad hjälparsökning hittade ingen officiell Sites-workflowhelper; vanlig verifierad Git-/arkivväg används med `helper_run=false`, inte ett påstått helperprov. Samma befintliga Site och begränsade custom-delning revision 2, runtime revision 1 och noll automations bevaras.
+
+Nya relevanta regressioner ska kontrollera exakta kund-ID:n, kund-/fokuscallbacks, medlemskoppling, saknat/borttaget/paddat alias, inaktiv profil, oinitierade profiler, team/läsare/otillåtet personurval, kontaktdefinitioner och Visa alla till Kundvård. Uppgifts-, mötes-, order-, signal-, utkast- och historiska metricutfall jämförs separat mot oförändrad main; kundfiltret får inte styra dessa kontrakt.
+
+Obligatoriska slutkommandon är node tests/outlook.mjs, TypeScript utan incremental, produktionsbygge, tests/runtime-smoke.mjs och git diff --check på exakt ren slutrevision. Befintliga syntetiska regressionsfall för 40→45, 50→48 med registrerat godkännande, kassation, delleverans och dubbelklick ska fortsatt passera; de blir ingen verklig kundacceptans. Native browser ska pröva Min dag/Kundvård vid 1290/390/320 px och exakt dubbel text utan zoom eller sänkt fontstorlek, med rå textgeometri, noll browserskrivningar, oförändrade indata och städade processer.
+
+Ändringen gäller endast `components/my-day.tsx` samt tre regressionstestfiler och åtta dokument. Inga lib-/backend-/API-/schema-/migrerings-/package-/hosting-/CSS-ändringar. Oförändrad lagring och samma backend som v99 ska beläggas med faktisk byte-/Git-lägejämförelse för slutkandidaten. Sparad v99 är ett kompatibelt UI-återgångsmål när jämförelsen passerar; inget hostat återställningsprov eller live-rollback är utfört.
+
+CRM102 är avslutad: [PR #170](https://github.com/ludros93-prog/MAgnussons-CRM/pull/170), kod `8526084077667547a94943306d907463d49a679b`, GitHub-main `b20e018cb4aff3315f40408d73902f331dcbda43`, Sites-källa `bcd2fb7e87c798a93d2d1b2a41f49ba31f47002e`, **live v99**, lyckad terminal deploy `appgdep_6acb2cbcfa8881919499e4da480af1cc`. Färsk Site-/main-läsning och tidigare slutkvitto SHA-256 `38c0f7d42f29b829aab0f7302477c19e983301ee206cc1583a5c441fbd9d9d25` belägger detta. Äldre väntande kandidat- och stopptexter nedan är bevarad historik.
+
+CRM103 är vid denna dokumentationsfrysning en separat kandidat. Slutkandidatens fem obligatoriska kommandon, exakta head-CI, native APP-/SOURCE-browser, aktuell mergebas och faktisk merge/save/deploy redovisas efter utförd verifiering i leverans-PR och task. Ingen framtida leverans, personlig inloggning, verklig sparning, integration, personalacceptans eller hostad återställning påstås.
+
+---
+
+Historik före CRM103 bevarad byteoförändrad nedan.
+
 **CRM102 – andra browserstoppet före leverans**
 
 Den korrigerade kandidaten `37ae97cdeb78af6c040f5acde7611deab8979344` klarade återigen alla fem slutkommandon (kvitto SHA-256 `2afccc9ff25ddc6e831de8c38275a4e71d4908423f0fd28574fabfcc94563035`) och [exakt-head CI 38116332540](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38116332540). Desktopfallet vid 1290 px och dubbel text passerade; ansvarsetiketten var då läsbar. Nästa faktiska browserfall vid 390 px och dubbel text stoppade på horisontellt överflöde: dokumentbredd 592 px. Rågeometri visar sidrubrikens block till x592,4 samt knappen Skapa affär från sparat behov till x475,1 i en 390 px viewport. Ingen merge eller publicering skedde; samtliga tidigare kvitton/loggar/bilder bevaras.
