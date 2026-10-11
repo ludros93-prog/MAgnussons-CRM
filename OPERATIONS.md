@@ -1,3 +1,17 @@
+# Drift – CRM100 kundregisterkandidat
+
+CRM99 är verifierad och publicerad: [PR #167](https://github.com/ludros93-prog/MAgnussons-CRM/pull/167), kod `8cb713bd25267e6ebf4dee81a4a6200b5df068e9`, GitHub-main `58c59574038bb3bc3e54543459a092ee32194a67`, Sites-källa `e8acb9a30773ac9b92cc8f6b84dde6bb626735d5`, **live v96**. Färsk native avläsning visar terminal `succeeded`, samma begränsade custom-delning (revision 2) och miljörevision 1. Äldre väntande CRM99-text nedan är historik.
+
+Endast klientens kundregisterurval och presentation ändras. Backend, API, schemas, SQL-migrationer, D1/R2, privata utkast, atomiska skrivningar, CAS, idempotens och hostingbindningar är oförändrade. Ingen datamigration behövs. V96 är kompatibelt UI-återgångsmål för denna avgränsning; faktisk live-rollback utförs inte som prov. Det tidigare crm82-formatgolvet gäller fortsatt. Gemensam CRM-kopia ersätter inte konton, privata utkast eller Outlook.
+
+Koden och de riktade proven är klara vid dokumentationsfrysningen. Kandidatens fem obligatoriska slutkontroller, isolerad native APP-/SOURCE-browser, exakt-head CI, aktuell mergebas och faktisk merge/save/deploy redovisas efter körning i leverans-PR/task. Här påstås inga framtida utfall.
+
+Inga konton, roller, kund-/orderposter, hemligheter, utskick, scheman eller agentinstruktioner ändras. Tekniska syntetiska prov är inga personliga inloggningar, verkliga uppföljningar, fungerande integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; tillgängligt read_thread avser Slack.
+
+---
+
+Historik före CRM100 – tidigare dokumentation bevarad nedan.
+
 # Drift – CRM99 releaseförberedelse
 
 Föregående leverans CRM98 är verifierad: PR #166, GitHub-main `b638c72593724fbbb842e9820b5c49ff85f570f7`, Sites-source `fe4f55209acb9703ecff8dc59ef6eade345cd9ac`, live **v95**. De 405 då spårade filerna har samma tree `9d3d061cd58ce9fefc8aee2af4a31b64a1cb332a` och byte. CRM99 är en separat kandidat; slutliga checks, CI, merge och publicering redovisas i dess PR och task efter faktisk verifiering.

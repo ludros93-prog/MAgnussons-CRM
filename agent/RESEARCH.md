@@ -1,3 +1,20 @@
+# Principer – crm100 personligt kundurval
+
+Tre officiella artikelbodies med faktisk HTTP 200 lästes och hashades den 11 oktober 2026 **02:23:06–02:23:08 UTC**. Privat kvitto `/workspace/.crm100-evidence/research/research.json`, SHA-256 `ade8f10e4ab3b1973c42cf454b2be87d5f5e03d8c4d60702e1c9f93af986775a`, binder URL, status, hämtningstid, rå body-/texthash och sex korta ordagranna utdrag till sparad text. Utdragen återkontrollerades exakt mot de sparade texterna.
+
+- [Salesforce Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) beskriver behörighet till poster som användaren inte äger. Att en kund syns visar därför inte att kunden ingår i personens ansvar. Salesforce föreskriver inte Magnussons personliga urval eller regler för kommersiell historik.
+- [Lime Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer loginanvändare från kopplad coworker och beskriver problem med personligt affärsurval vid saknad koppling. Änderliga user-/visningsnamn skiljs från stabilt Object ID. Limes first-match-beteende, inloggningskrav och databasspecifika ID-regler införs inte i Magnussons.
+- [Saleshub AI Funktioner](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet. Detta är officiellt marknadsunderlag för kundsammanhang, ingen kontroll av Magnussons funktioner eller anslutningar.
+
+Magnussons avgränsade tillämpning är **kundregistrets personliga kundurval**, inom redan serverbehörig State: registrerat kundansvar följer exakt medlemskopplad profil-ID och äldre kunder utan profil-ID följer kontots giltiga aktuella kundansvarsalias. Historiskt profilalias, namnlikhet eller runtime-user-ID ersätter inte exakt medlemskoppling. Saknad eller motstridig koppling ska förklaras som synligt, möjligen ofullständigt urval; noll synliga kunder bevisar inte att personen saknar kunder. Ett uttryckligt teamurval och befintligt separat val av kundansvar behåller sina etablerade betydelser. Detta är Magnussons repo-/domänkontrakt och produktval, ingen ny leverantörsregel, automatisk kontokoppling, serverbehörighet eller kommersiell omattribuering.
+
+Historiskt faktura-/kvalificeringsansvar, resultatmått, mål och marginalunderlag behålls separat. Artikelunderlaget styrker ingen faktisk personlig inloggning, kontoprofilkoppling, sparad verklig uppföljning, fungerande integration eller personal-/kundacceptans. Kodkandidat, GitHub-main, Sites-källa och publicerad version kräver separata belägg. Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; explicit brief och repo används.
+
+
+---
+
+Historik före CRM100 – tidigare dokumentation bevarad nedan.
+
 # Principer – crm99 personliga orderhinder i Mitt resultat
 
 Tre officiella artikelbodies med faktisk HTTP 200 lästes och hashades den 11 oktober 2026 omkring **01:25:49 UTC**. Privat kvitto `/workspace/.crm99-evidence/research-new.json`, SHA-256 `9b4c295a7fdc7cd93f0c204b65768ea4e9cd232f2e6ab305c4fa0e00491af805`, binder URL, status, hämtningstid, rå body-/texthash och sex korta ordagranna utdrag till sparad text. Utdragen återkontrollerades efter att kvittot skrivits; sammanlagt 30 citerade ord från Salesforce och 54 från Lime.

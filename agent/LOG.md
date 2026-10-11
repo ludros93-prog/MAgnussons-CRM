@@ -1,3 +1,25 @@
+# Teknisk logg – CRM100, 11 oktober 2026
+
+CRM99 är verifierad och publicerad: [PR #167](https://github.com/ludros93-prog/MAgnussons-CRM/pull/167), kod `8cb713bd25267e6ebf4dee81a4a6200b5df068e9`, GitHub-main `58c59574038bb3bc3e54543459a092ee32194a67`, Sites-källa `e8acb9a30773ac9b92cc8f6b84dde6bb626735d5`, **live v96**. Färsk native avläsning visar terminal `succeeded`, samma begränsade custom-delning (revision 2) och miljörevision 1. Äldre väntande CRM99-text nedan är historik.
+
+Egen branch/worktree från färsk main, inga öppna PR:er eller pågående deploy vid kontrollen. Sites-källan öppnades läsande och alla 406 spårade filer motsvarade main. Officiell workflow-helper hittades inte i sökta läsbara rötter; eget explicit Git-/arkivflöde används, utan påstådd helperkörning. Låsta byteidentiska beroenden återanvänds genom hårdlänkar; ingen installation påstås. Full disk löstes genom rensning enbart av ignorerad pnpm-cache från en avslutad ägd leverans. Kod, driftdata och belägg bevarades.
+
+**Kundregister → Mina kunder** följer exakt medlemskopplad säljarprofil för registrerat kundansvar och kontots giltiga aktuella alias för äldre kunder utan profil-ID. Namnlikhet, historiskt profilalias eller `_unassigned` ersätter inte denna koppling. Saknad eller motstridig koppling märks som **synligt urval**, även vid noll kunder. Sökning, antal och kundkort använder samma kundregisterurval. Kundvård, prospektering, Min dag, Kalender och Resultat ändras inte av detta steg.
+
+49 riktade testfall passerar (48 accepterade normaliserade läs-/Reactfall och 1 avvisad motsägande kundkoppling), 40 bytekontrollerade produktionsmoduler och noll HTTP. Oberoende basprov visar lika antal med fel kund-ID:n samt felaktigt sentinelurval utan giltigt alias. Oberoende slutgranskning bekräftar 13 parent-/registerfall, 84 ytterligare domänfall och bevarade 256 produkt/backend/hosting/CI/scriptfiler; se kandidatens PR för slutliga checks och publicering.
+
+Två inledande riktade testadapterfel (onödig calendar-import och saknad lokal toolbar-sökvariabel) bevaras i privata loggar; produktförväntningar ändrades inte. Oberoende byteguard upptäckte en faktisk efterföljande textjustering och provades om på rätt bytes.
+
+Koden och de riktade proven är klara vid dokumentationsfrysningen. Kandidatens fem obligatoriska slutkontroller, isolerad native APP-/SOURCE-browser, exakt-head CI, aktuell mergebas och faktisk merge/save/deploy redovisas efter körning i leverans-PR/task. Här påstås inga framtida utfall.
+
+Inga konton, roller, kund-/orderposter, hemligheter, utskick, scheman eller agentinstruktioner ändras. Tekniska syntetiska prov är inga personliga inloggningar, verkliga uppföljningar, fungerande integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; tillgängligt read_thread avser Slack.
+
+
+Riktat slutkvitto `customer-scope-targeted.json`, SHA-256 `79026eeaa2484c82bc8f1e3dbb2808e47f47c2264ecca6b966a6b43839b2229c`, binder faktiskt 49-fallsutfall till produkt-/testbyte.
+---
+
+Historik före CRM100 – tidigare dokumentation bevarad nedan.
+
 # Teknisk logg – CRM99, 11 oktober 2026
 
 Föregående leverans CRM98 är verifierad: PR #166, GitHub-main `b638c72593724fbbb842e9820b5c49ff85f570f7`, Sites-source `fe4f55209acb9703ecff8dc59ef6eade345cd9ac`, live **v95**. De 405 då spårade filerna har samma tree `9d3d061cd58ce9fefc8aee2af4a31b64a1cb332a` och byte. CRM99 är en separat kandidat; slutliga checks, CI, merge och publicering redovisas i dess PR och task efter faktisk verifiering.
