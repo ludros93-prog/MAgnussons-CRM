@@ -108,3 +108,6 @@ await (await import('./prospect-customer-scope.mjs')).verifyProspectCustomerScop
 
 // Personal Notiser read queues follow their exact task/order/customer responsibility.
 await (await import('./notice-work-scope.mjs')).verifyNoticeWorkScope();
+
+// Global customer choices retain all customers while own priority uses exact member-linked responsibility.
+await (await import('./customer-picker-scope.mjs')).verifyCustomerPickerScope();

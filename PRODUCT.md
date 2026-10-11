@@ -1,3 +1,13 @@
+# Global kundsökning med korrekt personligt fokus – CRM105
+
+”Din kund” betyder etablerat kundansvar: registrerad kund följer säljarprofilens stabila ID via exakt medlemskoppling; äldre kund utan profil-ID följer ett giltigt aktuellt kontoalias. Likadana visningsnamn eller namnlikhet är inget medlemsbevis. Prioriteringen sker före det oförändrade taket 30 träffar, så en faktiskt egen B-kund inte trängs undan av 30 registrerade A-kunder vid motstridig koppling.
+
+Sökningen är fortfarande global inom redan server-tillgängliga kunder. Sökning på företag, kontaktperson, e-post och organisationsnummer, svensk gemen/versalanpassning, kundvalets ändamål och callback-ID:n bevaras. Profilhjälpen beskriver osäker personlig märkning/prioritering och påstår inte att andra kunder är otillgängliga. Läsarrollens befintliga skapa-knappgräns ändras inte. Resultat, fakturahistorik, mål, marginalkostnader, privata utkast och order-/lager-/leveranshandlingar ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Detta är kandidatens verifierade läge före slutkontroller; slutrevision, CI, PR, main och publicering redovisas separat i leveranskvittensen.
+
+---
+
 # Personlig uppföljning i Notiser – CRM104
 
 Fyra läsköer återanvänder etablerat ansvarsurval: öppna uppgifter med deadline till nästa vecka, aktiva order som ska skickas, fakturabaserade återköpsförslag och kundsignaler för kontakt. Uppgiftens, orderns och kundens ansvar bedöms var för sig. Ett kopplat profil-ID får inte ersättas av ett liknande namn, konto-ID eller den länkade kundens ansvar. Ett registrerat främmande profil-ID faller inte tillbaka till sitt namn.

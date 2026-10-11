@@ -1,3 +1,13 @@
+# B01: korrekt personligt fokus i global kundväljare – CRM105
+
+Verifierad lucka: kopplad profil B/alias A gav lika eget antal men fel registrerade A-kunder; vid 31 träffar gömdes egen B-kund bakom 30 A-kunder. Kandidaten återanvänder canonical customerScope för prioritet/”Din kund”, behåller alla server-tillgängliga kunder och förklarar saknad/motstridig koppling. Ny faktisk regression 39 och befintlig 49 PASS; slutkontroller/exakt-head CI/merge/publicering återstår vid frysningen. Full B01-personalöverlämning och operativa urval är fortsatt öppna.
+
+**Nästa genomförbara B04-del:** faktisk syntetisk HTTP/SQLite-reproduktion bekräftar två exportbarhetsfel efter lyckad restore. Överstor exportedAt ger en 50 054 tecken lång återställningspost och senare export 400. Ett helt oförändrat servergenererat arkiv med 50 000 historikposter och en kund återställs till 50 001 poster, därefter export 400. JSON och NDJSON samt replay behöver täckas; skydda genererad historik och slutkapacitet före staging/commit utan att kasta originalhistorik. Rättningen är inte gjord i CRM105. Hostingåterställning, separata konto-/anslutnings-/privatutkastkopior och verkliga B06/B07-personalprov återstår; inga konton/acceptanser uppfinns.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Detta är kandidatens verifierade läge före slutkontroller; slutrevision, CI, PR, main och publicering redovisas separat i leveranskvittensen.
+
+---
+
 **CRM104 – även uppgiftskortets mobiltext rättad**
 
 Revision `97dfe9b9c31aa4607d98a58626aaa8e2fd5cbc70` klarade faktiskt nya femkontrollen och [exakt-head CI 38130276321](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38130276321). Browsern passerade därefter 1290 och 390 px med dubbel textstorlek, men stoppades vid 320 px på uppgiftskortets konstruerade kund-/ansvarstext: hängande mellanslagsrektangel 3,671875 px utanför textytan, medan synliga ord rymdes. Även detta stycke får normal mellanslagshantering och möjlighet att bryta långa ord; saknad kund renderas fortfarande som tomt namn. Övrig produktlogik och sparade notisers radbrytningar/läsning bevaras.

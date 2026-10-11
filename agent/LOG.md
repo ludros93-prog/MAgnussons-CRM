@@ -1,3 +1,15 @@
+# CRM105: kundväljarens felaktiga namnprioritering rättad
+
+Färsk remote/main och faktisk Site v101-källa öppnades och jämfördes före produktändringen; CRM104/PR #172 är levererad, main2e8fca77/source66cf3fd2. Egen branch feat/crm105-customer-context och reservation används. Inga öppna PR:er eller främmande publicering sågs vid öppningen. Alla 413 basfilers bytes/lägen jämfördes. Officiell Sites-källhjälpare saknas; vanlig autentiserad Git användes, ingen hjälparkörning påstås. Workspace-overlay är full; nya egna APP/SOURCE/bevis ligger på /dev/shm. Låsta inputs jämfördes före faktisk APP-beroendekopia och SOURCE-hardlinks; inga äldre bevis/källor raderades och ingen ny installation påstås.
+
+Oföränderlig tidigare komponent bekräftade lika antal men fel ID:n, inklusive egen kund bortträngd vid 30-raderstaket. Endast kundväljarens personliga prioritet/etikett/diagnostik ändras; global sökning och valkontrakt bevaras. Ny regression passerade 39 fall, befintlig kundurvalsregression 49, noll HTTP och oförändrade hela normaliserade inputs. Oberoende statisk produktgranskning fann ingen blockerande avvikelse. Slutkedjan återstår och anges separat efter faktisk körning.
+
+Oberoende privat B04-audit körde verkliga import-/exporthandlers, sex SQL-migrationer och syntetisk minnes-SQLite. Överstor exportedAt och helt giltig maximal historikmängd kunde båda återställas med 200 men därefter ge export 400; replay skapade ingen dubbel metadatahistorik, R2 läsning/skrivning noll. Dessa två dokumenterade fel är nästa separata förbättring och ännu olösta. Ingen hostingåterställning eller verklig kund-/kontohandling kördes. Codex-task 01a104c7-a5c5-7350-8577-a4f941138061 är oläst eftersom relevant read_thread saknas; explicit brief och repo används. Inga mejl skickas i bygguppdraget.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Detta är kandidatens verifierade läge före slutkontroller; slutrevision, CI, PR, main och publicering redovisas separat i leveranskvittensen.
+
+---
+
 **CRM104 – även uppgiftskortets mobiltext rättad**
 
 Revision `97dfe9b9c31aa4607d98a58626aaa8e2fd5cbc70` klarade faktiskt nya femkontrollen och [exakt-head CI 38130276321](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38130276321). Browsern passerade därefter 1290 och 390 px med dubbel textstorlek, men stoppades vid 320 px på uppgiftskortets konstruerade kund-/ansvarstext: hängande mellanslagsrektangel 3,671875 px utanför textytan, medan synliga ord rymdes. Även detta stycke får normal mellanslagshantering och möjlighet att bryta långa ord; saknad kund renderas fortfarande som tomt namn. Övrig produktlogik och sparade notisers radbrytningar/läsning bevaras.

@@ -1,3 +1,15 @@
+# Verifieringsläge före slutkontroller – CRM105
+
+Färsk GitHub-main 2e8fca7799dc05456a6c85efff6bd65a6924d58c och publicerad v101-källa 66cf3fd25339dad250b7d0f5b37642b893f6053b öppnades före produktändringen. Alla 413 basfilers bytes/Git-lägen och gemensamt träd d5c6c2809fd66ddcb886b55f1746df44cbb4d016 jämfördes. Privat öppningsmanifest SHA-256 80294bf2372bb369349d28fc150f9e9412d10b5837e24a15eef8e9a333c91cbd.
+
+Oföränderlig tidigare kundväljare reproducerade 11 fall: lika eget antal två men fel A-ID:n, samt lika träffantal 30 där faktisk B-kund saknades. Ny faktisk React/domän-regression passerade 39 fall och 35 oförändrade kompilerade produktmoduler. Befintlig kundurvalsregression passerade 49 fall och 40 oförändrade moduler. Noll HTTP; hela normaliserade syntetiska state bevaras. Fallen täcker exakta ID:n före taket, alla globala sökfält, tomt/borttaget alias, saknad/inaktiv medlems-/profilkoppling, medlemsbyte, roller, callbacks och gamla resultat-/mål-/kostnadssentineler. Visuella primitiver är adapters; detta är inget native browser- eller personprov.
+
+Slutkandidaten måste ännu passera regression node tests/outlook.mjs, TypeScript utan incremental, corepack pnpm build, isolerad byggd Worker/D1/R2-runtime och git diff --check. Därefter krävs aktuell bas, grön exakt-head CI samt isolerad APP-/SOURCE-Chromium på oförändrade byggbytes med exakta urval, native knapp-/tangenthandlingar, mobil/dubbel text, rådatabevarande och cleanup. Framtida kontroller påstås inte körda här. Grön syntetisk regression/CI är inget verkligt konto-, kund-, integrations- eller personalprov.
+
+Tidigare dokumentation bevaras byteoförändrad nedan. Detta är kandidatens verifierade läge före slutkontroller; slutrevision, CI, PR, main och publicering redovisas separat i leveranskvittensen.
+
+---
+
 **CRM104 – även uppgiftskortets mobiltext rättad**
 
 Revision `97dfe9b9c31aa4607d98a58626aaa8e2fd5cbc70` klarade faktiskt nya femkontrollen och [exakt-head CI 38130276321](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38130276321). Browsern passerade därefter 1290 och 390 px med dubbel textstorlek, men stoppades vid 320 px på uppgiftskortets konstruerade kund-/ansvarstext: hängande mellanslagsrektangel 3,671875 px utanför textytan, medan synliga ord rymdes. Även detta stycke får normal mellanslagshantering och möjlighet att bryta långa ord; saknad kund renderas fortfarande som tomt namn. Övrig produktlogik och sparade notisers radbrytningar/läsning bevaras.
