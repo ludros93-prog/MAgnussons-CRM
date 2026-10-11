@@ -1,3 +1,28 @@
+# Validering – CRM100 personligt Kundregister
+
+Kandidaten `59df3c31f6a3cb0355d5f01ac9e5bbd661c8a488` klarade alla fem obligatoriska slutkommandon och [exakt-head CI 38105466081](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38105466081). Den isolerade APP-browsern godkände normalvyn vid 1290 px men stoppade vid exakt dubbel textstorlek: Kundregistrets ansvarigfilter klippte sin fulla etikett (clientWidth 483 / scrollWidth 528). Ingen merge eller publicering skedde. Lokala processer och portar stängdes, syntetiska D1/R2-data återställdes och käll-/byggbyte bevarades. Filtret får nu lokal radbrytning och automatisk höjd under enbart Kundregistrets toolbar; etikett, ansvarsurval, data och andra vyers CSS bevaras. Ny fryst revision kräver hela slutgrinden och APP-/SOURCE-browser igen; faktisk slutleverans redovisas i PR #168 och task.
+
+49 riktade testfall passerar (48 accepterade normaliserade läs-/Reactfall och 1 avvisad motsägande kundkoppling), 40 bytekontrollerade produktionsmoduler och noll HTTP. Oberoende basprov visar lika antal med fel kund-ID:n samt felaktigt sentinelurval utan giltigt alias. Oberoende slutgranskning bekräftar 13 parent-/registerfall, 84 ytterligare domänfall och bevarade 256 produkt/backend/hosting/CI/scriptfiler; se kandidatens PR för slutliga checks och publicering.
+
+Basreproduktion: `customer-baseline.json` SHA-256 `7a616c00668145a9f92514e06084398d671e4e19aa32effb364dbecdd3ecb303`. Oberoende slutreview: `review-customer-candidate-v2.json` SHA-256 `d34fbc656161e857c40146f1977aded6fde70a2b0653a4d3df1901b0f341b5ab`; skyddsreview `108193c500e8f7f72ecfb27ba2c866febc815878306df7d672dd588199bfce1d`. Faktiska ID:n, öppnings-ID:n, sex sökfält, sju kundstatusar, roller, samma visningsnamn, initierat/äldre ansvar, saknad medlemslänk, borttaget alias, inaktiv profil, team och annat giltigt ansvar prövas. Visuella primitiv och oöppnade workflowdestinationer är testadapters, inga native browser-/personalprov.
+
+Koden och de riktade proven är klara vid dokumentationsfrysningen. Kandidatens fem obligatoriska slutkontroller, isolerad native APP-/SOURCE-browser, exakt-head CI, aktuell mergebas och faktisk merge/save/deploy redovisas efter körning i leverans-PR/task. Här påstås inga framtida utfall.
+
+Obligatoriska slutkommandon: `node tests/outlook.mjs`, TypeScript utan incremental, `pnpm build`, isolerat `tests/runtime-smoke.mjs` och `git diff --check`. Fullregression behåller 40→45, verkligt dokumenterad syntetisk acceptans för 50→48, kassation, delleverans, CAS och dubbelklick. Kundregisterbrowser ska mäta faktiska rader, sökning, tomtext och layout vid tre bredder/normal och dubbel text med syntetisk isolerad D1/R2.
+
+Inga konton, roller, kund-/orderposter, hemligheter, utskick, scheman eller agentinstruktioner ändras. Tekniska syntetiska prov är inga personliga inloggningar, verkliga uppföljningar, fungerande integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; tillgängligt read_thread avser Slack.
+
+
+Riktat slutkvitto `customer-scope-targeted.json`, SHA-256 `79026eeaa2484c82bc8f1e3dbb2808e47f47c2264ecca6b966a6b43839b2229c`, binder faktiskt 49-fallsutfall till produkt-/testbyte.
+
+Första frysta kandidaten `73cb83f1603928bfa10dfbca4aaf637a7092230d` stoppades i obligatorisk fullregression: `tests/calendar-profile-link.mjs` krävde fortfarande Kundregistrets tidigare filteralternativ. Logg SHA-256 `c18cce668436e667acc6ad489b4d8d1c464b967d72e9acc1660af308932dea33` bevaras privat. Läsgranskning fann samma gamla antagande i kundärendetestets toolbaradapter. Dessa två bevarandetester uppdateras för det avsiktliga Mina kunder/Teamets kunder-urvalet, medan prospekteringens och övriga vyers tidigare alternativ fortsatt prövas exakt. Ingen misslyckad kandidat mergas eller publiceras; ny fryst revision kräver hela slutgrinden igen.
+
+De två avgränsade toolbarregressionerna passerar efter uppdatering: Kalender 41 faktiska fall (`calendar-toolbar-targeted.json`, SHA-256 `33a0c5e16afed1ced46094da7e8b8bab9d456651c12b21beab41ecc8923e142e`) och kundärenden 45 faktiska fall (`issue-toolbar-targeted.json`, SHA-256 `9bcd9f30d5b375c1751f47570ac8254a6e1aded0044473bd7f6720bef137a4b6`), båda utan HTTP. De nya kundalternativen prövas separat; prospekteringens tidigare alternativ och kalender-/kundärendevyernas egna kontrakt bevaras. Detta ersätter inte den nya kandidatens fullregression.
+
+---
+
+Historik före CRM100 – tidigare dokumentation bevarad nedan.
+
 # Validering – CRM99 personliga orderurval
 
 Riktat nytt prov: **51 PASS** (50 accepterade normaliserade fall, 1 faktiskt avvisad motsägande profil-/aliaskoppling), **23** hela React-/parentfall, **115** kompletta jämförelser av de 26 övriga resultatfälten, **72** fulla profil-/teamjämförelser och **39** exakta jämförelser med verklig `orderScope`/`orderInScope`. **37** produktionsmodulers källbyte kontrolleras och inga HTTP-anrop sker. Kvitto `result-order-targeted.json` SHA-256 `542eb30b5ef6fd8b90c5bdef8679fc3bd0d2c3b188cbd2b7e189e8c05994ea5b` binder källor/test och faktiskt utfall. Även de ändrade befintliga Resultat-/aktivitetsproven kördes separat med exit 0; kvitto `existing-targeted.json` SHA-256 `d2ca81c88784fc6a07700a97030279a39826d775cb38be2e987f072369f7184e`. Dessa riktade prov ersätter inte kandidatens fem obligatoriska slutkontroller eller isolerad native webbläsare.

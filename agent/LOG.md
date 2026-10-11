@@ -1,3 +1,34 @@
+# Teknisk logg – CRM100, 11 oktober 2026
+
+Kandidaten `59df3c31f6a3cb0355d5f01ac9e5bbd661c8a488` klarade alla fem obligatoriska slutkommandon och [exakt-head CI 38105466081](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38105466081). Den isolerade APP-browsern godkände normalvyn vid 1290 px men stoppade vid exakt dubbel textstorlek: Kundregistrets ansvarigfilter klippte sin fulla etikett (clientWidth 483 / scrollWidth 528). Ingen merge eller publicering skedde. Lokala processer och portar stängdes, syntetiska D1/R2-data återställdes och käll-/byggbyte bevarades. Filtret får nu lokal radbrytning och automatisk höjd under enbart Kundregistrets toolbar; etikett, ansvarsurval, data och andra vyers CSS bevaras. Ny fryst revision kräver hela slutgrinden och APP-/SOURCE-browser igen; faktisk slutleverans redovisas i PR #168 och task.
+
+CRM99 är verifierad och publicerad: [PR #167](https://github.com/ludros93-prog/MAgnussons-CRM/pull/167), kod `8cb713bd25267e6ebf4dee81a4a6200b5df068e9`, GitHub-main `58c59574038bb3bc3e54543459a092ee32194a67`, Sites-källa `e8acb9a30773ac9b92cc8f6b84dde6bb626735d5`, **live v96**. Färsk native avläsning visar terminal `succeeded`, samma begränsade custom-delning (revision 2) och miljörevision 1. Äldre väntande CRM99-text nedan är historik.
+
+Egen branch/worktree från färsk main, inga öppna PR:er eller pågående deploy vid kontrollen. Sites-källan öppnades läsande och alla 406 spårade filer motsvarade main. Officiell workflow-helper hittades inte i sökta läsbara rötter; eget explicit Git-/arkivflöde används, utan påstådd helperkörning. Låsta byteidentiska beroenden återanvänds genom hårdlänkar; ingen installation påstås. Full disk löstes genom rensning enbart av ignorerad pnpm-cache från en avslutad ägd leverans. Kod, driftdata och belägg bevarades.
+
+**Kundregister → Mina kunder** följer exakt medlemskopplad säljarprofil för registrerat kundansvar och kontots giltiga aktuella alias för äldre kunder utan profil-ID. Namnlikhet, historiskt profilalias eller `_unassigned` ersätter inte denna koppling. Saknad eller motstridig koppling märks som **synligt urval**, även vid noll kunder. Sökning, antal och kundkort använder samma kundregisterurval. Kundvård, prospektering, Min dag, Kalender och Resultat ändras inte av detta steg.
+
+49 riktade testfall passerar (48 accepterade normaliserade läs-/Reactfall och 1 avvisad motsägande kundkoppling), 40 bytekontrollerade produktionsmoduler och noll HTTP. Oberoende basprov visar lika antal med fel kund-ID:n samt felaktigt sentinelurval utan giltigt alias. Oberoende slutgranskning bekräftar 13 parent-/registerfall, 84 ytterligare domänfall och bevarade 256 produkt/backend/hosting/CI/scriptfiler; se kandidatens PR för slutliga checks och publicering.
+
+Två inledande riktade testadapterfel (onödig calendar-import och saknad lokal toolbar-sökvariabel) bevaras i privata loggar; produktförväntningar ändrades inte. Oberoende byteguard upptäckte en faktisk efterföljande textjustering och provades om på rätt bytes.
+
+Koden och de riktade proven är klara vid dokumentationsfrysningen. Kandidatens fem obligatoriska slutkontroller, isolerad native APP-/SOURCE-browser, exakt-head CI, aktuell mergebas och faktisk merge/save/deploy redovisas efter körning i leverans-PR/task. Här påstås inga framtida utfall.
+
+Inga konton, roller, kund-/orderposter, hemligheter, utskick, scheman eller agentinstruktioner ändras. Tekniska syntetiska prov är inga personliga inloggningar, verkliga uppföljningar, fungerande integrationer eller personalacceptans. Full hostad återställning och live-rollback är oprövade. Codex-referensen är oläst; tillgängligt read_thread avser Slack.
+
+
+Riktat slutkvitto `customer-scope-targeted.json`, SHA-256 `79026eeaa2484c82bc8f1e3dbb2808e47f47c2264ecca6b966a6b43839b2229c`, binder faktiskt 49-fallsutfall till produkt-/testbyte.
+
+Första frysta kandidaten `73cb83f1603928bfa10dfbca4aaf637a7092230d` stoppades i obligatorisk fullregression: `tests/calendar-profile-link.mjs` krävde fortfarande Kundregistrets tidigare filteralternativ. Logg SHA-256 `c18cce668436e667acc6ad489b4d8d1c464b967d72e9acc1660af308932dea33` bevaras privat. Läsgranskning fann samma gamla antagande i kundärendetestets toolbaradapter. Dessa två bevarandetester uppdateras för det avsiktliga Mina kunder/Teamets kunder-urvalet, medan prospekteringens och övriga vyers tidigare alternativ fortsatt prövas exakt. Ingen misslyckad kandidat mergas eller publiceras; ny fryst revision kräver hela slutgrinden igen. Även exakt-head CI `38105175759` slutade `failure` på samma revision.
+
+De två avgränsade toolbarregressionerna passerar efter uppdatering: Kalender 41 faktiska fall (`calendar-toolbar-targeted.json`, SHA-256 `33a0c5e16afed1ced46094da7e8b8bab9d456651c12b21beab41ecc8923e142e`) och kundärenden 45 faktiska fall (`issue-toolbar-targeted.json`, SHA-256 `9bcd9f30d5b375c1751f47570ac8254a6e1aded0044473bd7f6720bef137a4b6`), båda utan HTTP. De nya kundalternativen prövas separat; prospekteringens tidigare alternativ och kalender-/kundärendevyernas egna kontrakt bevaras. Detta ersätter inte den nya kandidatens fullregression.
+
+Browserförsökets privata execution-kvitto SHA-256 `870b2c6f5106b57194105901cb55fc5e7a53f3563a874ec4a8efb0a49ce5f576` och skärmbild SHA-256 `585c8dcf73dcec8522c4a4e02f59424c6a1079a927f38ebc89e24099b1e5a815` binder det faktiska klippningsfyndet. Två tidigare harnessstopp gällde native innerText-radbrytning och naturligt fontöverhäng i overflow-visible rubrik. Den privata mätregeln granskas för faktisk own-/ancestor-klippning, strikt kontrolltext och kontrollboxar samt överlapp med annan text/kontroller. Ingen produktförväntning kring full läsbarhet eller dubbel textstorlek sänks.
+
+---
+
+Historik före CRM100 – tidigare dokumentation bevarad nedan.
+
 # Teknisk logg – CRM99, 11 oktober 2026
 
 Föregående leverans CRM98 är verifierad: PR #166, GitHub-main `b638c72593724fbbb842e9820b5c49ff85f570f7`, Sites-source `fe4f55209acb9703ecff8dc59ef6eade345cd9ac`, live **v95**. De 405 då spårade filerna har samma tree `9d3d061cd58ce9fefc8aee2af4a31b64a1cb332a` och byte. CRM99 är en separat kandidat; slutliga checks, CI, merge och publicering redovisas i dess PR och task efter faktisk verifiering.

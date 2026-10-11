@@ -29,10 +29,10 @@ function nextActivity(st:State,customerId:string){
  return candidates.sort((a,b)=>(a.date+'T'+(a.time||'00:00')).localeCompare(b.date+'T'+(b.time||'00:00')))[0];
 }
 
-export function CustomerRegister({st,customers,onCustomer,onCreateCustomer,onDataTools}:{st:State;customers:Customer[];onCustomer:(id:string)=>void;onCreateCustomer:()=>void;onDataTools:()=>void}){
+export function CustomerRegister({st,customers,visibleSubset=false,onCustomer,onCreateCustomer,onDataTools}:{st:State;customers:Customer[];visibleSubset?:boolean;onCustomer:(id:string)=>void;onCreateCustomer:()=>void;onDataTools:()=>void}){
  const today=day(),canCreate=['admin','seller'].includes(st.viewer?.role||'');
  return <section className="panel customer-register" aria-label="Kundregister">
-  <div className="panel-head cr-heading"><div><h2>Kundregister <span className="count">{customers.length}</span></h2><p>Öppna en kund för att arbeta vidare med relationen.</p></div><Button size="sm" variant="outline" onClick={onDataTools}>Importera / exportera</Button></div>
+  <div className="panel-head cr-heading"><div><h2>Kundregister <span className="count">{customers.length}</span>{visibleSubset?' · synligt urval':''}</h2><p>Öppna en kund för att arbeta vidare med relationen.</p></div><Button size="sm" variant="outline" onClick={onDataTools}>Importera / exportera</Button></div>
   {customers.length?<ul className="cr-list" aria-label="Kunder i urvalet">{customers.map(c=>{
    const responsible=customerResponsibility(st,c),activity=nextActivity(st,c.id),openDeals=st.deals.filter(d=>d.customerId===c.id&&isOpen(d)).length;
    return <li className="cr-row" key={c.id} data-customer-id={c.id}>
@@ -43,6 +43,6 @@ export function CustomerRegister({st,customers,onCustomer,onCreateCustomer,onDat
     </div>
     <dl className="cr-plan"><div><dt>Nästa avstämning</dt><dd className="cr-review-date" data-overdue={!!c.nextReview&&c.nextReview<today}>{c.nextReview?<time dateTime={c.nextReview}>{displayDate(c.nextReview)}</time>:'Inte planerad'}{c.nextReview&&c.nextReview<=today&&<span>{c.nextReview<today?'Datum passerat':'Idag'}</span>}</dd></div><div><dt>Öppna affärer</dt><dd>{openDeals}</dd></div></dl>
    </li>;
-  })}</ul>:<div className="cr-empty"><Users size={28} aria-hidden="true"/><h3>{st.customers.length?'Inga kunder matchar urvalet':'Kundregistret är tomt'}</h3><p>{st.customers.length?'Ändra sökningen eller välj Alla ansvariga för att se fler kunder.':canCreate?'Lägg till en kund när du har företagets uppgifter.':'Registrerade kunder visas här när de har lagts till.'}</p>{canCreate&&<Button onClick={onCreateCustomer}>{st.customers.length?'Lägg till kund':'Lägg till första kunden'}</Button>}</div>}
+  })}</ul>:<div className="cr-empty"><Users size={28} aria-hidden="true"/><h3>{visibleSubset?'Inga kunder visas i detta synliga urval':st.customers.length?'Inga kunder matchar urvalet':'Kundregistret är tomt'}</h3><p>{visibleSubset?'Kontokopplingen behöver kontrolleras innan listan kan bedömas som fullständig.':st.customers.length?'Ändra sökningen eller välj Teamets kunder för att se fler kunder.':canCreate?'Lägg till en kund när du har företagets uppgifter.':'Registrerade kunder visas här när de har lagts till.'}</p>{canCreate&&<Button onClick={onCreateCustomer}>{st.customers.length||visibleSubset?'Lägg till kund':'Lägg till första kunden'}</Button>}</div>}
  </section>;
 }
