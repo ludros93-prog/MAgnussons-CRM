@@ -1,3 +1,11 @@
+**CRM101 – browserkorrigering före leverans**
+
+Kandidaten `5da07a412dd65dcec9bf43bb7a6161f68caef8e9` klarade faktiskt alla fem obligatoriska slutkommandon och [exakt-head CI 38109472085](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38109472085). Native Chromium-browser stoppade därefter på verklig textklippning vid exakt dubbel textstorlek: Rapportmånad dolde året, två Kundvårdsfilter dolde delar av valtexten, kundkortens statusrad växte utanför mobilen och Resultats diagramförklaring klipptes vid 320 px. Ingen merge eller publicering skedde. De första två browserstoppen berodde på privat navigator respektive dekorationsmätning; verkliga text-/kontroll-/ancestor-klippkrav behålls. Samtliga tidigare kvitton och bilder finns kvar privat.
+
+Korrigeringen gäller enbart lokalt avgränsad CSS i Resultat och Kundvård: månadens native textfält, filter, kundkort och diagramförklaring får utrymme/radbrytning och växande höjd. Typ, lagrat `YYYY-MM`-värde, fontstorlek, eventhandlers, kundurval och andra vyers CSS behålls. År och längre månadsbeteckning granskas även som faktiska native segment vid 320 px och dubbel text. Utforskande prov ersätter inte nästa frysta revisions fem slutkommandon, exakt-head CI eller full APP-/SOURCE-browser. Ny leverans redovisas med faktiskt huvud/source/live i PR och task. Chromium-prov är inte allmän tillgänglighets-, Firefox-/Safari- eller personalacceptans.
+
+---
+
 # Validering – CRM101 kundrisk och Kundvård
 
 Läsande basprov på exakt main `0a9420dd` visar lika antal men fel kund-ID:n: personlig risk använde profilens historiska alias, direkt Kundvård kontots alias och ingången från Resultat profilaliaset. Sju normaliserade/renderade basfall och en separat positiv finanshistorikkorsning kördes utan HTTP eller skrivningar. Privata kvitton `baseline-customer-risk-main.json` SHA-256 `740eee02e4777ee194d033bb1c4709420904f2995d5bec07120cfd06bbfa783e` och `baseline-financial-attribution-main.json` SHA-256 `bd095ef74bb089be5b02aad3b7df9ece761cd7d312b9c1174432f84ec67789ab` binder verkliga produktionsmoduler och indata.

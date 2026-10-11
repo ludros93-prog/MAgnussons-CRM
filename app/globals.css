@@ -423,3 +423,24 @@ main[data-view="customers"] .toolbar{flex-wrap:wrap}
 main[data-view="customers"] .toolbar .search{min-width:min(180px,100%)}
 main[data-view="customers"] .toolbar [data-slot=select-trigger]{min-width:min(160px,100%);max-width:100%;height:auto;min-height:2.25rem;white-space:normal}
 main[data-view="customers"] .toolbar [data-slot=select-value]{min-width:0;display:block;white-space:normal;overflow:visible;overflow-wrap:anywhere;-webkit-line-clamp:unset;line-clamp:unset}
+
+/* Keep the native report month and year readable as text grows. */
+.visual-results .sales-scope{flex-wrap:wrap}
+.visual-results .sales-scope>label{min-width:0;max-width:100%;flex-wrap:wrap}
+.visual-results .sales-scope input[type="month"]{width:14em;max-width:100%;min-width:0;height:auto;min-height:44px;padding-block:.35em;line-height:1.5}
+
+.visual-results .sales-scope input[type="month"]::-webkit-datetime-edit-fields-wrapper{display:flex;flex-wrap:wrap;max-width:100%}
+main[data-view="care"] .toolbar{flex-wrap:wrap}
+main[data-view="care"] .toolbar .search{min-width:min(180px,100%)}
+main[data-view="care"] .toolbar [data-slot=select-trigger]{min-width:min(160px,100%);max-width:100%;height:auto;min-height:2.25rem;white-space:normal}
+main[data-view="care"] .toolbar [data-slot=select-value]{min-width:0;display:block;white-space:normal;overflow:visible;overflow-wrap:anywhere;-webkit-line-clamp:unset;line-clamp:unset}
+
+main[data-view="care"] .wf-controls [data-slot=select-trigger]{min-width:0;max-width:100%;height:auto;min-height:2.25rem;white-space:normal}
+main[data-view="care"] .wf-controls [data-slot=select-value]{min-width:0;display:block;white-space:normal;overflow:visible;overflow-wrap:anywhere;-webkit-line-clamp:unset;line-clamp:unset}
+
+.visual-results .result-chart-reading>div{min-width:0;overflow-wrap:anywhere}
+
+main[data-view="care"] .wf-card{min-width:0;overflow-wrap:anywhere}
+main[data-view="care"] .wf-card-top{flex-wrap:wrap;align-items:flex-start}
+main[data-view="care"] .wf-card-top>span,main[data-view="care"] .wf-route>span{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:1100px){main[data-view="care"] .wf-grid{grid-template-columns:minmax(0,1fr)}}

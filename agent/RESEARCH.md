@@ -1,3 +1,17 @@
+**CRM101 – officiella belägg för textförstoring och native månad**
+
+Färsk dokumentläsning gav fem HTTP 200-svar och 16 bytekontrollerade citat: [MDN month](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/month), [MDN select](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select), W3C [Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html), [Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) och [C38](https://www.w3.org/WAI/WCAG22/Techniques/css/C38). Månadsfältet lagrar YYYY-MM medan native visning följer locale; en passande yttre kontrollbox bevisar inte att interna segment ryms. Flex-wrap, flexibla bredder och skalbar höjd stöds av vägledningen. 200 % textförstoring och reflow vid 320 CSS-px är separata egenskaper. Rättelsen bevarar typ, värde, fontstorlek och funktion och verifierar faktisk glyph-/kalendergeometri i Chromium. Ingen universell native wrapping eller allmän WCAG-/cross-browser-acceptans påstås. Privat researchkvitto SHA-256 `bab20c0ec0c534dbe15489ed68370fde239f2d68804311fc15645b72fa12e7ab`.
+
+---
+
+**CRM101 – browserkorrigering före leverans**
+
+Kandidaten `5da07a412dd65dcec9bf43bb7a6161f68caef8e9` klarade faktiskt alla fem obligatoriska slutkommandon och [exakt-head CI 38109472085](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38109472085). Native Chromium-browser stoppade därefter på verklig textklippning vid exakt dubbel textstorlek: Rapportmånad dolde året, två Kundvårdsfilter dolde delar av valtexten, kundkortens statusrad växte utanför mobilen och Resultats diagramförklaring klipptes vid 320 px. Ingen merge eller publicering skedde. De första två browserstoppen berodde på privat navigator respektive dekorationsmätning; verkliga text-/kontroll-/ancestor-klippkrav behålls. Samtliga tidigare kvitton och bilder finns kvar privat.
+
+Korrigeringen gäller enbart lokalt avgränsad CSS i Resultat och Kundvård: månadens native textfält, filter, kundkort och diagramförklaring får utrymme/radbrytning och växande höjd. Typ, lagrat `YYYY-MM`-värde, fontstorlek, eventhandlers, kundurval och andra vyers CSS behålls. År och längre månadsbeteckning granskas även som faktiska native segment vid 320 px och dubbel text. Utforskande prov ersätter inte nästa frysta revisions fem slutkommandon, exakt-head CI eller full APP-/SOURCE-browser. Ny leverans redovisas med faktiskt huvud/source/live i PR och task. Chromium-prov är inte allmän tillgänglighets-, Firefox-/Safari- eller personalacceptans.
+
+---
+
 # Principer – crm101 personligt Kundvård och aktuell kundrisk
 
 Tre officiella artikelbodies hämtades med faktisk HTTP 200 och lästes den 11 oktober 2026 **03:20:20–03:20:22 UTC**. Privat kvitto `/workspace/.crm101-evidence/research/research.json`, SHA-256 `961b8ab491d657d033febe371a73da9c2b3474df730e3187f0bd11e4f43cba58`, binder URL, status, hämtningstid, rå body-/texthash och sex korta ordagranna utdrag till sparad text. Utdragen återkontrollerades exakt mot de sparade texterna.
