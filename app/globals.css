@@ -459,3 +459,8 @@ main[data-view="prospects"] .wf-card-top>span,main[data-view="prospects"] .wf-ro
 main[data-view="prospects"] .page-heading>div{min-width:0;max-width:100%;overflow-wrap:anywhere}
 main[data-view="prospects"] .page-heading h1{line-height:1.4}
 main[data-view="prospects"] .wf-buttons button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+
+/* Keep full customer signals readable in Min dag at larger text sizes. */
+.visual-day .day-contacts .daily-row>div:first-child{min-width:0;max-width:100%}
+.visual-day .day-contacts .daily-row small{max-width:100%;overflow-wrap:anywhere}
+.my-day.visual-day .count{height:auto;min-height:26px;line-height:1.5}

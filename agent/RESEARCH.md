@@ -1,3 +1,51 @@
+**CRM103 – placeringskontrollen stoppade föregående slutkandidat**
+
+Den strikta kompatibilitetsgrinden stoppade `42519634e4a91418f406e3a2952b77e991a56206`: CSS-tilläggets 310 byte låg mitt i filen, så tidigare bytes fanns kvar men utgjorde inte hela prefixet som scope kräver. Samma tre regler har nu flyttats till faktiskt filslut; filen är exakt tidigare main-CSS plus det oförändrade tillägget, Git-läget oförändrat. Privat korrigeringsbevis `stylesheet-placement-correction.json` binder före-/efterbytes; aktuell CSS SHA-256 `631787a2a7c311fac97dce33202a8c5939aa099339110c6dd8b9cfbc7b8ae590`. Kravet och scopekvittot behålls. Ett statiskt delprov som endast kontrollerade att gamla bytes gick att återfå räcker inte för detta prefixkrav och kvalificerar inte leverans.
+
+Den stoppade kandidatens regression, TypeScript och bygge hann faktiskt passera. Den egna femkontrollen avbröts med SIGTERM under isolerad runtime efter kompatibilitetsfyndet; processgruppen är stängd. Runtime och femkontrollen räknas inte som PASS. Kvittot/loggarna, avbrottet och det tidigare kandidaturvalets bevarandekvitto kvarstår som tidsbunden historik. Ny ren slutrevision kräver nya fem kommandon, exakt-head CI, faktisk prefix-/lagringsjämförelse och full APP-/SOURCE-browser. Ingen CRM103-merge, källsynkning eller publicering har skett; main/källa/live är fortsatt CRM102/v99 vid denna nya frysning.
+
+---
+
+**CRM103 – officiellt CSS-underlag för kontaktkortens radbrytning**
+
+Fyra färska substantiella officiella artiklar hämtades med faktisk HTTP 200 den 11 oktober 2026 kl. **07:51:42–07:51:45 UTC**: MDN [overflow-wrap](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap), [min-width](https://developer.mozilla.org/en-US/docs/Web/CSS/min-width) och W3C [Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html), [Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html). Tio korta ordagranna utdrag är byteverifierade mot sparade råbodies, texthash, citathash och offset. Separat privat CSS-researchkvitto SHA-256 `2d30b0ba9d25ea35f944d6ab0df7be7da4378235b5e2e9280d3c3a6ac3ebcc83`. Tidigare domänresearch, tre artiklar/sju citat, bevaras oförändrad.
+
+MDN beskriver att `overflow-wrap:anywhere` bryter annars obrutna strängar och påverkar min-content-beräkning; flex-/gridobjekt kan ha automatisk minimibredd baserad på min-content. W3C beskriver bevarat innehåll/funktion vid textförstoring till 200 % samt reflow utan tvådimensionell scroll vid angivna mått, bland annat 320 CSS-px, med uttryckliga undantag. Dessa är separata egenskaper. Lokal radbrytning/krympning i Min dags kontaktkort är vårt produktval; källorna föreskriver inte exakta selektorer eller att fonten ska minskas. Fontstorlek, text, värden, callbacks och domänurval ska behållas och faktisk glyph-/föräldrageometri verifieras för slutkandidaten. Ett 320 px-prov är inget utfört 400-procents helsidigt zoomprov; research eller lokala Chromium-prov innebär ingen allmän WCAG-, mobil-, personal- eller cross-browser-acceptans.
+
+
+---
+
+**CRM103 – browserfynd korrigerade inför slutleverans**
+
+Kandidat `64cbb0acc77563329ff0c534a04cd3ecd364f79e` klarade faktiskt alla fem obligatoriska kommandon (privat kvitto SHA-256 `af48df12e0a10764cf6cbeb9f63eb6c1b7b3f9e483e14c15ea16b617c5c5ff08`) och [exakt-head CI 38121749777](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38121749777). Native APP-browser stoppade sedan på horisontellt överflöde i två kundsignaler vid 1290 px och dubbel textstorlek. En kontaktpanelsregel rättade radbrytningen. Nästa undersökande mobilprov hittade verkligt överlapp: fasta 26 px antalsmarkeringar fick 38 px tecken; uppgiftsmarkeringen överlappade en knapp med 6 px och leveransköns markering nästa text med 3 px. En lokal MyDay-regel låter markeringarna växa med texten. Ett första försök behöll 26 px genom äldre importordning; det stoppet bevaras. Den korrigerade specificiteten gäller endast roten med klasserna my-day och visual-day.
+
+Undersökande byggd revision `8b5cb4bffd89b834df7ded7d040f370120735b73` klarade de första 25 native browserfallen, inklusive Min dag/Kundvård vid 1290/390/320 px med normal och exakt dubbel text. Fall 26, Visa alla sex kunder, stoppade på provets antagande om fixtureinsättningsordning för de första fem kunderna. Den faktiska servern läser utan ORDER BY; alla sex egna kund-ID:n var rätt och rådata oförändrade. Provadaptern korrigeras genom att spara faktiskt GET-urval/ordning och jämföra hela objektsmängden mot rå fixture, utan förväntningar från DOM eller sänkta ID-/antal-/geometrikrav. Tidigare fem definitionsfiler och samtliga felkvitton bevaras. Undersökande prov kvalificerar inte slutleverans.
+
+Aktuell ändringsmängd är **13 filer**: två produktfiler (MyDay och ett append-only CSS-suffix), tre regressionstestfiler och åtta dokument. Tidigare uppgifter om 12 ändrade/400 skyddade filer är v1-historik; slutjämförelsen ska kontrollera **399 skyddade filer av 412 tracked** samt hela tidigare CSS-prefixet och dess Git-läge. CSS-tillägget är exakt 310 byte, SHA-256 `5bbed2cf66fae089b071821f381129b3babe9d54bb45abf2c63d6f2e3c1d4b50`. Textstorlek, kontrolltyper, handlers, serverroller, övriga urval, finanshistorik, lagring, API, schema och migrationer behålls. Scopekvitto SHA-256 `dd3b3884fab5ae27a063dd148139fe0bdcdb2b6717974785837e411c36470bba` binder de faktiska browserstoppen och exakta ändringsvägarna.
+
+Ny slutkandidat ska köra alla fem kommandon, egen exakt-head CI och full native APP-/SOURCE-browser med 28 fall. [PR #171](https://github.com/ludros93-prog/MAgnussons-CRM/pull/171) och task redovisar faktisk slutrevision/merge/save/deploy när de utförts. Vid denna dokumentationsfrysning är färsk GitHub-main `b20e018cb4aff3315f40408d73902f331dcbda43`, Sites-källa `bcd2fb7e87c798a93d2d1b2a41f49ba31f47002e` och **live v99**. Ingen CRM103-merge eller publicering har skett. Personlig inloggning, första verkliga sparning, personalacceptans, riktiga integrationer, hostad återställning och utförd live-rollback förblir obekräftade. B01/B04 personligt ansvar och återställning samt B06/B07 faktisk introduktion är fortsatt nästa verksamhetsgrindar efter verifierad teknisk leverans.
+
+Tidigare kandidattexter nedan är bevarad historik med sina angivna revisioner.
+
+---
+
+**CRM103 – officiella principer för personligt kundfokus i Min dag**
+
+Tre färska substantiella officiella artiklar hämtades den 11 oktober 2026 med HTTP 200. Sju korta ordagranna utdrag är återkontrollerade mot sparade råbodies, UTF-8-texter, SHA-256 och byteoffset. Privat researchkvitto SHA-256 `f6a79daf5075a71e0bc36db9622f4a61c8ad607ffa2b7cd1c918abfee8b18bc1`; tidigare CRM102-research och samtliga tio tidigare citat är också återkontrollerade utan ändring.
+
+Salesforce [Record Access](https://trailhead.salesforce.com/content/learn/modules/data_security/data_security_records) skiljer poståtkomst från ägarskap. Lime [Users & Groups](https://platform.docs.lime-crm.com/en/latest/configuration/users-and-groups/) skiljer loginanvändare från kopplad coworker och beskriver problem med personligt affärsurval när kopplingen saknas. Änderliga user-/visningsnamn skiljs från stabila **user-/group** Object ID:n; detta belägger inte alla coworkerreferenser eller Magnussons profilschema. Saleshub [Funktioner](https://saleshubai.se/funktioner) beskriver kundkort med nästa aktivitet, som offentligt marknadsunderlag.
+
+Magnussons avgränsade produktval är att Min dags kundkontaktlista och dess kundbaserade fokus följer samma etablerade aktuella kundurval som Mina kunder, inom redan serverbehörig State. Exakt medlemskopplad profil-ID för registrerat kundansvar och giltigt aktuellt kontoalias för äldre kunder är repokontrakt, inte införda leverantörsregler. Saknad eller motstridig koppling innebär ett synligt, möjligen ofullständigt urval; noll rader bevisar inte att personens kundarbete är klart. Uppgifts-, order-, mötes-, signal- och resultatkontrakt ska beläggas separat och ändras inte genom research. Ingen faktisk inloggning, sparad verklig uppföljning, integration, personalacceptans eller hostad återställning påstås.
+
+
+CRM102 är avslutad: [PR #170](https://github.com/ludros93-prog/MAgnussons-CRM/pull/170), kod `8526084077667547a94943306d907463d49a679b`, GitHub-main `b20e018cb4aff3315f40408d73902f331dcbda43`, Sites-källa `bcd2fb7e87c798a93d2d1b2a41f49ba31f47002e`, **live v99**, lyckad terminal deploy `appgdep_6acb2cbcfa8881919499e4da480af1cc`. Färsk Site-/main-läsning och tidigare slutkvitto SHA-256 `38c0f7d42f29b829aab0f7302477c19e983301ee206cc1583a5c441fbd9d9d25` belägger detta. Äldre väntande kandidat- och stopptexter nedan är bevarad historik.
+
+CRM103 är vid denna dokumentationsfrysning en separat kandidat. Slutkandidatens fem obligatoriska kommandon, exakta head-CI, native APP-/SOURCE-browser, aktuell mergebas och faktisk merge/save/deploy redovisas efter utförd verifiering i leverans-PR och task. Ingen framtida leverans, personlig inloggning, verklig sparning, integration, personalacceptans eller hostad återställning påstås.
+
+---
+
+Historik före CRM103 bevarad byteoförändrad nedan.
+
 **CRM102 – andra browserstoppet före leverans**
 
 Den korrigerade kandidaten `37ae97cdeb78af6c040f5acde7611deab8979344` klarade återigen alla fem slutkommandon (kvitto SHA-256 `2afccc9ff25ddc6e831de8c38275a4e71d4908423f0fd28574fabfcc94563035`) och [exakt-head CI 38116332540](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38116332540). Desktopfallet vid 1290 px och dubbel text passerade; ansvarsetiketten var då läsbar. Nästa faktiska browserfall vid 390 px och dubbel text stoppade på horisontellt överflöde: dokumentbredd 592 px. Rågeometri visar sidrubrikens block till x592,4 samt knappen Skapa affär från sparat behov till x475,1 i en 390 px viewport. Ingen merge eller publicering skedde; samtliga tidigare kvitton/loggar/bilder bevaras.
