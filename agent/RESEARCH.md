@@ -14,6 +14,8 @@ Artikeltexterna styrker ingen Magnussons-anslutning, faktisk personlig inloggnin
 
 Mobilrättningen stöds av tre färska officiella MDN-bodies med HTTP 200 den 10 oktober 2026 23:53:39 UTC: [overflow-wrap](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap), [min-width](https://developer.mozilla.org/en-US/docs/Web/CSS/min-width) och [minmax](https://developer.mozilla.org/en-US/docs/Web/CSS/minmax). Fem korta citat återkontrollerades; privat kvitto SHA-256 `574647dbd8a4840ad20639356f4370acb7d6407e4d5d7023dd92458248d287c8`. Gridcellerna krymper redan med minmax(0,1fr); texten behöver också radbrytning. overflow-wrap:anywhere bidrar med brytpunkter även till min-content-beräkningen. Lokal flex-wrap låter antalet få nästa rad vid behov. Detta är layoutunderlag, inget browser-PASS.
 
+[MDN white-space](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space) hämtades färskt med HTTP 200 den 11 oktober 2026 00:08:16 UTC. Exakt verifierat citat för normal: ”Lines are broken as necessary to fill line boxes. Equivalent to collapse wrap.” Privat kvitto SHA-256 `f3c5cb4f7db0b28194686443907daab3385320d7c1c9763edfb9af971d12316a`. Den separata pipeline-rubrikknappen ärver annars Button-komponentens nowrap och fast höjd. Lokal normal/radbrytning, automatisk höjd och relativ radavstånd är vår layoutlösning; MDN föreskriver inte knappmått och styrker inget färdigt browserprov.
+
 ---
 
 Historik före crm98 – tidigare dokumentation bevarad byteoförändrad nedan.

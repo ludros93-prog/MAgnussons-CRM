@@ -40,6 +40,7 @@
 .result-main-grid > * { min-width: 0; }
 .result-panel-heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 1.35rem 1.5rem; }
 .result-panel-heading > div { min-width: 0; }
+.result-pipeline .result-panel-heading > button { min-width: 0; max-width: 100%; height: auto; min-height: 2.25rem; white-space: normal; overflow-wrap: anywhere; line-height: 1.5; }
 .result-panel-heading h2 { margin: .3rem 0 0; font-size: 1.25rem; line-height: 1.45; }
 .result-panel-heading p { font-size: .875rem; color: #62748b; margin: .35rem 0 0; }
 .result-kicker { display: block; font-size: .75rem; color: #60758d; letter-spacing: .075em; font-weight: 600; }
