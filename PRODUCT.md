@@ -1,3 +1,19 @@
+# CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
+
+Även ”Återställ CRM-data i en tom arbetsyta” stoppar nu en kopia vars färdiga databaspost blir för stor. Ett tydligt svenskt fel betyder att denna återställning inte skrivit några uppgifter. Exakt 2 000 000 byte tillåts. Historik kapas inte för att få kopian att passa.
+
+Om databasens textkodning inte kan verifieras stoppas återställningen också. Bevara originalfilen privat och beskriv ofarlig feltext för ansvarig administratör. Registrera inga testdata på riktiga order.
+
+Lagringsschema, sex migrationer, data-/backupformat, DB/BUCKET, serverroller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler ändras inte. Oberoende källjämförelse visar byteidentisk commit-funktion med dess SQL och bindvärden. v106-kod kan läsa samma data men saknar den nya grinden för äldre dataåterställning; ingen kodåtergång eller återställning av riktiga kunddata har utförts.
+
+Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade. Grön lokal/CI-verifiering ersätter inte dessa.
+
+Vid denna dokumentfrysning återstår den frysta slutrevisionens obligatoriska regression, TypeScript, bygge, isolerade fullruntime, diffkontroll, exakt-head CI, aktuell-bas merge och publicering på samma Site. Faktisk kandidat, GitHub-main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö, konton och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM109: färdiga återställningsrader får plats före filskrivning
 
 En CRM-kopia kan växa när kundfiler får nya ID:n och återställningen lägger till historik. Systemet stoppar nu en kopia som då skulle innehålla en för stor databaspost, innan några filer återställs. Exakt 2 000 000 byte tillåts; större ger ett tydligt svenskt fel. Originalhistorik tas aldrig bort för att få kopian att passa. Båda befintliga formaten behålls.

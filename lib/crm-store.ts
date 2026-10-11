@@ -1,5 +1,5 @@
 import {database} from './crm-db';
-import {normalizeState,emptyState,seedState,type State,type Actor} from './crm';
+import {normalizeState,emptyState,seedState,RuleError,type State,type Actor} from './crm';
 import {ensureReceiptTasks} from './order-work';
 import {assertStorageRowBudget,type StorageValue} from './crm-storage-budget';
 export type MutationResult={customerId?:string;dealId?:string;orderId?:string;taskId?:string;eventId?:string};
@@ -32,13 +32,24 @@ export function crmSpaceStorageRow(space:string,version:number,writeToken:string
  return {table:'crm_spaces',columns:['id','version','write_token','settings'],values:[space,version,writeToken,JSON.stringify(settings)]};
 }
 function unchangedCrmEntity(prev:State,name:CrmCollection,item:CrmEntity){return prev[name].some(old=>old.id===item.id&&JSON.stringify(old)===JSON.stringify(item));}
-export function assertBackupRestoreStorageBudget(space:string,current:State,next:State,files:StoredFile[],receipt:RestoreReceipt){
+export async function assertRestoreDatabaseEncoding(){
+ // Measure the actual binding's TEXT encoding without PRAGMA or a cached
+ // assumption. The exact record calculator supports UTF-8; an unknown or
+ // different encoding must fail before staging or a data-only restore commit.
+ let encoding:{storage_probe:string}|null=null;
+ try{encoding=await database().prepare('SELECT hex(CAST(? AS BLOB)) AS storage_probe').bind('A😀').first<{storage_probe:string}>();}catch{/* Unknown encoding must not permit restore writes. */}
+ if(encoding?.storage_probe!=='41F09F9880')throw new RuleError('Databasens textkodning kunde inte verifieras för säker återställning. Inga uppgifter återställs.');
+}
+export function assertRestoreStorageBudget(space:string,current:State,next:State,files:StoredFile[],requestId:string,mutation:Pick<MutationMeta,'result'|'userId'|'hash'>){
  // crypto.randomUUID() in commit is always 36 ASCII bytes. Reserve that exact
  // width without consuming another UUID or changing the atomic write token.
  assertStorageRowBudget(crmSpaceStorageRow(space,current.version+1,'00000000-0000-0000-0000-000000000000',next.settings).values);
  for(const name of names)for(const item of next[name])if(!unchangedCrmEntity(current,name,item))assertStorageRowBudget(crmEntityStorageRow(space,name,item).values);
  for(const file of files)assertStorageRowBudget(crmFileStorageRow(space,file).values);
- assertStorageRowBudget(crmMutationStorageRow(space,receipt.id,{result:{},userId:receipt.userId,hash:receipt.hash}).values);
+ assertStorageRowBudget(crmMutationStorageRow(space,requestId,mutation).values);
+}
+export function assertBackupRestoreStorageBudget(space:string,current:State,next:State,files:StoredFile[],receipt:RestoreReceipt){
+ assertRestoreStorageBudget(space,current,next,files,receipt.id,{result:{},userId:receipt.userId,hash:receipt.hash});
 }
 const db=database;
 export async function load(space:string):Promise<State>{

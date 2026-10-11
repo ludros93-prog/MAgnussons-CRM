@@ -1,3 +1,23 @@
+# CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
+
+Färsk levererad bas är CRM109/[PR #177](https://github.com/ludros93-prog/MAgnussons-CRM/pull/177): GitHub-main `c0ab72677334a84d617ccb1be4171a6580a1c0cf`, Sites-källa `48e44ea58483c37b9554919fa54298f9c1ca8f4e`, lyckad live v106. Alla 423 spårade filers bytes och Git-lägen matchade vid öppningen, träd `f2243421c2038f4b8438130731e247af4d0c47bf`. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.
+
+Den äldre rena dataåterställningen (`/api/crm`, `type: restore`) kontrollerar nu samma dokumenterade 2 000 000-bytegräns som CRM-kopia med kundfiler. Hela slutliga SQLite-posten räknas: header, alla kolumner, genererad kundhistorik och denna routes faktiska mutationsresultat i kvittot. Kontrollen görs efter historiktillägget och före commit. Den faktiska DB-bindningen måste visa UTF-8; okänd eller annan textkodning ger avslag före skrivning. Vanliga skrivningar och redan genomförda exakta återförsök behåller sitt beteende.
+
+Vid rad- eller kodningsfel ska originalkopian bevaras privat. Utred faktisk DB-bindning och berörd lagringspost; kapa inte historik eller byt importväg för att kringgå gränsen. CRM110 inför ingen migrering. Granskad återpublicering av v106-källa `48e44ea58483c37b9554919fa54298f9c1ca8f4e` är kodåtergångsvägen och ska behålla samma Site, DB/BUCKET och begränsad delning, men den återinför äldre dataåterställningens lucka. Ingen sådan återgång utförs här.
+
+Lagringsschema, sex migrationer, data-/backupformat, DB/BUCKET, serverroller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler ändras inte. Oberoende källjämförelse visar byteidentisk commit-funktion med dess SQL och bindvärden. v106-kod kan läsa samma data men saknar den nya grinden för äldre dataåterställning; ingen kodåtergång eller återställning av riktiga kunddata har utförts.
+
+Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade. Grön lokal/CI-verifiering ersätter inte dessa.
+
+Nästa B04-lucka: källschemat tillåter 50 000 historikhändelser, varefter dataåterställningen lägger till en per kund. Statisk kodgranskning visar att 50 000 + 1 eller 49 999 + 2 kan överskrida exportschemats gräns. Detta är ännu inte ett genomfört 50k-handler-/runtimeprov; repro och slutlig historikgrind återstår. Radgrinden i CRM110 löser inte händelseantalet.
+
+Vid denna dokumentfrysning återstår den frysta slutrevisionens obligatoriska regression, TypeScript, bygge, isolerade fullruntime, diffkontroll, exakt-head CI, aktuell-bas merge och publicering på samma Site. Faktisk kandidat, GitHub-main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö, konton och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM109: färdiga återställningsrader får plats före filskrivning
 
 Färsk bas är levererad CRM108/[PR #176](https://github.com/ludros93-prog/MAgnussons-CRM/pull/176): GitHub-main `c02201adf6a600d1762ec6d1fe91d0cce7003597`, Sites-källa `d5742b825b189e95c0af9a15f3db02a072e45eae`, lyckad live v105. Alla 420 spårade filers bytes och Git-lägen matchade före ändringen, träd `69f944d6de1255a51660c903002ea3d5ce060268`. Egen branch/worktree och reservation används; inga öppna PR:er eller konkurrerande publicering observerades vid öppningen.

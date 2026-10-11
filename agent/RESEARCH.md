@@ -1,3 +1,23 @@
+# CRM110: även äldre dataåterställning kontrollerar färdiga databasposter
+
+Officiell dokumentation kontrollerades på nytt: [Cloudflare D1 limits](https://developers.cloudflare.com/d1/platform/limits/) anger 2 000 000 byte för sträng/BLOB/tabellrad; [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/#batch) beskriver transaktionsåtergång vid SQL-fel. [SQLite record format](https://www.sqlite.org/fileformat2.html#record_format) beskriver header/kolumnpayload och [SQLite CAST](https://www.sqlite.org/lang_expr.html#cast_expressions) kopplar text → BLOB till databasens kodning. Fyra faktiska HTTP 200-källor och tolv citatkontroller bevaras privat. Placering, kvitto, replay och CAS stöds av egna kontraktprov; inga officiella källor används som bevis för hostingkapacitet.
+
+Verifierade tidigare principer från Saleshub AI, Salesforce och Lime om tydligt ansvar, nästa steg och granskningsbar historik behålls. Ingen extern integration eller ny affärsdefinition införs.
+
+Luckan reproducerades på byteverifierad oförändrad bas: äldre dataåterställning gav HTTP 200 och sparade en hel eventpost på 2 000 001 byte, trots att JSON-kolumnen var 1 999 937 byte. Nativebasen var den tidigare faktiskt paketerade Workern från Sites-källa `48e44ea58483c37b9554919fa54298f9c1ca8f4e`; alla 105 byggfiler verifierades mot dess eget manifest. Det var ett lokalt accepterat överskridande, inget bevis på hostingens SQL-avslag.
+
+Lagringsschema, sex migrationer, data-/backupformat, DB/BUCKET, serverroller, privat kommunikation, CAS, idempotens och mängd-/revisionsregler ändras inte. Oberoende källjämförelse visar byteidentisk commit-funktion med dess SQL och bindvärden. v106-kod kan läsa samma data men saknar den nya grinden för äldre dataåterställning; ingen kodåtergång eller återställning av riktiga kunddata har utförts.
+
+Total D1-batch-/databasbudget, hostingens CPU/minne och verklig hostingåterställning återstår. Separat backup för kontobindningar, Outlook och privata utkast samt personlig inloggning, första verkliga sparning och personalacceptans är fortsatt obekräftade. Grön lokal/CI-verifiering ersätter inte dessa.
+
+Nästa B04-lucka: källschemat tillåter 50 000 historikhändelser, varefter dataåterställningen lägger till en per kund. Statisk kodgranskning visar att 50 000 + 1 eller 49 999 + 2 kan överskrida exportschemats gräns. Detta är ännu inte ett genomfört 50k-handler-/runtimeprov; repro och slutlig historikgrind återstår. Radgrinden i CRM110 löser inte händelseantalet.
+
+Vid denna dokumentfrysning återstår den frysta slutrevisionens obligatoriska regression, TypeScript, bygge, isolerade fullruntime, diffkontroll, exakt-head CI, aktuell-bas merge och publicering på samma Site. Faktisk kandidat, GitHub-main, Sites-källrevision och lyckad liveversion redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö, konton och agentaktivering ändras inte.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM109: färdiga återställningsrader får plats före filskrivning
 
 Färsk officiell dokumentation lästes 11 oktober 2026: nio HTTP 200-källor och 37 exakt återkontrollerade citat/offsetar. Privata evidensdigests är `cdf998b9ea4a011269f1145ac45d11774c7e715dc6a6e34447c8cade9fc7bf9e` och kodningssupplement `9c752c1c0d6cd439e63b2d310b655b8b8ce97dd2a3fbf8b683c0b3e40fd6aee0`; inga produktionsdata ingår.
