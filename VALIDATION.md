@@ -1,3 +1,17 @@
+# CRM113: vanliga CRM-ändringar bevarar dataexportens bytebudget
+
+Luckan reproducerades på oförändrad main via fem autentiserade Node-anrop: anteckning sparades med framtida dataheader 16 000 001 byte; format1-JSON gav fortfarande 200 eftersom dess metadata är kortare, medan format2-NDJSON gav 400. Den bevarade, hashbundna v109-Workern reproducerade via tre faktiska lokala HTTP-anrop: backup 200 vid 15 999 685 byte → anteckning 200 → dataheader 16 000 001 byte och återexport 400. Alla 105 byggfiler och 34 fixturmoduler bands separat till öppningskällan.
+
+Riktad kandidat verifierades i 58 Node-handleranrop mot migrerad SQLite och 55 faktiska Worker-HTTP-anrop mot isolerad D1/R2. CJK/emoji, exakt gräns/+1, kundnotering, uppföljning med privat utkast, kundredigeringens två audits, 18 positiva tabellsentineler och två R2-objekt ingår. CAS=0, verklig rollindragning vid commit, privat revisionskonflikt, förlorad kvittens efter commit, säkert återförsök efter faktisk tillväxt och exakt redan sparat kvitto även efter syntetisk övergränstillväxt verifierades. Tekniska syntetiska prov innebär ingen kund-, konto- eller personalacceptans.
+
+Den gemensamma slutpunkten för `/api/crm` mäter nu färdig dataheader med befintlig UTF-8-serializer efter genererad historik och med destinationens nästa revision, före denna CRM-mutations commit. Över 16 000 000 byte ger ett handlingsbart 400-besked utan att ändringen förbrukar privat utkast, kvitto eller kunddata. Exakt gräns går vidare till tidigare roller, atomisk commit, CAS och övriga kontroller. Äldre restore-besked/kodningsprobe/radbudget och tidigare exakt idempotenskvittos svar behåller sina vägar. Historia kapas inte och säkert återförsök mäter om efter verklig konkurrerande tillväxt.
+
+Grinden avser dataheader med `files: []`; destinationens filtabell behöver inte vara tom. Den garanterar inte komplett kopia med filmetadata/innehåll, JSON:s separata totalbudget, framtida schema-/historikantal/textgränser, D1-rad/query/batchkapacitet eller hostingens CPU/minne. Full header-serialisering innebär arbete per mutation; lokal runtime bevisar inte produktionsprestanda. En redan överstor arbetsyta får inte ett nytt undantag som kapar historik eller kringgår grinden. Bevara privat underlag och låt administratören utreda.
+
+Vid denna källfrysning är riktade prov och eget preliminärt bygge gröna; fem obligatoriska kontroller på slutlig head, aktuell CI, merge, eget SOURCE-bygge/paket och samma Sites publicering återstår. Kandidat, GitHub-main, Sites-källa och live redovisas separat i PR/task efter faktiska kvitton. Den refererade Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget Codex read_thread-verktyg finns; explicit brief och färsk repo används.
+
+---
+
 # CRM112: äldre dataåterställning lämnar plats för återexport
 
 Felet reproducerades på oförändrad öppningsbas i fem autentiserade Node-handleranrop mot migrerad SQLite: en POST på 7 945 603 UTF-16-enheter sparade 161 händelser och en framtida header på 23 785 897 UTF-8-byte. Dataläsning och exakt återförsök gav 200, medan både JSON- och NDJSON-backup gav 400. Den tidigare faktiskt paketerade v108-Workern reproducerade samma lucka med en separat fixture via två lokala HTTP-anrop mot isolerad D1/R2: restore 200, header 23 800 541 byte, NDJSON-export 400. Alla 105 oförändrade byggfiler verifierades mot v108-källans eget paketmanifest.

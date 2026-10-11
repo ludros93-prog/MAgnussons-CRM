@@ -1,3 +1,13 @@
+# CRM113: vanliga CRM-ändringar bevarar dataexportens bytebudget
+
+När sparande ger beskedet ”Ändringen skulle göra CRM-data och historik för stora för dataexport inom 16 MB” har just den CRM-ändringen inte sparats. Bevara anteckningen/underlaget privat och kontakta ansvarig administratör. Upprepa inte sparandet tills underlaget har utretts. Ett privat utkast kan vara separat sparat; felbeskedet bekräftar inte att den gemensamma kunduppföljningen finns. Följ alltid aktivitetens faktiska sparbesked.
+
+Grinden avser dataheader med `files: []`; destinationens filtabell behöver inte vara tom. Den garanterar inte komplett kopia med filmetadata/innehåll, JSON:s separata totalbudget, framtida schema-/historikantal/textgränser, D1-rad/query/batchkapacitet eller hostingens CPU/minne. Full header-serialisering innebär arbete per mutation; lokal runtime bevisar inte produktionsprestanda. En redan överstor arbetsyta får inte ett nytt undantag som kapar historik eller kringgår grinden. Bevara privat underlag och låt administratören utreda.
+
+Vid denna källfrysning är riktade prov och eget preliminärt bygge gröna; fem obligatoriska kontroller på slutlig head, aktuell CI, merge, eget SOURCE-bygge/paket och samma Sites publicering återstår. Kandidat, GitHub-main, Sites-källa och live redovisas separat i PR/task efter faktiska kvitton. Den refererade Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget Codex read_thread-verktyg finns; explicit brief och färsk repo används.
+
+---
+
 # CRM112: äldre dataåterställning lämnar plats för återexport
 
 Om ”Återställ CRM-data i en tom arbetsyta” ger besked att data och återställningshistorik inte ryms inom 16 MB, har den nya återställningen inte skrivit några uppgifter. Bevara originalkopian privat och låt ansvarig administratör utreda feltexten; befintlig historik tas inte bort för att få kopian att passa. Filväljaren tillåter fortfarande högst 10 MB. Kopior som hänvisar till kundfiler behöver den separata funktionen ”CRM-kopia med kundfiler”. Detta ändrar inte behörigheten eller vilka uppgifter kopian omfattar.

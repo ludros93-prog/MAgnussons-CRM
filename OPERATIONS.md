@@ -1,3 +1,15 @@
+# CRM113: vanliga CRM-ändringar bevarar dataexportens bytebudget
+
+Den gemensamma slutpunkten för `/api/crm` mäter nu färdig dataheader med befintlig UTF-8-serializer efter genererad historik och med destinationens nästa revision, före denna CRM-mutations commit. Över 16 000 000 byte ger ett handlingsbart 400-besked utan att ändringen förbrukar privat utkast, kvitto eller kunddata. Exakt gräns går vidare till tidigare roller, atomisk commit, CAS och övriga kontroller. Äldre restore-besked/kodningsprobe/radbudget och tidigare exakt idempotenskvittos svar behåller sina vägar. Historia kapas inte och säkert återförsök mäter om efter verklig konkurrerande tillväxt.
+
+Ingen lagringsmigration, SQL-tabelländring, exportformatändring eller ny åtkomst införs. Öppningskällan v109 kan läsa samma data; återgång till den källan tar bort den nya grinden och kan åter möjliggöra för stora headers, så den är ingen rekommenderad kapacitetslösning. Ingen verklig rollback/restore eller skrivtest på kundorder utförs. Lokal provstart via `node --input-type=module -e` låste Miniflares eval-hjälptråd innan D1; vanliga `.mjs`-teststarter löste det utan ändrad Worker/SQL eller svagare assertioner. Tidigare misslyckade körningar bevaras privat. Globalt ”Sparat i databas” är en generell arbetsytestatus, inte ett nytt kvitto för nekad modalåtgärd.
+
+Grinden avser dataheader med `files: []`; destinationens filtabell behöver inte vara tom. Den garanterar inte komplett kopia med filmetadata/innehåll, JSON:s separata totalbudget, framtida schema-/historikantal/textgränser, D1-rad/query/batchkapacitet eller hostingens CPU/minne. Full header-serialisering innebär arbete per mutation; lokal runtime bevisar inte produktionsprestanda. En redan överstor arbetsyta får inte ett nytt undantag som kapar historik eller kringgår grinden. Bevara privat underlag och låt administratören utreda.
+
+Vid denna källfrysning är riktade prov och eget preliminärt bygge gröna; fem obligatoriska kontroller på slutlig head, aktuell CI, merge, eget SOURCE-bygge/paket och samma Sites publicering återstår. Kandidat, GitHub-main, Sites-källa och live redovisas separat i PR/task efter faktiska kvitton. Den refererade Codex-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget Codex read_thread-verktyg finns; explicit brief och färsk repo används.
+
+---
+
 # CRM112: äldre dataåterställning lämnar plats för återexport
 
 Äldre ren dataåterställning (`/api/crm`, `type: restore`) mäter nu den färdiga dataheadern i UTF-8 efter genererad kundhistorik och med destinationens nästa revision. Över 16 000 000 byte stoppas före kodningsprobe, commit och R2; exakt gräns tillåts av denna grind och övriga kontroller krävs som tidigare. Samma serializer och gräns används av NDJSON-exporten. Historik kapas inte. Ett tidigare sparat exakt kvitto returneras fortfarande före förkontrollen; aktör och avsikt kontrolleras som tidigare.
