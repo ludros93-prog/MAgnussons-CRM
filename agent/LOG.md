@@ -1,3 +1,31 @@
+# CRM112: äldre dataåterställning lämnar plats för återexport
+
+Levererad öppningsbas är CRM111/[PR #179](https://github.com/ludros93-prog/MAgnussons-CRM/pull/179): GitHub-main `bd7a22b1d14d85bdea45902e56356bf523991d37`, Sites-källa `946d38dc62f6784a9cfd5931a74236b7fe75332d`, lyckad live v108. Alla 427 spårade filers bytes och Git-lägen samt träd `dfa4a3a6ef11c9f1cd24b6269136f5a242849aae` matchade vid öppningen. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.
+
+Felet reproducerades på oförändrad öppningsbas i fem autentiserade Node-handleranrop mot migrerad SQLite: en POST på 7 945 603 UTF-16-enheter sparade 161 händelser och en framtida header på 23 785 897 UTF-8-byte. Dataläsning och exakt återförsök gav 200, medan både JSON- och NDJSON-backup gav 400. Den tidigare faktiskt paketerade v108-Workern reproducerade samma lucka med en separat fixture via två lokala HTTP-anrop mot isolerad D1/R2: restore 200, header 23 800 541 byte, NDJSON-export 400. Alla 105 oförändrade byggfiler verifierades mot v108-källans eget paketmanifest.
+
+Äldre ren dataåterställning (`/api/crm`, `type: restore`) mäter nu den färdiga dataheadern i UTF-8 efter genererad kundhistorik och med destinationens nästa revision. Över 16 000 000 byte stoppas före kodningsprobe, commit och R2; exakt gräns tillåts av denna grind och övriga kontroller krävs som tidigare. Samma serializer och gräns används av NDJSON-exporten. Historik kapas inte. Ett tidigare sparat exakt kvitto returneras fortfarande före förkontrollen; aktör och avsikt kontrolleras som tidigare.
+
+Kandidatens riktade Node-prov passerade 35 autentiserade HTTP-anrop mot migrerad SQLite på 8,409 sekunder. Både CJK- och emojiunderlag med exakt 16 000 000-byte slutheader sparas och återläses som data, JSON och NDJSON; en byte över gränsen avvisas före probe/commit/R2. Destinationens 9 → 10 mäts även när källversionen är en annan. ASCII och JSON-escaping, bevarad originalhistorik, fem nekade roller, CAS-förlust, återkallad aktör, förlorat commitsvar och exakta återförsök täcks. Ett uttryckligen syntetiskt äldre övergränskvitto returnerar 200 utan ny probe eller skrivning; det är ingen ny acceptans av för stort underlag. Alla 18 positiva råtabeller och privata konto-/utkast-/Outlook-/R2-sentineler bevaras vid avslag.
+
+Riktat nativeprov passerade 12 verkliga lokala HTTP-anrop på 8,608 sekunder mot byggd kandidat-Worker och isolerad D1/R2. Exakt 16 000 000-byte header ger restore 200 och giltig återläsning som data, JSON och NDJSON; 16 000 001 stoppas före probe/commit/R2. Exakt återförsök med gammalt underlag, syntetiskt äldre övergränskvitto, förlorat commitsvar 503 → kvitto 200, ändrad aktör/avsikt och nekad säljarroll täcks. Originalhistorik och 18 positiva råtabeller samt två privata R2-sentineler kontrolleras. Alla 105 byggfiler och 34 oförändrade pinnade fixturmoduler binds till faktiskt provat underlag. Detta är ett lokalt syntetiskt prov. Giltig återexport och parsning är inte ett andra fullständigt återställningsprov av samma 16 MB-kopia; nästa återställning skapar ny historik och kan kräva mer utrymme.
+
+Grinden gäller dataheadern vid första äldre dataåterställningen, med tom filförteckning (`files: []`). Källans filreferenser förbjuds som tidigare, men rutten bevisar inte att destinationens separata filtabell är tom. Full framtida backup med kvarvarande filmetadata, senare vanliga skrivningar och JSON-formatets egen total-/base64budget garanteras inte av denna kontroll. Befintlig SQL-radgrind på 2 000 000 byte och 50 000-händelsegrind behålls separat. Klientens oförändrade filgräns är 10 000 000 byte; POST-ruttens teckengräns räknar UTF-16-enheter och är ett annat mått.
+
+Ingen lagringsvariant, migration, formatändring eller ändring av commit-SQL införs. Serverroller, privata data, CAS, idempotens, mängd-/revisionsregler och DB/BUCKET behålls. v108-kod kan läsa samma accepterade data. Återpublicering av granskad Sites-källa `946d38dc62f6784a9cfd5931a74236b7fe75332d` är kodåtergångsvägen men tar bort den nya exportbudgetgrinden; ingen sådan återgång eller verklig hostingåterställning har utförts.
+
+Nästa avgränsade B04-spår är senare vanliga skrivningar efter en återställning vid exakt 16 MB: återställningsgrinden ger ingen framtida marginal för en ny anteckning. Detta är ett statiskt identifierat spår; separat handler-/native-reproduktion och åtgärd återstår. Total D1-batch-/databasbudget, hostingens CPU/minne, verklig hostingåterställning och separat backup för kontobindningar, Outlook och privata utkast återstår också. B01 är delvis öppet; B06/B07 kräver verkliga personer och konton.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Kontrollerat browserprov återstår; den stora avvisade serverfixturen passerar inte klientens filgräns. Eventuellt UI-prov med liten syntetisk fil och injicerad serverfeltext redovisas separat från verkligt handler-/nativeavslag. Faktisk kandidat, GitHub-main, Sites-källrevision, lyckad liveversion och slutkontroller redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo används.
+
+Syntetiska lokala Node-/Worker-/browserprov och grön CI bevisar inga riktiga kontoinloggningar, första verkliga sparningar, personalacceptanser, Fortnox-/Outlook-anslutningar eller verklig hostingåterställning. Inga riktiga kundorder används för skrivprov.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM111: återställd kundhistorik ryms även efter nya auditposter
 
 Levererad öppningsbas är CRM110/[PR #178](https://github.com/ludros93-prog/MAgnussons-CRM/pull/178): GitHub-main `ad34abc5e452420812af3a0f0b14c8752ad1116f`, Sites-källa `cd395bd31bfe788ae6f2bc0ad640c9dbcbddbddf`, lyckad live v107. Samtliga 425 spårade filers bytes och Git-lägen matchade före ändringen. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.

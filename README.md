@@ -1,3 +1,19 @@
+# CRM112: äldre dataåterställning lämnar plats för återexport
+
+Levererad öppningsbas är CRM111/[PR #179](https://github.com/ludros93-prog/MAgnussons-CRM/pull/179): GitHub-main `bd7a22b1d14d85bdea45902e56356bf523991d37`, Sites-källa `946d38dc62f6784a9cfd5931a74236b7fe75332d`, lyckad live v108. Alla 427 spårade filers bytes och Git-lägen samt träd `dfa4a3a6ef11c9f1cd24b6269136f5a242849aae` matchade vid öppningen. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.
+
+Äldre ren dataåterställning (`/api/crm`, `type: restore`) mäter nu den färdiga dataheadern i UTF-8 efter genererad kundhistorik och med destinationens nästa revision. Över 16 000 000 byte stoppas före kodningsprobe, commit och R2; exakt gräns tillåts av denna grind och övriga kontroller krävs som tidigare. Samma serializer och gräns används av NDJSON-exporten. Historik kapas inte. Ett tidigare sparat exakt kvitto returneras fortfarande före förkontrollen; aktör och avsikt kontrolleras som tidigare.
+
+Ingen lagringsvariant, migration, formatändring eller ändring av commit-SQL införs. Serverroller, privata data, CAS, idempotens, mängd-/revisionsregler och DB/BUCKET behålls. v108-kod kan läsa samma accepterade data. Återpublicering av granskad Sites-källa `946d38dc62f6784a9cfd5931a74236b7fe75332d` är kodåtergångsvägen men tar bort den nya exportbudgetgrinden; ingen sådan återgång eller verklig hostingåterställning har utförts.
+
+Vid denna dokumentfrysning återstår obligatorisk regression, TypeScript, bygge, isolerad fullruntime och diffkontroll på den frysta slutrevisionen samt exakt-head CI, aktuell-bas merge och samma Sites-publicering. Kontrollerat browserprov återstår; den stora avvisade serverfixturen passerar inte klientens filgräns. Eventuellt UI-prov med liten syntetisk fil och injicerad serverfeltext redovisas separat från verkligt handler-/nativeavslag. Faktisk kandidat, GitHub-main, Sites-källrevision, lyckad liveversion och slutkontroller redovisas separat i PR/leveranskvittensen efter körning. Begränsad delning, miljö och agentaktivering ändras inte.
+
+Referens-tasken `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex. Explicit brief och färskt repo används.
+
+Tidigare dokumentation bevaras byteoförändrad nedan.
+
+---
+
 # CRM111: återställd kundhistorik ryms även efter nya auditposter
 
 Levererad öppningsbas är CRM110/[PR #178](https://github.com/ludros93-prog/MAgnussons-CRM/pull/178): GitHub-main `ad34abc5e452420812af3a0f0b14c8752ad1116f`, Sites-källa `cd395bd31bfe788ae6f2bc0ad640c9dbcbddbddf`, lyckad live v107. Samtliga 425 spårade filers bytes och Git-lägen matchade före ändringen. Egen branch och reservation används; ingen öppen PR eller konkurrerande publicering observerades.

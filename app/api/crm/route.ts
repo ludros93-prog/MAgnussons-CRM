@@ -3,6 +3,7 @@ import {ProductionAssignmentTransferSchema,productionAssignmentBasis,productionA
 import {revisionBasis} from '@/lib/order-revisions';
 import {directBasis} from '@/lib/direct-delivery';
 import {restoreState} from '@/lib/crm-restore';
+import {BACKUP_MAX_BYTES,backupStreamHeader} from '@/lib/crm-backup';
 import {load,commit,initialize,projectState,mutationResult,requestHash,assertRestoreDatabaseEncoding,assertRestoreStorageBudget,type MutationMeta} from '@/lib/crm-store';
 import {followupBasis} from '@/lib/follow-up';
 import {assignmentBasis,productionBasis} from '@/lib/production-quantities';
@@ -340,7 +341,12 @@ export async function POST(req:Request){try{
 const result=mutationResult(current,next,p.type,p.data);
  // Generated history and the actual result receipt are part of the write.
  // Completed request receipts have already returned before this first-write gate.
- if(p.type==='restore'){await assertRestoreDatabaseEncoding();assertRestoreStorageBudget(p.space,persisted,next,[],p.requestId,{result,userId:user.user_id!,hash});}
+ if(p.type==='restore'){
+  // The restored data, including its audit and destination version, must fit the export header.
+  const {bytes}=backupStreamHeader(p.space,{...next,version:persisted.version+1},[]);
+  if(bytes.byteLength>BACKUP_MAX_BYTES)throw new RuleError('CRM-kopian lämnar inte plats för återställningens data och historik inom 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.');
+  await assertRestoreDatabaseEncoding();assertRestoreStorageBudget(p.space,persisted,next,[],p.requestId,{result,userId:user.user_id!,hash});
+ }
  if(!await commit(p.space,persisted,next,p.requestId,draft,{result,userId:user.user_id!,hash,actorAuthorization:{memberId:user.id,userId:user.user_id!,role:user.role,owner:user.owner},sellerProfileAuthorization,productionAssignmentAuthorization,customerAnchorAuthorization,commercialAnchorAuthorization,orderAnchorRecord,taskAnchorRecord})){user=await member(req,true);authorizeAction(user.role,p.type);if(p.type==='year_need'&&sellerProfileAuthorization)await profileAuthorization(req,current,p.type,actionData);if(safe)continue;return await checkedStateReply(req,user,projectState(await load(p.space),p.space),state=>({error:'Underlaget har ändrats. Dina uppgifter finns kvar.',state}),409);}
  return await checkedStateReply(req,user,projectState(await load(p.space),p.space),state=>({...state,mutationResult:result}));
  }
