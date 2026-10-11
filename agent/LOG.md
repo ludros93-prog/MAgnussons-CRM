@@ -1,3 +1,11 @@
+**CRM103 – placeringskontrollen stoppade föregående slutkandidat**
+
+Den strikta kompatibilitetsgrinden stoppade `42519634e4a91418f406e3a2952b77e991a56206`: CSS-tilläggets 310 byte låg mitt i filen, så tidigare bytes fanns kvar men utgjorde inte hela prefixet som scope kräver. Samma tre regler har nu flyttats till faktiskt filslut; filen är exakt tidigare main-CSS plus det oförändrade tillägget, Git-läget oförändrat. Privat korrigeringsbevis `stylesheet-placement-correction.json` binder före-/efterbytes; aktuell CSS SHA-256 `631787a2a7c311fac97dce33202a8c5939aa099339110c6dd8b9cfbc7b8ae590`. Kravet och scopekvittot behålls. Ett statiskt delprov som endast kontrollerade att gamla bytes gick att återfå räcker inte för detta prefixkrav och kvalificerar inte leverans.
+
+Den stoppade kandidatens regression, TypeScript och bygge hann faktiskt passera. Den egna femkontrollen avbröts med SIGTERM under isolerad runtime efter kompatibilitetsfyndet; processgruppen är stängd. Runtime och femkontrollen räknas inte som PASS. Kvittot/loggarna, avbrottet och det tidigare kandidaturvalets bevarandekvitto kvarstår som tidsbunden historik. Ny ren slutrevision kräver nya fem kommandon, exakt-head CI, faktisk prefix-/lagringsjämförelse och full APP-/SOURCE-browser. Ingen CRM103-merge, källsynkning eller publicering har skett; main/källa/live är fortsatt CRM102/v99 vid denna nya frysning.
+
+---
+
 **CRM103 – browserfynd korrigerade inför slutleverans**
 
 Kandidat `64cbb0acc77563329ff0c534a04cd3ecd364f79e` klarade faktiskt alla fem obligatoriska kommandon (privat kvitto SHA-256 `af48df12e0a10764cf6cbeb9f63eb6c1b7b3f9e483e14c15ea16b617c5c5ff08`) och [exakt-head CI 38121749777](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38121749777). Native APP-browser stoppade sedan på horisontellt överflöde i två kundsignaler vid 1290 px och dubbel textstorlek. En kontaktpanelsregel rättade radbrytningen. Nästa undersökande mobilprov hittade verkligt överlapp: fasta 26 px antalsmarkeringar fick 38 px tecken; uppgiftsmarkeringen överlappade en knapp med 6 px och leveransköns markering nästa text med 3 px. En lokal MyDay-regel låter markeringarna växa med texten. Ett första försök behöll 26 px genom äldre importordning; det stoppet bevaras. Den korrigerade specificiteten gäller endast roten med klasserna my-day och visual-day.

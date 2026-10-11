@@ -1,3 +1,11 @@
+**CRM103 – placeringskontrollen stoppade föregående slutkandidat**
+
+Den strikta kompatibilitetsgrinden stoppade `42519634e4a91418f406e3a2952b77e991a56206`: CSS-tilläggets 310 byte låg mitt i filen, så tidigare bytes fanns kvar men utgjorde inte hela prefixet som scope kräver. Samma tre regler har nu flyttats till faktiskt filslut; filen är exakt tidigare main-CSS plus det oförändrade tillägget, Git-läget oförändrat. Privat korrigeringsbevis `stylesheet-placement-correction.json` binder före-/efterbytes; aktuell CSS SHA-256 `631787a2a7c311fac97dce33202a8c5939aa099339110c6dd8b9cfbc7b8ae590`. Kravet och scopekvittot behålls. Ett statiskt delprov som endast kontrollerade att gamla bytes gick att återfå räcker inte för detta prefixkrav och kvalificerar inte leverans.
+
+Den stoppade kandidatens regression, TypeScript och bygge hann faktiskt passera. Den egna femkontrollen avbröts med SIGTERM under isolerad runtime efter kompatibilitetsfyndet; processgruppen är stängd. Runtime och femkontrollen räknas inte som PASS. Kvittot/loggarna, avbrottet och det tidigare kandidaturvalets bevarandekvitto kvarstår som tidsbunden historik. Ny ren slutrevision kräver nya fem kommandon, exakt-head CI, faktisk prefix-/lagringsjämförelse och full APP-/SOURCE-browser. Ingen CRM103-merge, källsynkning eller publicering har skett; main/källa/live är fortsatt CRM102/v99 vid denna nya frysning.
+
+---
+
 **CRM103 – officiellt CSS-underlag för kontaktkortens radbrytning**
 
 Fyra färska substantiella officiella artiklar hämtades med faktisk HTTP 200 den 11 oktober 2026 kl. **07:51:42–07:51:45 UTC**: MDN [overflow-wrap](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap), [min-width](https://developer.mozilla.org/en-US/docs/Web/CSS/min-width) och W3C [Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html), [Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html). Tio korta ordagranna utdrag är byteverifierade mot sparade råbodies, texthash, citathash och offset. Separat privat CSS-researchkvitto SHA-256 `2d30b0ba9d25ea35f944d6ab0df7be7da4378235b5e2e9280d3c3a6ac3ebcc83`. Tidigare domänresearch, tre artiklar/sju citat, bevaras oförändrad.
