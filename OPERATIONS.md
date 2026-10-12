@@ -1,3 +1,13 @@
+# CRM120: filförteckningens revision följer vardagssparningen
+
+Vanliga CRM-mutationer läser arbetsytans revision och samtliga `crm_files`-descriptors i en read-only D1-batch med två SELECT. Revisionen måste vara exakt den redan serverlästa `persisted.version`; det nya snapshotet ersätter aldrig gammal CAS-bas. Vid skillnad används befintlig återauktorisering och säkert återförsök eller kontrollerad 409. Varje omprov mäter verkligt nytt metadataunderlag. JSON-/schemafel i descriptors ger statiskt 400 utan privata parservärden; SQL-läsfel följer befintligt 503.
+
+Samma `backupStreamHeader` mäter hela `next` efter reducer/audits och nästa revision. Över 16 000 000 UTF-8-byte utan LF stoppas före mutationens commit. Återställningens data-only-grind och ordning består. Tidigare exakt aktörs-/avsiktskvitto returnerar före nya läsgrinden; shared commit, utkast-CAS, serverroller och tappad kvittens hanteras som tidigare. Kontrollens R2-läsningar är noll; NDJSON behåller sin större filinnehållsbudget, inga nya legacy JSON-/10 MB-begränsningar införs.
+
+Alla sex migrationer, DB/BUCKET, backupformat och sparade datafält består. Accepterade data är läsbara med föregående v116/SOURCE `591a750398417dcb80302cfb4136bc0063a9d788`; kodåtergång återinför metadata-/headerluckan. Ingen live-rollback eller full hostad återställning är prövad. crm82-golvet för äldre ansvarsaudit består. Konton, privata utkast och Outlook behöver separat återställningsrutin. Slutkontroller och publicering är ännu inte genomförda vid denna frysning.
+
+---
+
 # CRM119: första JSON-återställning bevarar hela paketbudgeten
 
 `importBackup` behåller tidigare ordning: källa/integritet och mål, tillagd återställningshistorik, verklig fil-ID-/referensomappning samt befintlig framtida NDJSON-header, DB-kodning och färdiga radbudgetar. Därefter mäts den färdiga äldre JSON-kopian före första R2 put och commit. Tidigare sparat exakt aktörs-/avsiktskvitto följer fortfarande sin tidigare replayväg. Målkontrollens befintliga `initialize()` ligger kvar och kan skapa en tom arbetsyta; avslag före återställningscommit innebär inte ett generellt löfte om noll tidigare SQL-skrivningar. De syntetiska bevarandeproven använder redan initialiserade mål.
