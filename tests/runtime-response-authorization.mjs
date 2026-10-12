@@ -136,7 +136,7 @@ export async function assertNativeResponseAuthorization(){
    }
    const key='response-native/'+space+'/file',fileId='response-file-'+space,bytes=new TextEncoder().encode(privateSecret+'\n  åäö '+space);
    await bucket.put(key,bytes,{httpMetadata:{contentType:'text/plain'},customMetadata:{synthetic:'response-authorization'}});
-   await db.prepare('INSERT INTO crm_files(id,space,customer_id,object_key,data)VALUES(?,?,?,?,?)').bind(fileId,space,'response-customer',key,JSON.stringify({id:fileId,customerId:'response-customer',name:'Syntetisk kontrollfil.txt',kind:'document',size:bytes.length,version:'response-native',at:'2026-10-09T09:00:00.000Z'})).run();
+   await db.prepare('INSERT INTO crm_files(id,space,customer_id,object_key,data)VALUES(?,?,?,?,?)').bind(fileId,space,'response-customer',key,JSON.stringify({id:fileId,customerId:'response-customer',name:'Syntetisk kontrollfil.txt',kind:'document',size:bytes.length,version:'response-native',at:'2026-10-09T09:00:00.000Z',uploadedBy:'Syntetisk kontrollaktör'})).run();
    for(const userId of [actorId,'response-other-user'])await db.prepare('INSERT INTO crm_drafts(space,user_id,id,kind,context,revision,request_id,title,data,archived,updated_at)VALUES(?,?,?,?,?,?,?,?,?,?,?)').bind(space,userId,'response-draft-'+userId,'note','response-customer',3,crypto.randomUUID(),'Syntetiskt privat utkast',' {"text":"'+privateSecret+'"} \n',0,'2026-10-09T09:00:00.000Z').run();
   }
   await db.prepare('INSERT INTO outlook_connections(user_id,microsoft_id,email,tokens,last_sync,status,sync_note,lock_until,revision)VALUES(?,?,?,?,?,?,?,?,?)').bind(actorId,'response-synthetic-microsoft',actorEmail,privateSecret,'2026-10-09T09:00:00.000Z','error',privateSecret,0,7).run();
