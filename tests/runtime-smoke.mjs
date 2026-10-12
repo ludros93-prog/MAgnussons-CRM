@@ -32,6 +32,7 @@ console.log('PASS native data-only restore row budget: '+JSON.stringify(await (a
 console.log('PASS native data-only restore history budget: '+JSON.stringify(await (await import('./runtime-data-restore-history-budget.mjs')).assertNativeDataRestoreHistoryBudget()));
 console.log('PASS native data-only restore export budget: '+JSON.stringify(await (await import('./runtime-data-restore-export-budget.mjs')).assertNativeDataRestoreExportBudget()));
 console.log('PASS native ordinary mutation export budget: '+JSON.stringify(await (await import('./runtime-mutation-export-budget.mjs')).assertNativeMutationExportBudget()));
+console.log('PASS native ordinary mutation complete file header budget: '+JSON.stringify(await (await import('./mutation-file-header-native.mjs')).assertNativeMutationFileHeaderBudget()));
 console.log('PASS native ordinary mutation history budget: '+JSON.stringify(await (await import('./runtime-mutation-history-export-budget.mjs')).assertNativeMutationHistoryExportBudget()));
 console.log('PASS native file upload history budget: '+JSON.stringify(await (await import('./runtime-file-history-export-budget.mjs')).assertNativeFileHistoryExportBudget()));
 console.log('PASS native file upload count copy budget: '+JSON.stringify(await (await import('./runtime-file-count-copy-budget.mjs')).assertNativeFileCountCopyBudget()));

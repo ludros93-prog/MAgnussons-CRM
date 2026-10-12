@@ -76,7 +76,7 @@ export async function verifyCrmResponseAuthorization({core,sqlite,api,draftApi,o
    sqlite.prepare('INSERT INTO outlook_oauth_states(hash,user_id,verifier,expires) VALUES(?,?,?,?)').run(id('oauth-'+person.id),person.user,'synthetic-verifier',1890000000000);
   }
   objects.set(objectKey,new Uint8Array([67,82,77,55,55]));
-  sqlite.prepare('INSERT INTO crm_files(id,space,customer_id,object_key,data) VALUES(?,?,?,?,?)').run(fileId,space,customerId,objectKey,JSON.stringify({id:fileId,name:'synthetic-proof.txt',version:'v1',kind:'proof',size:5,at}));
+  sqlite.prepare('INSERT INTO crm_files(id,space,customer_id,object_key,data) VALUES(?,?,?,?,?)').run(fileId,space,customerId,objectKey,JSON.stringify({id:fileId,name:'synthetic-proof.txt',version:'v1',kind:'proof',size:5,at,uploadedBy:'Syntetisk provaktör'}));
   meta=sqlite.prepare('SELECT * FROM crm_spaces WHERE id=?').get(space);baseline=snapshot();
   for(const role of roles){resetCase(role);const before=snapshot();projection(await get(),role);unchanged(before,'Fresh '+role+' read');counts.fresh++;}
   for(const source of roles)for(const change of [...roles.filter(role=>role!==source),...identityChanges]){

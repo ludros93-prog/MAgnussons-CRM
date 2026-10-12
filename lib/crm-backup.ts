@@ -38,6 +38,18 @@ export function backupStreamHeader(space:string,st:State,files:unknown[]){
  const header=BackupStreamHeader.parse({type:'header',format:BACKUP_STREAM_FORMAT,exportedAt:new Date().toISOString(),sourceSpace:space,state,files});
  return {header,bytes:new TextEncoder().encode(JSON.stringify(header))};
 }
+export async function backupMutationHeaderBytes(space:string,current:State,next:State){
+ // File mutations also advance the workspace revision. Read every descriptor
+ // with that revision in one transaction; never promote a later snapshot to
+ // the version on which this mutation was prepared.
+ const db=database(),snapshot=await db.batch([db.prepare('SELECT version FROM crm_spaces WHERE id=?').bind(space),db.prepare('SELECT customer_id,data FROM crm_files WHERE space=? ORDER BY id').bind(space)]);
+ const meta=snapshot[0].results[0] as {version:number}|undefined;
+ if(!meta||meta.version!==current.version)return null;
+ try{
+  const files=snapshot[1].results.map(value=>{const row=value as {customer_id:string;data:string};return {customerId:row.customer_id,metadata:JSON.parse(row.data)}});
+  return backupStreamHeader(space,{...next,version:current.version+1},files).bytes.byteLength;
+ }catch{throw new RuleError('CRM-kopians underlag kunde inte verifieras. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');}
+}
 export async function validateBackupRestoreHeader(space:string,current:State,next:State,stored:StoredFile[],receipt:RestoreReceipt){
  // Commit increments the destination version. File IDs and all references
  // have already been remapped, so neither source bytes nor its version suffice.

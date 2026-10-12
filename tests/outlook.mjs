@@ -13,6 +13,7 @@ await (await import('./data-restore-row-budget.mjs')).verifyDataRestoreRowBudget
 await (await import('./data-restore-history-budget.mjs')).verifyDataRestoreHistoryBudget();
 await (await import('./data-restore-export-budget.mjs')).verifyDataRestoreExportBudget();
 await (await import('./mutation-export-budget.mjs')).verifyMutationExportBudget();
+await (await import('./mutation-file-header-budget.mjs')).verifyMutationFileHeaderBudget();
 await (await import('./mutation-history-export-budget.mjs')).verifyMutationHistoryBudget();
 await (await import('./file-history-export-budget.mjs')).verifyFileHistoryBudget();
 await (await import('./file-count-copy-budget.mjs')).verifyFileCountCopyBudget();

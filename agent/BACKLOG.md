@@ -1,3 +1,13 @@
+# CRM120: full metadataheader för vardagssparningar – kandidat
+
+B04:s nästa avgränsade lucka är reproducerad och rättad: vanlig anteckning/uppföljning mäter nu hela NDJSON-headern med samtliga filbeskrivningar och faktisk nästa revision före commit. Version och descriptors läses i samma D1-batch; nyare snapshot ger befintligt säkert omprov eller konflikt. Exakt 16 000 000 UTF-8-byte utan LF tillåts; +1 avvisas med bevarat underlag/privat utkast. Inga nya R2-läsningar eller JSON-/10 MB-gränser; schema, CAS, atomisk commit och tidigare kvitto består.
+
+Oförändrad baslinje passerade två fall/åtta faktiska Node-handleranrop; kandidat passerade 25 fall/56 anrop med metadata, privata utkast, verklig andra filuppladdning, CAS, roller och tappad kvittens. Native- och obligatoriska slutprov, exakt-head CI, merge och samma-Site-publicering återstår vid dokumentfrysningen. Föregående dokumentationsleverans [PR #193](https://github.com/ludros93-prog/MAgnussons-CRM/pull/193) är faktiskt sammanslagen i öppnings-main `fb255a6a2141e31e29df0cf593e619ff44d14373`; live är v116.
+
+Nästa B04-del: senare skrivares legacy JSON-total/base64, andra läsarschemagränser och separat privat/full hostad återställning. Lokal kapacitet är ett konkret separat hinder; främmande filer behålls. Riktiga konto-/personal-/integrationsprov är obekräftade. Codex-referensen är oläst. B04 som helhet är öppet.
+
+## Historik före CRM120
+
 # CRM119 levererad i v116: äldre JSON-återställning ryms i nästa kopia
 
 Första återställningen av äldre JSON mäter hela nästa kopias 16 000 000 UTF-8-byte, inklusive genererade audits, omappade filreferenser och nästa destinationsrevision. Exakt gräns tillåts; +1 avvisas före R2-staging/återställningscommit efter befintliga förkontroller. JSON:s 10 MB filtak och NDJSON:s separata kontrakt består. Ingen migration eller formatändring.

@@ -1,3 +1,13 @@
+# CRM120 – revisionsbundet metadataunderlag i framtida NDJSON-header
+
+Fem färska officiella HTTP200-källor och elva exakta citat har verifierats privat med råbody-/text-/citat-hashar och byteoffset i normaliserad UTF-8-text: [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md), [SQLite isolation](https://www.sqlite.org/isolation.html), [WHATWG Encoding](https://encoding.spec.whatwg.org/), [ECMA JSON](https://tc39.es/ecma262/multipage/structured-data.html) och [R2 consistency](https://developers.cloudflare.com/r2/reference/consistency/index.md). Forskningskvitto SHA-256 `a6277103ffee32aca4b9c311c59ffbf5eb2e1a613c07cefd69beff7fb5c796c3`.
+
+D1 batch stöder sekventiell SQL-transaktion och rollback; revision och samtliga filbeskrivningar läses tillsammans. Behåll separat senare commit-CAS och byt inte gammal bas till en ny revision. SQLite-citatet om WAL-snapshot är uttryckligen WAL-scope, inget påstående om Magnussons journalmode. Mät hela den faktiska JSON-serialiserade headern efter escaping som UTF-8, inklusive filmetadata och nästa revision. 16 000 000 byte utan LF är Magnussons befintliga inkluderande formatkontrakt, ingen Cloudflare-gräns. R2:s konsistens utgör ingen gemensam SQL/R2-transaktion.
+
+Tidigare verifierade Saleshub-, Salesforce- och Lime-principer om stabilt ansvar, konkret nästa aktivitet och granskningsbar historik återanvänds; inga nya leverantörs-, konto-/integrations-/marginal-/affärspåståenden görs. Kod- och runtimeprov måste belägga egen implementation. Legacy JSON-total/base64, övriga läsargränser, privat/hostad återställning och verkliga personer/konton är separat öppna. Codex-referensen är oläst.
+
+---
+
 # CRM119 – källor för hela JSON-paketet och separat paddat base64
 
 Sju officiella HTTP200-källor och 20 exakta citat har verifierats privat med kropp-/texthashar: [RFC 4648 base64](https://www.rfc-editor.org/rfc/rfc4648.txt), [ECMAScript JSON.stringify](https://tc39.es/ecma262/multipage/structured-data.html), [WHATWG TextEncoder](https://encoding.spec.whatwg.org/), [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md), [R2 Workers API](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/index.md), [R2 consistency](https://developers.cloudflare.com/r2/reference/consistency/index.md) och [Workers limits](https://developers.cloudflare.com/workers/platform/limits/index.md). Ett HTTP403-förberedelseförsök och två ej matchande formuleringar är separat bevarade och ger inga källpåståenden. Privat forskningskvitto SHA-256 `f899cce6a2ef1b58f058b18ad598fd222a7d3e12565b0e1eb18494e96d27a9e4`.

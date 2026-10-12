@@ -1,3 +1,13 @@
+# CRM120: vardagssparningar räknar hela backupens filförteckning
+
+En vanlig CRM-ändring mäter nu hela framtida NDJSON-headern, inklusive alla sparade filbeskrivningar, verkliga audits och nästa revision. Exakt 16 000 000 UTF-8-byte utan radslut tillåts; +1 stoppas före ändringens commit. Filförteckningen och dess revision läses i samma batch. Ett nyare snapshot får inte bli ny bas för ett gammalt formulär: befintligt säkert återförsök eller konfliktbesked gäller.
+
+Detta rättar en reproducerad lucka där en anteckning eller uppföljning kunde sparas men därefter stoppa strömbackupen. Avslag bevarar arbetsunderlag och privata utkast; tidigare exakt kvitto återläses före första skrivningens nya kontroll. Inga R2-läsningar tillkommer i kontrollen. Återställningens tidigare ordning, serverroller, CAS och atomiska skrivningar består. Ingen ny JSON-/10 MB-gräns införs för vanliga skrivningar.
+
+Baslinje och riktade Node-prov har faktiskt passerat. Slutkandidatens obligatoriska kontroller, native-prov, exakt-head CI, merge och publicering återstår vid denna dokumentfrysning; senaste verifierade live är v116. Se [VALIDATION](VALIDATION.md) och [agent/LOG](agent/LOG.md). Detta garanterar inte legacy JSON-total, alla schemagränser eller full hostad återställning.
+
+---
+
 # CRM119: äldre JSON-återställning lämnar plats för återexport
 
 Första återställning av en JSON-kopia får nu ett förhandsprov av hela den kommande JSON-kopian, efter tillagd kundhistorik, verklig fil-ID-/referensomappning och destinationens nästa revision. Exakt **16 000 000 UTF-8-byte** tillåts; +1 avvisas före R2-staging och commit. Befintligt `BackupSchema`/`JSON.stringify` räknar omslag, normaliserat tillstånd, metadata och 64-teckenshashar; varje fils separat paddade base64längd läggs till utan nya R2-läsningar eller stora base64platshållare.
