@@ -35,6 +35,7 @@ console.log('PASS native ordinary mutation export budget: '+JSON.stringify(await
 console.log('PASS native ordinary mutation history budget: '+JSON.stringify(await (await import('./runtime-mutation-history-export-budget.mjs')).assertNativeMutationHistoryExportBudget()));
 console.log('PASS native file upload history budget: '+JSON.stringify(await (await import('./runtime-file-history-export-budget.mjs')).assertNativeFileHistoryExportBudget()));
 console.log('PASS native file upload count copy budget: '+JSON.stringify(await (await import('./runtime-file-count-copy-budget.mjs')).assertNativeFileCountCopyBudget()));
+console.log('PASS native customer file upload count copy budget: '+JSON.stringify(await (await import('./runtime-customer-file-count-copy-budget.mjs')).assertNativeCustomerFileCountCopyBudget()));
 const root = fileURLToPath(new URL('../',import.meta.url)), statePath = mkdtempSync(join(tmpdir(),'magnussons-runtime-'));
 const serverRoot=root+'/dist/server';
 const moduleFiles=readdirSync(serverRoot,{recursive:true}).filter(f=>/\.m?js$/.test(f));
