@@ -1,3 +1,13 @@
+# CRM118: tydligt avslag när kopians filförteckning blir för stor
+
+Om uppladdningen säger ”Filen skulle göra CRM-kopians filförteckning och historik för stor (högst 16 MB)” har ingen ny fil sparats av försöket. **Bevara originalfilen och kontakta administratören.** Samma regel gäller kundunderlag och arbetsfoton. Om en annan ändring hann före ges det befintliga 409-beskedet att välja filen igen och försöka på nytt.
+
+Gränsen gäller den fullständiga kommande NDJSON-headern: all CRM-data, arbetsytans samtliga filmetadata, den nya filen/händelsen och nästa revision. Den räknar 16 000 000 UTF-8-byte utan LF och tillåter exakt gräns. Befintliga antalstak består; tidigare filer tas inte bort. Ogiltigt privat kopieunderlag ger ett generiskt avslag utan att visa dess värden för tryck/lager.
+
+Headergrinden är preliminärt prövad i syntetiska Node-fall. Browserprov, kandidatens native-prov och slutlig publicering återstår. JSON-kopians total/base64 och filinnehållsbudget samt full privat backup/hostad återställning behöver fortfarande verifieras. Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmått; inga verksamhetsbeslut eller nya integrationer ingår.
+
+---
+
 # CRM117: kundens filgräns och revision läses tillsammans
 
 En samtidig kundfil eller ett arbetsfoto ska inte kunna lämna kunden med 201 filer och därmed stoppa båda backupformaten. Kundens filantal läses nu tillsammans med arbetsytans filantal, historikantal och CAS-revision i ett SQL-statement. Vid 200 befintliga filer avvisas uppladdningen med det befintliga beskedet ”Kunden har nått gränsen 200 filer.” före UUID och R2-staging. Befintliga filer raderas inte.

@@ -1,3 +1,13 @@
+# CRM118: filuppladdning ryms i kopians fullständiga header
+
+En ny kundfil eller ett arbetsfoto avvisas nu innan R2 eller databasen skrivs om den faktiska kommande NDJSON-headern skulle överstiga **16 000 000 UTF-8-byte, utan LF**. Beräkningen använder befintlig `backupStreamHeader` med hela normaliserade CRM-tillståndet, arbetsytans alla filmetadata, den nya filen, verklig ny händelse och nästa revision. Exakt gräns tillåts.
+
+Kundtak 200 → historik 50 000 → arbetsyta 2 000 behåller sin prioritet och avvisar före UUID. Därefter läses allt underlag i en batch med 12 SELECT; en revision som skiljer sig från den första läsningen ger 409 före UUID/R2. Byteavslaget sker efter två UUID, men före R2 och databasändring. Befintlig atomisk commit, serverroller, CAS och egen filstädning bevaras. Ingen migration eller formatändring införs.
+
+Riktade Node-prov har passerat; kandidatens native-prov och de fem obligatoriska slutkontrollerna, browserprov, exakt-head CI, merge samt samma-Site-publicering återstår vid denna källfrysning. Se [VALIDATION](VALIDATION.md). JSON-total/base64, 10 MB filinnehåll, andra läsarschemagränser, återställningens extra audits och full hostad återställning är fortsatt öppna; headergränsen gör inte alla kopior återställningsbara.
+
+---
+
 # CRM117: kundens filgräns och revision läses tillsammans
 
 En samtidig kundfil eller ett arbetsfoto ska inte kunna lämna kunden med 201 filer och därmed stoppa båda backupformaten. Kundens filantal läses nu tillsammans med arbetsytans filantal, historikantal och CAS-revision i ett SQL-statement. Vid 200 befintliga filer avvisas uppladdningen med det befintliga beskedet ”Kunden har nått gränsen 200 filer.” före UUID och R2-staging. Befintliga filer raderas inte.

@@ -1,3 +1,15 @@
+# CRM118 – källor för fullständig UTF-8-header och snapshots
+
+Åtta färska officiella HTTP200-källor och 13 exakta citat verifierades privat med kropp-/texthashar: [SQLite-transaktioner](https://www.sqlite.org/lang_transaction.html), [SQLite-isolation](https://www.sqlite.org/isolation.html), [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md), [D1 limits](https://developers.cloudflare.com/d1/platform/limits/index.md), [R2 Workers API](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/index.md), [R2 consistency](https://developers.cloudflare.com/r2/reference/consistency/index.md), [WHATWG TextEncoder](https://encoding.spec.whatwg.org/) och [ECMAScript JSON.stringify](https://tc39.es/ecma262/multipage/structured-data.html). Tre webverktygsförsök gav Internal Error; de efterföljande direkta officiella responserna var läsbara och deras citat hashverifierades.
+
+D1-batch kör statements sekventiellt och rullar tillbaka SQL-sekvensen vid fel. Den garanterar ingen gemensam D1/R2-transaktion. SQLite skiljer transaktionens snapshot från senare fristående läsningar; en senare revision får inte bli uppladdningens nya CAS-bas. D1:s separata gränser är bland annat 2 000 000 byte per string/BLOB/rad, 100 000 byte SQL, 100 bundna parametrar och 30 sekunder per SQL-fråga. Hela 16 MB-tillståndet samlas därför inte till ett enda SQL-JSON-värde. Lokal emulatorframgång belägger ingen produktionskapacitet.
+
+`TextEncoder` använder UTF-8; `JSON.stringify` tillför omslag och escaping. Därför återbrukas faktiskt läst `backupStreamHeader(...).bytes.byteLength` med all normaliserad data, alla gamla descriptors, verklig ny metadata/händelse och nästa revision. Rå SUM eller `files:[]` mäter inte kontraktet. **16 000 000 byte utan LF är Magnussons befintliga inkluderande headergräns**, inte en Cloudflare-gräns. Node-oraklet beräknar samma wire-kontrakt oberoende av produktserializern och prövar exakt gräns/+1.
+
+Saleshub-, Salesforce- och Lime-principerna om stabilt ansvar, konkret nästa steg och granskningsbar historik återanvänds från den tidigare källbanken; inga färska vendorhämtningar eller nya anslutnings-/affärspåståenden görs. JSON-total/base64, filinnehåll, andra läsarschemagränser, extra återställningsaudits och verklig privat/hostad återställning är fortsatt öppna. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt `read_thread` gäller Slack.
+
+---
+
 # CRM117: kundens filgräns och revision läses tillsammans
 
 En samtidig kundfil eller ett arbetsfoto ska inte kunna lämna kunden med 201 filer och därmed stoppa båda backupformaten. Kundens filantal läses nu tillsammans med arbetsytans filantal, historikantal och CAS-revision i ett SQL-statement. Vid 200 befintliga filer avvisas uppladdningen med det befintliga beskedet ”Kunden har nått gränsen 200 filer.” före UUID och R2-staging. Befintliga filer raderas inte.

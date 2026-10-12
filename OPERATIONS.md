@@ -1,3 +1,15 @@
+# CRM118: fullständigt underlag före filstaging
+
+Första SQL-läsningen behåller arbetsytans revision och felprioriteten kund 200 → historik 50 000 → arbetsyta 2 000. Dessa avslag sker före UUID. Därefter läser en D1-batch **12 SELECT**: arbetsytans version/settings, tio CRM-samlingar och alla arbetsytans filmetadata. Batchens revision måste vara exakt den ursprungliga; skillnad eller försvunnen arbetsyta ger 409 före UUID/R2. En senare snapshot får inte bli ny CAS-bas.
+
+Efter aktuell medlemskontroll skapas faktisk filmetadata och händelse med två UUID. Befintlig `backupStreamHeader` mäter hela normaliserade kommande tillståndet, samtliga descriptors plus den nya filen och nästa revision. Över 16 000 000 UTF-8-byte utan LF ger 400 före R2 och databasändring; exakt gräns tillåts. Ogiltigt underlag ger generiskt 400 utan privata parservärden. Fel vid databasläsningen följer befintligt 503-flöde.
+
+Befintlig atomisk trestatement-commit med ursprunglig CAS, medlem/orderpredikat och catch-/utfallsstädning är byteoförändrad. D1-transaktionen omfattar inte R2. Efter staging städas bara säkert osparad egen nyckel; okänt commitutfall behåller den. Ingen migration, schema-/backup-/filformatändring eller beständig replay införs. Föregående v114 kan läsa accepterade data men saknar denna headergrind. Ingen live-rollback har prövats.
+
+Vid källfrysningen är kandidatens native-prov, fem slutkontroller, browserprov, exakt-head CI, merge och SOURCE/save/deploy/efterkontroll öppna. Senast verifierad live är v114/SOURCE `cdae9437c2d67f999a8174abd14af3ef3c331d28`. Full hostad återställning och separat backup för konton, privata utkast och Outlook är fortsatt oprövade; JSON-total/base64 och andra läsargränser återstår.
+
+---
+
 # CRM117: kundens filgräns och revision läses tillsammans
 
 En samtidig kundfil eller ett arbetsfoto ska inte kunna lämna kunden med 201 filer och därmed stoppa båda backupformaten. Kundens filantal läses nu tillsammans med arbetsytans filantal, historikantal och CAS-revision i ett SQL-statement. Vid 200 befintliga filer avvisas uppladdningen med det befintliga beskedet ”Kunden har nått gränsen 200 filer.” före UUID och R2-staging. Befintliga filer raderas inte.
