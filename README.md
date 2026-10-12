@@ -1,6 +1,6 @@
 # CRM121 – kandidat med korrigerad isolerad observationskanal
 
-Produktändringen skyddar den befintliga återläsningsgränsen på 30 000 uppgifter. Den första kandidatens fullruntime/CI är faktiskt röd; felet lokaliserades till testets interna observations-fetch före filheader, efter lyckad native databas-/kvittoläsning. En avgränsad kontroll ändrar endast observationssvarets `Connection: close` och gav 20 fall/50 app-HTTP/61 R2-inspektioner. SQL, status/kvitto, 116 assertions och 139 await-uttryck består. Extra väntesteg från tidigare diagnoser införs inte. Detta är en testtransportändring, ingen verifierad produktionskapacitetsfix.
+Produktändringen skyddar den befintliga återläsningsgränsen på 30 000 uppgifter. Den första kandidatens fullruntime/CI är faktiskt röd; Det lokalt reproducerade 503-felet lokaliserades till testets interna observations-fetch före filheader, efter lyckad native databas-/kvittoläsning. CI-loggen visar 503 i nongrowth-loopen utan motsvarande fasdiagnos. En avgränsad kontroll ändrar endast observationssvarets `Connection: close` och gav 20 fall/50 app-HTTP/61 R2-inspektioner. SQL, status/kvitto, 116 assertions och 139 await-uttryck består. Extra väntesteg från tidigare diagnoser införs inte. Detta är en testtransportändring, ingen verifierad produktionskapacitetsfix.
 
 Ny fryst kandidat, obligatoriska slutkontroller, full runtime, exakt-head CI, main och separat Source/publicering återstår vid detta prefix. Live är fortsatt v117.
 
