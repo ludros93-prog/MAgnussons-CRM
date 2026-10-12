@@ -1,3 +1,13 @@
+# CRM121 – befintlig inkluderande uppgiftsgräns som skrivkontrakt
+
+Tre officiella HTTP200-källor och sex unika exakta citat har verifierats privat med UTF-8-offset, citat-/råbody-/normaliserad text-hash och hämtningstid: [arkiverad Zod v3](https://v3.zod.dev/), [officiell Zod 3.25.76-källa](https://raw.githubusercontent.com/colinhacks/zod/v3.25.76/packages/zod/src/v3/types.ts) och [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md). Kvitto SHA-256 `1a24c50f25725f889f0375c5056b2f5f8e7cbc2279872fd220c74688cfd1be3a`.
+
+Zod v3 dokumenterar `.max(5)` som fem eller färre objekt; versionsbunden implementation använder längd > max och inclusive:true. Den hämtade officiella 3.25.76-filen är byteidentisk med installerad källa (160 294 byte, SHA-256 `70309a0877c35d036842e291fe7c8a4439d5db49411d233f8a22bf8a59c41419`). Magnussons öppnings-Git har redan tasks.max(30000); den oförändrade inkluderande läsartillåtelsen delas med skrivaren. 30 000 är appens befintliga formatkontrakt, ingen Cloudflare-, verksamhets- eller hostingkapacitetsgaranti.
+
+D1 beskriver sekventiell SQL-transaktion och rollback. Befintlig CAS, identitet/avsikt/replay och SQL/R2-gräns måste fortsatt beläggas i egen kod/test; ingen gemensam D1/R2-transaktion påstås och inga nya SQL-operationer införs. Tidigare verifierade Saleshub/Salesforce/Lime-principer om stabilt ansvar, konkret nästa aktivitet och granskningsbar historik återbrukas utan nya effekt-, konto- eller integrationspåståenden. Andra samlingars läsartak, legacy JSON-total och privat/hostad återställning är separata öppna områden.
+
+## Historik före CRM121
+
 # CRM120 – revisionsbundet metadataunderlag i framtida NDJSON-header
 
 Fem färska officiella HTTP200-källor och elva exakta citat har verifierats privat med råbody-/text-/citat-hashar och byteoffset i normaliserad UTF-8-text: [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md), [SQLite isolation](https://www.sqlite.org/isolation.html), [WHATWG Encoding](https://encoding.spec.whatwg.org/), [ECMA JSON](https://tc39.es/ecma262/multipage/structured-data.html) och [R2 consistency](https://developers.cloudflare.com/r2/reference/consistency/index.md). Forskningskvitto SHA-256 `a6277103ffee32aca4b9c311c59ffbf5eb2e1a613c07cefd69beff7fb5c796c3`.

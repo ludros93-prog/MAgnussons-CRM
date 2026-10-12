@@ -1,3 +1,13 @@
+# CRM121: när nästa aktivitet når kopians uppgiftsgräns
+
+Beskedet ”CRM-kopian kan innehålla högst 30 000 uppgifter. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.” innebär att den nya ändringen inte har committats. Befintliga uppgifter, historik och privata utkast behålls. Bevara din text och ange endast minimal ofarlig feltext till administratören.
+
+Gränsen avser hela arbetsytans sparade uppgiftslista, även avslutade uppgifter och automatiskt skapade nästa steg. Exakt 30 000 tillåts. Redigering utan antalökning fungerar vid gränsen, men avslutning minskar inte antalet. Om arbetsytan redan har fler uppgifter stoppas även en ny ändring utan tillväxt. Ingen automatisk städning eller historikradering införs.
+
+Återställningsschema, CAS, serverroller, idempotens, privata utkast och DB/BUCKET består. Uppgiftsgränsen är appens befintliga återläsningskontrakt, ingen bekräftad hostingkapacitet. Andra samlingsgränser, legacy JSON-total/base64 och separat privat/full hostad återställning återstår. Vid denna frysning är kandidat-native, obligatoriska slutprov, CI, merge och publicering ännu inte verifierade; live är v117.
+
+## Historik före CRM121
+
 # CRM120: filförteckningens revision följer vardagssparningen
 
 Vanliga CRM-mutationer läser arbetsytans revision och samtliga `crm_files`-descriptors i en read-only D1-batch med två SELECT. Revisionen måste vara exakt den redan serverlästa `persisted.version`; det nya snapshotet ersätter aldrig gammal CAS-bas. Vid skillnad används befintlig återauktorisering och säkert återförsök eller kontrollerad 409. Varje omprov mäter verkligt nytt metadataunderlag. JSON-/schemafel i descriptors ger statiskt 400 utan privata parservärden; SQL-läsfel följer befintligt 503.

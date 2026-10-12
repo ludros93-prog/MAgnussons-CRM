@@ -1,3 +1,13 @@
+# CRM121: nästa steg skyddar uppgifternas återläsningsgräns – kandidat
+
+B04:s nästa avgränsade lucka är reproducerad: kundanteckning kan spara uppgift 30 001 och därefter stoppa båda backupformaten trots header under 16 MB. Vanlig slutlig mutation kontrollerar nu hela `next.tasks` mot samma 30 000-konstant som återläsaren. Avslutade och härledda uppgifter räknas. Exakt gräns tillåts; tidigare exakt aktörs-/avsiktskvitto returnerar först. Historikfel behåller sin prioritet; restoreordning och CAS består. Ingen migration eller formatändring.
+
+Node-kandidaten passerade 41 handlers med båda riktiga export-/isolering-/återställningsformaten, samtidighet, privata utkast och replay. Verklig bevarad v117-native reproducerade basfelet. Kandidat-native, frysta slutkontroller, exakt-head CI, merge och samma-Site-publicering återstår. Senast verifierad main är `6ab6fb9a025590521c3676a33234f29d8258844a` och live v117. Se [VALIDATION](../VALIDATION.md) och [LOG](LOG.md).
+
+Nästa B04-del: andra samlingars befintliga läsartak, formatmedveten legacy JSON-total/base64 och privat/full hostad återställning. B04 som helhet är öppet. Avslutning frigör inte uppgiftsutrymme; ingen automatisk radering införs. Lokal overlay/minneskapacitet är ett konkret separat hinder, främmande filer behålls. Riktiga konto-/personal-/integrationsprov är obekräftade; Codex-referensen är oläst.
+
+## Historik före CRM121
+
 # CRM120 levererad i v117: hela filheadern före vardagssparning
 
 B04:s avgränsade lucka är rättad och publicerad. Vanlig anteckning/uppföljning mäter nu hela kommande NDJSON-headern med befintliga filbeskrivningar, faktiskt resultat/audits och nästa revision före commit. Version och filbeskrivningar läses i samma D1-batch. Exakt 16 000 000 UTF-8-byte utan LF tillåts; +1 stoppas med bevarat underlag. Befintlig CAS, serverbehörighet, privata utkast och idempotenta kvitton består. Ingen migration eller formatändring.
