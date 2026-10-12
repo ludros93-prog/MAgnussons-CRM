@@ -1,3 +1,13 @@
+# CRM115: filuppladdning bevarar historikens exportgräns
+
+Oförändrad main reproducerade 50 000→50 001 via verklig multipart-uppladdning: 7 autentiserade Node-handleranrop och 5 lokala Worker-HTTP-anrop; båda backendbackuperna avvisades efteråt. Preliminär kandidat passerade 30 Node-anrop/26 fall och 27 native HTTP-anrop. Exakt 49 999+1 med verklig filmetadata/innehåll och JSON/NDJSON/parser, avslag före R2/commit, konkurrens, roller, orderunderlag, rollback samt förlorad/okänd kvittens täcks. Node har 55 och native 34 transitive käll-/modulhashar; 18 positiva råtabeller och två R2-sentineler skyddas. Native testar även arbetsfoto vid exakt gräns. Detta är syntetiska tekniska prov.
+
+Detta är historikantal för filuppladdning, inte full backupberedskap. Samlad filmetadata/headerbudget, 2 000 filer per kopia, JSON:s innehålls-/totalbudget, andra läsarschemagränser och verklig hostingkapacitet/återställning återstår. Exakt 50 000 kan exporteras i de prövade små filfallen men lämnar inte automatiskt plats för återställningens extra kundaudits. Filuppladdning har inget beständigt request-ID-kvitto: återläst egen filmetadata kan bekräfta samma pågående begärans COMMIT, inte en ny HTTP-begärans idempotenta replay.
+
+Vid denna källfrysning är ovanstående baslinjer och riktade preliminära prov genomförda. Fem obligatoriska slutkontroller, kontrollerat browserprov, exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår. Faktisk kandidat/main/Sites-källa/live och slutresultat redovisas separat i PR/task efter verkliga kvitton. Konto-/personal-/integrationsprov och verklig hostingåterställning är obekräftade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex; explicit brief och färsk repo används.
+
+---
+
 # CRM114: gemensamma CRM-sparningar bevarar historikens läsargräns
 
 Luckan reproducerades på oförändrad öppningsbas i 7 autentiserade Node-handleranrop: båda backendbackuperna gav 200 vid 50 000, vanlig note sparade 50 001 med dataheader 8 691 696 byte, originalhistoriken bevarades, läsarschemat avvisade och båda backuperna gav 400. Den verkliga, bevarade v110-Workern reproducerade via 5 lokala HTTP-anrop mot isolerad D1/R2: NDJSON 200 vid 50 000 → note 200 vid 50 001 och header 7 952 848 byte → båda backuperna 400. Dess 431 källfiler och 105 distfiler bevarades. Fixturerna skiljer sig; inget identiskt byteantal mellan miljöerna påstås.

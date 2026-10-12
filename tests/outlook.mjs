@@ -13,6 +13,7 @@ await (await import('./data-restore-history-budget.mjs')).verifyDataRestoreHisto
 await (await import('./data-restore-export-budget.mjs')).verifyDataRestoreExportBudget();
 await (await import('./mutation-export-budget.mjs')).verifyMutationExportBudget();
 await (await import('./mutation-history-export-budget.mjs')).verifyMutationHistoryBudget();
+await (await import('./file-history-export-budget.mjs')).verifyFileHistoryBudget();
 await (await import('./production-assignment-legacy.mjs')).verifyProductionAssignmentLegacy();
 await (await import('./production-issue-edit.mjs')).verifyProductionIssueEdit();
 await (await import('./production-dispatched-issue.mjs')).verifyProductionDispatchedIssue();
