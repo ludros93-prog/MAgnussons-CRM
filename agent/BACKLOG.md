@@ -1,3 +1,13 @@
+# CRM118: B04:s fullständiga filheadergrind är preliminärt prövad
+
+Kundfil och arbetsfoto har nu ett avgränsat förhandsprov av hela kommande NDJSON-headern: normaliserat CRM-tillstånd, samtliga arbetsytefiler, verklig ny metadata/händelse och nästa revision. Exakt 16 000 000 UTF-8-byte utan LF tillåts, +1 avvisas före R2/databasändring. Tidigare antalstak består. Revisionsskillnad före fullsnapshot ger 409 utan förlorarens staging; efter fullsnapshot gäller tidigare CAS och egen städning.
+
+Node-baslinje 16 anrop/två fall reproducerade luckan; kandidat 72 anrop/45 fall och de tre befintliga antal-/historikproven har passerat. Native-baslinjen passerade i bevarat faktiskt v114-bygge: sex app-HTTP-anrop/två fall med samma headerlucka. Kandidatens native-prov är ännu inte verifierat. Fem obligatoriska slutkontroller, browserprov, exakt-head CI, aktuell-bas merge och verifierad samma-Site-publicering återstår. CRM118 är inte levererad i live vid detta prefix; senast verifierad live är v114. Se [VALIDATION](../VALIDATION.md).
+
+**Nästa B04-del:** JSON-total/base64 och totalt filinnehåll, övriga läsarschemagränser och återställningens extra audits; därefter full privat backup med faktisk hostad återställning och bevarade referenser. Konton, privata utkast och Outlook behöver separat återställningsväg. Den nu behandlade fullheader-/antalgrinden ska inte återlistas som olöst. B01:s riktiga konto-/personalprov och Fortnox/Outlook är fortsatt öppna. Codex-referensen är oläst eftersom tillgängligt `read_thread` gäller Slack; inga nya schema-/prompt-/aktiveringsändringar ingår.
+
+---
+
 # CRM117 levererad: filgräns vid samtidig uppladdning
 
 B04:s avgränsade kundtakslucka är rättad och publicerad i **v114**. Kundens filantal och CAS-revision läses i samma SQL-snapshot. Konkurrens vid 199 filer kan ge en vinnare vid 200 och en CAS-förlorare 409, utan att lämna kunden med 201 och oläsbara JSON-/NDJSON-kopior. Äldre redan överskridna kunder får tydligt avslag; befintliga filer tas inte bort.

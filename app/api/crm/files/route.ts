@@ -2,6 +2,9 @@ import { z } from 'zod';
 import { database,bucket } from '@/lib/crm-db';
 import { member,AccessError,sameOrigin,type Member } from '@/lib/crm-auth';
 import {fileOnWork,type CustomerFile} from '@/lib/crm-files';
+import {emptyState,normalizeState} from '@/lib/crm';
+import {names,tables} from '@/lib/crm-store';
+import {backupStreamHeader,BACKUP_MAX_BYTES} from '@/lib/crm-backup';
 const reply=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
 const spaceOf=(value:unknown)=>z.enum(['demo','live']).parse(value);
 const fail=(e:unknown)=>{if(e instanceof AccessError)return reply({error:e.message},e.status);if(e instanceof z.ZodError)return reply({error:e.issues.map(i=>i.message).join(' ')},400);console.error('CRM file failed',e);return reply({error:'Filen kunde inte hanteras. Försök igen.'},503)};
@@ -32,10 +35,24 @@ export async function POST(req:Request){let objectKey='',savedData:CustomerFile|
  if(current.customer_count>=200)throw new AccessError('Kunden har nått gränsen 200 filer.',400);
  if(current.event_count>=50000)throw new AccessError('Filen skulle göra CRM-historiken för stor för dataexport (högst 50 000 händelser). Ingen ny fil har sparats. Bevara filen och kontakta administratören.',400);
  if(current.file_count>=2000)throw new AccessError('Filen skulle göra CRM-kopian för stor (högst 2 000 kundfiler). Ingen ny fil har sparats. Bevara filen och kontakta administratören.',400);
+ // State and every existing file descriptor belong to one read transaction.
+ // Never promote a later snapshot to the original upload's CAS revision.
+ const copy=await db.batch([db.prepare('SELECT version,settings FROM crm_spaces WHERE id=?').bind(space),...names.map(n=>db.prepare(`SELECT data FROM ${tables[n]} WHERE space=?`).bind(space)),db.prepare('SELECT customer_id,data FROM crm_files WHERE space=? ORDER BY id').bind(space)]);
+ const meta=copy[0].results[0] as {version:number;settings:string}|undefined;
+ if(!meta||meta.version!==current.version)throw new AccessError('En annan ändring hann före. Välj filen igen och försök på nytt.',409);
  await currentMember(req,user);
- const id=crypto.randomUUID(),at=new Date().toISOString(),data:CustomerFile={id,name:file.name.replace(/[\r\n]/g,'').slice(0,200),kind,version,size:file.size,at,uploadedBy:user.name,...(photo?{purpose:'production' as const,orderId:productionOrder.id,workId:productionOrder.production.workId}:{})};savedData=data;objectKey=space+'/'+customerId+'/'+id;
+ const id=crypto.randomUUID(),at=new Date().toISOString(),data:CustomerFile={id,name:file.name.replace(/[\r\n]/g,'').slice(0,200),kind,version,size:file.size,at,uploadedBy:user.name,...(photo?{purpose:'production' as const,orderId:productionOrder.id,workId:productionOrder.production.workId}:{})};
+ const event={id:crypto.randomUUID(),customerId,dealId:productionOrder?.dealId||'',text:(photo?'Arbetsfoto sparat: ':'Fil sparad: ')+data.name+' · version '+version,at,kind:photo?'production':'file',actor:{id:user.user_id!,name:user.name}};
+ let headerBytes:number;
+ try{
+  const state=emptyState();state.version=meta.version;state.settings=JSON.parse(meta.settings);names.forEach((n,i)=>{(state[n] as unknown[])=copy[i+1].results.map(r=>JSON.parse((r as {data:string}).data))});
+  const normalized=normalizeState(state),files=copy[names.length+1].results.map(r=>{const row=r as {customer_id:string;data:string};return {customerId:row.customer_id,metadata:JSON.parse(row.data)}});
+  headerBytes=backupStreamHeader(space,{...normalized,version:current.version+1,events:[...normalized.events,event]},[...files,{customerId,metadata:data}]).bytes.byteLength;
+ }catch{throw new AccessError('CRM-kopians underlag kunde inte verifieras. Ingen ny fil har sparats. Bevara filen och kontakta administratören.',400);}
+ if(headerBytes>BACKUP_MAX_BYTES)throw new AccessError('Filen skulle göra CRM-kopians filförteckning och historik för stor (högst 16 MB). Ingen ny fil har sparats. Bevara filen och kontakta administratören.',400);
+ savedData=data;objectKey=space+'/'+customerId+'/'+id;
  await bucket().put(objectKey,file.stream(),{httpMetadata:{contentType:'application/octet-stream'}});
- const token=crypto.randomUUID(),gate='EXISTS(SELECT 1 FROM crm_spaces WHERE id=? AND write_token=?)';const event={id:crypto.randomUUID(),customerId,dealId:productionOrder?.dealId||'',text:(photo?'Arbetsfoto sparat: ':'Fil sparad: ')+data.name+' · version '+version,at,kind:photo?'production':'file',actor:{id:user.user_id!,name:user.name}};
+ const token=crypto.randomUUID(),gate='EXISTS(SELECT 1 FROM crm_spaces WHERE id=? AND write_token=?)';
  const r=await db.batch([db.prepare('UPDATE crm_spaces SET version=version+1,write_token=? WHERE id=? AND version=? AND (? IS NULL OR EXISTS(SELECT 1 FROM crm_orders WHERE space=? AND id=? AND data=?)) AND EXISTS(SELECT 1 FROM crm_members WHERE id=? AND user_id=? AND role=? AND owner=? AND active=1)').bind(token,space,current.version,productionOrder?productionOrder.id:null,space,productionOrder?.id||'',productionOrder?JSON.stringify(productionOrder):'',user.id,user.user_id!,user.role,user.owner),db.prepare('INSERT INTO crm_files(id,space,customer_id,object_key,data) SELECT ?,?,?,?,? WHERE '+gate).bind(id,space,customerId,objectKey,JSON.stringify(data),space,token),db.prepare('INSERT INTO crm_events(id,space,customer_id,data) SELECT ?,?,?,? WHERE '+gate).bind(event.id,space,customerId,JSON.stringify(event),space,token)]);
  if(r[0].meta.changes!==1){await currentMember(req,user);await bucket().delete(objectKey);objectKey='';throw new AccessError('En annan ändring hann före. Välj filen igen och försök på nytt.',409);}objectKey='';await currentMember(req,user);return reply(data);
  }catch(e){let committed=false;if(objectKey)try{committed=!!await database().prepare('SELECT id FROM crm_files WHERE object_key=?').bind(objectKey).first();if(!committed)await bucket().delete(objectKey)}catch{/* Keep the object if commit outcome cannot be verified. */}if(writer)try{await currentMember(req,writer)}catch(error){return fail(error)}if(committed&&savedData)return reply(savedData);return fail(e)}}
