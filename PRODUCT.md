@@ -1,3 +1,13 @@
+# CRM119: tydligt stopp innan en äldre JSON-kopia blir för stor
+
+Om återställningen säger ”Återställningen skulle göra den äldre JSON-kopian större än 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.” har detta första återställningsförsök stoppats före filstaging och commit. **Bevara originalkopian privat och kontakta administratören med minimal ofarlig feltext.** Kapa inte historik.
+
+Kontrollen räknar hela framtida JSON-kopian efter nya historikposter och filreferenser, inte bara den inkommande filen. Exakt 16 000 000 UTF-8-byte tillåts. Den äldre JSON-kopians 10 MB-gräns för sammanlagt binärt filinnehåll består; det strömmade NDJSON-formatet får ingen ny JSON-totalgräns.
+
+Baslinjen och riktade syntetiska Node-prov har passerat; kandidatens native-, browser- och slutkontroller samt publicering återstår. Senast verifierad live är v115. Detta är en avgränsad återställningsgrind, inte bekräftad full driftbackup. Konton, privata utkast och Outlook ingår inte i den gemensamma kopian. Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmått; inga affärsdefinitioner eller integrationer ändras.
+
+---
+
 # CRM118: tydligt avslag när kopians filförteckning blir för stor
 
 Om uppladdningen säger ”Filen skulle göra CRM-kopians filförteckning och historik för stor (högst 16 MB)” har ingen ny fil sparats av försöket. **Bevara originalfilen och kontakta administratören.** Samma regel gäller kundunderlag och arbetsfoton. Om en annan ändring hann före ges det befintliga 409-beskedet att välja filen igen och försöka på nytt.

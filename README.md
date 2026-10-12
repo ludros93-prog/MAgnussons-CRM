@@ -1,3 +1,13 @@
+# CRM119: äldre JSON-återställning lämnar plats för återexport
+
+Första återställning av en JSON-kopia får nu ett förhandsprov av hela den kommande JSON-kopian, efter tillagd kundhistorik, verklig fil-ID-/referensomappning och destinationens nästa revision. Exakt **16 000 000 UTF-8-byte** tillåts; +1 avvisas före R2-staging och commit. Befintligt `BackupSchema`/`JSON.stringify` räknar omslag, normaliserat tillstånd, metadata och 64-teckenshashar; varje fils separat paddade base64längd läggs till utan nya R2-läsningar eller stora base64platshållare.
+
+Den äldre JSON-kopians separata 10 MB-gräns för binära filer består. NDJSON får ingen ny JSON-totalgräns. Roller, första återställningsförsökets befintliga förkontroller, atomisk commit, CAS, exakt kvittoåterförsök och egen R2-städning behålls. Ingen migration, nytt lagringsfält eller formatändring införs.
+
+Luckan är reproducerad med oförändrad publicerad v115-kod i Node och bevarat faktiskt Worker-bygge. Riktad Node-kandidat och avgränsat headerkompatibilitetsprov har passerat. Kandidatens nya native-prov, slutkontroller, browserprov, exakt-head CI, merge och publicering återstår vid denna dokumentfrysning; live är fortsatt v115. Se [VALIDATION](VALIDATION.md) och [agent/LOG](agent/LOG.md). Detta gör inte alla framtida skrivningar eller hela driften återställningsbar.
+
+---
+
 # CRM118: filuppladdning ryms i kopians fullständiga header
 
 En ny kundfil eller ett arbetsfoto avvisas nu innan R2 eller databasen skrivs om den faktiska kommande NDJSON-headern skulle överstiga **16 000 000 UTF-8-byte, utan LF**. Beräkningen använder befintlig `backupStreamHeader` med hela normaliserade CRM-tillståndet, arbetsytans alla filmetadata, den nya filen, verklig ny händelse och nästa revision. Exakt gräns tillåts.

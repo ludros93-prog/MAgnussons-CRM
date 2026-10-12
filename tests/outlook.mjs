@@ -8,6 +8,7 @@ await (await import('./delivery-task-responsibility.mjs')).verifyDeliveryTaskRes
 await (await import('./production-assignment.mjs')).verifyProductionAssignment();
 await (await import('./production-assignment-membership.mjs')).verifyProductionAssignmentMembership();
 await (await import('./backup-restore-row-budget.mjs')).verifyBackupRestoreRowBudget();
+await (await import('./json-restore-export-budget.mjs')).verifyJsonRestoreExportBudget();
 await (await import('./data-restore-row-budget.mjs')).verifyDataRestoreRowBudget();
 await (await import('./data-restore-history-budget.mjs')).verifyDataRestoreHistoryBudget();
 await (await import('./data-restore-export-budget.mjs')).verifyDataRestoreExportBudget();
