@@ -335,8 +335,10 @@ export async function POST(req:Request){try{
   const changes=after?fields.filter(k=>recordBasis(record[k])!==recordBasis(after[k])).map(k=>(fieldLabels[k]||k)+': '+String(record[k]??'Ej angivet')+' → '+String(after[k]??'Ej angivet')):[];
   if(changes.length)next.events.unshift({id:crypto.randomUUID(),customerId:String(p.type==='customer'?record.id:record.customerId),dealId:String(p.type==='deal'?record.id:record.dealId||''),text:'Ändrade uppgifter\n'+changes.join('\n'),kind:'change',at:new Date().toISOString()});
  }
- // Reserve room for generated customer audits before writing any restored data.
- if(p.type==='restore'&&next.events.length+next.customers.length>50000)throw new RuleError('CRM-kopian lämnar inte plats för återställningens historik. Inga uppgifter återställs och befintlig historik tas inte bort.');
+ // Count actual mutation audits and reserve restored customer audits before commit.
+ if(next.events.length+(p.type==='restore'?next.customers.length:0)>50000)throw new RuleError(p.type==='restore'
+  ?'CRM-kopian lämnar inte plats för återställningens historik. Inga uppgifter återställs och befintlig historik tas inte bort.'
+  :'Ändringen skulle göra CRM-historiken för stor för dataexport (högst 50 000 händelser). Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');
  const before=new Set(current.events.map(e=>e.id));if(p.type!=='restore'){for(const e of next.events)if(!before.has(e.id))e.actor={id:user.user_id!,name:user.name};}else for(const c of next.customers)next.events.push({id:crypto.randomUUID(),customerId:c.id,dealId:'',text:'Kundens CRM-data återställd från export',kind:'restore',at:new Date().toISOString(),actor:{id:user.user_id!,name:user.name}});
 const result=mutationResult(current,next,p.type,p.data);
  // Generated history and the actual result receipt are part of the write.

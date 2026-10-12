@@ -1,3 +1,17 @@
+# CRM114: gemensamma CRM-sparningar bevarar historikens läsargräns
+
+B04: den gemensamma mutationsvägens historikantal är implementerat och riktat Node-verifierat i kandidat. B01 är fortsatt delvis öppet; konto-/personalprov och verkliga integrationer kvarstår.
+
+Slutgrinden i `/api/crm` räknar nu den vanliga mutationens verkliga historik efter reducer och eventuell extra ändringsaudit. Över 50 000 händelser stoppas före denna mutations commit med ett konkret svenskt 400-besked. Återställning reserverar fortfarande en audit per kund med identiskt tidigare felbesked och ordning. Exakta redan sparade aktörs-/avsiktskvittot returnerar tidigare; säkert CAS-återförsök räknar om verklig konkurrerande tillväxt. Historik kapas inte och privat utkast förbrukas inte vid detta avslag. Befintlig separat 16 MB-dataheadergrind, kodningsprobe och restore-radbudget ligger kvar.
+
+Nästa avgränsade B04-spår är filuppladdningens separata historikskrivning och kombinerad filmetadata/headerbudget, med verklig isolerad repro före kodändring och med serverroller/CAS/R2-städägande bevarade. Genererad text och andra läsarschemagränser är separata statiskt identifierade luckor. Konto-/personalprov, separata privata backupområden, hostingkapacitet och verkliga externa anslutningar är fortsatt obekräftade.
+
+Detta skyddar gemensamma `/api/crm`-mutationers historikantal, inte varje CRM-skrivare eller hela backupens giltighet. Filuppladdningen har egen historikskrivning utanför denna grind. Filmetadata/innehåll, andra samlingars antal, historiktextens längd, JSON/base64-totalbudget, D1-/Workerkapacitet och verklig hostingåterställning återstår separat. Exakt 50 000 är läsarschemats gräns; en senare återställning behöver ytterligare kund-audits och kan därför fortfarande avvisas. Redan överstor historik ger avslag på nya gemensamma skrivningar, också utan nya events; inga poster raderas för att komma runt grinden.
+
+Vid denna källfrysning är baslinjer och riktade Node-prov verifierade. Fem obligatoriska kontroller på slutlig head, byggd kandidatruntime, kontrollerat browserprov, exakt-head CI, aktuell-bas merge, eget SOURCE-bygge/paket och samma Sites-publicering återstår. Faktisk kandidat, GitHub-main, Sites-källa och lyckad liveversion redovisas separat i PR/task efter verkliga kvitton. Syntetiska tekniska prov är ingen konto-, integrations-, kund- eller personalacceptans. Refererad Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: inget Codex read_thread-verktyg finns; explicit brief och färsk repo används.
+
+---
+
 # CRM113: vanliga CRM-ändringar bevarar dataexportens bytebudget
 
 B04: vanliga CRM-mutationers slutliga UTF-8-dataheadergrind är implementerad och riktat Node/native-verifierad i kandidat; frysta slutkontroller och leverans återstår.
