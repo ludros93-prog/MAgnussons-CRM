@@ -1,3 +1,11 @@
+# CRM121 – kandidat med korrigerad isolerad observationskanal
+
+Produktändringen skyddar den befintliga återläsningsgränsen på 30 000 uppgifter. Den första kandidatens fullruntime/CI är faktiskt röd; felet lokaliserades till testets interna observations-fetch före filheader, efter lyckad native databas-/kvittoläsning. En avgränsad kontroll ändrar endast observationssvarets `Connection: close` och gav 20 fall/50 app-HTTP/61 R2-inspektioner. SQL, status/kvitto, 116 assertions och 139 await-uttryck består. Extra väntesteg från tidigare diagnoser införs inte. Detta är en testtransportändring, ingen verifierad produktionskapacitetsfix.
+
+Ny fryst kandidat, obligatoriska slutkontroller, full runtime, exakt-head CI, main och separat Source/publicering återstår vid detta prefix. Live är fortsatt v117.
+
+## Föregående CRM121-kandidat
+
 # CRM121: nästa aktivitet ryms även i CRM-kopian
 
 Vanlig CRM-sparning använder nu återläsarens befintliga gräns på högst 30 000 uppgifter. Den räknar det färdiga resultatet, inklusive uppgifter som skapas av kundanteckning, avslutad uppföljning eller genomfört möte. Exakt gräns tillåts; uppgift 30 001 stoppas före ändringens commit. Avslag bevarar befintliga privata utkast och sparar ingen del av den nya uppföljningen.

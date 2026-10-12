@@ -1,3 +1,11 @@
+# CRM121 – verifierad kontroll, slutlig leverans ännu öppen
+
+Uppgiftsgrinden och privata Node-41-kontrakt är genomförda. Första head 35034cda har fyra gröna lokala kontroller men röd fullruntime-CI. Hindret avgränsades till testobservatörens interna fetch; extra await/yield-diagnoser blev inte produkt-/mergebevis. Minimal callback-Response Connection:close bevarar alla SQL/status/gates/116 assertions/139 awaits och passerade separat full native-kontroll: 20 fall/50 app-HTTP/61 R2. Ny head/canonical prov, obligatoriska slutkontroller, fullruntime/exakt-head CI, aktuell-bas merge och separat Source/deploy återstår. Main och live v117 är oförändrade vid detta prefix.
+
+Efter denna avgränsade förbättring: övriga samlingars läsartak, legacy JSON-total/base64, privat/hostad återställning och verkliga roller/konton förblir öppna. Granska separat kvadratiskt `mutationResult`-uppgiftsval vid stora befintliga listor; ingen prestanda-/tidsvinst påstås här.
+
+## Föregående CRM121-plan
+
 # CRM121: nästa steg skyddar uppgifternas återläsningsgräns – kandidat
 
 B04:s nästa avgränsade lucka är reproducerad: kundanteckning kan spara uppgift 30 001 och därefter stoppa båda backupformaten trots header under 16 MB. Vanlig slutlig mutation kontrollerar nu hela `next.tasks` mot samma 30 000-konstant som återläsaren. Avslutade och härledda uppgifter räknas. Exakt gräns tillåts; tidigare exakt aktörs-/avsiktskvitto returnerar först. Historikfel behåller sin prioritet; restoreordning och CAS består. Ingen migration eller formatändring.

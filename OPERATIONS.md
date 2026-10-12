@@ -1,3 +1,11 @@
+# CRM121 – separat isolerad testtransport
+
+Det reproducerade 503-felet i den första kandidatens fulla native/CI-prov uppstod i utvecklingsprovets interna Node-observations-fetch, efter lyckad native läsning och före skrivning. Minimal rättning stänger endast denna observationsanslutning efter komplett svar. Den ändrar inga produktionsbindningar, runtimevariabler, profiler, åtkomster, SQL, R2, status/kvitton eller affärsregler. Kontroll med 20 fall passerade; faktisk ny canonical kandidat/fullruntime/CI och Source-publicering återstår.
+
+Installerad Miniflare/Node-källa och officiella HTTP-källor styrker anslutningskontraktet. Exakt intern stale/idle-orsak och produktionskapacitet är obekräftade. Native-provet ger ingen verklig konto-/personalacceptans. Den befintliga synkrona kvittoberäkningens kvadratiska uppgiftssökning är separat framtida prestandaarbete, inte rättad i denna leverans. Ingen lagringsmigration, städning eller genomförd live rollback införs.
+
+## Föregående CRM121-driftunderlag
+
 # CRM121: när nästa aktivitet når kopians uppgiftsgräns
 
 Beskedet ”CRM-kopian kan innehålla högst 30 000 uppgifter. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.” innebär att den nya ändringen inte har committats. Befintliga uppgifter, historik och privata utkast behålls. Bevara din text och ange endast minimal ofarlig feltext till administratören.

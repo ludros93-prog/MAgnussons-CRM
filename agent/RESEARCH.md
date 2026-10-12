@@ -1,3 +1,11 @@
+# CRM121 – observerns interna HTTP-anslutningskontrakt
+
+Två ytterligare officiella HTTP200-källor och åtta exakta citat är privat bundna till råbody/normaliserad text/citat-hash, UTF-8-offset och tid: [Node24 HTTP](https://nodejs.org/docs/latest-v24.x/api/http.html#serverkeepalivetimeout) och [RFC9112 §9.6](https://www.rfc-editor.org/rfc/rfc9112.html#section-9.6). Kvitto SHA-256 `a2c1240a9cb3fef0a2ccf9e8cc23c30527cd159b3ba7f8a330e022c885f00167`. Node-webbsidan identifierar aktuella v24.21.0; lokal builtin v24.19-källa är separat installerat källbevis. Default keep-alive5000 ms + buffer1000 ms är dokumenterad, ingen påstådd specifik workerd-poolpolicy. Connection:close innebär komplett svar före stängning och ingen fortsatt återanvändning.
+
+Installerad Miniflare leder funktionell serviceBinding via Node HTTP-loopback; dess headers vidarebefordras till writeHead. Synkron diagnos fångade testets befintliga observer-fetch-fel och en separat minimal callback-headerkontroll med alla20 nativefall passerade. Detta motiverar testtransportändring, inte ett påstått D1-/produkt-/driftkapacitetsfel eller säkerställd idle-mekanism. Det ursprungliga tre-källor/sex-citat-kvittot består byteidentiskt.
+
+## Ursprungligt CRM121-formatunderlag
+
 # CRM121 – befintlig inkluderande uppgiftsgräns som skrivkontrakt
 
 Tre officiella HTTP200-källor och sex unika exakta citat har verifierats privat med UTF-8-offset, citat-/råbody-/normaliserad text-hash och hämtningstid: [arkiverad Zod v3](https://v3.zod.dev/), [officiell Zod 3.25.76-källa](https://raw.githubusercontent.com/colinhacks/zod/v3.25.76/packages/zod/src/v3/types.ts) och [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md). Kvitto SHA-256 `1a24c50f25725f889f0375c5056b2f5f8e7cbc2279872fd220c74688cfd1be3a`.

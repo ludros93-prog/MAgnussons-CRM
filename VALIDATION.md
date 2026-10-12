@@ -1,3 +1,15 @@
+# CRM121 – observertransport avgränsad, ny slutkandidat återstår
+
+Första frysta head `35034cda5952bc43849dae1a1faf7d3e179f5938`, 447 Gitfiler/106 byggfiler: obligatorisk Node-regression exit 0/449,460 s, TypeScript 0/13,001 s, bygge 0/9,919 s och diff 0. Exakt-head CI run `38300600401`, job `114982320397`, var faktiskt failure: 11 av 13 steg success, runtime failure och post setup-node skipped. Hela 437 490-byte terminala loggen och checkoutens bas/head/tree/alla 447 Gitposter verifierades; kvitto SHA-256 `091dd98b739f5e3a4115a3629dd4ba7d248ccb48ba82ddf9ddfa972d8e3be111`. Ingen gammal CI-success eller full lokalsvit påstås.
+
+Två fulla original-nativeprov är exit 1/81,475 s respektive 86,644 s. Synkron diagnos lokaliserade settings/30k/503 till det befintliga `RESTORABLE_TASK_OBSERVER.fetch(header_before)` före Node-callback, efter lyckad medlems-, 11-query-load och kvittoläsning. Revision 9, 30 000 uppgifter, ett event och noll kvitton bestod. Rå native DB för settings efter samma hela försekvens gav faktisk 200 med korrekt full state, revision 10, aktör/hash-kvitto, alla 18 positiva råtabeller och R2 bevarade; detta var endast sju kontrollfall/23 HTTP/28 R2.
+
+Extra await-observatör gav privat 20/50/61 PASS men ändrade I/O-timing och godkändes inte som fix. Yttre Connection:close, synkloggning och transparent Promise-forwarding löste inte originalfelet. Den minimala interna callback-Response-headern Connection:close, med alla ursprungliga SQL/argument/status/gates/116 assertions/139 awaits i samma ordning, gav separat faktisk exit 0/131,171 s: 20 fall/50 app-HTTP/61 R2-inspektioner, tre objekts body/HTTP/custom metadata och ≥2 verkliga sidor varje gång, 447 Git+106 build före/efter, full teardown. Rapport SHA-256 `a7fe2948f21c078429badc74dbab295a7effed2c2db3cc77f067fcae5874825c`. OOM-räknare 46/13 ändrades inte; ingen generell kapacitetsorsak fastställs. Exakt intern idle/pool-mekanism är en inferens.
+
+Detta kontrollprov är inte den nya kandidatens publika slutprov. Ny head måste få verkliga obligatoriska terminalkontroller, canonical native, fullruntime och exakt-head CI innan merge; Source/native/paket/deploy verifieras separat. Alla gamla misslyckanden består som misslyckanden.
+
+## Föregående CRM121-underlag
+
 # CRM121 – befintlig uppgiftsgräns före vanlig commit
 
 Oförändrad main `6ab6fb9a025590521c3676a33234f29d8258844a` reproducerade 30 000→30 001 via faktisk autentiserad kundanteckning. POST gav 200, sedan gav både JSON- och NDJSON-backup-GET 400. Före POST gav båda 200. Oberoende full header var 7 503 058 byte, under befintliga 16 MB. Slutlig baslinje: exit 0/16,473 s, sju faktiska handlers, rapport SHA-256 `661c4638b749751d318abb25b509c314545696e6667cc7951ea832181e25642e`.
