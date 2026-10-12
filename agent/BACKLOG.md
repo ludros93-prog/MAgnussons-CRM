@@ -1,3 +1,13 @@
+# CRM119 levererad i v116: äldre JSON-återställning ryms i nästa kopia
+
+Första återställningen av äldre JSON mäter hela nästa kopias 16 000 000 UTF-8-byte, inklusive genererade audits, omappade filreferenser och nästa destinationsrevision. Exakt gräns tillåts; +1 avvisas före R2-staging/återställningscommit efter befintliga förkontroller. JSON:s 10 MB filtak och NDJSON:s separata kontrakt består. Ingen migration eller formatändring.
+
+[App-PR #192](https://github.com/ludros93-prog/MAgnussons-CRM/pull/192) är sammanfogad. Fyra lokala slutkontroller och obligatorisk fullruntime i exakt-head CI passerade; lokal fullruntime kördes inte. Byggd APP/SOURCE-native passerade vardera 22 fall/53 app-HTTP/132 inspektioner. Åtta syntetiska browserfall är separata UI-belägg. Samma Site är publicerad i **v116** med terminal lyckad deploy och efterkontroll 15:33:32 UTC. Se [LOG](LOG.md).
+
+**Nästa B04-del:** senare skrivares hela JSON-/metadatautrymme, andra läsarschemagränser/extra audits och privat/full hostad återställning. Konton, privata utkast och Outlook behöver separat rutin; riktiga konto-/personal-/integrationsprov och Codex-referensen är obekräftade/oläst. B04 som helhet är öppet. Detta senare dokumentationsprefix behöver egna fyra lokala kontroller, fullruntime i exakt dokumentationshead-CI och aktuell-bas merge; dessa är ännu inte genomförda vid dokumentfrysningen. Ingen ny Site-version för dokumentationen.
+
+## Historik före CRM119:s faktiska leverans
+
 # CRM119: JSON-total efter återställning är preliminärt prövad
 
 B04:s nästa avgränsade lucka är reproducerad: en giltig äldre JSON-kopia kan återställas men därefter överskrida hela återexportens 16 000 000 UTF-8-byte. Första JSON-återställning mäter nu slutligt omslag, tillagd kundhistorik, omappade filreferenser, nästa destinationsrevision, metadata/hashar och varje fils separat paddade base64längd före R2/commit. Exakt gräns tillåts. Ingen ny JSON-gräns införs på NDJSON; JSON:s befintliga 10 MB binära filtak består.
