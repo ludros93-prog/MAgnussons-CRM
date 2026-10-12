@@ -1,3 +1,17 @@
+# CRM115 – verifierad kod på main, publiceringsproveniens blockerad
+
+Kodkandidat `d39a588c6a380c8eb8df091ee61f41282753a872`, träd `d7949b33d98f221361b62c56e1088a8fa3f0837e`, är mergad genom [PR183](https://github.com/ludros93-prog/MAgnussons-CRM/pull/183) till app-main `1be8e40e4dff6311b6e7f570443265e252d57510`. Alla fem obligatoriska lokala slutkontroller passerade: regressioner, TypeScript, bygge, full isolerad runtime och diffkontroll. Exakt PR-head CI [38193213954](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38193213954) lyckades; dess faktiska merge-checkout `e6aa15349aef6809d3a46ff498f34c91fc99ae55` har kandidatens träd och föräldrarna `[40fb19878734d203f9c1f4847284c620b09d731f, d39a588c6a380c8eb8df091ee61f41282753a872]`. Kontrollerade desktop-/mobilprov passerade åtta fall med fyra verkliga browser-POST mot isolerad HTTP-interception; native Worker-prov verifierar serverutfallen separat. Inga riktiga kundskrivprov eller personal-/kontoacceptanser.
+
+**Leveransläget är delvis klart:** Sites-SOURCE `a59a972a5e16a262d5d8c8bc956888e1c396b41c` är nonforce-pushad och dess samtliga 435 paths/modes/blobs/byte matchar app-main/kandidat. Eget SOURCE-bygge passerade och 106 lokala paketmedlemmar kontrollerades mot verkliga SOURCE-filer. Sites v112 är sparad med rätt källrevision men inte publicerad. Senast verifierad live är fortfarande v111, samma Site, URL och begränsade delning; inget deploy-anrop gjordes.
+
+**B04, nästa genomförbara steg:** klarlägg sparat arkivs proveniens innan v112 publiceras. Lokalt ursprungspaket: 6 195 200 byte, SHA256 `fc83a5a3e608e00dd1416ce45b16ccf09d11253fdb032859df30af87806f4f02`; Sites native metadata: 6 092 800 byte, SHA256 `a6b49861cb221bacbfb03a848e788cf4998e58eece5bed29b36d2c785d755307`, 106 filer. GNU-standardpaket av exakt samma verifierade filpayloads: 6 092 800 byte, SHA256 `cfc80847eaa1d785094db2cc6b30a899769de11b32336ba172cf808c5f044ba9`; en avgränsad omsparning återgav samma v112/arkivmetadata. Tillgänglig auktoriserad native-arkivhämtning gav `file could not be authorized or resolved`. Tar-metadata kan förklara storleksskillnaden, men ingen kontrollerad variant matchar native-hashen och native filinnehåll är inte verifierat. Ingen blind publicering, omsändning eller tom källändring för att kringgå versionens proveniens.
+
+Efter klarlagd proveniens: publicera verifierad version på samma Site och kontrollera deployment/status/source/åtkomst. Fortsatt separat backlogg: samlad filmetadata/headerbudget, 2 000 filer per kopia, privata säkerhetskopior och verklig hostingåterställning. Kodens eventgräns garanterar inte utrymme för återställningens extra audits. Codex-taskreferensen är fortsatt oläst eftersom rätt read_thread saknas. Detta tillägg ändrar ingen agentinstruktion, prompt, aktivering eller schema.
+
+---
+
+Tidigare CRM115-underlag och historik bevaras byteoförändrade nedan.
+
 # CRM115: filuppladdning bevarar historikens exportgräns
 
 B04: avgränsat filhistorikskydd implementerat och preliminärt verifierat.
