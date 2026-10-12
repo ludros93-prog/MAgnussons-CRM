@@ -1,3 +1,13 @@
+# CRM118 levererad: fullständig header före filstaging
+
+B04:s avgränsade fullheadergrind är rättad och publicerad i **v115**. Kundfil och arbetsfoto avvisas före R2/databasändring om faktisk kommande NDJSON-header överstiger 16 000 000 UTF-8-byte utan LF; exakt gräns tillåts. All normaliserad CRM-data, samtliga filmetadata, ny metadata/händelse och nästa revision ingår. Antalsprioritet 200 → 50 000 → 2 000, ursprunglig CAS och egen städning bevaras. Ingen migration eller formatändring.
+
+[App-PR #190](https://github.com/ludros93-prog/MAgnussons-CRM/pull/190) är sammanfogad. Testad kod `02c9becdfa04a742463f42f42d0dd1c519a3c32e`, app-main `7bdaf2a2bd888fe2ab1745002aaf798bdd5fca0c` och publicerad SOURCE `cb2ef41a7b8f400f704e9eb09720740508046b4e` har samma 441 källfiler och träd `1d90cb5abe95d60ed3432fc0ce53af828c6b9604`. Lokal regression, TypeScript, bygge och diff passerade; båda lokala fullruntimeförsöken fallerade och är bevarade. Obligatorisk fullruntime passerade i faktisk exakt-head CI 38240014583. Byggd SOURCE passerade eget bygge och native-headerprov; browserprovets åtta syntetiska fall/fyra kontrollerade POST400 och faktisk samma-Site-publicering/efterkontroll är verifierade. Se [LOG](LOG.md).
+
+**Nästa B04-del:** JSON-total/base64, 10 MB totalt filinnehåll, övriga läsarschemagränser, återställningens extra audits och full privat backup med faktisk hostad återställning och bevarade referenser. Konton, privata utkast och Outlook behöver separat återställningsväg. B01:s riktiga konto-/personalprov och Fortnox/Outlook förblir öppna; Codex-referensen är oläst. Detta senare backlog-/loggprefix bevarar hela äldre historiken och behöver egna kontroller/CI/merge, ännu inte verifierade vid dokumentfrysningen. Ingen ny Site-version behövs för dokumentationen.
+
+## Historik före CRM118:s leveranskvitto
+
 # CRM118: B04:s fullständiga filheadergrind är preliminärt prövad
 
 Kundfil och arbetsfoto har nu ett avgränsat förhandsprov av hela kommande NDJSON-headern: normaliserat CRM-tillstånd, samtliga arbetsytefiler, verklig ny metadata/händelse och nästa revision. Exakt 16 000 000 UTF-8-byte utan LF tillåts, +1 avvisas före R2/databasändring. Tidigare antalstak består. Revisionsskillnad före fullsnapshot ger 409 utan förlorarens staging; efter fullsnapshot gäller tidigare CAS och egen städning.
