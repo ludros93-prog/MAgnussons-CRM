@@ -1,3 +1,19 @@
+# CRM116: filuppladdning bevarar kopians filantal
+
+B04: avgränsat filantalskydd implementerat och preliminärt verifierat.
+
+Filuppladdning läser nu arbetsytans filantal, historikantal och CAS-revision i samma SQL-statement. Vid minst 2 000 befintliga filer avvisas en ny kundfil eller ett arbetsfoto med ett konkret svenskt 400-besked före UUID och R2-staging. Alla crm_files-rader i vald arbetsyta räknas, även historiska eller inte längre arbetskopplade filer; inga tidigare filer raderas. Det befintliga 50 000-historikbeskedet behåller sin prioritet. Hela currentMember-/UUID-/R2-/tre SQL-commit-/städ-/utfallssuffixet är byteoförändrat. Versionsökande konkurrerande filskrivning behåller befintlig CAS-grind och endast förlorarens egen staged-nyckel städas.
+
+Nästa B04-del är samlad filmetadata/headerbudget och separat kundtakets läs-/revisionsunderlag, med verklig isolerad reproduktion före rättning. Kvarstående publiceringsproveniens, privat backup/återställning, B01:s konton/personalöverlämning och verksamhetens verkliga integrations-/pilotprov är fortsatt öppna.
+
+2 000 är befintligt inkluderande filantal i både JSON-kopia och NDJSON-header/slutpost, ingen Cloudflare-gräns. Det nya skyddet garanterar inte full backupberedskap: samlad filmetadata/headerbudget, JSON-innehåll/totalbudget, andra läsarschemagränser, återställningens extra audits och verkliga D1/R2-/hostingbegränsningar återstår. Kundens separata 200-filfråga ligger fortfarande före revisionssnapshot; en ändring mellan dessa två läsningar ingår inte i denna fix. Uppladdning har inget beständigt request-ID-kvitto; samma pågående begärans metadataåterläsning är inget nytt HTTP-försöks idempotenta replay.
+
+CRM115:s konkreta publiceringshinder kvarstår vid öppningen: sparad v112 har native arkivhash `a6b49861cb221bacbfb03a848e788cf4998e58eece5bed29b36d2c785d755307` och 6 092 800 byte, skilda från det tidigare lokala paketets hash. En färsk auktoriserad hämtning gav åter `file could not be authorized or resolved`. Ingen ny publicering påstås och ingen tom källrevision skapas för att kringgå versionen. Den nya användbara kodändringen och dess senare verkliga käll-/save-/deployutfall redovisas separat.
+
+Vid denna källfrysning är ovanstående baslinjer och riktade preliminära prov genomförda. Fem obligatoriska slutkontroller, browserprov på slutbygget, exakt-head CI, aktuell-bas merge och faktisk samma-Site-publicering återstår. Slutliga kvitton/revisioner/main/SOURCE/live anges i PR/task efter verkligt utfall. Riktiga konton, personalacceptans, integrationer och hostad återställning är obekräftade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; tillgängligt read_thread gäller Slack. Explicit brief och färsk repo används.
+
+---
+
 # CRM115 – verifierad kod på main, publiceringsproveniens blockerad
 
 Kodkandidat `d39a588c6a380c8eb8df091ee61f41282753a872`, träd `d7949b33d98f221361b62c56e1088a8fa3f0837e`, är mergad genom [PR183](https://github.com/ludros93-prog/MAgnussons-CRM/pull/183) till app-main `1be8e40e4dff6311b6e7f570443265e252d57510`. Alla fem obligatoriska lokala slutkontroller passerade: regressioner, TypeScript, bygge, full isolerad runtime och diffkontroll. Exakt PR-head CI [38193213954](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38193213954) lyckades; dess faktiska merge-checkout `e6aa15349aef6809d3a46ff498f34c91fc99ae55` har kandidatens träd och föräldrarna `[40fb19878734d203f9c1f4847284c620b09d731f, d39a588c6a380c8eb8df091ee61f41282753a872]`. Kontrollerade desktop-/mobilprov passerade åtta fall med fyra verkliga browser-POST mot isolerad HTTP-interception; native Worker-prov verifierar serverutfallen separat. Inga riktiga kundskrivprov eller personal-/kontoacceptanser.

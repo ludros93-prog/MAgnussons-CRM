@@ -1,3 +1,13 @@
+# CRM116: filuppladdning bevarar kopians filantal
+
+Om uppladdningen säger ”Filen skulle göra CRM-kopian för stor (högst 2 000 kundfiler)” har ingen ny fil sparats av det försöket. Bevara originalfilen och kontakta administratören. Detta gäller arbetsytans kundfiler och arbetsfoton tillsammans. På kundkortet behåller befintlig UI vald fil, typ och version vid avslag; orderguiden och arbetsfoto använder sitt befintliga omval efter fel. Invänta faktiskt sparbesked.
+
+2 000 är befintligt inkluderande filantal i både JSON-kopia och NDJSON-header/slutpost, ingen Cloudflare-gräns. Det nya skyddet garanterar inte full backupberedskap: samlad filmetadata/headerbudget, JSON-innehåll/totalbudget, andra läsarschemagränser, återställningens extra audits och verkliga D1/R2-/hostingbegränsningar återstår. Kundens separata 200-filfråga ligger fortfarande före revisionssnapshot; en ändring mellan dessa två läsningar ingår inte i denna fix. Uppladdning har inget beständigt request-ID-kvitto; samma pågående begärans metadataåterläsning är inget nytt HTTP-försöks idempotenta replay.
+
+Vid denna källfrysning är ovanstående baslinjer och riktade preliminära prov genomförda. Fem obligatoriska slutkontroller, browserprov på slutbygget, exakt-head CI, aktuell-bas merge och faktisk samma-Site-publicering återstår. Slutliga kvitton/revisioner/main/SOURCE/live anges i PR/task efter verkligt utfall. Riktiga konton, personalacceptans, integrationer och hostad återställning är obekräftade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; tillgängligt read_thread gäller Slack. Explicit brief och färsk repo används.
+
+---
+
 # CRM115: filuppladdning bevarar historikens exportgräns
 
 Om uppladdningen säger ”Filen skulle göra CRM-historiken för stor för dataexport (högst 50 000 händelser)” har ingen ny fil sparats av det försöket. Bevara originalfilen och kontakta administratören. På kundkortet behåller befintlig UI vald fil, typ och version vid avslag. Orderguiden och arbetsfoto väljer befintligen om filen efter fel; version och arbetsunderlag behålls. Kontrollera det faktiska sparbeskedet.

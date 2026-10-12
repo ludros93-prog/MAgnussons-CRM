@@ -52,7 +52,7 @@ export async function verifyPrivateApiAuthorization({core,sqlite,fileApi,draftAp
   reset('admin');let r=await fileWrite();assert.equal(r.status,200,JSON.stringify(r.data));const document=r.data,documentKey=space+'/'+customerId+'/'+document.id;assert.ok(objects.has(documentKey));
   // A role change before staging performs no R2 put and no CRM write.
   reset();let injected=false;const earlyBefore=snapshot(),earlyObjects=new Map(objects);
-  afterSQL=async(sql,name)=>{if(!injected&&name==='first'&&sql==='SELECT version,(SELECT COUNT(*) FROM crm_events WHERE space=?) AS event_count FROM crm_spaces WHERE id=?'){injected=true;revocations[0][1]();}};
+  afterSQL=async(sql,name)=>{if(!injected&&name==='first'&&sql==='SELECT version,(SELECT COUNT(*) FROM crm_events WHERE space=?) AS event_count,(SELECT COUNT(*) FROM crm_files WHERE space=?) AS file_count FROM crm_spaces WHERE id=?'){injected=true;revocations[0][1]();}};
   try{r=await fileWrite();}finally{resetHooks();}assert.ok(injected);denied(r);assert.deepEqual(snapshot(),earlyBefore);assert.deepEqual(objects,earlyObjects);
 
   for(const [label,revoke] of revocations){
