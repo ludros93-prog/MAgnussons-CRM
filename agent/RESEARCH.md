@@ -1,3 +1,15 @@
+# CRM122 – befintlig inkluderande kundgräns som skrivkontrakt
+
+Två färska läsbara officiella källor och fyra exakta citat är privat bundna till råbody, hash, UTF-8-offset och tid: [Zod 3.25.76-källa](https://raw.githubusercontent.com/colinhacks/zod/v3.25.76/packages/zod/src/v3/types.ts) och [Cloudflare D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md). Kvitto SHA-256 `6e1c30aa6fdfa9745d55dd36e74730b3acd8a1e8990f8532f81e2d877e7e64c8`, 2026-10-12T23:24:07.485666+00:00. Officiell Zod-källa är byteidentisk med installerad 3.25.76: 160 294 byte, SHA-256 `70309a0877c35d036842e291fe7c8a4439d5db49411d233f8a22bf8a59c41419`.
+
+Zod jämför arraylängd med `> max` och anger `inclusive: true`: exakt 10 000 tillåts med övrig validering. Detta är Magnussons redan befintliga läsarkontrakt, ingen Cloudflaregräns eller affärsdefinition. D1 dokumenterar sekventiell commit och rollback av SQL-batch; texten belägger ingen gemensam D1/R2-transaktion eller ny CAS-/idempotensgaranti. Egen kod och faktisk isolerad provning måste belägga skrivgrinden och bevarat underlag.
+
+Zods arkiverade startsida gav HTTP200 men endast Docsify-skal, inget verifierat dokumentationscitat. Direkt markdown gav avslag/verktygsfel och behålls som misslyckad hämtning. Versionskällan används som det faktiska inkluderande max-underlaget.
+
+Salesforce-, Lime- och Saleshub-principer återbrukas från faktiskt lästa tidigare avsnitt om kund-/uppgiftssammanhang, historik, stabil identitet och konkret nästa steg. Det är inga nya vendorhämtningar eller bevis på Magnussonsinloggning, privat lagring eller fungerande integration. Kundtaket skyddar dessa kopplingars återläsning utan att ta bort tidigare arbete. Andra läsartak, legacy JSON-total/base64 och privat/hostad återställning är separata öppna områden. Den kvadratiska kvittosökningen ändras inte; ingen tidsvinst eller hostingkapacitet påstås. Codex-referensen är oläst.
+
+## Historik före CRM122
+
 # CRM121 – observerns interna HTTP-anslutningskontrakt
 
 Två ytterligare officiella HTTP200-källor och åtta exakta citat är privat bundna till råbody/normaliserad text/citat-hash, UTF-8-offset och tid: [Node24 HTTP](https://nodejs.org/docs/latest-v24.x/api/http.html#serverkeepalivetimeout) och [RFC9112 §9.6](https://www.rfc-editor.org/rfc/rfc9112.html#section-9.6). Kvitto SHA-256 `a2c1240a9cb3fef0a2ccf9e8cc23c30527cd159b3ba7f8a330e022c885f00167`. Node-webbsidan identifierar aktuella v24.21.0; lokal builtin v24.19-källa är separat installerat källbevis. Default keep-alive5000 ms + buffer1000 ms är dokumenterad, ingen påstådd specifik workerd-poolpolicy. Connection:close innebär komplett svar före stängning och ingen fortsatt återanvändning.

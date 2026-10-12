@@ -1,3 +1,13 @@
+# CRM122: kundregistret följer återläsarens tak – kandidat
+
+B04:s nästa avgränsade lucka är reproducerad och rättad i arbetskoden: vanlig CRM-sparning kontrollerar hela färdiga kundlistan mot återläsarens befintliga 10 000-gräns. Exakt tak tillåts; kundskapande, import och omvandling som går över stoppas före commit utan delskrivning eller förbrukat privat utkast. Historik-/uppgiftsfel, restoreordning, tidigare exakt kvitto, serverroller och CAS består. Ingen migration, formatändring eller automatisk radering.
+
+Oförändrad Node och faktiskt bevarat v118-Worker reproducerade 10 000→10 001 med POST 200 följt av båda backupformatens 400 trots header under 16 MB. Riktad Node-kandidat passerade 59 autentiserade anrop med exakt-gräns-återställning i båda format, eget/främmande privat underlag, verkligt separat autentiserad CAS-vinnare, förlorare, tappad kvittens/replay och roller. Fryst kandidat-native, obligatoriska slutkontroller, exakt-head CI, aktuell-bas merge och samma-Site-publicering återstår. Main `0f12b6d8b18d57dba3c4fa39900288b1fd1118a6` och live v118/SOURCE `5275b582b349906e36e3ba7783b54d6c4996def1` är ännu oförändrade.
+
+Nästa B04-del: övriga samlingars läsartak för affärer/order/möten, formatmedveten legacy JSON-total/base64, andra återställningars extra audits/finalbytebudget och full privat/hostad återställning. Konton, privata utkast och Outlook behöver separat rutin. Den kvadratiska kvittosökningen är separat oförändrat arbete. Riktiga konto-/personal-/integrationsprov och observerad pilot återstår. Codex-referensen är oläst; explicit brief och repo används. B04 som helhet är öppet.
+
+## Historik före CRM122
+
 # CRM121 levererad i v118: uppgiftsgränsen bevarar nästa steg
 
 B04:s avgränsade uppgiftslucka är rättad och publicerad. Vanlig CRM-sparning skyddar återläsarens befintliga gräns på högst 30 000 uppgifter. Hela slutliga `next.tasks` räknas, inklusive avslutade uppgifter och nästa aktiviteter som skapas av kundanteckning, avslutad uppföljning eller genomfört möte. Exakt gräns tillåts; uppgift 30 001 stoppas före ändringens commit och privata utkast bevaras. Historikfel behåller sin tidigare prioritet; tidigare exakt aktörs-/avsiktskvitto returnerar först. Restoreordning, serverroller, CAS och atomiska kvitton består. Ingen migration eller formatändring.

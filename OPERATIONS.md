@@ -1,3 +1,15 @@
+# CRM122: kundgräns före vanlig atomisk sparning
+
+Vanlig `/api/crm`-mutation räknar hela slutliga `next.customers` efter reducer, härledda poster och historik. Den delar återläsarens befintliga inkluderande `CRM_RESTORE_MAX_CUSTOMERS=10000`; både JSON och NDJSON behåller samma tillåtna format. Kontrollordningen är tidigare regler/record- och utkastbasis, historikgräns, uppgiftsgräns och därefter kundgräns före kvittoberäkning, full filheader och atomisk commit. Restore följer sin tidigare väg. Tidigare exakt aktörs-/avsiktskvitto returnerar före första skrivningens nya grind.
+
+Alla kundstatusar räknas. Vid exakt tak tillåts förändringar utan antalökning med övriga kontroller. Överskridande kundskapande, granskad import eller omvandling till ny kund stoppas helt; privat utkast förbrukas inte och befintliga kunder/historik behålls. Äldre redan överstor lista får avslag också på nya avsikter utan tillväxt. Säkert CAS-omprov räknar om faktiskt konkurrerande kundantal; osäker import behåller tidigare konfliktflöde. Ingen automatisk städning eller raderingsrekommendation införs.
+
+Inga nya lagringsfält, backupformat, SQL-migrationer eller DB/BUCKET-bindningar. Sex migrationer och skyddade format-/hostingfiler är byteoförändrade mot faktisk publicerad v118-SOURCE `5275b582b349906e36e3ba7783b54d6c4996def1`. Accepterade data är kompatibla med denna föregångare; kodåtergång dit tar bort kundgrinden och återinför luckan. Ingen live-rollback eller full hostad återställning har utförts. crm82-golvet för tidigare ansvarsaudit består.
+
+Privata starträttningar och kundlistans jämförelseordning gäller enbart isolerade prov; de belägger ingen produktionskapacitetsfix. Kandidat-native, obligatoriska slutkontroller, CI, merge och publicering återstår. Andra samlingars läsartak, legacy JSON-total/base64, andra återställningars extra audits/finalbytebudget samt separat konto-/utkast-/Outlookrutin och full privat/hostad återställning är fortsatt öppna. Kvadratiskt `mutationResult`-urval är oförändrat separat arbete.
+
+## Historik före CRM122
+
 # CRM121 – separat isolerad testtransport
 
 Det lokalt reproducerade 503-felet i den första kandidatens fulla native-prov lokaliserades till utvecklingsprovets interna Node-observations-fetch, efter lyckad native läsning och före skrivning. Den första CI-loggen styrker endast 503 i nongrowth-loopen; den exakta CI-fasen och handlingen är obekräftade. Minimal rättning stänger endast denna observationsanslutning efter komplett svar. Den ändrar inga produktionsbindningar, runtimevariabler, profiler, åtkomster, SQL, R2, status/kvitton eller affärsregler. Kontroll med 20 fall passerade; faktisk ny canonical kandidat/fullruntime/CI och Source-publicering återstår.
