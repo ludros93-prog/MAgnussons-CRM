@@ -1,3 +1,21 @@
+# CRM121 – observerns interna HTTP-anslutningskontrakt
+
+Två ytterligare officiella HTTP200-källor och åtta exakta citat är privat bundna till råbody/normaliserad text/citat-hash, UTF-8-offset och tid: [Node24 HTTP](https://nodejs.org/docs/latest-v24.x/api/http.html#serverkeepalivetimeout) och [RFC9112 §9.6](https://www.rfc-editor.org/rfc/rfc9112.html#section-9.6). Kvitto SHA-256 `a2c1240a9cb3fef0a2ccf9e8cc23c30527cd159b3ba7f8a330e022c885f00167`. Node-webbsidan identifierar aktuella v24.21.0; lokal builtin v24.19-källa är separat installerat källbevis. Default keep-alive5000 ms + buffer1000 ms är dokumenterad, ingen påstådd specifik workerd-poolpolicy. Connection:close innebär komplett svar före stängning och ingen fortsatt återanvändning.
+
+Installerad Miniflare leder funktionell serviceBinding via Node HTTP-loopback; dess headers vidarebefordras till writeHead. Synkron diagnos fångade testets befintliga observer-fetch-fel och en separat minimal callback-headerkontroll med alla20 nativefall passerade. Detta motiverar testtransportändring, inte ett påstått D1-/produkt-/driftkapacitetsfel eller säkerställd idle-mekanism. Det ursprungliga tre-källor/sex-citat-kvittot består byteidentiskt.
+
+## Ursprungligt CRM121-formatunderlag
+
+# CRM121 – befintlig inkluderande uppgiftsgräns som skrivkontrakt
+
+Tre officiella HTTP200-källor och sex unika exakta citat har verifierats privat med UTF-8-offset, citat-/råbody-/normaliserad text-hash och hämtningstid: [arkiverad Zod v3](https://v3.zod.dev/), [officiell Zod 3.25.76-källa](https://raw.githubusercontent.com/colinhacks/zod/v3.25.76/packages/zod/src/v3/types.ts) och [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md). Kvitto SHA-256 `1a24c50f25725f889f0375c5056b2f5f8e7cbc2279872fd220c74688cfd1be3a`.
+
+Zod v3 dokumenterar `.max(5)` som fem eller färre objekt; versionsbunden implementation använder längd > max och inclusive:true. Den hämtade officiella 3.25.76-filen är byteidentisk med installerad källa (160 294 byte, SHA-256 `70309a0877c35d036842e291fe7c8a4439d5db49411d233f8a22bf8a59c41419`). Magnussons öppnings-Git har redan tasks.max(30000); den oförändrade inkluderande läsartillåtelsen delas med skrivaren. 30 000 är appens befintliga formatkontrakt, ingen Cloudflare-, verksamhets- eller hostingkapacitetsgaranti.
+
+D1 beskriver sekventiell SQL-transaktion och rollback. Befintlig CAS, identitet/avsikt/replay och SQL/R2-gräns måste fortsatt beläggas i egen kod/test; ingen gemensam D1/R2-transaktion påstås och inga nya SQL-operationer införs. Tidigare verifierade Saleshub/Salesforce/Lime-principer om stabilt ansvar, konkret nästa aktivitet och granskningsbar historik återbrukas utan nya effekt-, konto- eller integrationspåståenden. Andra samlingars läsartak, legacy JSON-total och privat/hostad återställning är separata öppna områden.
+
+## Historik före CRM121
+
 # CRM120 – revisionsbundet metadataunderlag i framtida NDJSON-header
 
 Fem färska officiella HTTP200-källor och elva exakta citat har verifierats privat med råbody-/text-/citat-hashar och byteoffset i normaliserad UTF-8-text: [D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md), [SQLite isolation](https://www.sqlite.org/isolation.html), [WHATWG Encoding](https://encoding.spec.whatwg.org/), [ECMA JSON](https://tc39.es/ecma262/multipage/structured-data.html) och [R2 consistency](https://developers.cloudflare.com/r2/reference/consistency/index.md). Forskningskvitto SHA-256 `a6277103ffee32aca4b9c311c59ffbf5eb2e1a613c07cefd69beff7fb5c796c3`.

@@ -1,3 +1,21 @@
+# CRM121 – separat isolerad testtransport
+
+Det lokalt reproducerade 503-felet i den första kandidatens fulla native-prov lokaliserades till utvecklingsprovets interna Node-observations-fetch, efter lyckad native läsning och före skrivning. Den första CI-loggen styrker endast 503 i nongrowth-loopen; den exakta CI-fasen och handlingen är obekräftade. Minimal rättning stänger endast denna observationsanslutning efter komplett svar. Den ändrar inga produktionsbindningar, runtimevariabler, profiler, åtkomster, SQL, R2, status/kvitton eller affärsregler. Kontroll med 20 fall passerade; faktisk ny canonical kandidat/fullruntime/CI och Source-publicering återstår.
+
+Installerad Miniflare/Node-källa och officiella HTTP-källor styrker anslutningskontraktet. Exakt intern stale/idle-orsak och produktionskapacitet är obekräftade. Native-provet ger ingen verklig konto-/personalacceptans. Den befintliga synkrona kvittoberäkningens kvadratiska uppgiftssökning är separat framtida prestandaarbete, inte rättad i denna leverans. Ingen lagringsmigration, städning eller genomförd live rollback införs.
+
+## Föregående CRM121-driftunderlag
+
+# CRM121: när nästa aktivitet når kopians uppgiftsgräns
+
+Beskedet ”CRM-kopian kan innehålla högst 30 000 uppgifter. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.” innebär att den nya ändringen inte har committats. Befintliga uppgifter, historik och privata utkast behålls. Bevara din text och ange endast minimal ofarlig feltext till administratören.
+
+Gränsen avser hela arbetsytans sparade uppgiftslista, även avslutade uppgifter och automatiskt skapade nästa steg. Exakt 30 000 tillåts. Redigering utan antalökning fungerar vid gränsen, men avslutning minskar inte antalet. Om arbetsytan redan har fler uppgifter stoppas även en ny ändring utan tillväxt. Ingen automatisk städning eller historikradering införs.
+
+Återställningsschema, CAS, serverroller, idempotens, privata utkast och DB/BUCKET består. Uppgiftsgränsen är appens befintliga återläsningskontrakt, ingen bekräftad hostingkapacitet. Andra samlingsgränser, legacy JSON-total/base64 och separat privat/full hostad återställning återstår. Vid denna frysning är kandidat-native, obligatoriska slutprov, CI, merge och publicering ännu inte verifierade; live är v117.
+
+## Historik före CRM121
+
 # CRM120: filförteckningens revision följer vardagssparningen
 
 Vanliga CRM-mutationer läser arbetsytans revision och samtliga `crm_files`-descriptors i en read-only D1-batch med två SELECT. Revisionen måste vara exakt den redan serverlästa `persisted.version`; det nya snapshotet ersätter aldrig gammal CAS-bas. Vid skillnad används befintlig återauktorisering och säkert återförsök eller kontrollerad 409. Varje omprov mäter verkligt nytt metadataunderlag. JSON-/schemafel i descriptors ger statiskt 400 utan privata parservärden; SQL-läsfel följer befintligt 503.

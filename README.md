@@ -1,3 +1,21 @@
+# CRM121 – kandidat med korrigerad isolerad observationskanal
+
+Produktändringen skyddar den befintliga återläsningsgränsen på 30 000 uppgifter. Den första kandidatens fullruntime/CI är faktiskt röd; Det lokalt reproducerade 503-felet lokaliserades till testets interna observations-fetch före filheader, efter lyckad native databas-/kvittoläsning. CI-loggen visar 503 i nongrowth-loopen utan motsvarande fasdiagnos. En avgränsad kontroll ändrar endast observationssvarets `Connection: close` och gav 20 fall/50 app-HTTP/61 R2-inspektioner. SQL, status/kvitto, 116 assertions och 139 await-uttryck består. Extra väntesteg från tidigare diagnoser införs inte. Detta är en testtransportändring, ingen verifierad produktionskapacitetsfix.
+
+Ny fryst kandidat, obligatoriska slutkontroller, full runtime, exakt-head CI, main och separat Source/publicering återstår vid detta prefix. Live är fortsatt v117.
+
+## Föregående CRM121-kandidat
+
+# CRM121: nästa aktivitet ryms även i CRM-kopian
+
+Vanlig CRM-sparning använder nu återläsarens befintliga gräns på högst 30 000 uppgifter. Den räknar det färdiga resultatet, inklusive uppgifter som skapas av kundanteckning, avslutad uppföljning eller genomfört möte. Exakt gräns tillåts; uppgift 30 001 stoppas före ändringens commit. Avslag bevarar befintliga privata utkast och sparar ingen del av den nya uppföljningen.
+
+Ändringar utan antalökning fungerar vid exakt 30 000. Avslutade uppgifter räknas fortfarande; avslutning frigör inte en rad i kopian. Om arbetsytan redan ligger över gränsen stoppas också en ny ändring utan tillväxt. Bevara underlaget och kontakta administratören. Tidigare exakt aktörs-/avsiktskvitto återläses före denna första-skrivningskontroll.
+
+Baslinjen reproducerades i Node och faktisk tidigare native Worker; riktade Node-prov har passerat. Frysta slutkontroller, kandidat-native, CI, merge och publicering återstår vid dokumentfrysningen. Senast verifierad live är v117. Ingen migration, formatändring eller automatisk radering. Andra samlingsgränser, legacy JSON-total och full privat/hostad återställning är fortsatt separata luckor. Se [VALIDATION](VALIDATION.md) och [agent/LOG](agent/LOG.md).
+
+## Historik före CRM121
+
 # CRM120: vardagssparningar räknar hela backupens filförteckning
 
 En vanlig CRM-ändring mäter nu hela framtida NDJSON-headern, inklusive alla sparade filbeskrivningar, verkliga audits och nästa revision. Exakt 16 000 000 UTF-8-byte utan radslut tillåts; +1 stoppas före ändringens commit. Filförteckningen och dess revision läses i samma batch. Ett nyare snapshot får inte bli ny bas för ett gammalt formulär: befintligt säkert återförsök eller konfliktbesked gäller.

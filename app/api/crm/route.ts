@@ -2,7 +2,7 @@ import {ProductionIssueResponsibilityTransferSchema,productionIssueResponsibilit
 import {ProductionAssignmentTransferSchema,productionAssignmentBasis,productionAssignmentBlockedReason,productionAssignmentRole,productionAssignmentTargetBasis,transferProductionAssignment,resolveLegacyProductionAssignment,type ProductionAssignmentTarget} from '@/lib/production-assignment';
 import {revisionBasis} from '@/lib/order-revisions';
 import {directBasis} from '@/lib/direct-delivery';
-import {restoreState} from '@/lib/crm-restore';
+import {restoreState,CRM_RESTORE_MAX_TASKS} from '@/lib/crm-restore';
 import {BACKUP_MAX_BYTES,backupStreamHeader,backupMutationHeaderBytes} from '@/lib/crm-backup';
 import {load,commit,initialize,projectState,mutationResult,requestHash,assertRestoreDatabaseEncoding,assertRestoreStorageBudget,type MutationMeta} from '@/lib/crm-store';
 import {followupBasis} from '@/lib/follow-up';
@@ -340,6 +340,9 @@ export async function POST(req:Request){try{
   ?'CRM-kopian lämnar inte plats för återställningens historik. Inga uppgifter återställs och befintlig historik tas inte bort.'
   :'Ändringen skulle göra CRM-historiken för stor för dataexport (högst 50 000 händelser). Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');
  const before=new Set(current.events.map(e=>e.id));if(p.type!=='restore'){for(const e of next.events)if(!before.has(e.id))e.actor={id:user.user_id!,name:user.name};}else for(const c of next.customers)next.events.push({id:crypto.randomUUID(),customerId:c.id,dealId:'',text:'Kundens CRM-data återställd från export',kind:'restore',at:new Date().toISOString(),actor:{id:user.user_id!,name:user.name}});
+ // Keep ordinary writes within the same inclusive task count as both readers.
+ // Count the final reduced state; completed receipts have already returned.
+ if(p.type!=='restore'&&next.tasks.length>CRM_RESTORE_MAX_TASKS)throw new RuleError('CRM-kopian kan innehålla högst 30 000 uppgifter. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');
 const result=mutationResult(current,next,p.type,p.data);
  // Generated history and the actual result receipt are part of the write.
  // Completed request receipts have already returned before this first-write gate.
