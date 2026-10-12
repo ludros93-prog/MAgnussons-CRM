@@ -1,3 +1,13 @@
+# CRM115: filuppladdning bevarar historikens exportgräns
+
+Filuppladdningen läser nu historikantal och arbetsytans CAS-revision i samma SQL-statement. Vid minst 50 000 befintliga händelser avvisas den nya kundfilen eller arbetsfotot med ett konkret svenskt 400-besked före filstaging. De tre commit-statementen, serverrollerna, ordningens underlagskontroll och städ-/utfallshanteringen är byteoförändrade. En versionsökande konkurrerande skrivning ger befintligt CAS-avslag; endast den förlorande uppladdningens egna staged-objekt städas. Historik raderas inte.
+
+Detta är historikantal för filuppladdning, inte full backupberedskap. Samlad filmetadata/headerbudget, 2 000 filer per kopia, JSON:s innehålls-/totalbudget, andra läsarschemagränser och verklig hostingkapacitet/återställning återstår. Exakt 50 000 kan exporteras i de prövade små filfallen men lämnar inte automatiskt plats för återställningens extra kundaudits. Filuppladdning har inget beständigt request-ID-kvitto: återläst egen filmetadata kan bekräfta samma pågående begärans COMMIT, inte en ny HTTP-begärans idempotenta replay.
+
+Vid denna källfrysning är ovanstående baslinjer och riktade preliminära prov genomförda. Fem obligatoriska slutkontroller, kontrollerat browserprov, exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår. Faktisk kandidat/main/Sites-källa/live och slutresultat redovisas separat i PR/task efter verkliga kvitton. Konto-/personal-/integrationsprov och verklig hostingåterställning är obekräftade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex; explicit brief och färsk repo används.
+
+---
+
 # CRM114: gemensamma CRM-sparningar bevarar historikens läsargräns
 
 Öppningsbasen är levererad CRM113/[PR #181](https://github.com/ludros93-prog/MAgnussons-CRM/pull/181): GitHub-main `b2066543172d95e8d493e97a5da962304c74ad33`, Sites-källa `b76b1d20e3652010aa3e0757cd9f43bb74c17c9d`, lyckad live v110. Alla 431 spårade filers bytes/lägen och träd `f3b8819ea30ac709c1ce806a3041ddcf37134c7e` matchade. Egen branch och reservation; inga öppna PR:er eller konkurrerande publicering observerades. Sites-identitet, begränsad delning, auth, miljö, DB/BUCKET och agenternas uppdrag/scheman behålls.

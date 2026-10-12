@@ -1,3 +1,13 @@
+# CRM115: filuppladdning bevarar historikens exportgräns
+
+Om uppladdningen säger ”Filen skulle göra CRM-historiken för stor för dataexport (högst 50 000 händelser)” har ingen ny fil sparats av det försöket. Bevara originalfilen och kontakta administratören. På kundkortet behåller befintlig UI vald fil, typ och version vid avslag. Orderguiden och arbetsfoto väljer befintligen om filen efter fel; version och arbetsunderlag behålls. Kontrollera det faktiska sparbeskedet.
+
+Detta är historikantal för filuppladdning, inte full backupberedskap. Samlad filmetadata/headerbudget, 2 000 filer per kopia, JSON:s innehålls-/totalbudget, andra läsarschemagränser och verklig hostingkapacitet/återställning återstår. Exakt 50 000 kan exporteras i de prövade små filfallen men lämnar inte automatiskt plats för återställningens extra kundaudits. Filuppladdning har inget beständigt request-ID-kvitto: återläst egen filmetadata kan bekräfta samma pågående begärans COMMIT, inte en ny HTTP-begärans idempotenta replay.
+
+Vid denna källfrysning är ovanstående baslinjer och riktade preliminära prov genomförda. Fem obligatoriska slutkontroller, kontrollerat browserprov, exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår. Faktisk kandidat/main/Sites-källa/live och slutresultat redovisas separat i PR/task efter verkliga kvitton. Konto-/personal-/integrationsprov och verklig hostingåterställning är obekräftade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex; explicit brief och färsk repo används.
+
+---
+
 # CRM114: gemensamma CRM-sparningar bevarar historikens läsargräns
 
 Om sparandet ger beskedet ”Ändringen skulle göra CRM-historiken för stor för dataexport (högst 50 000 händelser)” har just den gemensamma CRM-ändringen avvisats före commit. Bevara anteckningen/underlaget privat och kontakta ansvarig administratör. Ett separat sparat privat utkast är inget kvitto för gemensam kunduppföljning. Följ aktivitetens faktiska sparbesked; upprepa inte samma sparförsök tills underlaget har utretts.

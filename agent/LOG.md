@@ -1,3 +1,23 @@
+# CRM115: filuppladdning bevarar historikens exportgräns
+
+Första obligatoriska regressionen på kandidat `a4aed494fabcd3c4cdac60b05c3c08500dec2018` stoppade vid `assert.ok(injected)` i det befintliga privata behörighetsprovet. Testets verkliga rollindragning var knuten till den gamla separata versionsfrågan och utfördes därför inte. Endast injektionspunktens SQL-matchning uppdaterades till filrutens nya atomiska version-/antalfråga; SQL-resultatet, indragningen och samtliga krav på 403, oförändrade poster och ingen R2-skrivning behålls. Den stoppade körningen räknas inte grön. Ny slutrevision och alla obligatoriska kontroller krävs.
+
+Öppningsbasen är levererad CRM114/[PR #182](https://github.com/ludros93-prog/MAgnussons-CRM/pull/182): GitHub-main `40fb19878734d203f9c1f4847284c620b09d731f`, Sites-källa `68b5c66ba38b9619a60783f8e63755a2ac2dfdfb`, lyckad live v111. Alla 433 spårade filers bytes/lägen och träd `cdb771bd330687d70604718254379d776c8886b5` matchade vid öppningen. Egen branch/reservation används; inga öppna PR:er, andra aktiva byggagenter eller konkurrerande publicering observerades. Begränsad custom-delning, auth, miljö och DB/BUCKET bevaras.
+
+Filuppladdningen läser nu historikantal och arbetsytans CAS-revision i samma SQL-statement. Vid minst 50 000 befintliga händelser avvisas den nya kundfilen eller arbetsfotot med ett konkret svenskt 400-besked före filstaging. De tre commit-statementen, serverrollerna, ordningens underlagskontroll och städ-/utfallshanteringen är byteoförändrade. En versionsökande konkurrerande skrivning ger befintligt CAS-avslag; endast den förlorande uppladdningens egna staged-objekt städas. Historik raderas inte.
+
+Oförändrad main reproducerade 50 000→50 001 via verklig multipart-uppladdning: 7 autentiserade Node-handleranrop och 5 lokala Worker-HTTP-anrop; båda backendbackuperna avvisades efteråt. Preliminär kandidat passerade 30 Node-anrop/26 fall och 27 native HTTP-anrop. Exakt 49 999+1 med verklig filmetadata/innehåll och JSON/NDJSON/parser, avslag före R2/commit, konkurrens, roller, orderunderlag, rollback samt förlorad/okänd kvittens täcks. Node har 55 och native 34 transitive käll-/modulhashar; 18 positiva råtabeller och två R2-sentineler skyddas. Native testar även arbetsfoto vid exakt gräns. Detta är syntetiska tekniska prov.
+
+Två preliminära harnessproblem behålls i privata kvitton: Node-baslinjens första historikjämförelse var onödigt kvadratisk och avslutades ägt innan keyed bytejämförelse; native-baslinjens egna stdin-runner ärvde `--input-type=module` till Miniflares CommonJS eval-Worker och låste init. Vanlig privat .mjs-runner löste det utan produkt-, proxy-, CA-, policy- eller permissionändring. Båda slutliga baslinjerna och riktade kandidatproven fick exit 0. Native gjorde faktisk dispose. Dessa avbrutna försök räknas inte som gröna kontroller.
+
+Ingen SQL-migration, lagringsvariant, filmetadata-/backupformatändring eller ändring av commit-SQL införs. Föregående v111-kod kan läsa accepterade data; återpublicering av dess verifierade källa är kodåtergångsvägen men tar bort det nya filhistorikskyddet. Ingen faktisk rollback eller återställning av riktiga data har utförts. Privata utkast, konton, Outlook, serverroller, mängd-/revisionsregler, scheman, prompter och aktivering ändras inte.
+
+Nästa avgränsade B04-steg är samlad filmetadata/headerbudget med isolerad reproduktion före rättning. B01:s återstående roller/personalöverlämning, privata backupområden, faktisk hostingåterställning, riktiga konton/integrationer och personalpilot är fortsatt öppna; denna leverans markerar inte dem klara.
+
+Vid denna källfrysning är ovanstående baslinjer och riktade preliminära prov genomförda. Fem obligatoriska slutkontroller, kontrollerat browserprov, exakt-head CI, aktuell-bas merge och samma Sites-publicering återstår. Faktisk kandidat/main/Sites-källa/live och slutresultat redovisas separat i PR/task efter verkliga kvitton. Konto-/personal-/integrationsprov och verklig hostingåterställning är obekräftade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt read_thread gäller Slack, inte Codex; explicit brief och färsk repo används.
+
+---
+
 # CRM114: gemensamma CRM-sparningar bevarar historikens läsargräns
 
 Öppningsbasen är levererad CRM113/[PR #181](https://github.com/ludros93-prog/MAgnussons-CRM/pull/181): GitHub-main `b2066543172d95e8d493e97a5da962304c74ad33`, Sites-källa `b76b1d20e3652010aa3e0757cd9f43bb74c17c9d`, lyckad live v110. Alla 431 spårade filers bytes/lägen och träd `f3b8819ea30ac709c1ce806a3041ddcf37134c7e` matchade. Egen branch och reservation; inga öppna PR:er eller konkurrerande publicering observerades. Sites-identitet, begränsad delning, auth, miljö, DB/BUCKET och agenternas uppdrag/scheman behålls.

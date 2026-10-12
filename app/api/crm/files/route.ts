@@ -28,7 +28,9 @@ export async function POST(req:Request){let objectKey='',savedData:CustomerFile|
  const bytes=new Uint8Array(await file.arrayBuffer()),ext=file.name.split('.').at(-1)!.toLowerCase();const valid=ext==='png'?bytes.slice(0,8).join(',')==='137,80,78,71,13,10,26,10':ext==='webp'?new TextDecoder().decode(bytes.slice(0,4))==='RIFF'&&new TextDecoder().decode(bytes.slice(8,12))==='WEBP':bytes[0]===255&&bytes[1]===216&&bytes[2]===255;if(!valid)throw new AccessError('Filen känns inte igen som ett foto.',400);
  }else if(!['admin','seller'].includes(user.role))throw new AccessError('Kundunderlag laddas upp av säljare.',403);
  const count=await db.prepare('SELECT COUNT(*) AS n FROM crm_files WHERE space=? AND customer_id=?').bind(space,customerId).first<{n:number}>();if(count&&count.n>=200)throw new AccessError('Kunden har nått gränsen 200 filer.',400);
- const current=await db.prepare('SELECT version FROM crm_spaces WHERE id=?').bind(space).first<{version:number}>();if(!current)throw new AccessError('Arbetsytan saknas.',404);
+ // Read history capacity and its CAS revision in the same SQLite snapshot.
+ const current=await db.prepare('SELECT version,(SELECT COUNT(*) FROM crm_events WHERE space=?) AS event_count FROM crm_spaces WHERE id=?').bind(space,space).first<{version:number;event_count:number}>();if(!current)throw new AccessError('Arbetsytan saknas.',404);
+ if(current.event_count>=50000)throw new AccessError('Filen skulle göra CRM-historiken för stor för dataexport (högst 50 000 händelser). Ingen ny fil har sparats. Bevara filen och kontakta administratören.',400);
  await currentMember(req,user);
  const id=crypto.randomUUID(),at=new Date().toISOString(),data:CustomerFile={id,name:file.name.replace(/[\r\n]/g,'').slice(0,200),kind,version,size:file.size,at,uploadedBy:user.name,...(photo?{purpose:'production' as const,orderId:productionOrder.id,workId:productionOrder.production.workId}:{})};savedData=data;objectKey=space+'/'+customerId+'/'+id;
  await bucket().put(objectKey,file.stream(),{httpMetadata:{contentType:'application/octet-stream'}});
