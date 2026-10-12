@@ -1,3 +1,15 @@
+# CRM119: första JSON-återställning bevarar hela paketbudgeten
+
+`importBackup` behåller tidigare ordning: källa/integritet och mål, tillagd återställningshistorik, verklig fil-ID-/referensomappning samt befintlig framtida NDJSON-header, DB-kodning och färdiga radbudgetar. Därefter mäts den färdiga äldre JSON-kopian före första R2 put och commit. Tidigare sparat exakt aktörs-/avsiktskvitto följer fortfarande sin tidigare replayväg. Målkontrollens befintliga `initialize()` ligger kvar och kan skapa en tom arbetsyta; avslag före återställningscommit innebär inte ett generellt löfte om noll tidigare SQL-skrivningar. De syntetiska bevarandeproven använder redan initialiserade mål.
+
+Befintligt `BackupSchema` bygger format1-omslaget med hela förberedda tillståndet, destinationens `current.version+1`, borttagen viewer och alla verkligt omappade descriptors. Tomma contentfält och 64 tecken SHA ger det faktiska JSON-omslagets UTF-8-längd. Lägg till **summan av `4 * ceil(size / 3)` per fil**, inte en gemensam avrundning. Standard-base64 och hexhash innehåller inga tecken som behöver JSON-escaping. Exakt 16 000 000 byte tillåts; +1 ger konkret 400 utan staging/commit. Den nya grinden gör ingen R2-läsning eller allokering av stora base64platshållare; tidigare indataavkodning och hashkontroll består.
+
+Den separata JSON-gränsen 10 000 000 binära filbyte består. NDJSON behåller sin summering utan JSON-formatets 10 MB-tak och får inte den nya JSON-grinden; dess övriga schema-/filgränser består. Gemensam SQL-commit, aktuell medlemskontroll, CAS, kvittoavstämning och egen R2-städning behålls. D1-batch gör inte R2 atomiskt; okänt commitutfall får inte radera en möjlig lyckad återställning.
+
+Inget schema, lagringsfält, backupformat, SQL-migration eller DB/BUCKET-bindning ändras. v115 kan läsa samma accepterade data; återpublicering av verifierad SOURCE `cb2ef41a7b8f400f704e9eb09720740508046b4e` är en kodåtergång som saknar grinden, ingen provad live-rollback. crm82-kompatibilitetsgolvet för äldre ansvarsaudit kvarstår. Verklig hostad/privat återställning och separat konton-/utkast-/Outlookrutin är oprövade. Kandidatens native-, slut-/UI-/CI-/merge-/publiceringskvitton återstår vid denna frysning; live är v115.
+
+---
+
 # CRM118: fullständigt underlag före filstaging
 
 Första SQL-läsningen behåller arbetsytans revision och felprioriteten kund 200 → historik 50 000 → arbetsyta 2 000. Dessa avslag sker före UUID. Därefter läser en D1-batch **12 SELECT**: arbetsytans version/settings, tio CRM-samlingar och alla arbetsytans filmetadata. Batchens revision måste vara exakt den ursprungliga; skillnad eller försvunnen arbetsyta ger 409 före UUID/R2. En senare snapshot får inte bli ny CAS-bas.

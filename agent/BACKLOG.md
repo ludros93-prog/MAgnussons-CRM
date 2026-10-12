@@ -1,3 +1,13 @@
+# CRM119: JSON-total efter återställning är preliminärt prövad
+
+B04:s nästa avgränsade lucka är reproducerad: en giltig äldre JSON-kopia kan återställas men därefter överskrida hela återexportens 16 000 000 UTF-8-byte. Första JSON-återställning mäter nu slutligt omslag, tillagd kundhistorik, omappade filreferenser, nästa destinationsrevision, metadata/hashar och varje fils separat paddade base64längd före R2/commit. Exakt gräns tillåts. Ingen ny JSON-gräns införs på NDJSON; JSON:s befintliga 10 MB binära filtak består.
+
+Oförändrad v115-SOURCE gav baslinje-PASS i tio Node-anrop/två Unicodefall och bevarat faktiskt native-bygge i fyra app-HTTP/nio inspektioner. Kandidatens Node-prov passerade 57 anrop/17 fall; separat headerkompatibilitet passerade 22 anrop. Kandidat-native, frysta slutkontroller, browser, exakt-head CI, aktuell-bas merge och SOURCE/save/deploy/efterkontroll återstår. CRM119 är ännu inte levererad; senast verifierad live är v115. Se [VALIDATION](../VALIDATION.md) och [LOG](LOG.md).
+
+**Nästa B04-del:** senare vanliga skrivares hela JSON-/metadatautrymme, andra läsarschemagränser och extra återställningsaudits; därefter full privat backup med faktisk hostad återställning och bevarade referenser. Konton, privata utkast och Outlook har fortsatt separat återställningsbehov. B01:s verkliga konto-/personalprov och riktiga integrationer är obekräftade. Den redan levererade CRM118-fullheadergrinden ska inte återlistas som olöst. Inga agentscheman, prompter, aktiveringar eller konton ändras; Codex-referensen är oläst.
+
+---
+
 # CRM118 levererad: fullständig header före filstaging
 
 B04:s avgränsade fullheadergrind är rättad och publicerad i **v115**. Kundfil och arbetsfoto avvisas före R2/databasändring om faktisk kommande NDJSON-header överstiger 16 000 000 UTF-8-byte utan LF; exakt gräns tillåts. All normaliserad CRM-data, samtliga filmetadata, ny metadata/händelse och nästa revision ingår. Antalsprioritet 200 → 50 000 → 2 000, ursprunglig CAS och egen städning bevaras. Ingen migration eller formatändring.

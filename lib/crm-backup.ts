@@ -49,6 +49,15 @@ export async function validateBackupRestoreHeader(space:string,current:State,nex
 const BackupSchema=z.object({format:z.literal('magnussons-crm-backup-1'),exportedAt:z.string(),sourceSpace:z.enum(['demo','live']),state:z.unknown(),files:z.array(BackupFileDescriptor.extend({content:z.string().max(6700000),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(2000)});
 export const backupNeed=(v:unknown,message:string)=>{if(!v)throw new RuleError(message)};
 const need=backupNeed;
+function validateJsonBackupRestoreBudget(space:string,current:State,next:State,stored:StoredFile[]){
+ const {viewer:_,...state}={...next,version:current.version+1};
+ const copy=BackupSchema.parse({format:'magnussons-crm-backup-1',exportedAt:new Date().toISOString(),sourceSpace:space,state,files:stored.map(({customerId,metadata})=>({customerId,metadata,content:'',sha256:'0'.repeat(64)}))});
+ // Canonical base64 and hex SHA are ASCII without JSON escaping. Measure
+ // the final envelope, then add each file's separately padded base64 length.
+ // No R2 read or encoded-content allocation is needed before staging.
+ const bytes=new TextEncoder().encode(JSON.stringify(copy)).byteLength+copy.files.reduce((total,file)=>total+4*Math.ceil(file.metadata.size/3),0);
+ need(bytes<=BACKUP_MAX_BYTES,'Återställningen skulle göra den äldre JSON-kopian större än 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.');
+}
 export async function checksum(bytes:Uint8Array){const hash=await crypto.subtle.digest('SHA-256',bytes as BufferSource);return Array.from(new Uint8Array(hash),v=>v.toString(16).padStart(2,'0')).join('');}
 export const encodeBackupFile=(bytes:Uint8Array)=>{let raw='';for(let i=0;i<bytes.length;i+=32768)raw+=String.fromCharCode(...bytes.subarray(i,i+32768));return btoa(raw)};
 export const decodeBackupFile=(value:string,canonical=false)=>{need(value.length%4===0&&/^[A-Za-z0-9+/]*={0,2}$/.test(value),'Filinnehållet är felaktigt.');const raw=atob(value);const bytes=Uint8Array.from(raw,c=>c.charCodeAt(0));if(canonical)need(encodeBackupFile(bytes)===value,'Filinnehållet är felaktigt.');return bytes;};
@@ -127,6 +136,7 @@ export async function importBackup(space:string,input:unknown,requestId:string,v
  for(const {file,bytes} of decoded)need(bytes.length===file.metadata.size&&await checksum(bytes)===file.sha256,'Kontrollsumman stämmer inte för '+file.metadata.name+'. Inga uppgifter återställs.');
  const prepared=prepareBackupRestore(current,next,data.exportedAt,actor),stored=remapBackupFiles(space,prepared,data.files),staged:string[]=[];let finalizing=false;
  await validateBackupRestoreHeader(space,current,prepared,stored,{id:requestId,userId:actor.id,hash});
+ validateJsonBackupRestoreBudget(space,current,prepared,stored);
  try{
   for(let i=0;i<stored.length;i++){staged.push(stored[i].objectKey);await bucket().put(stored[i].objectKey,decoded[i].bytes as unknown as ArrayBuffer,{httpMetadata:{contentType:'application/octet-stream'}});}
   finalizing=true;return await finishBackupRestore(space,current,prepared,stored,staged,requestId,hash,actor);
