@@ -1,3 +1,19 @@
+# CRM117: kundens filgräns och revision läses tillsammans
+
+En samtidig kundfil eller ett arbetsfoto ska inte kunna lämna kunden med 201 filer och därmed stoppa båda backupformaten. Kundens filantal läses nu tillsammans med arbetsytans filantal, historikantal och CAS-revision i ett SQL-statement. Vid 200 befintliga filer avvisas uppladdningen med det befintliga beskedet ”Kunden har nått gränsen 200 filer.” före UUID och R2-staging. Befintliga filer raderas inte.
+
+I en befintlig arbetsyta behålls felprioriteten kundens 200 filer → historikens 50 000 → arbetsytans 2 000. Saknad arbetsyta ger nu 404 innan kundtaket bedöms; detta är ett avsiktligt ordningsförtydligande. Serverbehörighet och inputkontroller samt hela currentMember-/UUID-/R2-/tre SQL-commit-/städ-/utfallssuffixet är byteoförändrade. Två samtidiga uppladdningar som läser 199 och samma revision får en vinnare vid 200; förloraren får befintligt CAS-avslag 409 och städar bara sin egen staged-fil.
+
+200 är CRM-backupens befintliga kundgräns, inte en uppgiven Cloudflare-gräns. Ingen migration, fil-/backupformatändring, medlemskoppling eller beständig request-ID-replay läggs till. Samlad filmetadata/headerbudget, JSON-innehåll/totalbudget, andra läsarschemagränser, återställningens extra audits och verklig hostingåterställning återstår. En summa av metadata eller en header med tom files-lista räcker inte som nästa fullständiga budgetprov.
+
+Öppningsbasen är färsk GitHub-main `09d068880f5e97895b659f756a0260300f9db4df`, träd `606f201872edd473f37a357873e937880f78e819`, och faktisk Sites-SOURCE `4244a5b98ade557db08adfc7c287872cede09a4a`, träd `363c2f5c2d6477cacca10806957e745ed5820165`, med lyckad live v113. Av 437 källfiler är 435 övriga byte-/lägeidentiska; main har endast senare backlog-/loggprefix som bevarar SOURCE:s hela historik. Egen worktree, branch och ägd lokal reservation används. Vid öppningen fanns inga öppna PR:er eller observerad konkurrerande publicering. Sites-identitet, begränsad delning, auth, miljö, DB/BUCKET och agenternas instruktioner/scheman bevaras.
+
+Accepterade data är fortfarande läsbara med tidigare verifierad v113: inga nya fält eller format skapas. Kodåtergång till v113 tar bort den nya kopplingen av kundantal/revision och återinför därför just denna samtidighetslucka. Profilhistorik kräver fortfarande v55-kompatibel skrivare enligt körboken. Ingen live-rollback eller full hostad återställning är prövad; gemensam backup omfattar inte konton, privata utkast eller Outlook.
+
+Vid denna källfrysning är baslinjer och riktade preliminära prov genomförda. Fem obligatoriska slutkontroller, browserprov på slutbygget, exakt-head CI, aktuell-bas merge och faktisk samma-Site-publicering återstår. Slutliga kvitton/revisioner/main/SOURCE/live anges separat i PR/task efter verkligt utfall. Syntetiska tekniska prov är ingen konto-, integrations-, kund- eller personalacceptans. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; tillgängligt read_thread gäller Slack. Explicit brief och färsk repo används.
+
+---
+
 # CRM116: filuppladdning bevarar kopians filantal
 
 Filuppladdning läser nu arbetsytans filantal, historikantal och CAS-revision i samma SQL-statement. Vid minst 2 000 befintliga filer avvisas en ny kundfil eller ett arbetsfoto med ett konkret svenskt 400-besked före UUID och R2-staging. Alla crm_files-rader i vald arbetsyta räknas, även historiska eller inte längre arbetskopplade filer; inga tidigare filer raderas. Det befintliga 50 000-historikbeskedet behåller sin prioritet. Hela currentMember-/UUID-/R2-/tre SQL-commit-/städ-/utfallssuffixet är byteoförändrat. Versionsökande konkurrerande filskrivning behåller befintlig CAS-grind och endast förlorarens egen staged-nyckel städas.

@@ -27,9 +27,9 @@ export async function POST(req:Request){let objectKey='',savedData:CustomerFile|
  if(!/\.(png|jpe?g|webp)$/i.test(file.name))throw new AccessError('Välj ett foto i JPG, PNG eller WebP.',400);
  const bytes=new Uint8Array(await file.arrayBuffer()),ext=file.name.split('.').at(-1)!.toLowerCase();const valid=ext==='png'?bytes.slice(0,8).join(',')==='137,80,78,71,13,10,26,10':ext==='webp'?new TextDecoder().decode(bytes.slice(0,4))==='RIFF'&&new TextDecoder().decode(bytes.slice(8,12))==='WEBP':bytes[0]===255&&bytes[1]===216&&bytes[2]===255;if(!valid)throw new AccessError('Filen känns inte igen som ett foto.',400);
  }else if(!['admin','seller'].includes(user.role))throw new AccessError('Kundunderlag laddas upp av säljare.',403);
- const count=await db.prepare('SELECT COUNT(*) AS n FROM crm_files WHERE space=? AND customer_id=?').bind(space,customerId).first<{n:number}>();if(count&&count.n>=200)throw new AccessError('Kunden har nått gränsen 200 filer.',400);
- // Read both copy capacities and their CAS revision in the same SQLite snapshot.
- const current=await db.prepare('SELECT version,(SELECT COUNT(*) FROM crm_events WHERE space=?) AS event_count,(SELECT COUNT(*) FROM crm_files WHERE space=?) AS file_count FROM crm_spaces WHERE id=?').bind(space,space,space).first<{version:number;event_count:number;file_count:number}>();if(!current)throw new AccessError('Arbetsytan saknas.',404);
+ // Read customer and workspace copy capacities with their CAS revision in the same SQLite snapshot.
+ const current=await db.prepare('SELECT version,(SELECT COUNT(*) FROM crm_events WHERE space=?) AS event_count,(SELECT COUNT(*) FROM crm_files WHERE space=?) AS file_count,(SELECT COUNT(*) FROM crm_files WHERE space=? AND customer_id=?) AS customer_count FROM crm_spaces WHERE id=?').bind(space,space,space,customerId,space).first<{version:number;event_count:number;file_count:number;customer_count:number}>();if(!current)throw new AccessError('Arbetsytan saknas.',404);
+ if(current.customer_count>=200)throw new AccessError('Kunden har nått gränsen 200 filer.',400);
  if(current.event_count>=50000)throw new AccessError('Filen skulle göra CRM-historiken för stor för dataexport (högst 50 000 händelser). Ingen ny fil har sparats. Bevara filen och kontakta administratören.',400);
  if(current.file_count>=2000)throw new AccessError('Filen skulle göra CRM-kopian för stor (högst 2 000 kundfiler). Ingen ny fil har sparats. Bevara filen och kontakta administratören.',400);
  await currentMember(req,user);

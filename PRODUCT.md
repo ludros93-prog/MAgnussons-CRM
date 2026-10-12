@@ -1,3 +1,17 @@
+# CRM117: kundens filgräns och revision läses tillsammans
+
+En samtidig kundfil eller ett arbetsfoto ska inte kunna lämna kunden med 201 filer och därmed stoppa båda backupformaten. Kundens filantal läses nu tillsammans med arbetsytans filantal, historikantal och CAS-revision i ett SQL-statement. Vid 200 befintliga filer avvisas uppladdningen med det befintliga beskedet ”Kunden har nått gränsen 200 filer.” före UUID och R2-staging. Befintliga filer raderas inte.
+
+I en befintlig arbetsyta behålls felprioriteten kundens 200 filer → historikens 50 000 → arbetsytans 2 000. Saknad arbetsyta ger nu 404 innan kundtaket bedöms; detta är ett avsiktligt ordningsförtydligande. Serverbehörighet och inputkontroller samt hela currentMember-/UUID-/R2-/tre SQL-commit-/städ-/utfallssuffixet är byteoförändrade. Två samtidiga uppladdningar som läser 199 och samma revision får en vinnare vid 200; förloraren får befintligt CAS-avslag 409 och städar bara sin egen staged-fil.
+
+200 är CRM-backupens befintliga kundgräns, inte en uppgiven Cloudflare-gräns. Ingen migration, fil-/backupformatändring, medlemskoppling eller beständig request-ID-replay läggs till. Samlad filmetadata/headerbudget, JSON-innehåll/totalbudget, andra läsarschemagränser, återställningens extra audits och verklig hostingåterställning återstår. En summa av metadata eller en header med tom files-lista räcker inte som nästa fullständiga budgetprov.
+
+Accepterade data är fortfarande läsbara med tidigare verifierad v113: inga nya fält eller format skapas. Kodåtergång till v113 tar bort den nya kopplingen av kundantal/revision och återinför därför just denna samtidighetslucka. Profilhistorik kräver fortfarande v55-kompatibel skrivare enligt körboken. Ingen live-rollback eller full hostad återställning är prövad; gemensam backup omfattar inte konton, privata utkast eller Outlook.
+
+Vid denna källfrysning är baslinjer och riktade preliminära prov genomförda. Fem obligatoriska slutkontroller, browserprov på slutbygget, exakt-head CI, aktuell-bas merge och faktisk samma-Site-publicering återstår. Slutliga kvitton/revisioner/main/SOURCE/live anges separat i PR/task efter verkligt utfall. Syntetiska tekniska prov är ingen konto-, integrations-, kund- eller personalacceptans. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; tillgängligt read_thread gäller Slack. Explicit brief och färsk repo används.
+
+---
+
 # CRM116: filuppladdning bevarar kopians filantal
 
 Om uppladdningen säger ”Filen skulle göra CRM-kopian för stor (högst 2 000 kundfiler)” har ingen ny fil sparats av det försöket. Bevara originalfilen och kontakta administratören. Detta gäller arbetsytans kundfiler och arbetsfoton tillsammans. På kundkortet behåller befintlig UI vald fil, typ och version vid avslag; orderguiden och arbetsfoto använder sitt befintliga omval efter fel. Invänta faktiskt sparbesked.
