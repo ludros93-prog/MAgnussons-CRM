@@ -1,3 +1,13 @@
+# CRM116: filuppladdning bevarar kopians filantal
+
+Filuppladdning läser nu arbetsytans filantal, historikantal och CAS-revision i samma SQL-statement. Vid minst 2 000 befintliga filer avvisas en ny kundfil eller ett arbetsfoto med ett konkret svenskt 400-besked före UUID och R2-staging. Alla crm_files-rader i vald arbetsyta räknas, även historiska eller inte längre arbetskopplade filer; inga tidigare filer raderas. Det befintliga 50 000-historikbeskedet behåller sin prioritet. Hela currentMember-/UUID-/R2-/tre SQL-commit-/städ-/utfallssuffixet är byteoförändrat. Versionsökande konkurrerande filskrivning behåller befintlig CAS-grind och endast förlorarens egen staged-nyckel städas.
+
+2 000 är befintligt inkluderande filantal i både JSON-kopia och NDJSON-header/slutpost, ingen Cloudflare-gräns. Det nya skyddet garanterar inte full backupberedskap: samlad filmetadata/headerbudget, JSON-innehåll/totalbudget, andra läsarschemagränser, återställningens extra audits och verkliga D1/R2-/hostingbegränsningar återstår. Kundens separata 200-filfråga ligger fortfarande före revisionssnapshot; en ändring mellan dessa två läsningar ingår inte i denna fix. Uppladdning har inget beständigt request-ID-kvitto; samma pågående begärans metadataåterläsning är inget nytt HTTP-försöks idempotenta replay.
+
+Vid denna källfrysning är ovanstående baslinjer och riktade preliminära prov genomförda. Fem obligatoriska slutkontroller, browserprov på slutbygget, exakt-head CI, aktuell-bas merge och faktisk samma-Site-publicering återstår. Slutliga kvitton/revisioner/main/SOURCE/live anges i PR/task efter verkligt utfall. Riktiga konton, personalacceptans, integrationer och hostad återställning är obekräftade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är fortsatt oläst; tillgängligt read_thread gäller Slack. Explicit brief och färsk repo används.
+
+---
+
 # CRM115: filuppladdning bevarar historikens exportgräns
 
 Filuppladdningen läser nu historikantal och arbetsytans CAS-revision i samma SQL-statement. Vid minst 50 000 befintliga händelser avvisas den nya kundfilen eller arbetsfotot med ett konkret svenskt 400-besked före filstaging. De tre commit-statementen, serverrollerna, ordningens underlagskontroll och städ-/utfallshanteringen är byteoförändrade. En versionsökande konkurrerande skrivning ger befintligt CAS-avslag; endast den förlorande uppladdningens egna staged-objekt städas. Historik raderas inte.
