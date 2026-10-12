@@ -1,3 +1,17 @@
+# CRM121 levererad i v118: nästa aktivitet ryms i CRM-kopian
+
+Vanlig CRM-sparning skyddar återläsarens befintliga gräns på högst 30 000 uppgifter. Hela slutliga `next.tasks` räknas, inklusive avslutade uppgifter och nästa aktiviteter som skapas av kundanteckning, avslutad uppföljning eller genomfört möte. Exakt gräns tillåts; uppgift 30 001 stoppas före ändringens commit och privata utkast bevaras. Historikfel behåller sin tidigare prioritet; tidigare exakt aktörs-/avsiktskvitto returnerar först. Restoreordning, serverroller, CAS och atomiska kvitton består. Ingen migration eller formatändring.
+
+Ändringar utan antalökning fungerar vid exakt 30 000, med övriga befintliga kontroller. Avslutning frigör inte uppgiftsutrymme. Redan överstora arbetsytor får avslag även vid en ny ändring utan tillväxt; bevara underlaget och kontakta administratören. Ingen automatisk radering eller raderingsrekommendation införs. Detta är Magnussons befintliga läsarkontrakt, ingen uppgiven Cloudflare-gräns.
+
+[App-PR #196](https://github.com/ludros93-prog/MAgnussons-CRM/pull/196) är faktiskt sammanslagen i app-main `4fd0b3a06d3224a72b7974a2a8f6c414f01bba57`. Fyra lokala kontroller är gröna; fullruntime passerade i faktisk exakt-head CI `38305927121` med samtliga 13 steg. Byggd APP och självständigt byggd SOURCE passerade vardera 20 fall/50 HTTP/61 R2-inspektioner. Samma Site är publicerad i **v118** med terminal lyckad deploy och oförändrad begränsad delning/miljö; se [agent/LOG](agent/LOG.md).
+
+Lokal fullruntime förblir misslyckad med R2-socketfel och ökade OOM-räknare. Gröna isolerade prov är inga verkliga konto-/personal-/integrations- eller hostad återställningsprov. Nästa B04-del: andra samlingars befintliga läsartak, formatmedveten legacy JSON-total/base64 samt privat/full hostad återställning. B04 som helhet är öppet. Separat möjlig förbättring är granskning av kvadratiskt `mutationResult`-uppgiftsval; ingen prestandarättning eller tidsvinst påstås här. Riktiga konto-/personal-/integrationsprov är obekräftade. Codex-referensen är fortsatt oläst; explicit brief och repo används.
+
+Detta senare tre-dokumentprefix redovisar den faktiska appleveransen och bevarar hela äldre historiken. Prefixets egna fyra lokala kontroller, fullruntime i exakt dokumentationshead-CI och aktuell-bas merge återstår vid dokumentfrysningen. Ingen ytterligare Site-version behövs för denna dokumentation.
+
+## Historik före CRM121:s faktiska leverans
+
 # CRM121 – kandidat med korrigerad isolerad observationskanal
 
 Produktändringen skyddar den befintliga återläsningsgränsen på 30 000 uppgifter. Den första kandidatens fullruntime/CI är faktiskt röd; Det lokalt reproducerade 503-felet lokaliserades till testets interna observations-fetch före filheader, efter lyckad native databas-/kvittoläsning. CI-loggen visar 503 i nongrowth-loopen utan motsvarande fasdiagnos. En avgränsad kontroll ändrar endast observationssvarets `Connection: close` och gav 20 fall/50 app-HTTP/61 R2-inspektioner. SQL, status/kvitto, 116 assertions och 139 await-uttryck består. Extra väntesteg från tidigare diagnoser införs inte. Detta är en testtransportändring, ingen verifierad produktionskapacitetsfix.

@@ -1,3 +1,17 @@
+# CRM121 levererad i v118: uppgiftsgränsen bevarar nästa steg
+
+B04:s avgränsade uppgiftslucka är rättad och publicerad. Vanlig CRM-sparning skyddar återläsarens befintliga gräns på högst 30 000 uppgifter. Hela slutliga `next.tasks` räknas, inklusive avslutade uppgifter och nästa aktiviteter som skapas av kundanteckning, avslutad uppföljning eller genomfört möte. Exakt gräns tillåts; uppgift 30 001 stoppas före ändringens commit och privata utkast bevaras. Historikfel behåller sin tidigare prioritet; tidigare exakt aktörs-/avsiktskvitto returnerar först. Restoreordning, serverroller, CAS och atomiska kvitton består. Ingen migration eller formatändring.
+
+Ändringar utan antalökning fungerar vid exakt 30 000, med övriga befintliga kontroller. Avslutning frigör inte uppgiftsutrymme. Redan överstora arbetsytor får avslag även vid en ny ändring utan tillväxt; bevara underlaget och kontakta administratören. Ingen automatisk radering eller raderingsrekommendation införs. Detta är Magnussons befintliga läsarkontrakt, ingen uppgiven Cloudflare-gräns.
+
+[App-PR #196](https://github.com/ludros93-prog/MAgnussons-CRM/pull/196) är faktiskt sammanslagen i app-main `4fd0b3a06d3224a72b7974a2a8f6c414f01bba57`. Fyra lokala slutkontroller är gröna; lokal fullruntime misslyckades med socketfel i R2-snapshot samtidigt som OOM-räknarna ökade. Hela runtime-provet och samtliga 13 steg passerade i faktisk exakt-head CI `38305927121`. Byggd APP och självständigt byggd SOURCE passerade vardera 20 fall/50 HTTP/61 R2-inspektioner. Samma Site är publicerad i **v118**, terminal lyckad deploy och efterkontroll 2026-10-12T21:27:31.541931+00:00; skyddad delning/miljö är oförändrad. Se [LOG](LOG.md).
+
+Nästa B04-del: andra samlingars befintliga läsartak, formatmedveten legacy JSON-total/base64 samt privat/full hostad återställning. B04 som helhet är öppet. Separat möjlig förbättring är granskning av kvadratiskt `mutationResult`-uppgiftsval; ingen prestandarättning eller tidsvinst påstås här. Riktiga konto-/personal-/integrationsprov är obekräftade. Codex-referensen är fortsatt oläst; explicit brief och repo används.
+
+Detta senare tre-dokumentprefix redovisar den faktiska appleveransen och bevarar hela äldre historiken. Prefixets egna fyra lokala kontroller, fullruntime i exakt dokumentationshead-CI och aktuell-bas merge återstår vid dokumentfrysningen. Ingen ytterligare Site-version behövs för denna dokumentation.
+
+## Historik före CRM121:s faktiska leverans
+
 # CRM121 – verifierad kontroll, slutlig leverans ännu öppen
 
 Uppgiftsgrinden och privata Node-41-kontrakt är genomförda. Första head 35034cda har fyra gröna lokala kontroller men röd fullruntime-CI. Hindret avgränsades till testobservatörens interna fetch; extra await/yield-diagnoser blev inte produkt-/mergebevis. Minimal callback-Response Connection:close bevarar alla SQL/status/gates/116 assertions/139 awaits och passerade separat full native-kontroll: 20 fall/50 app-HTTP/61 R2. Ny head/canonical prov, obligatoriska slutkontroller, fullruntime/exakt-head CI, aktuell-bas merge och separat Source/deploy återstår. Main och live v117 är oförändrade vid detta prefix.
