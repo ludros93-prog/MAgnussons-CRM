@@ -1,3 +1,15 @@
+# CRM120 levererad i v117: hela filheadern före vardagssparning
+
+B04:s avgränsade lucka är rättad och publicerad. Vanlig anteckning/uppföljning mäter nu hela kommande NDJSON-headern med befintliga filbeskrivningar, faktiskt resultat/audits och nästa revision före commit. Version och filbeskrivningar läses i samma D1-batch. Exakt 16 000 000 UTF-8-byte utan LF tillåts; +1 stoppas med bevarat underlag. Befintlig CAS, serverbehörighet, privata utkast och idempotenta kvitton består. Ingen migration eller formatändring.
+
+[App-PR #194](https://github.com/ludros93-prog/MAgnussons-CRM/pull/194) är faktiskt sammanslagen i app-main `c4b257184fb24babf239775ea8428677f6caeba2`. Fyra lokala slutkontroller är gröna; lokal fullruntime misslyckades med socketfel samtidigt som OOM-räknarna ökade. Hela runtime-provet och samtliga 13 steg passerade i faktisk exakt-head CI `38286480423`. Byggd APP och självständigt byggd SOURCE passerade vardera 21 fall/40 HTTP/60 R2-inspektioner. Samma Site är publicerad i **v117**, terminal lyckad deploy och efterkontroll 18:24:30 UTC; skyddad delning/miljö är oförändrad. Se [LOG](LOG.md).
+
+**Nästa B04-del:** senare skrivares legacy JSON-total/base64, andra läsarschemagränser och separat privat/full hostad återställning. Skyddet gäller hela NDJSON-headern och lovar inte att alla äldre JSON-exporter ryms. Lokal fullruntime-kapacitet är fortsatt ett konkret separat hinder; inga främmande filer raderades. Riktiga konto-/personal-/integrationsprov och full hostad återställning är obekräftade. Codex-referensen är oläst. B04 som helhet är öppet.
+
+Detta senare tvådokumentsprefix redovisar den faktiska appleveransen. Dess egna fyra lokala kontroller, fullruntime i exakt dokumentationshead-CI och aktuell-bas merge återstår vid dokumentfrysningen. Ingen ytterligare Site-version behövs för dokumentationen.
+
+## Historik före CRM120:s faktiska leverans
+
 # CRM120: full metadataheader för vardagssparningar – kandidat
 
 B04:s nästa avgränsade lucka är reproducerad och rättad: vanlig anteckning/uppföljning mäter nu hela NDJSON-headern med samtliga filbeskrivningar och faktisk nästa revision före commit. Version och descriptors läses i samma D1-batch; nyare snapshot ger befintligt säkert omprov eller konflikt. Exakt 16 000 000 UTF-8-byte utan LF tillåts; +1 avvisas med bevarat underlag/privat utkast. Inga nya R2-läsningar eller JSON-/10 MB-gränser; schema, CAS, atomisk commit och tidigare kvitto består.
