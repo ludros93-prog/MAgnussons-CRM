@@ -1,3 +1,15 @@
+# CRM117 levererad: filgräns vid samtidig uppladdning
+
+B04:s avgränsade kundtakslucka är rättad och publicerad i **v114**. Kundens filantal och CAS-revision läses i samma SQL-snapshot. Konkurrens vid 199 filer kan ge en vinnare vid 200 och en CAS-förlorare 409, utan att lämna kunden med 201 och oläsbara JSON-/NDJSON-kopior. Äldre redan överskridna kunder får tydligt avslag; befintliga filer tas inte bort.
+
+[App-PR #188](https://github.com/ludros93-prog/MAgnussons-CRM/pull/188) är faktiskt sammanfogad. Testad kod `32c4e857a861c82f4fe4217868366615b0ba67f2`, app-main `6ea9a4fac1fcd344cff0ba56c8f68eaf2008d66e` och publicerad SOURCE `cdae9437c2d67f999a8174abd14af3ef3c331d28` har samma 439 källfiler och träd `7a97e7a94aefae0ecf8e43a7c09b2434f1eafa83`. Denna senare dokumentationsbranch ändrar bara backlog/logg och behöver egen verifiering och merge; den innebär ingen ny app-publicering.
+
+Alla fem obligatoriska appkontroller avslutades med exit 0 på exakt kodhead: regression, TypeScript utan incremental, bygge, full isolerad Worker/D1/R2-runtime och diffkontroll. Exakt-head PR-CI run `38215656341` lyckades före merge. Det riktade slutprovet körde 74 Node-handleranrop/44 fall samt 66 native appanrop/124 fixture-inspektioner. Åtta browserfall/fyra kontrollerade POST400 bevarade filval och tidigare lista utan falsk sparning. Nytt SOURCE-bygge och riktat runtimeprov passerade före publicering. Se tekniska leveransbelägget i [LOG](LOG.md).
+
+**Nästa B04-del:** fullstate-budget för all filmetadata och verklig kopierubriksserialisering, med den nya händelsen och nästa revision. En rå SUM eller en header med tom files-lista bevisar inte hela gränsen. Privat backup, verklig hostingåterställning och B01:s riktiga konto-/personalprov är fortfarande öppna. Gröna syntetiska prov visar ingen användarinloggning eller fungerande Fortnox-/Outlook-anslutning. Codex-referensen är fortsatt oläst eftersom tillgängligt read_thread gäller Slack.
+
+## Historik före CRM117:s faktiska leverans
+
 # CRM117: kundens filgräns och revision läses tillsammans
 
 En samtidig kundfil eller ett arbetsfoto ska inte kunna lämna kunden med 201 filer och därmed stoppa båda backupformaten. Kundens filantal läses nu tillsammans med arbetsytans filantal, historikantal och CAS-revision i ett SQL-statement. Vid 200 befintliga filer avvisas uppladdningen med det befintliga beskedet ”Kunden har nått gränsen 200 filer.” före UUID och R2-staging. Befintliga filer raderas inte.
