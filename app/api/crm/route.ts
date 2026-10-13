@@ -2,7 +2,7 @@ import {ProductionIssueResponsibilityTransferSchema,productionIssueResponsibilit
 import {ProductionAssignmentTransferSchema,productionAssignmentBasis,productionAssignmentBlockedReason,productionAssignmentRole,productionAssignmentTargetBasis,transferProductionAssignment,resolveLegacyProductionAssignment,type ProductionAssignmentTarget} from '@/lib/production-assignment';
 import {revisionBasis} from '@/lib/order-revisions';
 import {directBasis} from '@/lib/direct-delivery';
-import {restoreState,CRM_RESTORE_MAX_TASKS,CRM_RESTORE_MAX_CUSTOMERS,CRM_RESTORE_MAX_MEETINGS} from '@/lib/crm-restore';
+import {restoreState,CRM_RESTORE_MAX_TASKS,CRM_RESTORE_MAX_CUSTOMERS,CRM_RESTORE_MAX_MEETINGS,CRM_RESTORE_MAX_DEALS} from '@/lib/crm-restore';
 import {BACKUP_MAX_BYTES,backupStreamHeader,backupMutationHeaderBytes} from '@/lib/crm-backup';
 import {load,commit,initialize,projectState,mutationResult,requestHash,assertRestoreDatabaseEncoding,assertRestoreStorageBudget,type MutationMeta} from '@/lib/crm-store';
 import {followupBasis} from '@/lib/follow-up';
@@ -347,6 +347,8 @@ export async function POST(req:Request){try{
  if(p.type!=='restore'&&next.customers.length>CRM_RESTORE_MAX_CUSTOMERS)throw new RuleError('CRM-kopian kan innehålla högst 10 000 kunder. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');
  // Keep every planned, completed and cancelled meeting within the restore reader's inclusive limit.
  if(p.type!=='restore'&&next.meetings.length>CRM_RESTORE_MAX_MEETINGS)throw new RuleError('CRM-kopian kan innehålla högst 20 000 möten. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');
+ // Count every final deal, including won, paused and lost, within the readers' inclusive limit.
+ if(p.type!=='restore'&&next.deals.length>CRM_RESTORE_MAX_DEALS)throw new RuleError('CRM-kopian kan innehålla högst 20 000 affärer. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');
 const result=mutationResult(current,next,p.type,p.data);
  // Generated history and the actual result receipt are part of the write.
  // Completed request receipts have already returned before this first-write gate.
