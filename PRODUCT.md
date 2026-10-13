@@ -1,3 +1,15 @@
+# CRM124 – bevara underlaget vid affärsgränsen
+
+Beskedet ”CRM-kopian kan innehålla högst 20 000 affärer. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.” betyder att ändringen inte sparats. Behåll text och privat utkast. Avslut av en affär frigör ingen plats och inga tidigare affärer/historik raderas automatiskt.
+
+Vanliga skrivningar stoppas före atomisk sparning när hela slutliga affärslistan passerar återställarens befintliga gräns 20 000. Alla tio stadier räknas, även vunna, pausade och förlorade. Exakt gräns och ändringar utan ökning vid gränsen följer övriga regler. En äldre överstor slutlista avvisar nya avsikter även utan tillväxt; tidigare exakta aktörs-/avsiktskvitton återspelas fortfarande. Inget underlag gallras automatiskt.
+
+Direkta affärer och affärer från kvalificering, årshjul, återköp och katalogbeställning går genom samma slutkontroll. Avslag lämnar affär, härledd order, uppgift, audit, kvitto och privat utkast osparade/oförbrukade. Tidigare felprioritet historik → uppgifter → kunder → möten består, därefter affärer, före kvitto/full filheader/commit.
+
+Se [VALIDATION](VALIDATION.md) för syntetiska belägg; egna inloggningar, verkligt arbete och personalacceptans behöver separata prov.
+
+## Historik före CRM124
+
 # CRM123 – bevara mötesunderlaget när kopians gräns nås
 
 När beskedet säger ”CRM-kopian kan innehålla högst 20 000 möten. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.” har denna ändring inte sparats. Bevara din text och ditt privata utkast; kontakta administratören med minimal ofarlig feltext, inga lösenord, koder, exporter eller kundbilagor. Ett avslag sparar inte delar av mötet, dess nya uppföljningsuppgift eller historik. Det innebär inget kundgodkännande eller skickad kalenderinbjudan.

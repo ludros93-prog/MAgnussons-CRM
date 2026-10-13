@@ -1,3 +1,15 @@
+# CRM124 – affärsunderlag inom kopians befintliga gräns
+
+Vanliga skrivningar stoppas före atomisk sparning när hela slutliga affärslistan passerar återställarens befintliga gräns 20 000. Alla tio stadier räknas, även vunna, pausade och förlorade. Exakt gräns och ändringar utan ökning vid gränsen följer övriga regler. En äldre överstor slutlista avvisar nya avsikter även utan tillväxt; tidigare exakta aktörs-/avsiktskvitton återspelas fortfarande. Inget underlag gallras automatiskt.
+
+Direkta affärer och affärer från kvalificering, årshjul, återköp och katalogbeställning går genom samma slutkontroll. Avslag lämnar affär, härledd order, uppgift, audit, kvitto och privat utkast osparade/oförbrukade. Tidigare felprioritet historik → uppgifter → kunder → möten består, därefter affärer, före kvitto/full filheader/commit.
+
+Verifierad ingång är levererad CRM123: [PR #200](https://github.com/ludros93-prog/MAgnussons-CRM/pull/200), GitHub-main `41e991b25af94325257497153d0c603285aa2ce7`, Sites Source `a4375a3bff2106ad1be04351b790203d15ccd40f`, publicerad v120 på samma [Site](https://magnussons-crm.rosen123.chatgpt.site). Slutrevisionens obligatoriska kontroller, exakt-head CI, aktuell-bas merge och separat Source/save/deploy/efterkontroll redovisas i ändringens PR-historik, taskens slutkvittens och privata slutkvitto. Riktade belägg ovan ersätter inte dessa slutkontroller.
+
+Se [VALIDATION](VALIDATION.md) för faktiska riktade prov och [agent/BACKLOG](agent/BACKLOG.md) för kvarvarande B04.
+
+## Historik före CRM124
+
 # CRM123 – möteshistoriken skyddas före sparning
 
 En vanlig CRM-ändring som skulle lämna fler än återläsarens befintliga 20 000 möten får ett tydligt avslag före atomisk sparning. Planerade, genomförda och avbokade möten räknas tillsammans; avslut eller avbokning frigör ingen plats. Exakt 20 000 och ändringar utan ökning vid gränsen tillåts med övriga kontroller. En färdig lista över gränsen avvisar nya vanliga avsikter också utan tillväxt; tidigare exakta kvitton kan fortfarande återspelas. Kundkoppling, stabilt mötesansvar, historik, privata utkast och eventuell ny uppföljningsuppgift behålls utan delskrivning vid avslaget.

@@ -1,3 +1,15 @@
+# CRM124 – affärsantal och återläsarens gräns
+
+Officiella Zod 3.25.76-källan och D1:s batchdokumentation kontrollerades. Zods array-max är inkluderande; D1-batch rullar tillbaka SQL vid fel men lovar ingen gemensam D1/R2-transaktion. Principerna stabil identitet, bevarad historik/kundkontext och konkret nästa steg återbrukas från tidigare källbelagd Saleshub AI/Salesforce/Lime-granskning; ingen ny anslutning påstås.
+
+Kodobservationen är nu reproducerad på oförändrad main41e: 20 000→20 001 affärer kunde sparas under fullheadergränsen, varefter båda kopiorna avvisades. Ny slutgrind räknar alla stadier och härledda affärer utan gallring. Riktade Node/native-prov återläste båda formaten vid exakt 20 000 och bevarade privata utkast, ansvar och historik; ingen generell byte-/hostinggaranti följer.
+
+B04 kvarstår för orderantalets läsartak, hela äldre JSON inklusive base64, extra återställningsaudits/slutbyte och full privat/hostad återställning med separat konto-/utkast-/Outlook-rutin. Riktiga konto-, personal- och integrationsprov samt verksamhetsunderlag återstår. Nästa avgränsade kontroll är att först reproducera ordergränsen syntetiskt. Separat kvadratisk kvittosökning ändras inte.
+
+Inga riktiga kundorder används för skrivprov. Konton, roller, delning, integrationer och agenters schema/prompt/aktivering ändras inte. Huvudmått är försäljning mot månads-/årsmål, marginal och nya prospects. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt `read_thread` gäller Slack; dokumenterad brief och färsk repo-main används.
+
+## Historik före CRM124
+
 # CRM122 – befintlig inkluderande kundgräns som skrivkontrakt
 
 Två färska läsbara officiella källor och fyra exakta citat är privat bundna till råbody, hash, UTF-8-offset och tid: [Zod 3.25.76-källa](https://raw.githubusercontent.com/colinhacks/zod/v3.25.76/packages/zod/src/v3/types.ts) och [Cloudflare D1 batch](https://developers.cloudflare.com/d1/worker-api/d1-database/index.md). Kvitto SHA-256 `6e1c30aa6fdfa9745d55dd36e74730b3acd8a1e8990f8532f81e2d877e7e64c8`, 2026-10-12T23:24:07.485666+00:00. Officiell Zod-källa är byteidentisk med installerad 3.25.76: 160 294 byte, SHA-256 `70309a0877c35d036842e291fe7c8a4439d5db49411d233f8a22bf8a59c41419`.

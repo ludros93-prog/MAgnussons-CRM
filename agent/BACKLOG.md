@@ -1,3 +1,19 @@
+# CRM124 – B04:s affärsgrind byggd och riktat verifierad
+
+Vanliga skrivningar stoppas före atomisk sparning när hela slutliga affärslistan passerar återställarens befintliga gräns 20 000. Alla tio stadier räknas, även vunna, pausade och förlorade. Exakt gräns och ändringar utan ökning vid gränsen följer övriga regler. En äldre överstor slutlista avvisar nya avsikter även utan tillväxt; tidigare exakta aktörs-/avsiktskvitton återspelas fortfarande. Inget underlag gallras automatiskt.
+
+Direkta affärer och affärer från kvalificering, årshjul, återköp och katalogbeställning går genom samma slutkontroll. Avslag lämnar affär, härledd order, uppgift, audit, kvitto och privat utkast osparade/oförbrukade. Tidigare felprioritet historik → uppgifter → kunder → möten består, därefter affärer, före kvitto/full filheader/commit.
+
+Riktade prov: baseline exit 0/sju anrop; ny Node exit 0/84 anrop och byggd native exit 0/28 fall/61 app-HTTP/76 R2-inspektioner. Båda formaten återläste och återexporterade exakt 20 000 affärer med full nästlad historik. [VALIDATION](../VALIDATION.md) skiljer dessa belägg från obligatoriska slutkontroller och leverans.
+
+Verifierad ingång är levererad CRM123: [PR #200](https://github.com/ludros93-prog/MAgnussons-CRM/pull/200), GitHub-main `41e991b25af94325257497153d0c603285aa2ce7`, Sites Source `a4375a3bff2106ad1be04351b790203d15ccd40f`, publicerad v120 på samma [Site](https://magnussons-crm.rosen123.chatgpt.site). Slutrevisionens obligatoriska kontroller, exakt-head CI, aktuell-bas merge och separat Source/save/deploy/efterkontroll redovisas i ändringens PR-historik, taskens slutkvittens och privata slutkvitto. Riktade belägg ovan ersätter inte dessa slutkontroller.
+
+B04 kvarstår för orderantalets läsartak, hela äldre JSON inklusive base64, extra återställningsaudits/slutbyte och full privat/hostad återställning med separat konto-/utkast-/Outlook-rutin. Riktiga konto-, personal- och integrationsprov samt verksamhetsunderlag återstår. Nästa avgränsade kontroll är att först reproducera ordergränsen syntetiskt. Separat kvadratisk kvittosökning ändras inte.
+
+Inga riktiga kundorder används för skrivprov. Konton, roller, delning, integrationer och agenters schema/prompt/aktivering ändras inte. Huvudmått är försäljning mot månads-/årsmål, marginal och nya prospects. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt `read_thread` gäller Slack; dokumenterad brief och färsk repo-main används.
+
+## Historik före CRM124
+
 ## CRM123 – GitHub-provet rättat efter faktiskt CI-fel
 
 CI `38346139897`/jobb `115127897669` på H2 `a37c31d158de912e89fcdc895bb0903a33a9d911` avslutade runtime-steget med exit 1 före den nya mötesgruppen: provhjälparen krävde privat `0600`, men en normal GitHub-checkout hade `0644`. Produktgrinden ändras inte. Hjälparen tillåter nu exakt `0600/0644` för Git `100644` och `0700/0755` för Git `100755`; andra moder avvisas. Hela faktiska filmoder, byte, index och Git-identitet jämförs fortfarande före/efter, och alla 20 fall, SQL och 143 assertioner bevaras.

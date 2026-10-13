@@ -1,3 +1,19 @@
+# CRM124 – befintligt affärstak före atomisk sparning
+
+Vanliga skrivningar stoppas före atomisk sparning när hela slutliga affärslistan passerar återställarens befintliga gräns 20 000. Alla tio stadier räknas, även vunna, pausade och förlorade. Exakt gräns och ändringar utan ökning vid gränsen följer övriga regler. En äldre överstor slutlista avvisar nya avsikter även utan tillväxt; tidigare exakta aktörs-/avsiktskvitton återspelas fortfarande. Inget underlag gallras automatiskt.
+
+Direkta affärer och affärer från kvalificering, årshjul, återköp och katalogbeställning går genom samma slutkontroll. Avslag lämnar affär, härledd order, uppgift, audit, kvitto och privat utkast osparade/oförbrukade. Tidigare felprioritet historik → uppgifter → kunder → möten består, därefter affärer, före kvitto/full filheader/commit.
+
+Inga nya lagringsfält, backupformat, SQL-migrationer eller hostingbindningar. Läsarens samma inkluderande 20 000-gräns delas som konstant. Återgång till föregående kod återinför skrivluckan; tidigare kompatibilitetsgolv för ansvarsaudit gäller fortsatt. Full privat/hostad återställning och live-rollback är oprövade.
+
+CI-jobbet får 45 minuter med samma 13 steg och samtliga obligatoriska prov. Föregående faktiskt lyckade CI `38348613592` tog 35:46; nya riktade Node/native-processer tog tillsammans 412,738 s. Summan 42:38,738 är en planeringsuppskattning från separata miljöer, inget påstående om faktisk CRM124-CI. Det tidigare 40-minutersfönstret ger inte utrymme för denna uppmätta utökning.
+
+Verifierad ingång är levererad CRM123: [PR #200](https://github.com/ludros93-prog/MAgnussons-CRM/pull/200), GitHub-main `41e991b25af94325257497153d0c603285aa2ce7`, Sites Source `a4375a3bff2106ad1be04351b790203d15ccd40f`, publicerad v120 på samma [Site](https://magnussons-crm.rosen123.chatgpt.site). Slutrevisionens obligatoriska kontroller, exakt-head CI, aktuell-bas merge och separat Source/save/deploy/efterkontroll redovisas i ändringens PR-historik, taskens slutkvittens och privata slutkvitto. Riktade belägg ovan ersätter inte dessa slutkontroller.
+
+B04 kvarstår för orderantalets läsartak, hela äldre JSON inklusive base64, extra återställningsaudits/slutbyte och full privat/hostad återställning med separat konto-/utkast-/Outlook-rutin. Riktiga konto-, personal- och integrationsprov samt verksamhetsunderlag återstår. Nästa avgränsade kontroll är att först reproducera ordergränsen syntetiskt. Separat kvadratisk kvittosökning ändras inte.
+
+## Historik före CRM124
+
 # CRM123 – befintlig mötesgräns före atomisk sparning
 
 `CRM_RESTORE_MAX_MEETINGS=20000` delas av den befintliga återläsaren och vanlig `/api/crm`-skrivning. Efter reducer och alla härledda poster/audits kontrolleras hela slutliga `next.meetings` för `p.type!=='restore'`. Ordningen är historikgräns → uppgiftsgräns → kundgräns → mötesgräns, före `mutationResult`, full filheader och atomisk commit. Restore-väg och tidigt exakt aktörs-/avsiktskvitto är oförändrade. Ett säkert CAS-omprov räknar om den konkurrerande listan; osäker avsikt bevarar befintligt konfliktflöde.
