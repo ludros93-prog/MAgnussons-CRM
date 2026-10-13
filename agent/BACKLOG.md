@@ -1,3 +1,13 @@
+# CRM122 – kundgrind verifierad lokalt, faktisk CI-gräns rättas
+
+Kandidat `026e937ca1d9ddd4a71868c2a6447fab349b0ed4` har fem faktiska lokala slutkontroller med exit 0 och separat kanoniskt native-PASS med 20 fall/45 app-HTTP/55 R2-inspektioner. CI run `38326807222`/jobb `115067388724` avbröts vid 35-minutersjobbgränsen: terminal cancelled och runtime-steget cancelled, trots fullruntime-PASS-text precis före städ-/avslutningsavbrottet. CI är inte grön och ingen merge/Source/publicering är genomförd.
+
+Jobbets körbudget höjs avgränsat 35→40 minuter med exakt samma testkommandon, actions och miljöinställningar. Produktfiler och nativehjälpare är oförändrade. Inga tester hoppas över; agentscheman, prompter och aktivering ändras inte. Ny head behöver egna obligatoriska slutkontroller/native/fullruntime och grön exakt-head CI innan aktuell-bas merge och verifierad samma-Site-publicering.
+
+Main `0f12b6d8b18d57dba3c4fa39900288b1fd1118a6` och live v118/SOURCE `5275b582b349906e36e3ba7783b54d6c4996def1` består. Äldre alla lokala/native-/CI-/hjälparkvitton bevaras separat. B04:s övriga samlingstak, legacy JSON-total/base64, andra återställningars extra audits/slutbytebudget och full privat/hostad återställning förblir öppna. Verkliga konton/personal och kvadratiskt produktionskvittourval är separata kvarvarande områden.
+
+## Föregående CRM122-kandidat
+
 # CRM122 – kundgrinden består, ny slutkandidat väntar verifiering
 
 Första head `5a53257eb130757720f8253fcb03f19e6e1c0dac` fick fyra gröna lokala kontroller och separat byggt native-PASS med 20 fall/45 app-HTTP/55 R2-inspektioner. Hela obligatoriska runtime-provet avbröts av egen körning med faktisk exit 143 och saknar slutligt PASS. Ingen CRM122-merge eller publicering påstås.

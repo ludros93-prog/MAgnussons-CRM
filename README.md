@@ -1,3 +1,13 @@
+# CRM122 – lokala slutprov godkända, CI behöver mer avslutstid
+
+Kandidat `026e937ca1d9ddd4a71868c2a6447fab349b0ed4` har fem faktiska gröna lokala slutkontroller och separat byggt native-PASS med 20 fall/45 app-HTTP/55 R2-inspektioner. CI [38326807222](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38326807222) avslutades däremot **cancelled**, även för runtime-steget. Fullruntime-PASS finns i loggtexten precis före avbrottet; det är inget godkänt terminalt CI-resultat.
+
+Jobbets körbudget höjs avgränsat 35→40 minuter för det faktiskt observerade avbrottet vid runtimens avslutning/städning. Alla testkommandon, actions och miljöinställningar är oförändrade. Kundgrindens produktkod och nativehjälparen ändras inte; inga tester hoppas över. Detta är CI-jobbets budget, ingen ändring av agentschema eller verifierad produktionskapacitet.
+
+Ny sluthead behöver egna obligatoriska kontroller, native/fullruntime och exakt-head CI före merge och separat Source/publicering. Tidigare kvitton bevaras som historiska utfall. Main `0f12b6d8b18d57dba3c4fa39900288b1fd1118a6` och live v118/SOURCE `5275b582b349906e36e3ba7783b54d6c4996def1` är oförändrade. Ingen CRM122-merge, Sourceändring eller publicering är genomförd; se [VALIDATION](VALIDATION.md) och [agent/LOG](agent/LOG.md).
+
+## Föregående CRM122-kandidat
+
 # CRM122 – ny slutkandidat efter isolerad testeffektivisering
 
 Första kundgrindskandidaten `5a53257eb130757720f8253fcb03f19e6e1c0dac` har fyra gröna lokala kontroller och ett separat lyckat byggt nativeprov: 20 fall/45 app-HTTP/55 R2-inspektioner. Det obligatoriska hela runtime-provet avbröts av egen körning med exit 143 och har **inget slutligt PASS**. Kandidaten är inte levererad.

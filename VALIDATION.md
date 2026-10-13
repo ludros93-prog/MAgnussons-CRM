@@ -1,3 +1,15 @@
+# CRM122 – andra kandidatens lokala slutprov gröna, CI avbruten vid jobbgränsen
+
+Fryst head `026e937ca1d9ddd4a71868c2a6447fab349b0ed4`, träd `e471e9cdfe8dbf4657a780596c3a43f2f54267da`: fem faktiska lokala kontroller avslutade med exit 0 – regression 580,693 s, TypeScript 14,681 s, bygge 11,441 s, diff 0,004 s och hela isolerade runtime 1 205,883 s. Den lokala runtimekörningen har slutligt PASS. Godkänt kontrollkvitto SHA-256 `72ebc79173472b5303dc1b568e3a7a1e2bf752858a49dac796fcfa17782ab75f` binder 449 Gitposter, 451 faktiska filer med exakt två genererade extrafiler och 106 byggfiler; dessa antal hålls åtskilda. Separat kanoniskt native: faktisk exit 0/127,881 s, 20 fall/45 app-HTTP/55 R2-inspektioner, 18 positiva råtabeller, tre objekt och full teardown. Native-rapport SHA-256 `49b774ba433409239f064daab3da19c4c45d0a6fb364d0c192c4c9bc081a439e`.
+
+Faktisk exakt-head CI run `38326807222`/jobb `115067388724` avslutades cancelled; runtime-stegets conclusion är också cancelled. Jobbet började 2026-10-13T00:21:41Z och avslutades 00:56:46Z med konfigurerad 35-minutersgräns. Slutlig fullruntime-PASS-text loggades 00:56:44.3043907Z precis före avbrottet vid avslutning/städning. Ingen lyckad terminal runtimeprocess eller grön CI påstås från den texten. Hela 576 959-byte loggen är bevarad, SHA-256 `8cd525ab1aed4ed29ecafb6063fb2a1b121e8095e28174f47db6ec89c43a3981`; faktiskt utfallskvitto SHA-256 `a449908cacb3889b5b0803d97962dfc7d81d10e6a0519787aa0ce46d6c788726`. Detta avbrott tillåter ingen merge eller publicering.
+
+Ny kandidat ändrar endast CI-jobbets `timeout-minutes` 35→40 samt denna konkreta dokumentation. Testkommandon, actions, versionsval, miljö, triggers och concurrency behålls. Produktkod och nativehjälpare är oförändrade från 026e937; inget assertion-/behörighets-/CAS-/idempotensprov försvagas eller hoppas över. Extra tid gäller den observerade jobbgränsen; den nya CI-körningens terminala resultat är fortfarande oprövat.
+
+Ny fryst kandidats obligatoriska slutkontroller, separat native, hela runtime, exakt-head grön CI, aktuell-bas merge och Sourcebygge/native/paket/save/deploy/efterkontroll återstår. Äldre frysta kontroller och avbruten CI bevaras separat. Main och live v118 är oförändrade. Verkliga konto-/personal-/integrationsprov, full privat/hostad återställning och live-rollback är fortsatt oprövade.
+
+## Föregående CRM122-kandidat
+
 # CRM122 – första kandidatens native godkänd, hela runtime avbrutet
 
 Första frysta head `5a53257eb130757720f8253fcb03f19e6e1c0dac`, träd `afa4032bfb5d3b9f939c4c12acd67010fb32b54f`, hade 449 Gitfiler/106 byggfiler. Faktiska lokala kontroller: regression exit 0/560,234 s, TypeScript 0/14,470 s, bygge 0/12,210 s och diffkontroll 0. Separat byggt kanoniskt native avslutades med exit 0/651,333 s: 20 fall, 45 app-HTTP och 55 R2-inspektioner med 18 positiva råtabeller och tre objekt. Käll-/byggbindning och teardown verifierades. Rapport SHA-256 `155f5da5732b72e459c8499f0490a8881bc0a7268275464fdea90957f38b0713`; processkvitto SHA-256 `14274ac8766e90624d797b9ac62c3d0d2c9dc32c4d517b482850cd14ffeafb58`.
