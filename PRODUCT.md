@@ -1,3 +1,13 @@
+# CRM125 – originalet behålls när den äldre JSON-kopian är för stor
+
+Beskeden ”CRM-kopian är större än 16 MB. Ingen ofullständig kopia skapas.” och ”CRM-kopian stöder högst 10 MB kundfiler totalt. Ingen ofullständig kopia skapas.” betyder att försöket inte lämnat ut en färdig JSON-kopia. Originaldata och filer finns kvar. Kandidaten kan avgöra kända övergränser från filförteckningen före filläsning; historik/filer tas inte bort för att få kopian att passa.
+
+NDJSON har egna regler för större filsamlingar. En hämtad kopia behöver ett separat återställningsprov med filer, versioner och kopplingar. Förvara kopian privat; gemensam CRM-kopia omfattar inte personliga konton, privata utkast eller Outlook.
+
+Faktiskt publicerad ingång är CRM124/live v121 genom PR #201. CRM125 är verifierad i riktade syntetiska Node/native-prov; vid denna källfrysning återstår slutkontroller och leverans, se [VALIDATION](VALIDATION.md) och PR/taskens slututfall. Egna konton, verkligt arbete och personalacceptans är obekräftade. Försäljning mot månads-/årsmål, marginal och nya prospects förblir huvudmått.
+
+## Historik före CRM125
+
 # CRM124 – bevara underlaget vid affärsgränsen
 
 Beskedet ”CRM-kopian kan innehålla högst 20 000 affärer. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.” betyder att ändringen inte sparats. Behåll text och privat utkast. Avslut av en affär frigör ingen plats och inga tidigare affärer/historik raderas automatiskt.

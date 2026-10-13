@@ -1,3 +1,28 @@
+# CRM125 – faktisk gammal baseline och avgränsade kandidatprov
+
+Levererad CRM124: kod `bc9c81f8131efa845df5d5b48b2f49b45061b5e9`, [PR #201](https://github.com/ludros93-prog/MAgnussons-CRM/pull/201), main `5b1c0bc7d2843ec96bca672e0859dcb9fc39153c`, Source `d874efd72c0184f2f71940673d61d458f9ced5c3`, live v121. CRM124:s fem faktiska lokala exit 0/13 success-steg i CI `38366644314` och lyckade deployment `appgdep_6acdf23fb80c819194f226cd51b74ee6` ersätter inga CRM125-kontroller.
+
+Oförändrad main5b-baseline: fyra autentiserade Node/SQLite-handlers, faktisk exit 0/3,225 s. Rapport SHA-256 `8d9c47f51f69d5dcf0ac27a2304f1c6563c84938d9dd2f70da8560084bb248da`; processkvitto `58ebbb51ffb8e291d09e10e772aee30aa1e182e49eb55fea5e32d967d655fad8`.
+
+| Gammalt syntetiskt underlag | JSON-avslag före ändringen | Samma NDJSON-underlag |
+| --- | --- | --- |
+| Exakt 16 000 001 paketbyte/fyra filer | 400 efter fyra gets/fyra kroppsläsningar/10 råfilbyte/fyra SHA- och base64-operationer | 200; header 15 999 641 byte, wire 16 000 230 byte |
+| 13 500 000 råfilbyte/fyra filer | 400 efter två gets/104 strömläsningar/6 750 000 byte/två SHA- och base64-operationer | 200; header 19 664 byte, wire 18 020 239 byte |
+
+Baseline binder 18 positiva råtabeller, två privata R2-sentineler, noll writes/puts/deletes, bevarade source-/modul-/hjälpar-/migrations-/compilerbyte och egen nedstängning. Kropparna är syntetiska Node-strömmar, ingen byggd native eller live.
+
+Kandidat-Node H1: faktisk exit 0/14,342 s, 34 fall, 36 handleranrop och 43 källmoduler. Produkt-/Node-byte är oförändrade genom native-fixturefixarna. Bygge H1/H2/H3/H4: exit 0.
+
+Riktat native på kodrevision `1198dea5bae8b49dc478305b79f652e52d69fb7d` har faktisk exit 0/44,709 s: 28 fall, 30 vanliga CRM-HTTP-anrop, ett privat HTTP-anrop som konsumerar den faktiska byggda Workerns responskropp och 61 fulla R2-inspektioner. Alla fem nedstängningsprov, 455 Git-filer, 457 fysiska källfiler, 106 byggfiler och 32 transitive fixturemoduler är verifierade före/efter. Exakt 16 MB, en byte över, separat filpadding, tom fillista och sena rollbyten är prövade. Responskroppsavbrott inom workerd är verifierat; yttre HTTP-klientavbrott och native AbortSignal är obekräftade. Node provar separat den faktiska gemensamma läsarens AbortSignal. Rapport SHA-256 `e58a662ce1b2177db2c41bdf6273c16543a85496648a22bc32abe36cdc5dd298`.
+
+Native-H1 föll på testets förälder-före-barn-städning. H2:s klientavbrottsprov etablerade aldrig sitt erforderliga pågående R2-läsarvillkor. H3-spårningen visade en odränerad 4 096-byte-del av headern, inga R2-get/kroppshändelser och därefter timeout i testobservatören. H4 dränerar/parsar hela headern innan verklig R2-läsning och responskroppsavbrott prövas. Dessa ursprungliga exit-1-försök/loggar bevaras; de belägger inget produkt- eller HTTP-transportfel och ersätter inte slutkontroller.
+
+Orderhypotesen avfördes efter granskning: schema-krävt icke-tomt affärs-ID, unik giltig order→affär och CRM124:s affärsgrind ger orderantal ≤ affärsantal ≤ 20 000; fullheaderns separata bytebudget består. Ingen giltig självständig orderantalsoverflow påstås.
+
+Vid denna källfrysning återstår slutkandidatens fem obligatoriska lokala kontroller, exakt-head CI, aktuell-bas merge och separat Source/save/deploy/efterkontroll. Deras faktiska slututfall redovisas i PR:ens kontrollhistorik, taskens slutkvittens och privat slutkvitto; riktade prov och tidigare leveranser ersätter dem inte. Bundlade `site-workflow.mjs`/`build-site.mjs` kan inte läsas eller hittas i tillgängliga paths. Ingen körning av dem påstås. Tillgänglig väg är samma ordinarie Source-Git med eget bygge/paket/native-prov och native Sites-save/deploy, med oförändrad projektidentitet och begränsad delning; genomförandet kräver först faktisk slutverifiering/merge. Vanliga skrivares JSON-garanti, extra återställningsaudits/slutbyte och privat/full hostad återställning med separat konto-/utkast-/Outlook-rutin kvarstår. Riktiga konton, personal, integrationer, hostingkapacitet och live-rollback är obekräftade. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst; tillgängligt read_thread gäller Slack. Inga riktiga kundorder används för skrivprov eller ändringar av konton/roller/delning/integrationer/agentmandat/schema/prompt/aktivering.
+
+## Historik före CRM125
+
 # CRM124 – faktisk avgränsad affärsverifiering
 
 Oförändrad Node/SQLite-baslinje `41e991b25af94325257497153d0c603285aa2ce7`: faktisk exit 0/18,913 s, sju autentiserade anrop. Båda kopiorna gav 200 vid 20 000 affärer; vanlig sparning gav 200 och 20 000→20 001, varefter både JSON och NDJSON gav 400. Headern var 11 718 002 UTF-8-byte, under separat 16 000 000-bytegräns. Ingen gammal native-Worker kördes.

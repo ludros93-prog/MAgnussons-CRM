@@ -19,6 +19,7 @@ await (await import('./restorable-task-budget.mjs')).verifyRestorableTaskBudget(
 await (await import('./restorable-customer-budget.mjs')).verifyRestorableCustomerBudget();
 await (await import('./restorable-meeting-budget.mjs')).verifyRestorableMeetingBudget();
 await (await import('./restorable-deal-budget.mjs')).verifyRestorableDealBudget();
+await (await import('./json-export-preflight.mjs')).verifyJsonExportPreflight();
 await (await import('./file-history-export-budget.mjs')).verifyFileHistoryBudget();
 await (await import('./file-count-copy-budget.mjs')).verifyFileCountCopyBudget();
 await (await import('./customer-file-count-copy-budget.mjs')).verifyCustomerFileCountCopyBudget();

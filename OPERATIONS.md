@@ -1,3 +1,15 @@
+# CRM125 – metadataförkontroll för äldre JSON-export – kandidat
+
+Arbetskoden parsar hela sorterade filförteckningen och kontrollerar samma 10 MB-råfilgräns. Därefter mäts exakt framtida JSON: validerad state/metadata, en faktisk servergenererad exportedAt, tomma contentfält, 64-teckens hashfält och separat paddat base64 per fil. Över 16 000 000 UTF-8-byte avvisas före första R2-get/kropp/kodning/hash; exakt gräns följer övrig validering. Samma exportedAt återanvänds i slutresultatet.
+
+Tillåten export behåller befintliga behörighetsåterkontroller, filstorlek/hash, saknad-fil-fel, slutlig revision, domänvalidering och GET:s sista faktiska bytekontroll. Privat hjälpare delar tidigare JSON-återställningsaritmetik. Ingen ny gräns läggs på NDJSON eller vanliga CRM-skrivningar; en generell vanliga-skrivare JSON-garanti är fortsatt separat arbete.
+
+Ingen ny lagring, SQL-migration, backupvariant, hostingbindning eller konto-/roll-/CAS-/idempotensregel införs. Tidigare kompatibilitetsgolv för ansvarshistorik består. Föregående publicerad v121-källa `d874efd72c0184f2f71940673d61d458f9ced5c3` är återgångsunderlag; kodåtergång tar bort tidigt exportavslag och återinför onödig filläsning. Ingen live-rollback/full hostad återställning har utförts.
+
+Vid denna källfrysning återstår slutkandidatens fem obligatoriska lokala kontroller, exakt-head CI, aktuell-bas merge och separat Source/save/deploy/efterkontroll. Deras faktiska slututfall redovisas i PR:ens kontrollhistorik, taskens slutkvittens och privat slutkvitto; riktade prov och tidigare leveranser ersätter dem inte. Bundlade `site-workflow.mjs`/`build-site.mjs` kan inte läsas eller hittas i tillgängliga paths. Ingen körning av dem påstås. Tillgänglig väg är samma ordinarie Source-Git med eget bygge/paket/native-prov och native Sites-save/deploy, med oförändrad projektidentitet och begränsad delning; genomförandet kräver först faktisk slutverifiering/merge. Full privat driftbackup, hostad återställning och separat konto-/utkast-/Outlook-rutin kvarstår. D1 SQL-rollback gör inte R2/D1 till en gemensam transaktion. Verkliga konton, integrationer och personalacceptans är obekräftade; Codex-tasken är oläst. Agentmandat, schema, prompt och aktivering är oförändrade.
+
+## Historik före CRM125
+
 # CRM124 – befintligt affärstak före atomisk sparning
 
 Vanliga skrivningar stoppas före atomisk sparning när hela slutliga affärslistan passerar återställarens befintliga gräns 20 000. Alla tio stadier räknas, även vunna, pausade och förlorade. Exakt gräns och ändringar utan ökning vid gränsen följer övriga regler. En äldre överstor slutlista avvisar nya avsikter även utan tillväxt; tidigare exakta aktörs-/avsiktskvitton återspelas fortfarande. Inget underlag gallras automatiskt.

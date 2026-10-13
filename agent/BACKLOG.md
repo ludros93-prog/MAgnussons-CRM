@@ -1,3 +1,15 @@
+# CRM125 – B04:s JSON-export avvisar kända övergränser före filarbete
+
+Den gamla exporteraren kunde läsa, koda och hasha filer före ett redan bestämt JSON-avslag. Baseline reproducerar detta; arbetskoden granskar hela JSON-paketet från metadata före första R2-get. Separat paddat base64, samma befintliga gränser, svenska besked och slutkontroller behålls. NDJSON får ingen JSON-totalgräns.
+
+Orderhypotesen avfördes: `OrderSchema` kräver icke-tomt affärs-ID och varje läsargiltig order har en unik befintlig affär och vunnen affär skapar högst en order. CRM124:s slutliga affärsgrind ger därmed orderantal ≤ affärsantal ≤ 20 000. Stora normaliserade listor måste dessutom klara fullheaderns separata 16 MB-budget. Ingen ny ordergrind behövs för den granskade giltiga skrivvägen.
+
+CRM124 är faktiskt levererad genom PR #201/main `5b1c0bc7d2843ec96bca672e0859dcb9fc39153c`, Source `d874efd72c0184f2f71940673d61d458f9ced5c3`, live v121. CRM125:s riktade Node och native är gröna. Vid denna källfrysning återstår slutkandidatens fem obligatoriska lokala kontroller, exakt-head CI, aktuell-bas merge och separat Source/save/deploy/efterkontroll. Deras faktiska slututfall redovisas i PR:ens kontrollhistorik, taskens slutkvittens och privat slutkvitto; riktade prov och tidigare leveranser ersätter dem inte.
+
+**B04 kvar:** vanliga skrivares fulla JSON-budget, senare återställningsaudits/slutbyte och privat/full hostad återställning med separat konto-/utkast-/Outlook-rutin. Ett exportavslag får inte frysa en giltig större NDJSON-arbetsyta till äldre JSON:s budget. B01b2:s fulla personalöverlämning, B02:s chefsroll och verkliga konto-/personal-/integrationsprov kvarstår. Codex-tasken är oläst; agentmandat, schema, prompt och aktivering är oförändrade.
+
+## Historik före CRM125
+
 # CRM124 – B04:s affärsgrind byggd och riktat verifierad
 
 Vanliga skrivningar stoppas före atomisk sparning när hela slutliga affärslistan passerar återställarens befintliga gräns 20 000. Alla tio stadier räknas, även vunna, pausade och förlorade. Exakt gräns och ändringar utan ökning vid gränsen följer övriga regler. En äldre överstor slutlista avvisar nya avsikter även utan tillväxt; tidigare exakta aktörs-/avsiktskvitton återspelas fortfarande. Inget underlag gallras automatiskt.
