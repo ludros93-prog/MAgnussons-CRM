@@ -1,3 +1,13 @@
+# CRM122 – kundgrinden består, ny slutkandidat väntar verifiering
+
+Första head `5a53257eb130757720f8253fcb03f19e6e1c0dac` fick fyra gröna lokala kontroller och separat byggt native-PASS med 20 fall/45 app-HTTP/55 R2-inspektioner. Hela obligatoriska runtime-provet avbröts av egen körning med faktisk exit 143 och saknar slutligt PASS. Ingen CRM122-merge eller publicering påstås.
+
+Endast nativehjälparens upprepade parsning av samma NDJSON-header inne i 10 000-auditloopen ändras: faktisk `exportedAt` hämtas en gång före loopen. Alla sju radassertioner, övriga kontroller, awaits, SQL och kundgrindens produktkod bevaras. Ursprungliga prov och misslyckanden ligger kvar. Ingen prestandavinst eller produktionskapacitetsfix är verifierad på den nya kandidaten.
+
+Nästa steg är ny frysning och egna obligatoriska slutkontroller/native/fullruntime/exakt-head CI, därefter aktuell-bas merge och verifierad samma-Site-publicering. Main `0f12b6d8b18d57dba3c4fa39900288b1fd1118a6` och live v118/SOURCE `5275b582b349906e36e3ba7783b54d6c4996def1` är oförändrade. B04:s övriga samlingstak, legacy JSON-total/base64, andra återställningars extra audits/slutbytebudget och full privat/hostad återställning förblir öppna; kvadratiskt produktionskvittourval är separat oförändrat arbete.
+
+## Föregående CRM122-kandidat
+
 # CRM122: kundregistret följer återläsarens tak – kandidat
 
 B04:s nästa avgränsade lucka är reproducerad och rättad i arbetskoden: vanlig CRM-sparning kontrollerar hela färdiga kundlistan mot återläsarens befintliga 10 000-gräns. Exakt tak tillåts; kundskapande, import och omvandling som går över stoppas före commit utan delskrivning eller förbrukat privat utkast. Historik-/uppgiftsfel, restoreordning, tidigare exakt kvitto, serverroller och CAS består. Ingen migration, formatändring eller automatisk radering.

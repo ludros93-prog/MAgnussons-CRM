@@ -1,3 +1,13 @@
+# CRM122 – ny slutkandidat efter isolerad testeffektivisering
+
+Första kundgrindskandidaten `5a53257eb130757720f8253fcb03f19e6e1c0dac` har fyra gröna lokala kontroller och ett separat lyckat byggt nativeprov: 20 fall/45 app-HTTP/55 R2-inspektioner. Det obligatoriska hela runtime-provet avbröts av egen körning med exit 143 och har **inget slutligt PASS**. Kandidaten är inte levererad.
+
+En konkret kostnad i nativehjälparen avgränsades: samma oförändrade NDJSON-header parsades på nytt inne i varje av de 10 000 återställningsauditerna. Endast kopians verkliga `exportedAt` läses nu en gång före loopen. Alla sju radassertioner, väntesteg, SQL och produktkoden är oförändrade. Detta är en teständring; ingen tidsvinst eller produktionskapacitetsfix är ännu verifierad.
+
+Ny fryst kandidat måste få egna obligatoriska slutkontroller, byggt nativeprov, fullruntime och exakt-head CI före aktuell-bas merge och separat Source/publicering. Tidigare utfall behålls som historiska, inte nya gröna belägg. Main `0f12b6d8b18d57dba3c4fa39900288b1fd1118a6` och live v118/SOURCE `5275b582b349906e36e3ba7783b54d6c4996def1` är oförändrade. [VALIDATION](VALIDATION.md) och [agent/LOG](agent/LOG.md) skiljer provresultaten.
+
+## Föregående CRM122-kandidat
+
 # CRM122: kundgränsen skyddar CRM-kopian – kandidat
 
 Vanlig CRM-sparning använder nu båda återläsarnas befintliga gräns på högst **10 000 kunder**. Den färdiga kundlistan räknas efter alla ändringar, även när granskad import eller prospektomvandling skapar kunder. Exakt gräns och ändringar utan antalökning tillåts med övriga befintliga kontroller. Kund 10 001 stoppas före commit; importen sparas inte delvis och privata utkast behålls.

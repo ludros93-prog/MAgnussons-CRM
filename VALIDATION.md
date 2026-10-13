@@ -1,3 +1,15 @@
+# CRM122 – första kandidatens native godkänd, hela runtime avbrutet
+
+Första frysta head `5a53257eb130757720f8253fcb03f19e6e1c0dac`, träd `afa4032bfb5d3b9f939c4c12acd67010fb32b54f`, hade 449 Gitfiler/106 byggfiler. Faktiska lokala kontroller: regression exit 0/560,234 s, TypeScript 0/14,470 s, bygge 0/12,210 s och diffkontroll 0. Separat byggt kanoniskt native avslutades med exit 0/651,333 s: 20 fall, 45 app-HTTP och 55 R2-inspektioner med 18 positiva råtabeller och tre objekt. Käll-/byggbindning och teardown verifierades. Rapport SHA-256 `155f5da5732b72e459c8499f0490a8881bc0a7268275464fdea90957f38b0713`; processkvitto SHA-256 `14274ac8766e90624d797b9ac62c3d0d2c9dc32c4d517b482850cd14ffeafb58`.
+
+Det separata obligatoriska hela runtime-provet avbröts av egen körning: faktisk observerad exit **143/227,577 s**, utan slutligt fullruntime-PASS. Processkvitto SHA-256 `46fb6abd8ca250bf8579758978ccbe0cf3ea19bc08d4170648849bb2ce99b87c`; bevarad logg SHA-256 `f2bdd77473bf8a09b323b8c9dcf84fd09fcdfc9de289c5dbce5002b6ad34dc01`. Native 20-falls-PASS är ett separat prov och gör inte hela den avbrutna körningen grön. Alla gamla frysta kontroller, hjälpare och kvitton är bevarade separat.
+
+Den nya teständringen flyttar enbart läsningen av verkligt oföränderligt `exportedAt` ur återställningens auditloop. Tidigare parsades samma NDJSON-header 10 000 gånger. De sju fullständiga radassertionerna, övriga assertioner, alla awaits, appanrop, SQL, hash-/rådatakontroller och produktkod består. Ny nativehjälpare SHA-256 `26f47869d4ec9e36b7acf202efe258c05652125bf74f4aec6035d2bf81e53d40`; inget återställningsunderlag ersätts med en konstant eller faktisk respons som förväntningsoracle. Någon uppmätt förbättring på ny kandidat eller generell produktionskapacitet är inte belagd.
+
+Vid detta prefix återstår ny fryst kandidats obligatoriska regressioner, TypeScript, bygge, diff, fullruntime, separat kanoniskt native, exakt-head CI, aktuell-bas merge och Source/save/deploy/efterkontroll. Inga gamla gröna kvitton återanvänds som nya slutprov. Main och live v118 är oförändrade. Verkliga konton, personalacceptans, full privat/hostad återställning och live-rollback är fortsatt oprövade.
+
+## Föregående CRM122-kandidat
+
 # CRM122 – kundtaket reproducerat, riktat Node-prov godkänt
 
 Oförändrad öppnings-main `0f12b6d8b18d57dba3c4fa39900288b1fd1118a6` gav faktisk Node-baslinje exit 0/16,185 s med åtta autentiserade handleranrop: båda kopieformaten gav 200 före kundskapandet, POST sparade kund 10 001 med 200 och båda exporter gav därefter 400. Oberoende framtida header ryms under 16 MB. Baslinjerapport SHA-256 `58c2847367308f5eb979699330ef303d59c214edaf910373778b5c23c2e95fcb`.
