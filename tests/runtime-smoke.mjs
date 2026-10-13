@@ -43,6 +43,7 @@ console.log('PASS native file upload count copy budget: '+JSON.stringify(await (
 console.log('PASS native customer file upload count copy budget: '+JSON.stringify(await (await import('./runtime-customer-file-count-copy-budget.mjs')).assertNativeCustomerFileCountCopyBudget()));
 console.log('PASS native file upload header budget: '+JSON.stringify(await (await import('./runtime-file-upload-header-budget.mjs')).assertNativeFileUploadHeaderBudget()));
 console.log('PASS native JSON restore complete export budget: '+JSON.stringify(await (await import('./runtime-json-restore-export-budget.mjs')).assertNativeJsonRestoreExportBudget()));
+console.log('PASS native readonly JSON export metadata preflight: '+JSON.stringify(await (await import('./json-export-preflight-native.mjs')).assertNativeJsonExportPreflight()));
 const root = fileURLToPath(new URL('../',import.meta.url)), statePath = mkdtempSync(join(tmpdir(),'magnussons-runtime-'));
 const serverRoot=root+'/dist/server';
 const moduleFiles=readdirSync(serverRoot,{recursive:true}).filter(f=>/\.m?js$/.test(f));

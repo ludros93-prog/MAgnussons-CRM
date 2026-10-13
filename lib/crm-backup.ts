@@ -61,14 +61,16 @@ export async function validateBackupRestoreHeader(space:string,current:State,nex
 const BackupSchema=z.object({format:z.literal('magnussons-crm-backup-1'),exportedAt:z.string(),sourceSpace:z.enum(['demo','live']),state:z.unknown(),files:z.array(BackupFileDescriptor.extend({content:z.string().max(6700000),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(2000)});
 export const backupNeed=(v:unknown,message:string)=>{if(!v)throw new RuleError(message)};
 const need=backupNeed;
+function jsonBackupByteLength(copy:z.infer<typeof BackupSchema>){
+ // Canonical base64 and hex SHA are ASCII without JSON escaping. Measure
+ // the empty-content envelope, then add each file's separately padded length.
+ return new TextEncoder().encode(JSON.stringify(copy)).byteLength+copy.files.reduce((total,file)=>total+4*Math.ceil(file.metadata.size/3),0);
+}
 function validateJsonBackupRestoreBudget(space:string,current:State,next:State,stored:StoredFile[]){
  const {viewer:_,...state}={...next,version:current.version+1};
  const copy=BackupSchema.parse({format:'magnussons-crm-backup-1',exportedAt:new Date().toISOString(),sourceSpace:space,state,files:stored.map(({customerId,metadata})=>({customerId,metadata,content:'',sha256:'0'.repeat(64)}))});
- // Canonical base64 and hex SHA are ASCII without JSON escaping. Measure
- // the final envelope, then add each file's separately padded base64 length.
  // No R2 read or encoded-content allocation is needed before staging.
- const bytes=new TextEncoder().encode(JSON.stringify(copy)).byteLength+copy.files.reduce((total,file)=>total+4*Math.ceil(file.metadata.size/3),0);
- need(bytes<=BACKUP_MAX_BYTES,'Återställningen skulle göra den äldre JSON-kopian större än 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.');
+ need(jsonBackupByteLength(copy)<=BACKUP_MAX_BYTES,'Återställningen skulle göra den äldre JSON-kopian större än 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.');
 }
 export async function checksum(bytes:Uint8Array){const hash=await crypto.subtle.digest('SHA-256',bytes as BufferSource);return Array.from(new Uint8Array(hash),v=>v.toString(16).padStart(2,'0')).join('');}
 export const encodeBackupFile=(bytes:Uint8Array)=>{let raw='';for(let i=0;i<bytes.length;i+=32768)raw+=String.fromCharCode(...bytes.subarray(i,i+32768));return btoa(raw)};
@@ -127,17 +129,25 @@ export async function finishBackupRestore(space:string,current:State,next:State,
 export async function exportBackup(space:string,authorize:BackupExportAuthorization=trustedBackupExport){
  await authorize();const st=await load(space);await authorize();
  const rows=await database().prepare('SELECT customer_id,object_key,data FROM crm_files WHERE space=? ORDER BY id').bind(space).all<{customer_id:string;object_key:string;data:string}>();await authorize();
- const files:z.infer<typeof BackupSchema>['files']=[];let total=0;
- for(const row of rows.results){
+ let total=0;
+ const descriptors=rows.results.map(row=>{
   const metadata=BackupFileMeta.parse(JSON.parse(row.data));total+=metadata.size;need(total<=FILE_BYTES,'CRM-kopian stöder högst 10 MB kundfiler totalt. Ingen ofullständig kopia skapas.');
-  await authorize();const object=await bucket().get(row.object_key);if(!object){await authorize();need(object,'Kundfilen '+metadata.name+' saknas i fillagringen. Kopian stoppades.');}
+  return {customerId:row.customer_id,objectKey:row.object_key,metadata};
+ });
+ const {viewer:_,...state}=st,exportedAt=new Date().toISOString();
+ const copy=BackupSchema.parse({format:'magnussons-crm-backup-1',exportedAt,sourceSpace:space,state,files:descriptors.map(({customerId,metadata})=>({customerId,metadata,content:'',sha256:'0'.repeat(64)}))});
+ // The whole JSON budget includes separately padded file contents. Reject
+ // from metadata before the first R2 read or file-body allocation, encoding or hash.
+ if(jsonBackupByteLength(copy)>BACKUP_MAX_BYTES){await authorize();throw new RuleError('CRM-kopian är större än 16 MB. Ingen ofullständig kopia skapas.');}
+ const files:z.infer<typeof BackupSchema>['files']=[];
+ for(const {customerId,objectKey,metadata} of descriptors){
+  await authorize();const object=await bucket().get(objectKey);if(!object){await authorize();need(object,'Kundfilen '+metadata.name+' saknas i fillagringen. Kopian stoppades.');}
   const bytes=await readBackupFile(object!,metadata.size,metadata.name,authorize);
-  files.push({customerId:row.customer_id,metadata,content:encodeBackupFile(bytes),sha256:await checksum(bytes)});
+  files.push({customerId,metadata,content:encodeBackupFile(bytes),sha256:await checksum(bytes)});
   await authorize();
  }
  const current=await load(space);await authorize();need(current.version===st.version,'Arbetsytan ändrades under exporten. Försök igen.');
- const {viewer:_,...state}=st;
- const result=BackupSchema.parse({format:'magnussons-crm-backup-1',exportedAt:new Date().toISOString(),sourceSpace:space,state,files});
+ const result=BackupSchema.parse({format:'magnussons-crm-backup-1',exportedAt,sourceSpace:space,state,files});
  const validated=restoreState(emptyState(),{format:'magnussons-crm-1',state:result.state},true);validateBackupFiles(validated,result.files);return result;
 }
 export async function importBackup(space:string,input:unknown,requestId:string,version:number,actor:Actor){
