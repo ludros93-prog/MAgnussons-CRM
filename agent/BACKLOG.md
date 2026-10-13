@@ -1,3 +1,9 @@
+## CRM123 – GitHub-provet rättat efter faktiskt CI-fel
+
+CI `38346139897`/jobb `115127897669` på H2 `a37c31d158de912e89fcdc895bb0903a33a9d911` avslutade runtime-steget med exit 1 före den nya mötesgruppen: provhjälparen krävde privat `0600`, men en normal GitHub-checkout hade `0644`. Produktgrinden ändras inte. Hjälparen tillåter nu exakt `0600/0644` för Git `100644` och `0700/0755` för Git `100755`; andra moder avvisas. Hela faktiska filmoder, byte, index och Git-identitet jämförs fortfarande före/efter, och alla 20 fall, SQL och 143 assertioner bevaras.
+
+H2 hade fyra lokala kontroller med faktisk exit 0; dess pågående fullruntime stoppades kontrollerat med exit 143/974,810 s efter CI-felet och är inte ett godkänt slutprov. Alla ursprungliga processer/loggar och den faktiska CI-checkouten `92f675aee227e06159d804e79e7e10d93152110d` bevaras privat. Kodrevisionens nya fullständiga kontroller, CI och eventuell leverans redovisas i [PR #200](https://github.com/ludros93-prog/MAgnussons-CRM/pull/200), taskens slutkvittens och privat slutkvitto; H2:s partiella prov ersätter dem inte.
+
 # CRM123 – B04:s befintliga mötesläsartak
 
 Avgränsning: dela återläsarens redan inkluderande 20 000-gräns och skydda vanliga skrivningars slutliga `next.meetings` före commit. Det skyddar planerat kundarbete, genomförda/avbokade möten, kundkoppling och stabil ansvarshistorik från att en ny ändring gör kopian oläsbar. Alla tre statusar räknas; inget tidigare möte eller historik rensas och inga format/migrationer ändras.
