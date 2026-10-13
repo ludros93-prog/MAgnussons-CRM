@@ -1,3 +1,15 @@
+# CRM122 – kundantalet skyddas före sparning
+
+En vanlig kundskapning, import eller konvertering som skulle ge fler än återställarens befintliga 10 000 kunder avvisas nu före atomisk sparning. Alla kundstatusar räknas. Exakt 10 000 och ändringar utan kundökning vid gränsen fungerar i verifierade syntetiska prov; nya vanliga ändringar avvisas om den färdiga listan fortfarande överstiger 10 000 kunder, även utan tillväxt, medan tidigare exakta kvitton fortfarande kan återspelas. Ingen ny radering, gallring eller lagringsmigration införs.
+
+Slutkandidat `5715b36880f8e03ac91f53cf3d304fbe05616483` har fem lokala slutkontroller med faktisk exit 0, separat Node-prov med 59 anrop/53 moduler och native-prov med 20 fall/45 app-HTTP/55 R2-inspektioner. [PR #198](https://github.com/ludros93-prog/MAgnussons-CRM/pull/198) är mergad som `698a97a7f29806afa8a4ae2602d6a5fe57509c78` efter [CI 38330884691](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38330884691), vars 13 steg faktiskt lyckades. Sites Source är `4406d6a4ecc6610617d9b41aa4865afe403cdbfd`, samma verifierade träd med 449 Git-filer, med eget lyckat bygge. Det oberoende byggda Source-native-provet avslutade med faktisk exit 0/118,409 s och 20 fall/45 app-HTTP/55 R2-inspektioner samt verifierad nedstängning. Samma [Site](https://magnussons-crm.rosen123.chatgpt.site) publicerar verifierad v119, version `appgprj_6aa71b309d90819181a32a9af6e6baf2~appgver_1877e2093db08191873e51c6b65408c0`; deployment `appgdep_6acd8fd930508191a1b0ee7e6da7a61f` återlästes `succeeded`, `2026-10-13T01:56:52.374286+00:00`, med samma Source och pakethash. Färsk efterkontroll jämförde hela skyddade baslinjen: begränsad custom-delning/policyrevision 2, envrevision 1 och inga automationer består.
+
+B04 är fortsatt öppen för andra läsartak, hela JSON/base64-budgeten, återställningens extra audits/slutbyte och privat återställning i hosting. Konto-, integrations- och personalacceptans är inte verifierade av dessa isolerade prov. Nästa avgränsade steg är att först reproducera mötesgränsen 20 000→20 001 syntetiskt. Äldre avbrutna prov nedan är bevarad historik, inte slutkandidatens godkännande.
+
+Denna separata dokumentkandidat utgår från färsk remote-main `698a97a7f29806afa8a4ae2602d6a5fe57509c78`; dess egna kontroller och merge redovisas i dokumentations-PR:ens kontrollhistorik och taskens slutkvittens. Apppubliceringen ovan är redan verifierad och ingen ny appversion behövs för dokumentkvittot. Refererad Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt `read_thread` avser Slack, inte Codex; dokumenterad brief och färsk repo-main används.
+
+## Historik före CRM122:s verifierade leverans
+
 # CRM122 – lokala slutprov godkända, CI behöver mer avslutstid
 
 Kandidat `026e937ca1d9ddd4a71868c2a6447fab349b0ed4` har fem faktiska gröna lokala slutkontroller och separat byggt native-PASS med 20 fall/45 app-HTTP/55 R2-inspektioner. CI [38326807222](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38326807222) avslutades däremot **cancelled**, även för runtime-steget. Fullruntime-PASS finns i loggtexten precis före avbrottet; det är inget godkänt terminalt CI-resultat.
