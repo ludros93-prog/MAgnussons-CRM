@@ -1,3 +1,29 @@
+# CRM124 – affärsgrindens faktiska underlag
+
+Vanliga skrivningar stoppas före atomisk sparning när hela slutliga affärslistan passerar återställarens befintliga gräns 20 000. Alla tio stadier räknas, även vunna, pausade och förlorade. Exakt gräns och ändringar utan ökning vid gränsen följer övriga regler. En äldre överstor slutlista avvisar nya avsikter även utan tillväxt; tidigare exakta aktörs-/avsiktskvitton återspelas fortfarande. Inget underlag gallras automatiskt.
+
+Direkta affärer och affärer från kvalificering, årshjul, återköp och katalogbeställning går genom samma slutkontroll. Avslag lämnar affär, härledd order, uppgift, audit, kvitto och privat utkast osparade/oförbrukade. Tidigare felprioritet historik → uppgifter → kunder → möten består, därefter affärer, före kvitto/full filheader/commit.
+
+Oförändrad Node/SQLite-baslinje `41e991b25af94325257497153d0c603285aa2ce7`: faktisk exit 0/18,913 s, sju autentiserade anrop. Båda kopiorna gav 200 vid 20 000 affärer; vanlig sparning gav 200 och 20 000→20 001, varefter både JSON och NDJSON gav 400. Headern var 11 718 002 UTF-8-byte, under separat 16 000 000-bytegräns. Ingen gammal native-Worker kördes.
+
+Riktat Node-prov på `f8c7ef51d7be12e2daaaa2f768ee2743192bdced`: faktisk exit 0/172,102 s, 84 autentiserade anrop, 13 accepterade/27 avvisade fall, 54 käll-/kompilerade moduler, 18 positiva råtabeller och två R2-sentineler. Byggt native-prov på `5c46574eea4d2eef158a00e5ba82f739cbc0c2a5`/träd `55aec155e7730ebb693e94834fb45163682b20c6`: faktisk exit 0/240,636 s, 28 fall/61 app-HTTP/76 fullständiga paginerade R2-inspektioner, 18 råtabeller/tre objekt och samtliga fem nedstängningskontroller sanna. Eget bygge: exit 0/10,112 s. 453 spårade/455 faktiska källfiler, exakt två genererade extra, 106 byggartefakter och 32 native-fixturemoduler binds separat före/efter. Produkt-/Node-byte är identiska mellan dessa två riktade revisioner; endast syntetisk native-orderfixtur skiljer.
+
+Båda faktiska formaten återställde och återexporterade exakt 20 000 affärer, hela nästlade order-/revisions-/mängdhistoriken och en ny kund-audit; slutlig header 11 717 665 UTF-8-byte. Konkurrerande autentiserad vinnare, säkert CAS-omprov, nya avsikter över taket, sena autosparningar, rollåterkallelse, SQL-rollback och förlorat sparbesked/exakt återspelning provades isolerat. Korta syntetiska fixtures ger ingen generell totalbyte-/base64-/hostingkapacitetsgaranti.
+
+Första H1-native avslutade exit 1/2,044 s före första testfallet: syntetisk bevarandeorder saknade nio obligatoriska schemafält. Fixturen rättades med falska godkännandeflaggor, tomma leverans-/fakturatexter, null-belopp/kostnad och fiktiv anteckning; inga fall/assertioner togs bort. Ursprunglig process/logg bevaras. Privat baseline-wrapper hade ett syntaxfel före teststart; rättades före den faktiska baselinekörningen.
+
+Inga nya lagringsfält, backupformat, SQL-migrationer eller hostingbindningar. Läsarens samma inkluderande 20 000-gräns delas som konstant. Återgång till föregående kod återinför skrivluckan; tidigare kompatibilitetsgolv för ansvarsaudit gäller fortsatt. Full privat/hostad återställning och live-rollback är oprövade.
+
+CI-jobbet får 45 minuter med samma 13 steg och samtliga obligatoriska prov. Föregående faktiskt lyckade CI `38348613592` tog 35:46; nya riktade Node/native-processer tog tillsammans 412,738 s. Summan 42:38,738 är en planeringsuppskattning från separata miljöer, inget påstående om faktisk CRM124-CI. Det tidigare 40-minutersfönstret ger inte utrymme för denna uppmätta utökning.
+
+Verifierad ingång är levererad CRM123: [PR #200](https://github.com/ludros93-prog/MAgnussons-CRM/pull/200), GitHub-main `41e991b25af94325257497153d0c603285aa2ce7`, Sites Source `a4375a3bff2106ad1be04351b790203d15ccd40f`, publicerad v120 på samma [Site](https://magnussons-crm.rosen123.chatgpt.site). Slutrevisionens obligatoriska kontroller, exakt-head CI, aktuell-bas merge och separat Source/save/deploy/efterkontroll redovisas i ändringens PR-historik, taskens slutkvittens och privata slutkvitto. Riktade belägg ovan ersätter inte dessa slutkontroller.
+
+B04 kvarstår för orderantalets läsartak, hela äldre JSON inklusive base64, extra återställningsaudits/slutbyte och full privat/hostad återställning med separat konto-/utkast-/Outlook-rutin. Riktiga konto-, personal- och integrationsprov samt verksamhetsunderlag återstår. Nästa avgränsade kontroll är att först reproducera ordergränsen syntetiskt. Separat kvadratisk kvittosökning ändras inte.
+
+Inga riktiga kundorder används för skrivprov. Konton, roller, delning, integrationer och agenters schema/prompt/aktivering ändras inte. Huvudmått är försäljning mot månads-/årsmål, marginal och nya prospects. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst: tillgängligt `read_thread` gäller Slack; dokumenterad brief och färsk repo-main används.
+
+## Historik före CRM124
+
 ## CRM123 – GitHub-provet rättat efter faktiskt CI-fel
 
 CI `38346139897`/jobb `115127897669` på H2 `a37c31d158de912e89fcdc895bb0903a33a9d911` avslutade runtime-steget med exit 1 före den nya mötesgruppen: provhjälparen krävde privat `0600`, men en normal GitHub-checkout hade `0644`. Produktgrinden ändras inte. Hjälparen tillåter nu exakt `0600/0644` för Git `100644` och `0700/0755` för Git `100755`; andra moder avvisas. Hela faktiska filmoder, byte, index och Git-identitet jämförs fortfarande före/efter, och alla 20 fall, SQL och 143 assertioner bevaras.
