@@ -1,3 +1,15 @@
+# CRM125 – validerad metadata före R2-kropp och exakt JSON-längd
+
+Färska officiella HTTP200-källor med sparade råbody/hash/tid och fem exakta citat/UTF-8-offset: [R2 Workers API](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/index.md), [Zods äldre officiella v3.24.4-schemahandledning](https://raw.githubusercontent.com/colinhacks/zod/v3.24.4/README.md) och [exakt 3.25.76-källa](https://raw.githubusercontent.com/colinhacks/zod/v3.25.76/packages/zod/src/v3/types.ts). Privat källkvitto SHA-256 `f4a2d4aa7dd229913f8b8a8731a29a6b23e5c0d6f8bf07cbcb1eee8fe23a7fbf`.
+
+R2 beskriver metadata plus `ReadableStream` från get och hela värdet från arrayBuffer. Den äldre Zod3-handledningen beskriver parse/fel; faktisk installerad 3.25.76-källa bekräftar returnerat `result.data` eller kastat `result.error`. 3.25.76-package-README använder v4-exempel och används inte som v3-handledning. Docsify-skal och ett 404-försök är separat sparade otillräckliga källor.
+
+JSON mäts som faktisk serialiserad UTF-8-envelope med validerad metadata/state/tid, tomma contentfält och 64-teckens hashfält, plus `4 × ceil(filstorlek / 3)` för varje fil separat. Detta återbrukar befintlig återställningsaritmetik och appens befintliga 16 000 000 paketbyte/10 000 000 råfilbyte; inga Cloudflare-gränser eller uppmätta prestandavinster påstås. D1:s batchdokumentation belägger SQL-rollback, ingen gemensam D1/R2-transaktion.
+
+Tidigare verifierade Saleshub-/Salesforce-/Lime-principer om stabil identitet, kundkontext/historik och konkret nästa handling återbrukas utan nya integrations-/privat-/resultatpåståenden. Vanliga skrivares JSON-garanti och privat/full hostad återställning är separata öppna områden. Codex-referensen är oläst.
+
+## Historik före CRM125
+
 # CRM124 – affärsantal och återläsarens gräns
 
 Officiella Zod 3.25.76-källan och D1:s batchdokumentation kontrollerades. Zods array-max är inkluderande; D1-batch rullar tillbaka SQL vid fel men lovar ingen gemensam D1/R2-transaktion. Principerna stabil identitet, bevarad historik/kundkontext och konkret nästa steg återbrukas från tidigare källbelagd Saleshub AI/Salesforce/Lime-granskning; ingen ny anslutning påstås.

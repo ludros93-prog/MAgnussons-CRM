@@ -1,3 +1,13 @@
+# CRM125 – JSON-kopian granskas före filläsning – kandidat
+
+Arbetskoden kontrollerar den äldre JSON-kopians befintliga 16 MB-paketgräns och 10 MB-filgräns från validerad metadata före första R2-hämtning. Ett för stort paket ger samma svenska avslag som tidigare; originaldata och filer behålls. NDJSON behåller sina egna regler för större filsamlingar.
+
+Faktiskt levererad ingång är CRM124 genom [PR #201](https://github.com/ludros93-prog/MAgnussons-CRM/pull/201): kod `bc9c81f8131efa845df5d5b48b2f49b45061b5e9`, GitHub-main `5b1c0bc7d2843ec96bca672e0859dcb9fc39153c`, Source `d874efd72c0184f2f71940673d61d458f9ced5c3`, live **v121** på samma [Site](https://magnussons-crm.rosen123.chatgpt.site). Äldre preliminära CRM124-texter nedan är historiska frysningar. Vid denna källfrysning är riktad Node/native gröna; [VALIDATION](VALIDATION.md) skiljer dem från kvarvarande slutkontroller och leverans. Slututfall anges i PR och taskens slutkvittens.
+
+B04:s vanliga-skrivare JSON-garanti och full privat/hostad återställning med separat konto-/utkast-/Outlook-rutin kvarstår. Riktiga konton, integrationer och personalacceptans är obekräftade. Codex-referensen är oläst; `read_thread` avser Slack.
+
+## Historik före CRM125
+
 # CRM124 – affärsunderlag inom kopians befintliga gräns
 
 Vanliga skrivningar stoppas före atomisk sparning när hela slutliga affärslistan passerar återställarens befintliga gräns 20 000. Alla tio stadier räknas, även vunna, pausade och förlorade. Exakt gräns och ändringar utan ökning vid gränsen följer övriga regler. En äldre överstor slutlista avvisar nya avsikter även utan tillväxt; tidigare exakta aktörs-/avsiktskvitton återspelas fortfarande. Inget underlag gallras automatiskt.
