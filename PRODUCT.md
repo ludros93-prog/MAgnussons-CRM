@@ -1,3 +1,17 @@
+# CRM123 – bevara mötesunderlaget när kopians gräns nås
+
+När beskedet säger ”CRM-kopian kan innehålla högst 20 000 möten. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.” har denna ändring inte sparats. Bevara din text och ditt privata utkast; kontakta administratören med minimal ofarlig feltext, inga lösenord, koder, exporter eller kundbilagor. Ett avslag sparar inte delar av mötet, dess nya uppföljningsuppgift eller historik. Det innebär inget kundgodkännande eller skickad kalenderinbjudan.
+
+Gränsen gäller hela arbetsytans sparade möteslista, inklusive planerade, genomförda och avbokade möten. Exakt 20 000 tillåts med övriga kontroller; en redigering utan ökning vid gränsen fungerar. Att genomföra eller avboka ett möte frigör ingen plats. Nya vanliga ändringar avvisas om den färdiga listan fortfarande överstiger gränsen, även utan tillväxt. Systemet raderar inga möten eller kundhistorik automatiskt.
+
+Isolerade riktade Node- och byggda native-prov verifierar bevarat underlag, exakt gräns och full JSON-/NDJSON-återställning/återexport för de syntetiska fixtures som beskrivs i [VALIDATION](VALIDATION.md). Ett generellt privat CRM-utkast provas; särskild validering av ofärdig mötesdialog eller en verklig användares inloggning/sparning påstås inte.
+
+Verifierad ingång till CRM123: GitHub-main `de56777fd84789316ed0c43aa7e5195223d39757`, publicerad v119 på samma [Site](https://magnussons-crm.rosen123.chatgpt.site), Source `4406d6a4ecc6610617d9b41aa4865afe403cdbfd`. Före CRM123 publicerades kundgrinden genom v119; äldre preliminär v118-/pendingtext nedan är historik. Den slutliga kodrevisionens obligatoriska kontroller, exakt-head CI, aktuell-bas merge och separat Source/save/deploy/efterkontroll redovisas i PR:ens kontrollhistorik, taskens slutkvittens och privat slutkvitto. Verifierad ingång ovan ersätter inte dessa nya belägg.
+
+Huvudmåtten är försäljning mot månads-/årsmål, marginal och nya prospects. Detta skyddar ett befintligt kopiekrav; full driftbackup, kontoinloggning, rätt personlig arbetsvy, första verkliga sparning och personalanvändning måste fortfarande beläggas var för sig.
+
+## Historik före CRM123
+
 # CRM122: tydligt stopp när kundregistret når kopians gräns
 
 När beskedet säger ”CRM-kopian kan innehålla högst 10 000 kunder. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.” har den nya ändringen inte sparats. Bevara formulärtext, importunderlag och privata utkast. Kontakta administratören med minimal ofarlig feltext; skicka inga lösenord, koder eller kundexporter.

@@ -36,6 +36,7 @@ console.log('PASS native ordinary mutation complete file header budget: '+JSON.s
 console.log('PASS native ordinary mutation history budget: '+JSON.stringify(await (await import('./runtime-mutation-history-export-budget.mjs')).assertNativeMutationHistoryExportBudget()));
 console.log('PASS native ordinary mutation restorable task budget: '+JSON.stringify(await (await import('./restorable-task-native.mjs')).assertNativeRestorableTaskBudget()));
 console.log('PASS native ordinary mutation restorable customer budget: '+JSON.stringify(await (await import('./restorable-customer-native.mjs')).assertNativeRestorableCustomerBudget()));
+console.log('PASS native ordinary mutation restorable meeting budget: '+JSON.stringify(await (await import('./restorable-meeting-native.mjs')).assertNativeRestorableMeetingBudget()));
 console.log('PASS native file upload history budget: '+JSON.stringify(await (await import('./runtime-file-history-export-budget.mjs')).assertNativeFileHistoryExportBudget()));
 console.log('PASS native file upload count copy budget: '+JSON.stringify(await (await import('./runtime-file-count-copy-budget.mjs')).assertNativeFileCountCopyBudget()));
 console.log('PASS native customer file upload count copy budget: '+JSON.stringify(await (await import('./runtime-customer-file-count-copy-budget.mjs')).assertNativeCustomerFileCountCopyBudget()));

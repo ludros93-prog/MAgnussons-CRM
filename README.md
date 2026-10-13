@@ -1,3 +1,15 @@
+# CRM123 – möteshistoriken skyddas före sparning
+
+En vanlig CRM-ändring som skulle lämna fler än återläsarens befintliga 20 000 möten får ett tydligt avslag före atomisk sparning. Planerade, genomförda och avbokade möten räknas tillsammans; avslut eller avbokning frigör ingen plats. Exakt 20 000 och ändringar utan ökning vid gränsen tillåts med övriga kontroller. En färdig lista över gränsen avvisar nya vanliga avsikter också utan tillväxt; tidigare exakta kvitton kan fortfarande återspelas. Kundkoppling, stabilt mötesansvar, historik, privata utkast och eventuell ny uppföljningsuppgift behålls utan delskrivning vid avslaget.
+
+Oförändrad Node/SQLite-baslinje på `de56777`: faktisk exit 0/7,972 s, sju autentiserade anrop. JSON och NDJSON gav först 200; en vanlig mötesskrivning gav 200 och 20 000→20 001, varefter båda kopiorna gav 400. Faktisk header var 3 954 634 UTF-8-byte, tydligt under den separata 16 MB-gränsen. Ingen native-baslinje kördes. Riktade isolerade prov har faktisk exit 0: Node på H1, 63 anrop/nio accepterade/19 avvisade; byggt native på H1′, 20 fall/45 app-HTTP/57 R2-inspektioner med full nedstängning. Produkt-/Node-byte är oförändrade mellan H1 och H1′. Båda faktiska formaten återställde och återexporterade exakt 20 000 möten med en ny kund-audit/header 3 954 676 UTF-8-byte. Dessa korta syntetiska fixtures ger ingen generell garanti för alla 20 000 mötens totalbyte.
+
+Verifierad ingång till CRM123: GitHub-main `de56777fd84789316ed0c43aa7e5195223d39757`, publicerad v119 på samma [Site](https://magnussons-crm.rosen123.chatgpt.site), Source `4406d6a4ecc6610617d9b41aa4865afe403cdbfd`. Före CRM123 publicerades kundgrinden genom v119; äldre preliminär v118-/pendingtext nedan är historik. Den slutliga kodrevisionens obligatoriska kontroller, exakt-head CI, aktuell-bas merge och separat Source/save/deploy/efterkontroll redovisas i PR:ens kontrollhistorik, taskens slutkvittens och privat slutkvitto. Verifierad ingång ovan ersätter inte dessa nya belägg.
+
+B04 är fortsatt öppen för affärers/ordrars läsartak, hela legacy-JSON inklusive base64, extra återställningsaudits/slutbyte och full privat/hostad återställning med separat konto-/utkast-/Outlook-rutin. Riktiga konto-/personal-/integrationsprov och verksamhetsunderlag återstår; den separata kvadratiska `mutationResult`-uppgiftssökningen ändras inte. Codex-task `01a104c7-a5c5-7350-8577-a4f941138061` är oläst; dokumenterad brief och färsk repo-main används.
+
+## Historik före CRM123
+
 # CRM122 – kundantalet skyddas före sparning
 
 En vanlig kundskapning, import eller konvertering som skulle ge fler än återställarens befintliga 10 000 kunder avvisas nu före atomisk sparning. Alla kundstatusar räknas. Exakt 10 000 och ändringar utan kundökning vid gränsen fungerar i verifierade syntetiska prov; nya vanliga ändringar avvisas om den färdiga listan fortfarande överstiger 10 000 kunder, även utan tillväxt, medan tidigare exakta kvitton fortfarande kan återspelas. Ingen ny radering, gallring eller lagringsmigration införs.
