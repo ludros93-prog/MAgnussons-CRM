@@ -1,3 +1,13 @@
+# CRM122: tydligt stopp när kundregistret når kopians gräns
+
+När beskedet säger ”CRM-kopian kan innehålla högst 10 000 kunder. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.” har den nya ändringen inte sparats. Bevara formulärtext, importunderlag och privata utkast. Kontakta administratören med minimal ofarlig feltext; skicka inga lösenord, koder eller kundexporter.
+
+Gränsen gäller hela arbetsytans kundlista, även prospekt, vilande och avslutade kunder. Exakt 10 000 tillåts. En import som går över gränsen sparas inte delvis. En befintlig kund kan redigeras vid gränsen med övriga kontroller; om arbetsytan redan är överstor stoppas även en ny ändring utan antalökning. Att avsluta en kund frigör ingen plats, och inga kunder eller historikposter raderas automatiskt.
+
+Kandidaten är riktat prövad i Node; slutkontroller och publicering återstår. Live är fortfarande v118. Detta skyddar en befintlig kopiegräns, inte full driftbackup eller bekräftad hostingkapacitet. Huvudmåtten är försäljning mot månads-/årsmål, marginal och nya prospects. Verklig personalanvändning och kontoprov är obekräftade.
+
+## Historik före CRM122
+
 # CRM119: tydligt stopp innan en äldre JSON-kopia blir för stor
 
 Om återställningen säger ”Återställningen skulle göra den äldre JSON-kopian större än 16 MB. Inga uppgifter återställs och befintlig historik tas inte bort.” har detta första återställningsförsök stoppats före filstaging och commit. **Bevara originalkopian privat och kontakta administratören med minimal ofarlig feltext.** Kapa inte historik.

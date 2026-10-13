@@ -2,7 +2,7 @@ import {ProductionIssueResponsibilityTransferSchema,productionIssueResponsibilit
 import {ProductionAssignmentTransferSchema,productionAssignmentBasis,productionAssignmentBlockedReason,productionAssignmentRole,productionAssignmentTargetBasis,transferProductionAssignment,resolveLegacyProductionAssignment,type ProductionAssignmentTarget} from '@/lib/production-assignment';
 import {revisionBasis} from '@/lib/order-revisions';
 import {directBasis} from '@/lib/direct-delivery';
-import {restoreState,CRM_RESTORE_MAX_TASKS} from '@/lib/crm-restore';
+import {restoreState,CRM_RESTORE_MAX_TASKS,CRM_RESTORE_MAX_CUSTOMERS} from '@/lib/crm-restore';
 import {BACKUP_MAX_BYTES,backupStreamHeader,backupMutationHeaderBytes} from '@/lib/crm-backup';
 import {load,commit,initialize,projectState,mutationResult,requestHash,assertRestoreDatabaseEncoding,assertRestoreStorageBudget,type MutationMeta} from '@/lib/crm-store';
 import {followupBasis} from '@/lib/follow-up';
@@ -343,6 +343,8 @@ export async function POST(req:Request){try{
  // Keep ordinary writes within the same inclusive task count as both readers.
  // Count the final reduced state; completed receipts have already returned.
  if(p.type!=='restore'&&next.tasks.length>CRM_RESTORE_MAX_TASKS)throw new RuleError('CRM-kopian kan innehålla högst 30 000 uppgifter. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');
+ // Preserve the readers' inclusive customer count after all mutation effects.
+ if(p.type!=='restore'&&next.customers.length>CRM_RESTORE_MAX_CUSTOMERS)throw new RuleError('CRM-kopian kan innehålla högst 10 000 kunder. Inga uppgifter från ändringen har sparats. Bevara ditt underlag och kontakta administratören.');
 const result=mutationResult(current,next,p.type,p.data);
  // Generated history and the actual result receipt are part of the write.
  // Completed request receipts have already returned before this first-write gate.

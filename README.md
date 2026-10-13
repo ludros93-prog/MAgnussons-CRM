@@ -1,3 +1,35 @@
+# CRM122 – lokala slutprov godkända, CI behöver mer avslutstid
+
+Kandidat `026e937ca1d9ddd4a71868c2a6447fab349b0ed4` har fem faktiska gröna lokala slutkontroller och separat byggt native-PASS med 20 fall/45 app-HTTP/55 R2-inspektioner. CI [38326807222](https://github.com/ludros93-prog/MAgnussons-CRM/actions/runs/38326807222) avslutades däremot **cancelled**, även för runtime-steget. Fullruntime-PASS finns i loggtexten precis före avbrottet; det är inget godkänt terminalt CI-resultat.
+
+Jobbets körbudget höjs avgränsat 35→40 minuter för det faktiskt observerade avbrottet vid runtimens avslutning/städning. Alla testkommandon, actions och miljöinställningar är oförändrade. Kundgrindens produktkod och nativehjälparen ändras inte; inga tester hoppas över. Detta är CI-jobbets budget, ingen ändring av agentschema eller verifierad produktionskapacitet.
+
+Ny sluthead behöver egna obligatoriska kontroller, native/fullruntime och exakt-head CI före merge och separat Source/publicering. Tidigare kvitton bevaras som historiska utfall. Main `0f12b6d8b18d57dba3c4fa39900288b1fd1118a6` och live v118/SOURCE `5275b582b349906e36e3ba7783b54d6c4996def1` är oförändrade. Ingen CRM122-merge, Sourceändring eller publicering är genomförd; se [VALIDATION](VALIDATION.md) och [agent/LOG](agent/LOG.md).
+
+## Föregående CRM122-kandidat
+
+# CRM122 – ny slutkandidat efter isolerad testeffektivisering
+
+Första kundgrindskandidaten `5a53257eb130757720f8253fcb03f19e6e1c0dac` har fyra gröna lokala kontroller och ett separat lyckat byggt nativeprov: 20 fall/45 app-HTTP/55 R2-inspektioner. Det obligatoriska hela runtime-provet avbröts av egen körning med exit 143 och har **inget slutligt PASS**. Kandidaten är inte levererad.
+
+En konkret kostnad i nativehjälparen avgränsades: samma oförändrade NDJSON-header parsades på nytt inne i varje av de 10 000 återställningsauditerna. Endast kopians verkliga `exportedAt` läses nu en gång före loopen. Alla sju radassertioner, väntesteg, SQL och produktkoden är oförändrade. Detta är en teständring; ingen tidsvinst eller produktionskapacitetsfix är ännu verifierad.
+
+Ny fryst kandidat måste få egna obligatoriska slutkontroller, byggt nativeprov, fullruntime och exakt-head CI före aktuell-bas merge och separat Source/publicering. Tidigare utfall behålls som historiska, inte nya gröna belägg. Main `0f12b6d8b18d57dba3c4fa39900288b1fd1118a6` och live v118/SOURCE `5275b582b349906e36e3ba7783b54d6c4996def1` är oförändrade. [VALIDATION](VALIDATION.md) och [agent/LOG](agent/LOG.md) skiljer provresultaten.
+
+## Föregående CRM122-kandidat
+
+# CRM122: kundgränsen skyddar CRM-kopian – kandidat
+
+Vanlig CRM-sparning använder nu båda återläsarnas befintliga gräns på högst **10 000 kunder**. Den färdiga kundlistan räknas efter alla ändringar, även när granskad import eller prospektomvandling skapar kunder. Exakt gräns och ändringar utan antalökning tillåts med övriga befintliga kontroller. Kund 10 001 stoppas före commit; importen sparas inte delvis och privata utkast behålls.
+
+Historik- och uppgiftsfel behåller sin prioritet. Tidigare exakt aktörs-/avsiktskvitto återläses först; återställningsordning, serverroller, CAS och atomisk sparning består. Redan överstora arbetsytor får avslag även på nya ändringar utan tillväxt. Ingen kund eller historik raderas automatiskt. Detta är appens befintliga formatgräns, ingen hostingkapacitetsgaranti.
+
+Baslinjen är reproducerad i Node och faktiskt tidigare v118-Worker. Riktat Node-prov passerade 59 autentiserade handleranrop, inklusive exakt gräns, båda kopieformatens isolerade återställning, samtidighet och privata utkast. Kandidatens byggda nativeprov, obligatoriska slutkontroller, exakt-head CI, merge och publicering återstår. GitHub-main är fortfarande `0f12b6d8b18d57dba3c4fa39900288b1fd1118a6` och live **v118**, SOURCE `5275b582b349906e36e3ba7783b54d6c4996def1`. Se [VALIDATION](VALIDATION.md) och [agent/LOG](agent/LOG.md).
+
+Andra samlingars läsartak, legacy JSON-total/base64, andra återställningars extra audits/finalbytebudget samt privat/full hostad återställning och verkliga konto-/personalprov är fortsatt öppna. Den separata kvadratiska kvittosökningen ändras inte. Codex-referensen är oläst.
+
+## Historik före CRM122
+
 # CRM121 levererad i v118: nästa aktivitet ryms i CRM-kopian
 
 Vanlig CRM-sparning skyddar återläsarens befintliga gräns på högst 30 000 uppgifter. Hela slutliga `next.tasks` räknas, inklusive avslutade uppgifter och nästa aktiviteter som skapas av kundanteckning, avslutad uppföljning eller genomfört möte. Exakt gräns tillåts; uppgift 30 001 stoppas före ändringens commit och privata utkast bevaras. Historikfel behåller sin tidigare prioritet; tidigare exakt aktörs-/avsiktskvitto returnerar först. Restoreordning, serverroller, CAS och atomiska kvitton består. Ingen migration eller formatändring.
