@@ -32,3 +32,22 @@
 - PR/SHA: anges i produkt-PR och slutrapport; bas main `b264c71` och Site-Source `bf67464`.
 - Publicering: v123 kvar tills exakt-head CI, merge och verifierad deploy; PR #205 lämnas separat blockerad.
 - Nästa: användartesta orderförberedelsen och överlämningen med säljare respektive tryck/lager.
+
+## 2026-10-14 – orderguidens genväg publicerad
+
+- Vad/för vem: nästa saknade orderuppgift kan nu öppnas direkt av säljaren; granskning och uttrycklig inlämning finns kvar.
+- PR/SHA: #206, head `f1312ba42bce8474dc6511207c32fdc5884e9e97`; main `f48c7e043752b4c196b39a11225f441b9064808e`.
+- Verifiering: exakt-head CI 38616435058 grön (regression, TypeScript, bygge, isolerad D1/R2); källblobbar matchar main och lokalt paketbygge passerar.
+- Publicering: v124; Source `a86641a417586bae1559e448ed76cc1d4ab932c9`; terminal deploy succeeded. Åtkomstpolicy, auth-klient och scheman oförändrade vid efterkontroll.
+- Avgränsning: ingen browser- eller personalacceptans påstås; detaljerade provkvitton finns i PR #206.
+- Nästa: användartesta orderguidens nästa handling i demoytan. PR #205 är fortfarande separat blockerad.
+
+## 2026-10-14 – nå hela företagsurvalet
+
+- Vad/för vem: säljaren kan visa nästa 100 företag i sökurvalet i stället för att fastna vid de första 100.
+- Varför: den tidigare fasta avklippningen krävde ett nytt filter för att nå senare företag; nu finns tydligt visat/totalantal och fokus på första nya kortet.
+- Omfattning: enbart listvisning; filterbyte återställer första gruppen. Kontaktspärrar, kundkopplingar, konvertering och serverrättigheter är oförändrade.
+- Verifiering: faktisk sökkomponent/domän med 237 syntetiska företag, alla filter, fokus, kundlänk, spärr/läsare och inga skrivningar; ESLint, TypeScript och produktionsbygge passerar.
+- PR/SHA: slutrevision och fulla provkvitton anges i produkt-PR; bas main `f48c7e0`, Source `a86641a`.
+- Publicering: v124 kvar tills exakt-head CI, merge och verifierad deploy. Ingen browser- eller personalacceptans påstås.
+- Nästa: prova verklig prospektering i demoytan; PR #205 för kundsökning kvarstår separat blockerad.
