@@ -1,4 +1,5 @@
 import './role-navigation.mjs';
+await (await import('./order-guide-next-step.mjs')).verifyOrderGuideNextStep();
 await (await import('./customer-import-preview.mjs')).verifyCustomerImportPreview();
 import './account-change-review.mjs';
 import './crm.mjs';
