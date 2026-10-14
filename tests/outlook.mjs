@@ -1,3 +1,4 @@
+import './role-navigation.mjs';
 import './account-change-review.mjs';
 import './crm.mjs';
 await (await import('./note-draft-resume.mjs')).verifyNoteDraftResume();
