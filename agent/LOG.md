@@ -22,3 +22,13 @@
 - Verifiering: riktat React-livscykelprov, lint, TypeScript, regression och bygge redovisas efter slutkontroll.
 - Publicering: redovisas efter verifierad Source/save/deploy på befintlig Site.
 - Nästa: prova kolumnmappningen med en rensad Fortnox-export och därefter sök/uppföljning för en importerad kund.
+
+## 2026-10-14 – nästa komplettering direkt i orderguiden
+
+- Vad/för vem: säljaren ser första saknade uppgift och går direkt till rätt steg; komplett underlag leder till granskning, aldrig automatisk inlämning.
+- Varför: kontrollistan fanns först i sista steget och krävde onödigt letande i ett sparat arbetsunderlag.
+- Omfattning: endast presentation/navigation; befintliga kontroller, utkast, sparning, antal och behörighet är oförändrade.
+- Verifiering: faktisk OrderGuide i React-prov med tomt/delvis/komplett underlag, datum, konflikter, busy, fokus och inga skrivningar; TypeScript och ny kods ESLint passerar.
+- PR/SHA: anges i produkt-PR och slutrapport; bas main `b264c71` och Site-Source `bf67464`.
+- Publicering: v123 kvar tills exakt-head CI, merge och verifierad deploy; PR #205 lämnas separat blockerad.
+- Nästa: användartesta orderförberedelsen och överlämningen med säljare respektive tryck/lager.
