@@ -70,6 +70,7 @@ import {CustomerResponsibilityAnchor} from '@/components/customer-responsibility
 import './customer-responsibility-anchor.css';
 import {CustomerRegister} from '@/components/customer-register';
 import {customerScope,customerInScope} from '@/lib/customer-scope';
+import {customerMatchesQuery} from '@/lib/customer-search';
 import {CustomerScopeNotice} from '@/components/customer-scope-notice';
 import {CommercialResponsibility} from '@/components/commercial-responsibility';
 import {CommercialResponsibilityAnchor} from '@/components/commercial-responsibility-anchor';
@@ -472,13 +473,13 @@ export default function CRM(){
  function openActivity(t:State['tasks'][number]){if(canFollowUp(t)){setFollowDraftId('');setFollowTask(t.id);return}const order=st?.orders.find(o=>o.dealId===t.dealId),deal=st?.deals.find(d=>d.id===t.dealId);if(order&&['handover','invoice_ready','delivery','proof_deadline','order_deadline','receipt'].includes(t.kind)){if(t.kind==='receipt')openReceipt(order.id);else open('order',order)}else if(deal&&['proof_deadline','order_deadline'].includes(t.kind))open('deal',deal);else {const next=t.kind==='prospecting'?'prospects':t.kind==='onboarding'?'onboarding':t.kind.startsWith('year:')?'year':'care';setView(next);setSearch(cname(t.customerId));setOwner('all');}}
  function create(type:string,customerId='',intent=''){if(!st)return;if(type==='customer')afterCustomer.current=intent;if(type!=='customer'&&!customerId){setPicker(type);return}const o=owner==='all'||owner==='_unassigned'?(st.settings.owners.includes(st.viewer?.owner||'')?st.viewer!.owner:''):owner;const c=st.customers.find(c=>c.id===customerId);if(type!=='customer'&&!c)return;const base={customerId:c?.id,owner:c?.owner||o};if(type==='customer')open(type,{...CustomerSchema.parse({name:'Ny kund',owner:o||'Välj ansvarig',reviewDays:st.settings.reviewDays,nextReview:plusDays(day(),st.settings.reviewDays)}),name:'',owner:o});if(type==='deal')open(type,DealSchema.parse({...base,title:'Ny offert',nextDate:day(),need:c?.need,decisionMaker:c?.decisionMaker}));if(type==='task')open(type,TaskSchema.parse({...base,title:'Ny uppföljning',due:day()}));if(type==='meeting')open(type,MeetingSchema.parse({...base,title:'Kundmöte',date:day(),time:'10:00',duration:45}));if(type==='notes')showCustomer(customerId,'notes');}
  useEffect(()=>{const mc=(document as any).modelContext;if(!allowAssistant||!mc?.registerTool)return;const controller=new AbortController();mc.registerTool({name:'list_crm_priorities',description:'Läs försenade uppgifter och kunder som behöver uppföljning i vald CRM-arbetsyta.',inputSchema:{type:'object',properties:{},additionalProperties:false},execute:()=>({space,tasks:st?.tasks.filter(t=>!t.done&&t.due<=day())||[],customers:st?.customers.filter(c=>concerns(c,day(),st||undefined).length).map(c=>({id:c.id,name:c.name,owner:c.owner,nextReview:c.nextReview,signals:concerns(c,day(),st||undefined)}))||[]})},{signal:controller.signal});return()=>controller.abort()},[st,space,allowAssistant]);
- const customers=st?.customers.filter(c=>(owner==='all'||c.owner===owner)&&(c.name+' '+c.contact+' '+c.need+' '+c.organizationNumber+' '+c.plan.contacts.map(p=>p.name+' '+p.email).join(' ')).toLowerCase().includes(search.toLowerCase()))||[];
+ const customers=st?.customers.filter(c=>(owner==='all'||c.owner===owner)&&customerMatchesQuery(c,search))||[];
  const customerScopeState=st?customerScope(st,owner):null;
- const registerCustomers=st?.customers.filter(c=>!!customerScopeState&&customerInScope(c,customerScopeState)&&(c.name+' '+c.contact+' '+c.need+' '+c.organizationNumber+' '+c.plan.contacts.map(p=>p.name+' '+p.email).join(' ')).toLowerCase().includes(search.toLowerCase()))||[];
+ const registerCustomers=st?.customers.filter(c=>!!customerScopeState&&customerInScope(c,customerScopeState)&&customerMatchesQuery(c,search))||[];
  const onboardingScopeState=st?onboardingScope(st,owner):null;
- const onboardingCustomers=st?.customers.filter(c=>!!onboardingScopeState&&onboardingCustomerInScope(c,onboardingScopeState)&&(c.name+' '+c.contact+' '+c.need+' '+c.organizationNumber+' '+c.plan.contacts.map(p=>p.name+' '+p.email).join(' ')).toLowerCase().includes(search.toLowerCase()))||[];
+ const onboardingCustomers=st?.customers.filter(c=>!!onboardingScopeState&&onboardingCustomerInScope(c,onboardingScopeState)&&customerMatchesQuery(c,search))||[];
  const issueScopeState=st?customerIssueScope(st,owner):null;
- const issueCustomers=st?.customers.filter(c=>c.plan.issueStatus==='open'&&!!issueScopeState&&customerIssueInScope(c,issueScopeState)&&(c.name+' '+c.contact+' '+c.need+' '+c.organizationNumber+' '+c.plan.issue+' '+c.plan.issueAction+' '+c.plan.contacts.map(p=>p.name+' '+p.email).join(' ')).toLowerCase().includes(search.toLowerCase()))||[];
+ const issueCustomers=st?.customers.filter(c=>c.plan.issueStatus==='open'&&!!issueScopeState&&customerIssueInScope(c,issueScopeState)&&customerMatchesQuery(c,search,[c.plan.issue,c.plan.issueAction]))||[];
  const issueScopeLabel=issueScopeState?.caption||'Välj ärendeansvar';
  const dealScopeState=st?dealScope(st,owner):null;
  const orderScopeState=st?orderScope(st,owner):null;

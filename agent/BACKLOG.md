@@ -8,7 +8,7 @@ Prioriteringen följer verkliga användarhinder, Sebbes order-/prospekteringsbeh
 | O01 | Gå igenom godkänd offert till tryck, lager, delleverans och fakturaunderlag | Samma fiktiva order passerar flödet utan dubbelregistrering eller tappade/restfel i antal. |
 | O02 | Förenkla nästa synliga handling i orderöverlämningen | Säljare och tryck/lager kan förklara nästa steg och vem som ansvarar, utan att öppna irrelevanta vyer. |
 | P01 | Gör Fortnox-export redo för förhandsgranskad kundimport | Rensat exempelformat kan mappas, valideras och granskas utan att skapa dubletter eller skriva före bekräftelse. |
-| P02 | Koppla importerade befintliga kunder till sök och uppföljning | En importerad kund hittas och får en verklig nästa aktivitet utan extra registerpost. |
+| P02 | Prova Fortnox-sökning och första uppföljningen med en rensad export | En importerad kund hittas via namn eller Fortnox-nummer och den automatiskt skapade aktiviteten används i ett verkligt arbetsmoment. |
 | P03 | Förkorta prospektering till kontaktbeslut och nästa aktivitet | En säljare går från företagssökning till sparat nästa steg utan dubbel inmatning. |
 | R01 | Kontrollera resultat mot månads-/årsmål, marginal och nya prospects | Chef och säljare ser rätt omfattning samt tydlig markering när mål, kostnad eller personkoppling saknas. |
 | A01 | Verifiera faktiska konton, roller och säljarprofilkopplingar | Varje teammedlem ser rätt arbetsvy och bara sina tillåtna data/åtgärder. |
