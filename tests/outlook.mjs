@@ -1,4 +1,5 @@
 import './role-navigation.mjs';
+await (await import('./production-date-overview.mjs')).verifyProductionDateOverview();
 await (await import('./prospect-results.mjs')).verifyProspectResults();
 await (await import('./order-guide-next-step.mjs')).verifyOrderGuideNextStep();
 await (await import('./customer-import-preview.mjs')).verifyCustomerImportPreview();

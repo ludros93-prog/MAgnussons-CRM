@@ -51,3 +51,14 @@
 - PR/SHA: slutrevision och fulla provkvitton anges i produkt-PR; bas main `f48c7e0`, Source `a86641a`.
 - Publicering: v124 kvar tills exakt-head CI, merge och verifierad deploy. Ingen browser- eller personalacceptans påstås.
 - Nästa: prova verklig prospektering i demoytan; PR #205 för kundsökning kvarstår separat blockerad.
+
+## 2026-10-22 – datumöversikt för tryck och lager
+
+- Vad/för vem: månad/dag och datumtyp i Tryck & leverans för öppna jobb i aktuell sökning; saknade datum visas separat.
+- Varför: Sebbes önskemål den 19 oktober om månadsöversikt och dagsplan. Detta är deadlineöversikt, inte tidsbokning eller kapacitetslöfte.
+- Omfattning: läsvy som öppnar befintliga jobb; inga nya lagringsfält, roller, orderhändelser eller integrationer.
+- Källa: GitHub main `ff899dd`, identiskt träd med Sites Source `e572467`; öppna PR #202 och #205 lämnas orörda.
+- Verifiering: React-prov för periodgräns, dag/månad, datumtyp, unika jobb, saknade datum, tomt urval och oförändrade indata; TypeScript, riktad ESLint och bygge passerar.
+- Begränsning: förhandsvisningen nådde inte healthy före timeout. Browser- och personalprov är inte verifierade. Full regression/runtime och exakt-head CI redovisas i PR.
+- Leverans: gren `feat/production-date-overview`; v125 kvar tills godkänd CI, merge och terminal deploy.
+- Nästa: slutför kandidatens kontroll/publicering; håll IT-godkännande och verklig Outlook/Fortnox-anslutning separata från frontendarbete.
