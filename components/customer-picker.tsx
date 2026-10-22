@@ -4,17 +4,18 @@ import {Search,ArrowRight,Plus} from 'lucide-react';
 import {Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {Button} from '@/components/ui/button';import {Input} from '@/components/ui/input';import type {State} from '@/lib/crm';
 import {customerScope,customerInScope} from '@/lib/customer-scope';
+import {customerMatchesQuery} from '@/lib/customer-search';
 import {personalOwner} from '@/lib/sales-dashboard';
 export function CustomerPicker({st,purpose,onSelect,onClose,onNew}:{st:State;purpose:string;onSelect:(id:string)=>void;onClose:()=>void;onNew:()=>void}){
  const labelId=useId(),diagnosticId=useId(),[query,setQuery]=useState('');
  const scope=customerScope(st,personalOwner(st)||'_unassigned'),isMine=(customer:State['customers'][number])=>customerInScope(customer,scope),accountHelp=scope.diagnostic==='operational-missing';
- const matches=st.customers.filter(c=>(c.name+' '+c.contact+' '+c.email+' '+c.organizationNumber).toLocaleLowerCase('sv').includes(query.trim().toLocaleLowerCase('sv'))).sort((a,b)=>Number(isMine(b))-Number(isMine(a))||a.name.localeCompare(b.name,'sv'));
+ const matches=st.customers.filter(c=>customerMatchesQuery(c,query)).sort((a,b)=>Number(isMine(b))-Number(isMine(a))||a.name.localeCompare(b.name,'sv'));
  const action=purpose==='search'?'Öppna kundkort':'Välj kund';
  return <Dialog open onOpenChange={v=>{if(!v)onClose()}}>
   <DialogContent className="customer-picker">
    <DialogHeader>
     <DialogTitle>{purpose==='search'?'Sök kund':purpose==='notes'?'Vilken kund gäller anteckningen?':'Vilken kund gäller det?'}</DialogTitle>
-    <DialogDescription>Sök på företag, kontaktperson, e-post eller organisationsnummer.</DialogDescription>
+    <DialogDescription>Sök på företag, kontaktuppgift, organisationsnummer eller kundnummer i Fortnox.</DialogDescription>
    </DialogHeader>
    {scope.diagnostic&&<section className="min-w-0 [overflow-wrap:anywhere]" role="status" aria-labelledby={diagnosticId} data-profile-diagnostic={scope.diagnostic}>
     <p id={diagnosticId}><b>{accountHelp?'Kundansvar saknas':'Kundkopplingen behöver kontrolleras'}</b></p>
