@@ -19,7 +19,10 @@ export function onboardingScopeFixture(core,{link='b',owner=nameA,role='seller',
   {id:profileA,legacyOwnerName:nameA,displayName:'Samma syntetiska visningsnamn',memberId:link==='a'?'synthetic-member':'',active:true,linkHistory:[],retirementHistory:[]},
   {id:profileB,legacyOwnerName:nameB,displayName:'Samma syntetiska visningsnamn',memberId:link==='b'?'synthetic-member':'',active:!inactive,linkHistory:[],retirementHistory:[]}
  ]:[];
- const customer=(id,profile='',onboardingOwner=nameA,customerOwner=nameB,extra={})=>core.CustomerSchema.parse({id,name:'Syntetisk onboarding '+id,owner:customerOwner,status:'onboarding',onboarding:{owner:onboardingOwner,ownerProfileId:profile,dealId:id+'-deal',startedAt:at,due:'2026-10-20'},...extra});
+ // Default cases are not overdue; the late-summary case sets its own past date.
+ // Keep that distinction after the original fixture's October 2026 deadline.
+ const due=core.plusDays(core.day(),10);
+ const customer=(id,profile='',onboardingOwner=nameA,customerOwner=nameB,extra={})=>core.CustomerSchema.parse({id,name:'Syntetisk onboarding '+id,owner:customerOwner,status:'onboarding',onboarding:{owner:onboardingOwner,ownerProfileId:profile,dealId:id+'-deal',startedAt:at,due},...extra});
  st.customers=[...(initialized?[customer('profile-a',profileA,nameA,nameB),customer('profile-b',profileB,nameB,nameA)]:[]),
   customer('legacy-a','',nameA,nameB),customer('legacy-b','',nameB,nameA),
   customer('fallback-a','','',nameA),customer('fallback-b','','',nameB),
