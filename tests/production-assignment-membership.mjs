@@ -55,13 +55,13 @@ export const ProductionProgress=()=>null,ProductionIssueResponsibilityHistory=()
 export const QuantityDialog=()=>{throw Error('Movement dialog must remain closed')};
 `);
  function compile(file){
-  file=relative(resolve('.'),resolve(file)).split(sep).join('/');assert.ok(file.startsWith('lib/')||file.startsWith('app/api/crm/')||['components/production-workspace.tsx','components/business-ui.tsx','components/handover-focus.ts'].includes(file),file);
+  file=relative(resolve('.'),resolve(file)).split(sep).join('/');assert.ok(file.startsWith('lib/')||file.startsWith('app/api/crm/')||['components/production-workspace.tsx','components/production-date-overview.tsx','components/business-ui.tsx','components/handover-focus.ts'].includes(file),file);
   const target=toTarget(file);if(compiled.has(file))return target;compiled.add(file);
   let source=remember(file).replace("import { env } from 'cloudflare:workers';","const env=globalThis.__crmEnv;");
   let output=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
   output=output.replace(/(from\s+|import\s*)['"]([^'"]+)['"]/g,(whole,prefix,specifier)=>{
    let dependency;
-   if(specifier.startsWith('@/components/ui/')||file==='components/production-workspace.tsx'&&(specifier.startsWith('./ui/')||['./production-progress','./production-issue-responsibility-dialog'].includes(specifier)))dependency=helpers;
+   if(specifier.startsWith('@/components/ui/')||file==='components/production-date-overview.tsx'&&specifier.startsWith('./ui/')||file==='components/production-workspace.tsx'&&(specifier.startsWith('./ui/')||['./production-progress','./production-issue-responsibility-dialog'].includes(specifier)))dependency=helpers;
    else if(specifier.startsWith('@/lib/'))dependency=compile('lib/'+specifier.slice(6)+'.ts');
    else if(specifier.startsWith('./')||specifier.startsWith('../')){const base=resolve(dirname(file),specifier);dependency=compile(base+(existsSync(base+'.ts')?'.ts':'.tsx'));}
    else return whole;
