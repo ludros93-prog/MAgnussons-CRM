@@ -1,0 +1,54 @@
+name: Visuell genomgång
+
+on:
+  push:
+    branches: ["claude/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: walkthrough-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  walkthrough:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - uses: pnpm/action-setup@v6
+        with:
+          version: "11.25.0"
+          run_install: false
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile --prod=false
+      - name: TypeScript
+        run: node node_modules/typescript/bin/tsc --noEmit --incremental false
+      - name: Role navigation test
+        run: node tests/role-navigation.mjs
+      - name: Build Worker and client
+        run: pnpm build
+      - name: Install browser driver outside the project
+        run: npm install --prefix "$RUNNER_TEMP/pw" --no-audit --no-fund playwright-core@1.56.1
+      - name: Walk through the built app as each role
+        run: node tests/visual-walkthrough.mjs
+        env:
+          PLAYWRIGHT_DIR: ${{ runner.temp }}/pw/node_modules/playwright-core
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: genomgang
+          path: outputs/walkthrough
+          if-no-files-found: warn
+          retention-days: 14
