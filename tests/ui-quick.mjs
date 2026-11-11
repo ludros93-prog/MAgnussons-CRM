@@ -1,5 +1,6 @@
 // Snabb delmängd av regressionen: de React-prov som läser appens vyer och texter.
 // Hela sviten körs fortfarande av tests/outlook.mjs i CRM checks.
+import './test-clock.mjs';
 import './role-navigation.mjs';
 await (await import('./production-date-overview.mjs')).verifyProductionDateOverview();
 await (await import('./prospect-results.mjs')).verifyProspectResults();
