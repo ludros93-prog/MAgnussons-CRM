@@ -20,7 +20,7 @@ export function CustomerPicker({st,purpose,onSelect,onClose,onNew}:{st:State;pur
    {scope.diagnostic&&<section className="min-w-0 [overflow-wrap:anywhere]" role="status" aria-labelledby={diagnosticId} data-profile-diagnostic={scope.diagnostic}>
     <p id={diagnosticId}><b>{accountHelp?'Kundansvar saknas':'Kundkopplingen behöver kontrolleras'}</b></p>
     <p>{scope.diagnostic==='missing'?'Märkningen ”Din kund” och prioriteringen kan vara ofullständiga eftersom kontot saknar säljarprofil.':accountHelp?'Profilkopplade kunder kan märkas ”Din kund”. Äldre kunder utan profilansvar kan inte prioriteras som dina.':'Ditt kundansvar och din kopplade säljarprofil hör till olika ansvar. ”Din kund” och prioriteringen följer profilen för registrerade kunder och kundansvaret för äldre kunder.'} Sökningen omfattar alla tillgängliga kunder.</p>
-    <p>{st.viewer?.role==='admin'?(accountHelp?'Kontrollera ditt kundansvar i Konton & roller.':'Kontrollera konto- och profilkopplingen i Mål & inställningar.'):(accountHelp?'Be en administratör kontrollera ditt kundansvar i Konton & roller.':'Be en administratör kontrollera din konto- och profilkoppling i Mål & inställningar.')}</p>
+    <p>{st.viewer?.role==='admin'?(accountHelp?'Kontrollera ditt kundansvar i Konton & roller.':'Kontrollera konto- och profilkopplingen i Inställningar.'):(accountHelp?'Be en administratör kontrollera ditt kundansvar i Konton & roller.':'Be en administratör kontrollera din konto- och profilkoppling i Inställningar.')}</p>
    </section>}
    <div className="search"><Search size={18}/><Input autoFocus aria-label="Sök i kundregistret" placeholder="Börja skriva ett namn…" value={query} onChange={e=>setQuery(e.target.value)}/></div>
    <div className="picker-results">

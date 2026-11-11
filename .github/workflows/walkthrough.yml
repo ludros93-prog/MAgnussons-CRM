@@ -1,0 +1,67 @@
+name: Visuell genomgång
+
+on:
+  push:
+    branches: ["claude/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: walkthrough-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  walkthrough:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - uses: pnpm/action-setup@v6
+        with:
+          version: "11.25.0"
+          run_install: false
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile --prod=false
+      - name: TypeScript
+        run: node node_modules/typescript/bin/tsc --noEmit --incremental false
+      - name: UI regression subset
+        run: node tests/ui-quick.mjs
+        continue-on-error: true
+      - name: Build Worker and client
+        run: pnpm build
+      - name: Install browser driver outside the project
+        run: npm install --prefix "$RUNNER_TEMP/pw" --no-audit --no-fund playwright-core@1.56.1
+      - name: Walk through the built app as each role
+        run: node tests/visual-walkthrough.mjs
+        env:
+          PLAYWRIGHT_DIR: ${{ runner.temp }}/pw/node_modules/playwright-core
+      - name: Publish screenshots to a temporary branch
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd outputs/walkthrough
+          git init -q -b bilder
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Skärmbilder från ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" bilder:refs/heads/genomgang-bilder
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: genomgang
+          path: outputs/walkthrough
+          if-no-files-found: warn
+          retention-days: 14

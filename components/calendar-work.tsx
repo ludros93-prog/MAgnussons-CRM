@@ -36,7 +36,7 @@ export function CalendarWork({st,owner,search,busy,onMeeting,onTask,onCreateTask
    {scope.diagnostic==='operational-missing'&&<p>Kopplad profil: <b>{linkedProfile!.displayName}</b>.</p>}
    {scope.diagnostic==='mismatch'&&<p>Kundansvar: <b>{scope.legacyOwner}</b>. Kopplad profil: <b>{linkedProfile!.displayName}</b> · ansvar: <b>{linkedProfile!.legacyOwnerName}</b>.</p>}
    <p>Synligt urval: det som visas här är inte en bekräftad fullständig aktivitetslista.</p>
-   {admin?<Button type="button" variant="outline" onClick={()=>onView(scope.diagnostic==='operational-missing'?'accounts':'settings')}>{scope.diagnostic==='operational-missing'?'Öppna Konton & roller':'Öppna Mål & inställningar'}</Button>:<p>{scope.diagnostic==='operational-missing'?'Be en administratör kontrollera ditt kundansvar i Konton & roller.':'Be en administratör kontrollera din konto- och profilkoppling i Mål & inställningar.'}</p>}
+   {admin?<Button type="button" variant="outline" onClick={()=>onView(scope.diagnostic==='operational-missing'?'accounts':'settings')}>{scope.diagnostic==='operational-missing'?'Öppna Konton & roller':'Öppna Inställningar'}</Button>:<p>{scope.diagnostic==='operational-missing'?'Be en administratör kontrollera ditt kundansvar i Konton & roller.':'Be en administratör kontrollera din konto- och profilkoppling i Inställningar.'}</p>}
   </section>}
   <div className="dashboard-grid">
    <section className="panel min-w-0"><div className="panel-head"><div><h2>Kundmöten i CRM{scope.diagnostic?' · synligt urval':''}</h2><p>Intern planering · ingen inbjudan skickas</p></div><CalendarDays/></div>

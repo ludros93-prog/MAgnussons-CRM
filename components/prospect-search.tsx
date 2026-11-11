@@ -30,7 +30,7 @@ export function ProspectSearch({st,save,busy,onCustomer}:{st:State;save:SaveActi
  const decisionAlreadyApplied=!!decision&&!!decisionLead&&!!decisions.get(decisionLead.id)?.blocked===decision.blocked;
  const openDecision=(l:Lead)=>{setReason('');setDecision({id:l.id,blocked:!decisions.get(l.id)?.blocked,basis:leadContactBasis(st,l.id)});};
  return <section className="business-ui operations">
-  <div className="biz-head"><div><span className="biz-kicker">HITTA NÄSTA KUND</span><h2><Search/>Företagsökning</h2><p>{st.leads.length} företag i inläst underlag · {list.length} matchar urvalet · {[...decisions.values()].filter(d=>d?.blocked).length} spärrade poster</p></div>{st.viewer?.role==='admin'&&<Button onClick={()=>setImporting(true)}>Importera företagslista</Button>}</div>
+  <div className="biz-head"><div><span className="biz-kicker">HITTA NÄSTA KUND</span><h2><Search/>Hitta företag</h2><p>{st.leads.length} företag i inläst underlag · {list.length} matchar urvalet · {[...decisions.values()].filter(d=>d?.blocked).length} spärrade poster</p></div>{st.viewer?.role==='admin'&&<Button onClick={()=>setImporting(true)}>Importera företagslista</Button>}</div>
   <div className="biz-callout">Sökningen gäller era inlästa företagslistor. Vainu eller annan extern datakälla är inte ansluten. Kontaktuppgifter visas från underlaget och behöver kontrolleras före kontakt. Kontaktspärren gäller prospekteringen i denna vy.</div>
   <div className="prospect-filters">
    <F label="Företag / org.nr"><Input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Sök företag"/></F>
