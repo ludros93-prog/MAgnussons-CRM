@@ -18,13 +18,14 @@ const root=fileURLToPath(new URL('../',import.meta.url)),serverRoot=join(root,'d
 const out=join(root,'outputs/walkthrough');mkdirSync(out,{recursive:true});
 const statePath=mkdtempSync(join(tmpdir(),'magnussons-walkthrough-'));
 const moduleFiles=readdirSync(serverRoot,{recursive:true}).filter(f=>/\.m?js$/.test(f));
-const mf=new Miniflare({modulesRoot:serverRoot,modules:[
+const boot=workerFirst=>new Miniflare({modulesRoot:serverRoot,modules:[
  {type:'ESModule',path:join(serverRoot,'index.js')},
  ...moduleFiles.filter(f=>f!=='index.js').map(f=>({type:'ESModule',path:join(serverRoot,f)}))],
  compatibilityDate:'2026-05-15',compatibilityFlags:['nodejs_compat'],cf:false,host:'127.0.0.1',
  log:new Log(LogLevel.ERROR),d1Databases:{DB:'crm-walkthrough'},r2Buckets:{BUCKET:'crm-walkthrough'},
  d1Persist:join(statePath,'d1'),r2Persist:join(statePath,'r2'),
- assets:{directory:join(root,'dist/client'),binding:'ASSETS',routerConfig:{has_user_worker:true,invoke_user_worker_ahead_of_assets:true}}});
+ assets:{directory:join(root,'dist/client'),binding:'ASSETS',routerConfig:workerFirst?{has_user_worker:true,invoke_user_worker_ahead_of_assets:true}:{has_user_worker:true}}});
+let mf=boot(true);
 
 // Syntetiska personer. Namnen på säljarna följer demoytans exempelansvariga.
 const people=[
@@ -41,6 +42,7 @@ const sizes=[{name:'dator',width:1440,height:900},{name:'mobil',width:390,height
 const only=(process.env.WALK_ROLES||'').split(',').map(s=>s.trim()).filter(Boolean);
 
 const report=[],problems=[];
+const problem=data=>{problems.push(data);console.log('WALK problem '+JSON.stringify(data));};
 const note=(kind,data)=>{report.push({kind,...data});console.log('WALK '+kind+' '+JSON.stringify(data));};
 const facts=()=>{
  const text=s=>(s||'').replace(/\s+/g,' ').trim();
@@ -70,27 +72,44 @@ try{
  for(const file of readdirSync(join(root,'drizzle')).filter(f=>f.endsWith('.sql')).sort())
   for(const sql of readFileSync(join(root,'drizzle',file),'utf8').split('--> statement-breakpoint').map(s=>s.trim()).filter(Boolean))await db.prepare(sql).run();
  for(const p of people)await db.prepare('INSERT INTO crm_members(id,email,user_id,name,role,owner,active) VALUES(?,?,?,?,?,?,1)').bind(p.id,p.id+'@example.test',p.id,p.name,p.role,p.owner).run();
- const base=(await mf.ready).toString().replace(/\/$/,'');
+ let base=(await mf.ready).toString().replace(/\/$/,'');
+ // Den byggda sidan måste kunna hämta sina skript. Pröva vem som serverar dem.
+ const html=await (await fetch(base+'/')).text(),asset=(html.match(/(?:src|href)="(\/[^"]+\.js)"/)||[])[1];
+ let assetStatus=asset?(await fetch(base+asset)).status:0;
+ note('start',{base,asset:asset||'',assetStatus,workerFirst:true,htmlBytes:html.length});
+ if(asset&&assetStatus!==200){
+  await mf.dispose();mf=boot(false);base=(await mf.ready).toString().replace(/\/$/,'');
+  assetStatus=(await fetch(base+asset)).status;note('start',{base,asset,assetStatus,workerFirst:false});
+ }
  browser=await chromium.launch(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{channel:'chrome'});
  for(const person of people.filter(p=>!only.length||only.includes(p.role))){
   const context=await browser.newContext({viewport:{width:sizes[0].width,height:sizes[0].height},locale:'sv-SE',timezoneId:'Europe/Stockholm',extraHTTPHeaders:{'oai-authenticated-user-id':person.id,'oai-authenticated-user-email':person.id+'@example.test'}});
+  context.setDefaultTimeout(8000);
   const page=await context.newPage();
   page.on('dialog',d=>d.accept().catch(()=>{}));
-  page.on('pageerror',e=>{problems.push({role:person.role,type:'pageerror',text:String(e).slice(0,300)});});
-  page.on('console',m=>{if(m.type()==='error')problems.push({role:person.role,type:'console',text:m.text().slice(0,300)});});
-  const step=async(label,run)=>{try{await run();return true}catch(e){problems.push({role:person.role,type:'step',label,text:String(e).split('\n')[0].slice(0,300)});note('fel',{role:person.role,label,error:String(e).split('\n')[0].slice(0,300)});return false}};
+  page.on('pageerror',e=>problem({role:person.role,type:'pageerror',text:String(e).slice(0,300)}));
+  page.on('console',m=>{if(m.type()==='error')problem({role:person.role,type:'console',text:m.text().slice(0,300)});});
+  page.on('requestfailed',r=>problem({role:person.role,type:'requestfailed',text:r.method()+' '+r.url().replace(base,'')+' '+(r.failure()?.errorText||'')}));
+  page.on('response',r=>{if(r.status()>=400)problem({role:person.role,type:'http',text:r.status()+' '+r.request().method()+' '+r.url().replace(base,'')});});
+  const step=async(label,run)=>{try{await run();return true}catch(e){problem({role:person.role,type:'step',label,text:String(e).split('\n')[0].slice(0,300)});return false}};
   const shot=async(size,label)=>{
    await page.waitForTimeout(350);
-   const data=await page.evaluate(facts),file=[person.role,size.name,label].join('-')+'.png';
-   await page.screenshot({path:join(out,file),fullPage:true});
+   const data=await page.evaluate(facts),file=[person.role,size.name,label].join('-')+'.jpg';
+   await page.screenshot({path:join(out,file),fullPage:true,type:'jpeg',quality:72});
    note('vy',{role:person.role,size:size.name,label,file,...data});
   };
-  await page.goto(base+'/',{waitUntil:'networkidle'});
-  await step('välj demoyta',async()=>{
-   await page.getByRole('combobox',{name:'Arbetsyta'}).first().click();
+  await page.goto(base+'/',{waitUntil:'load',timeout:30000});
+  await page.waitForTimeout(1500);
+  const ready=await step('välj demoyta',async()=>{
+   await page.getByRole('combobox',{name:'Arbetsyta'}).first().click({timeout:15000});
    await page.getByRole('option',{name:'Demoyta'}).click();
    await page.locator('.workspace-banner b',{hasText:'DEMO'}).waitFor({timeout:15000});
   });
+  if(!ready){
+   await page.screenshot({path:join(out,person.role+'-START-FEL.jpg'),fullPage:true,type:'jpeg',quality:72}).catch(()=>{});
+   note('startfel',{role:person.role,url:page.url(),text:(await page.evaluate(()=>document.body.innerText.replace(/\s+/g,' ').slice(0,600)).catch(()=>'')),scripts:(await page.evaluate(()=>[...document.scripts].map(s=>s.src).filter(Boolean).slice(0,6)).catch(()=>[]))});
+   await context.close();continue;
+  }
   for(const size of sizes){
    await page.setViewportSize({width:size.width,height:size.height});
    await page.waitForTimeout(300);
@@ -114,7 +133,7 @@ try{
      await page.locator('main.main[data-view="'+target+'"]').waitFor({timeout:8000});
     });
     if(ok)await step('bild '+size.name+' '+label,()=>shot(size,label));
-    else await step('felbild '+size.name+' '+label,()=>page.screenshot({path:join(out,[person.role,size.name,label,'FEL'].join('-')+'.png'),fullPage:true}));
+    else await step('felbild '+size.name+' '+label,()=>page.screenshot({path:join(out,[person.role,size.name,label,'FEL'].join('-')+'.jpg'),fullPage:true,type:'jpeg',quality:72}));
    }
   }
   await context.close();
@@ -122,7 +141,6 @@ try{
 }finally{
  writeFileSync(join(out,'rapport.json'),JSON.stringify({generated:new Date().toISOString(),report,problems},null,1));
  console.log('WALK klart '+JSON.stringify({vyer:report.filter(r=>r.kind==='vy').length,problem:problems.length}));
- for(const p of problems)console.log('WALK problem '+JSON.stringify(p));
  await browser?.close().catch(()=>{});
  await mf.dispose().catch(()=>{});
  rmSync(statePath,{recursive:true,force:true});
