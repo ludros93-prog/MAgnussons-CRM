@@ -29,19 +29,19 @@ let mf=boot(true);
 
 // Syntetiska personer. Namnen på säljarna följer demoytans exempelansvariga.
 const people=[
- {id:'walk-seller',role:'seller',name:'Erik Lindberg',owner:'Erik Lindberg'},
  {id:'walk-admin',role:'admin',name:'Sebastian Hansson',owner:'Sebastian Hansson'},
+ {id:'walk-seller',role:'seller',name:'Erik Lindberg',owner:'Erik Lindberg'},
  {id:'walk-print',role:'print',name:'Tryck Exempel',owner:''},
  {id:'walk-warehouse',role:'warehouse',name:'Lager Exempel',owner:''},
  {id:'walk-production',role:'production',name:'Produktion Exempel',owner:''}
 ];
-const salesViews=[['today'],['customers'],['customers','prospects'],['customers','search'],['customers','onboarding'],['customers','care'],['customers','year'],['deals'],['deals','orders'],['deals','catalog'],['deals','production'],['calendar'],['calendar','correspondence'],['overview']];
+const salesViews=[['today'],['customers'],['customers','prospects'],['customers','search'],['customers','onboarding'],['customers','care'],['customers','year'],['deals'],['deals','orders'],['deals','catalog'],['deals','print'],['deals','warehouse'],['deals','production'],['calendar'],['calendar','correspondence'],['overview'],['notices']];
 const adminViews=[['admin','settings'],['admin','accounts'],['admin','connections'],['admin','process']];
 const viewsFor={seller:salesViews,admin:[...salesViews,...adminViews],print:[['print'],['notices']],warehouse:[['warehouse'],['notices']],production:[['production'],['notices']]};
 const sizes=[{name:'dator',width:1440,height:900},{name:'mobil',width:390,height:844}];
 const only=(process.env.WALK_ROLES||'').split(',').map(s=>s.trim()).filter(Boolean);
 
-const report=[],problems=[];
+const report=[],problems=[];let exampleFailure=false;
 const problem=data=>{problems.push(data);console.log('WALK problem '+JSON.stringify(data));};
 const note=(kind,data)=>{report.push({kind,...data});console.log('WALK '+kind+' '+JSON.stringify(data));};
 const facts=()=>{
@@ -110,15 +110,37 @@ try{
    note('startfel',{role:person.role,url:page.url(),text:(await page.evaluate(()=>document.body.innerText.replace(/\s+/g,' ').slice(0,600)).catch(()=>'')),scripts:(await page.evaluate(()=>[...document.scripts].map(s=>s.src).filter(Boolean).slice(0,6)).catch(()=>[]))});
    await context.close();continue;
   }
+  if(person.role==='admin'){
+   // Administratören lägger in exempelorder med appens egen knapp. Det prövar
+   // hela kedjan order, korrektur, tryck, lager, utleverans och kvittens i den byggda appen.
+   const started=Date.now();
+   const seeded=await step('lägg in exempelorder',async()=>{
+    const panel=page.locator('section.demo-flow');
+    await panel.waitFor({timeout:10000});
+    await page.screenshot({path:join(out,'admin-dator-exempel-fore.jpg'),fullPage:true,type:'jpeg',quality:72});
+    await panel.getByRole('button',{name:'Lägg in exempelorder'}).click();
+    await page.waitForFunction(()=>{const node=document.querySelector('section.demo-flow');return !node||node.getAttribute('data-demo-flow')==='error'},null,{timeout:120000});
+    const failed=await page.locator('section.demo-flow .demo-flow-error').count();
+    if(failed)throw Error('Exempelorder: '+(await page.locator('section.demo-flow .demo-flow-error').innerText()));
+   });
+   const state=await (await fetch(base+'/api/crm?space=demo',{headers:{'oai-authenticated-user-id':person.id,'oai-authenticated-user-email':person.id+'@example.test'}})).json();
+   const examples=(state.deals||[]).filter(d=>String(d.title).startsWith('Exempel: ')).map(d=>{const o=state.orders.find(o=>o.dealId===d.id);return {title:d.title,owner:d.owner,stage:o?.stage,production:o?.production?.status,issue:!!o?.production?.issue,delivered:o?.deliveredDate||''}});
+   note('exempel',{ok:seeded,ms:Date.now()-started,count:examples.length,examples});
+   if(!seeded||examples.length<7){exampleFailure=true;await page.screenshot({path:join(out,'admin-dator-exempel-FEL.jpg'),fullPage:true,type:'jpeg',quality:72}).catch(()=>{});}
+   await page.waitForTimeout(800);
+  }
   for(const size of sizes){
    await page.setViewportSize({width:size.width,height:size.height});
    await page.waitForTimeout(300);
    for(const path of viewsFor[person.role]){
     const target=path[path.length-1],label=path.join('_');
     const ok=await step(size.name+' '+label,async()=>{
-     const item=page.locator('[data-nav="'+path[0]+'"] button').first();
-     if(!(await item.isVisible())){await page.locator('[data-sidebar="trigger"]').first().click();await item.waitFor({state:'visible',timeout:5000});}
-     await item.click();
+     if(path[0]==='notices'&&!['print','warehouse','production'].includes(person.role))await page.getByRole('button',{name:'Öppna notiser'}).click();
+     else{
+      const item=page.locator('[data-nav="'+path[0]+'"] button').first();
+      if(!(await item.isVisible())){await page.locator('[data-sidebar="trigger"]').first().click();await item.waitFor({state:'visible',timeout:5000});}
+      await item.click();
+     }
      if(path.length>1&&path[0]!=='admin'||path[0]==='admin'&&target!=='settings'){
       const current=await page.locator('main.main').getAttribute('data-view');
       if(current!==target){
@@ -145,4 +167,5 @@ try{
  await mf.dispose().catch(()=>{});
  rmSync(statePath,{recursive:true,force:true});
 }
-if(!report.some(r=>r.kind==='vy'))process.exit(1);
+const broken=problems.filter(p=>p.type==='step'||p.type==='pageerror');
+if(!report.some(r=>r.kind==='vy')||exampleFailure||broken.length){console.log('WALK underkänd '+JSON.stringify({exampleFailure,broken:broken.length}));process.exit(1);}
