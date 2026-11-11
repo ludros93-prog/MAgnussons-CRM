@@ -170,7 +170,7 @@ export const toast={success:value=>globalThis.__accountIdentityToasts.push({kind
   },{expectedRefreshes:1});
   await isolated('the account form explicitly edits customer responsibility rather than the separate stable seller member link',async()=>{
    const st=fixture({sellerProfiles:[profile(a,aliasA,'synthetic-member-a'),profile(b,aliasB)]}),member=account();await mount(st,[member]);await click(row(member.id).findAllByType('button')[0]);const control=picker('Kundansvar för kontot');assert.ok(control);assert.equal(control.props.value,aliasA);assert.ok(control.findAllByType('option').some(option=>option.props.value===aliasB));assert.ok(!control.findAllByType('option').some(option=>option.props.value===a||option.props.value===b));
-   assert.match(content(),/Mål & inställningar/);assert.ok(!content().includes('Kopplad säljarprofil'));await act(async()=>control.props.onChange(aliasB));assert.equal(picker('Kundansvar för kontot').props.value,aliasB);assert.equal(st.settings.sellerProfiles[0].memberId,member.id);assert.equal(calls.length,1);
+   assert.match(content(),/Inställningar/);assert.ok(!content().includes('Kopplad säljarprofil'));await act(async()=>control.props.onChange(aliasB));assert.equal(picker('Kundansvar för kontot').props.value,aliasB);assert.equal(st.settings.sellerProfiles[0].memberId,member.id);assert.equal(calls.length,1);
   });
   await isolated('an unmapped customer responsibility prepares an empty person instead of guessing identity or administrator rights',async()=>{
    await mount(fixture(),[]);const prepare=renderer.root.findAllByType('button').find(node=>node.props['aria-label']==='Förbered konto med kundansvar '+aliasA);await click(prepare);

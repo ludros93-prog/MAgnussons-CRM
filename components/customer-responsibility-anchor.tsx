@@ -39,7 +39,7 @@ function accountRow(value:unknown):Account{
 function accountBlocker(snapshot:Snapshot){
  if(snapshot.accountError)return snapshot.accountError;
  const profile=snapshot.review.sourceProfile,account=snapshot.account;
- if(!profile?.memberId)return 'Resultatprofilen saknar ett anslutet personligt CRM-konto. Administratören behöver granska kontolänken under Mål & inställningar.';
+ if(!profile?.memberId)return 'Resultatprofilen saknar ett anslutet personligt CRM-konto. Administratören behöver granska kontolänken under Inställningar.';
  if(!account)return 'Kontot har ännu inte kunnat läsas. Hämta aktuellt underlag innan du granskar kopplingen.';
  if(account.id!==profile.memberId||account.owner!==profile.legacyOwnerName)return 'Det anslutna kontots kundansvar stämmer inte med resultatprofilen. Administratören behöver granska kontolänken.';
  if(!account.active)return 'Det anslutna CRM-kontot är inaktivt. Administratören behöver granska kontot innan kundansvaret kan kopplas.';

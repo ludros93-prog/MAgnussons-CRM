@@ -31,8 +31,8 @@ function nextActivity(st:State,customerId:string){
 
 export function CustomerRegister({st,customers,visibleSubset=false,onCustomer,onCreateCustomer,onDataTools}:{st:State;customers:Customer[];visibleSubset?:boolean;onCustomer:(id:string)=>void;onCreateCustomer:()=>void;onDataTools:()=>void}){
  const today=day(),canCreate=['admin','seller'].includes(st.viewer?.role||'');
- return <section className="panel customer-register" aria-label="Kundregister">
-  <div className="panel-head cr-heading"><div><h2>Kundregister <span className="count">{customers.length}</span>{visibleSubset?' · synligt urval':''}</h2><p>Öppna en kund för att arbeta vidare med relationen.</p></div><Button size="sm" variant="outline" onClick={onDataTools}>Importera / exportera</Button></div>
+ return <section className="panel customer-register" aria-label="Kunder">
+  <div className="panel-head cr-heading"><div><h2>Kunder <span className="count">{customers.length}</span>{visibleSubset?' · synligt urval':''}</h2><p>Öppna en kund för att arbeta vidare med relationen.</p></div><Button size="sm" variant="outline" onClick={onDataTools}>Importera / exportera</Button></div>
   {customers.length?<ul className="cr-list" aria-label="Kunder i urvalet">{customers.map(c=>{
    const responsible=customerResponsibility(st,c),activity=nextActivity(st,c.id),openDeals=st.deals.filter(d=>d.customerId===c.id&&isOpen(d)).length;
    return <li className="cr-row" key={c.id} data-customer-id={c.id}>

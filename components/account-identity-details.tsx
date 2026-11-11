@@ -16,6 +16,6 @@ export function AccountIdentityDetails({account,settings}:{account:AccountIdenti
     {!settings.owners.includes(profile.legacyOwnerName)&&<small>Profilens kundansvar finns inte i den här arbetsytans lista.</small>}
     {account.owner!==profile.legacyOwnerName&&<p className="account-identity-warning">Kundansvar skiljer sig från säljarprofilen. Granska kundansvaret här och kontokopplingen i Mål &amp; inställningar; kontokopplingen flyttar inget arbete.</p>}
    </div>)}
-  </>:<><span>Ingen säljarprofil kopplad till konto-ID:t.</span><small>{commercial?'Granska den exakta kontokopplingen i Mål & inställningar innan personliga säljarvyer används.':'Säljarprofil är inget krav för kontots roll.'}</small></>}</dd></div>
+  </>:<><span>Ingen säljarprofil kopplad till konto-ID:t.</span><small>{commercial?'Granska den exakta kontokopplingen i Inställningar innan personliga säljarvyer används.':'Säljarprofil är inget krav för kontots roll.'}</small></>}</dd></div>
  </dl>;
 }
