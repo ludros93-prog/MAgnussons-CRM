@@ -20,4 +20,8 @@ assert.match(page,/primaryViewsForRole\(st\?\.viewer\?\.role\)/);
 assert.match(page,/canSeeAdminNavigation\(st\?\.viewer\?\.role\).*<span>Admin<\/span>/);
 assert.doesNotMatch(page,/<span>Inställningar<\/span>/);
 
+// Ett namn per vy: flikarna hämtar sina namn från samma lista som meny och rubrik.
+assert.match(page,/const sectionLabels:Record<string,string>=Object\.fromEntries\(nav\.map\(/);
+for(const old of ['Kundregister','Årsplanering','Artikelregister','Möten & planering','Mål & grunduppgifter','Företagsökning','Nykundsbearbetning','Offerter & order','Order & fakturering','Artiklar & beställning','Min produktion','Korrespondens','Mål & inställningar'])assert.ok(!page.split('\n').some(line=>/^const nav=/.test(line)&&line.includes("'"+old+"'")),'Gammalt vynamn i menyn: '+old);
+
 console.log('role navigation: ok');

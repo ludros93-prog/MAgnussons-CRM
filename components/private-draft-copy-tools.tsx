@@ -14,7 +14,7 @@ type Presentation={clipboard:ClipboardFeedback|null;key:string;scope:Scope;open:
 type CopyWorkspace={enabled:boolean;open:(event:MouseEvent<HTMLButtonElement>)=>void};
 const Context=createContext<CopyWorkspace|null>(null);
 const initial=(key:string,scope:Scope):Presentation=>({clipboard:null,key,scope,open:false,fetching:false,reading:false,message:'',error:'',local:null,archived:false,selected:-1,limit:20,showFile:false,showRaw:false});
-const kindLabels:Record<string,string>={catalog:'Offert-/orderutkast',production:'Tryckunderlag',note:'Anteckning',followup:'Kunduppföljning',form:'Påbörjade uppgifter',plan:'Kundplan',prospecting:'Nykundsbearbetning',onboarding:'Onboarding',receipt:'Leveransbesked'};
+const kindLabels:Record<string,string>={catalog:'Offert-/orderutkast',production:'Tryckunderlag',note:'Anteckning',followup:'Kunduppföljning',form:'Påbörjade uppgifter',plan:'Kundplan',prospecting:'Bearbeta företag',onboarding:'Onboarding',receipt:'Leveransbesked'};
 const readableLabels:Record<string,string>={text:'Text',notes:'Anteckningar',note:'Anteckning',message:'Meddelande',reason:'Orsak',goal:'Mål',nextAction:'Nästa steg',title:'Rubrik',name:'Namn',need:'Behov',receivedBy:'Mottagningsunderlag',description:'Beskrivning'};
 const plainObject=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
 /** Display-only decoding of a small, known set of text fields. The original

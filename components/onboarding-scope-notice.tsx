@@ -15,6 +15,6 @@ export function OnboardingScopeNotice({st,scope,onView}:{st:State;scope:Onboardi
   {accountHelp&&linkedProfile&&<p>Kopplad profil: <b>{linkedProfile.displayName}</b>.</p>}
   {scope.diagnostic==='mismatch'&&linkedProfile&&<p>Kundansvar: <b>{scope.legacyOwner}</b>. Kopplad profil: <b>{linkedProfile.displayName}</b> · ansvar: <b>{linkedProfile.legacyOwnerName}</b>.</p>}
   <p>Synligt urval: listan och antalen gäller det som visas här, inte en bekräftad fullständig onboardinglista.</p>
-  {st.viewer?.role==='admin'?<Button type="button" variant="outline" onClick={()=>onView(accountHelp?'accounts':'settings')}>{accountHelp?'Öppna Konton & roller':'Öppna Mål & inställningar'}</Button>:<p>{accountHelp?'Be en administratör kontrollera ditt kundansvar i Konton & roller.':'Be en administratör kontrollera din konto- och profilkoppling i Mål & inställningar.'}</p>}
+  {st.viewer?.role==='admin'?<Button type="button" variant="outline" onClick={()=>onView(accountHelp?'accounts':'settings')}>{accountHelp?'Öppna Konton & roller':'Öppna Inställningar'}</Button>:<p>{accountHelp?'Be en administratör kontrollera ditt kundansvar i Konton & roller.':'Be en administratör kontrollera din konto- och profilkoppling i Inställningar.'}</p>}
  </section>;
 }
